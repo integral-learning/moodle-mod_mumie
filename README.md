@@ -38,8 +38,6 @@ You need to be a MUMIE partner to use our content on moodle. Please contact us o
 3. Select *Plugins*->*Install plugins*
 4. Drag and drop the ZIP file into the respecting field
 5. Click *Install plugin from the ZIP file*
-6. Enter your MUMIE API key and your organisation shorthand and click *Save changes*
-7. Go to *Site Administration*->*Plugins*->*Manage authentication* and enable MUMIE Single Sign On by clicking on the eye icon next to it
 
 ## Wiki
 For further information, detailed step-by-step guides and FAQs please visit our [wiki](https://wiki.mumie.net/wiki/MUMIE-Moodle-integration)!
