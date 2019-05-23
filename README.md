@@ -42,4 +42,4 @@ You need to be a MUMIE partner to use our content on moodle. Please contact us o
 7. Go to *Site Administration*->*Plugins*->*Manage authentication* and enable MUMIE Single Sign On by clicking on the eye icon next to it
 
 
-For more information, please visit our [wiki](https://wiki.mumie.net/wiki/MUMIE-Moodle-integration)!
+For further information, step-by-step guides and FAQs please visit our [wiki](https://wiki.mumie.net/wiki/MUMIE-Moodle-integration)!
