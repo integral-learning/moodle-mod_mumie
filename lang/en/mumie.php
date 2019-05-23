@@ -24,7 +24,7 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['pluginname'] = 'MUMIE';
+$string['pluginname'] = 'MUMIE Task';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>This activity module enables the usage of content from the MUMIE e-learning platform and automatic grade synchronization. A MUMIE tasks represents an individual graded problem from a MUMIE course.</p>
 <p><strong>What is MUMIE?</strong></p>

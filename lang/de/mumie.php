@@ -24,7 +24,7 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['pluginname'] = 'MUMIE';
+$string['pluginname'] = 'MUMIE Task';
 $string['modulename'] = 'MUMIE Task';
 
 $string['modulename_help'] = '<p>Dieses Aktivität-Modul ermöglicht die Nutzung von Inhalten der MUMIE-Plattform auf Moodle und eine automatische Synchronisierung der dort erzielten Noten.
