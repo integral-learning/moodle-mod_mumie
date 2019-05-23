@@ -10,6 +10,9 @@ MUMIE is an e-learning platform for learning and teaching mathematics and comput
 
 MUMIE platform and content is the result of a cooperative effort by leading universities in Europe supported by the company integral-learning.
 
+## How to get access to MUMIE content
+You need to be a MUMIE partner to use our content on moodle. Please contact us over [email](mailto:contact@integral-learning.de) for more information.
+
 ## Key features
 * ### Use MUMIE Tasks in moodle
 
@@ -26,3 +29,17 @@ MUMIE platform and content is the result of a cooperative effort by leading univ
 * ### Automatic grade synchronization
 
   All MUMIE tasks are graded and their results are automatically added to the moodle gradebook.
+
+## Installation
+
+
+1. Download this plugin as a ZIP file
+2. Go to *Site Administration*
+3. Select *Plugins*->*Install plugins*
+4. Drag and drop the ZIP file into the respecting field
+5. Click *Install plugin from the ZIP file*
+6. Enter your MUMIE API key and your organisation shorthand and click *Save changes*
+7. Go to *Site Administration*->*Plugins*->*Manage authentication* and enable MUMIE Single Sign On by clicking on the eye icon next to it
+
+
+For more information, please visit our [wiki](https://wiki.mumie.net/wiki/MUMIE-Moodle-integration)!
