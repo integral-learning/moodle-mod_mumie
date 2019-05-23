@@ -13,7 +13,7 @@ MUMIE platform and content is the result of a cooperative effort by leading univ
 ## How to get access to MUMIE content
 You need to be a MUMIE partner to use our content on moodle. Please contact us over [email](mailto:contact@integral-learning.de) for more information.
 
-## Key features
+## Key features of MUMIE Task
 * ### Use MUMIE Tasks in moodle
 
   Add any number of MUMIE Tasks to your moodle course with an easy to use form.
