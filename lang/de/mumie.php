@@ -86,6 +86,7 @@ $string['mumie_form_activity_server'] = 'MUMIE-Server';
 $string['mumie_form_activity_server_help'] = 'Bitte wählen Sie einen MUMIE-Server, um eine aktuelle Auswahl von verfügbaren Kursen und Aufgaben zu erhalten.';
 $string['mumie_form_activity_course'] = 'MUMIE-Kurs';
 $string['mumie_form_activity_problem'] = "MUMIE-Aufgabe";
+$string['mumie_form_activity_problem_help'] = "Eine MUMIE-Aufgabe ist eine einzelne benotete Aufgabe in MUMIE";
 $string['mumie_form_activity_container'] = 'Startcontainer';
 $string['mumie_form_activity_container_help'] = 'Bitte wählen Sie, ob diese Aktivität in die Moodle-Umgebung eingebunden oder in einem neuen Browser-Tab geöffnet werden soll.';
 $string['mumie_form_activity_container_embedded'] = 'Eingebunden';

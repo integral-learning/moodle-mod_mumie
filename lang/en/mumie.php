@@ -74,6 +74,7 @@ $string['mumie_form_activity_server'] = 'MUMIE server';
 $string['mumie_form_activity_server_help'] = 'Please select a MUMIE server to get an updated list of available tasks and courses.';
 $string['mumie_form_activity_course'] = 'MUMIE course';
 $string['mumie_form_activity_problem'] = "MUMIE problem";
+$string['mumie_form_activity_problem_help'] = "A MUMIE problem is a single graded exercise on MUMIE";
 $string['mumie_form_activity_container'] = 'Launch container';
 $string['mumie_form_activity_container_help'] = 'Please select whether the activity should be openend in a new browser tab or embedded into moodle.';
 $string['mumie_form_activity_container_embedded'] = 'embedded';

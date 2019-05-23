@@ -80,6 +80,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
 
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
+        $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
