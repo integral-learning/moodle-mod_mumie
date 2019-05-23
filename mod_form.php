@@ -1,0 +1,268 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This moodle form is used to insert or update MumieServer in the database
+ *
+ * @package mod_mumie
+ * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+defined('MOODLE_INTERNAL') || die;
+
+require_once ($CFG->dirroot . '/course/moodleform_mod.php');
+require_once ($CFG->dirroot . '/mod/mumie/locallib.php');
+
+/**
+ * This moodle form is used to insert or update MumieServer in the database
+ *
+ * @package mod_mumie
+ * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class mod_mumie_mod_form extends moodleform_mod {
+    /**
+     * Define fields and default values for the mumie server form
+     * @return void
+     */
+    public function definition() {
+        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
+
+        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
+
+        $mform = &$this->_form;
+
+        $coursesforserver = mod_mumie\locallib::get_available_courses_for_all_servers();
+        $serveroptions = array();
+        $courseoptions = array();
+        $problemoptions = array();
+        $languageoptions = array();
+
+        self::populate_options($serveroptions, $courseoptions, $problemoptions, $languageoptions);
+
+        // Adding the "general" fieldset, where all the common settings are shown.
+        $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
+
+        $this->standard_intro_elements(get_string('mumieintro', 'mumie'));
+        $mform->setAdvanced('introeditor');
+
+        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"));
+        $mform->setType('name', PARAM_TEXT);
+
+        $mform->addElement("select", "server", get_string('mumie_form_activity_server', "mod_mumie"), $serveroptions);
+        $mform->addHelpButton("server", 'mumie_form_activity_server', 'mumie');
+
+        $contentbutton = $mform->addElement(
+            'button',
+            'add_server_button',
+            get_string("mumie_form_add_server_button", "mod_mumie"),
+            array()
+        );
+
+        $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
+
+        $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
+        $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
+
+        $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
+
+        $launchoptions = array();
+        $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
+        $launchoptions[MUMIE_LAUNCH_CONTAINER_WINDOW] = get_string("mumie_form_activity_container_window", "mod_mumie");
+
+        $mform->addElement("select", "launchcontainer", get_string('mumie_form_activity_container', "mod_mumie"), $launchoptions);
+        $mform->addHelpButton("launchcontainer", "mumie_form_activity_container", "mumie");
+
+        $mform->addElement("hidden", "mumie_coursefile", "");
+        $mform->setType("mumie_coursefile", PARAM_TEXT);
+
+        $mform->addElement("hidden", "mumie_missing_config", null);
+        $mform->setType("mumie_missing_config", PARAM_TEXT);
+
+        // Add standard course module grading elements.
+        $this->standard_grading_coursemodule_elements();
+
+        $mform->removeElement('grade');
+        $mform->addElement("text", "points", get_string("mumie_form_points", "mod_mumie"));
+        $mform->setDefault("points", 100);
+        $mform->setType("points", PARAM_INT);
+        $mform->addHelpButton("points", "mumie_form_points", "mumie");
+
+        // Add standard elements, common to all modules.
+        $this->standard_coursemodule_elements();
+        $mform->setAdvanced('cmidnumber');
+
+        // Add standard buttons, common to all modules.
+        $this->add_action_buttons();
+        $context = context_course::instance($COURSE->id);
+        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', array(json_encode($context->id)));
+    }
+
+    /**
+     * Valdiate the form data
+     * @param array $data form data
+     * @param array $files files uploaded
+     * @return array associative array of errors
+     */
+    public function validation($data, $files) {
+        $errors = array();
+
+        if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
+            $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
+        }
+
+        if (!isset($data["mumie_course"]) && !isset($data["mumie_missing_config"])) {
+            $errors["mumie_course"] = get_string('mumie_form_required', 'mod_mumie');
+        }
+
+        if (!isset($data["taskurl"]) && !isset($data["mumie_missing_config"])) {
+            $errors["taskurl"] = get_string('mumie_form_required', 'mod_mumie');
+        }
+
+        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
+            $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
+
+            // Show an error if require passing grade was selected and the grade to pass was set to 0.
+            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
+                if (isset($data['completionpass'])) {
+                    $errors['completionpassgroup'] = get_string('gradetopassnotset', 'mumie');
+                } else {
+                    $errors['gradepass'] = get_string('gradetopassmustbeset', 'mumie');
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * For the form to work, we need to populate all option fields before javascript can modify them.
+     * If a option is not defined before js is started, it won't be saved by moodle.
+     *
+     * @param stdClass $serveroptions pointer to the array containing all available servers
+     * @param stdClass $courseoptions pointer to the array containing all available courses
+     * @param stdClass $problemoptions pointer to the array containing all available tasks
+     * @param stdClass $languageoptions pointer to the array containing all available languages
+     * @return void
+     */
+    private function populate_options(&$serveroptions, &$courseoptions, &$problemoptions, &$languageoptions) {
+
+        $availablecourses = mod_mumie\locallib::get_available_courses_for_all_servers();
+        foreach (mod_mumie\locallib::get_all_mumie_servers() as $server) {
+            $serveroptions[$server->url_prefix] = $server->name;
+            self::populate_course_options(
+                $availablecourses[$server->name]["courses"],
+                $courseoptions,
+                $problemoptions,
+                $languageoptions
+            );
+        }
+    }
+
+    /**
+     * Populate course option list and then populate task options for all given courses of a MUMIE server
+     *
+     * @param stdClass $server single instance of a MUMIE server containing a list of courses
+     * @param array $courseoptions pointer to the array containing all available courses
+     * @param array $problemoptions pointer to the array containing all available tasks
+     * @param array $languageoptions pointer to the array containing all available languages
+     * @return void
+     */
+    private function populate_course_options($server, &$courseoptions, &$problemoptions, &$languageoptions) {
+        foreach (array_keys($server) as $coursekey) {
+            $course = $server[$coursekey];
+            $courseoptions[$course["name"]] = $course["name"];
+            self::populate_task_options($course, $problemoptions, $languageoptions);
+        }
+    }
+
+    /**
+     * Populate task and language option list for a given course
+     *
+     * @param stdClass $course single isntance of MUMIE course containing a list of tasks
+     * @param array $problemoptions pointer to the array containing all available tasks
+     * @param array $languageoptions pointer to the array containing all available languages
+     * @return void
+     */
+    private function populate_task_options($course, &$problemoptions, &$languageoptions) {
+        foreach ($course["tasks"] as $task) {
+            $link = $task['link'];
+
+            foreach ($task['headline'] as $headline) {
+                $languagelink = $link . '?lang=' . $headline['language'];
+                $languageoptions[$headline['language']] = $headline['language'];
+                $problemoptions[$languagelink] = $headline['name'];
+            }
+        }
+    }
+
+    /**
+     * Provide option to mark an activity automatically as completed once a passing grade was archived
+     *
+     * This function is copied from mod_quiz version 2018051400
+     * @return array containing the name of the mform group that has been added to the form
+     */
+    public function add_completion_rules() {
+        $mform = $this->_form;
+        $items = array();
+
+        $group = array();
+        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'mumie'),
+            array('group' => 'cpass'));
+        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
+        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'mumie'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup', 'completionpass', 'mumie');
+        $items[] = 'completionpassgroup';
+        return $items;
+    }
+
+    /**
+     * Set a hidden value, if the MUMIE server configuration, which has been used in this MUMIE task, has been deleted.
+     * Javascript uses this information to display an error message.
+     *
+     * This function is called, when a MUMIE task is edited.
+     * @param stdClass $data instance of MUMIE task, that is being edited
+     * @return void
+     */
+    public function set_data($data) {
+
+        $filter = array_filter(mod_mumie\locallib::get_all_mumie_servers(), function ($server) use ($data) {
+            if (!isset($data->server)) {
+                return false;
+            }
+
+            return $server->url_prefix === $data->server;
+        });
+
+        if (count($filter) < 1 && isset($data->server)) {
+            $data->mumie_missing_config = $data->server;
+        }
+
+        parent::set_data($data);
+    }
+
+    /**
+     * Called during validation. Indicates whether a module-specific completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated)
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        return !empty($data['completionpass']);
+    }
+}

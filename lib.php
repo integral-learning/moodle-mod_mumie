@@ -1,0 +1,273 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * A library of functions and constants for the mumie module
+ *
+ * @package mod_mumie
+ * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die;
+
+require_once ($CFG->dirroot . '/mod/mumie/locallib.php');
+define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
+define("MUMIE_TASK_TABLE", "mumie");
+
+/**
+ * Add a new MUMIE task to the database
+ * @param stdClass $mumie instance of MUMIE task to add
+ * @param array $mform form data, that has been used to add the new MUMIE task
+ * @return int $id id of newly added grade item
+ */
+function mumie_add_instance($mumie, $mform) {
+    global $DB, $CFG;
+    $mumie->timecreated = time();
+    $mumie->timemodified = $mumie->timecreated;
+    $mumie->id = $DB->insert_record("mumie", $mumie);
+    mumie_grade_item_update($mumie);
+    return $mumie->id;
+}
+
+/**
+ * Updated a MUMIE task in the database
+ * @param stdClass $mumie updated instance of MUMIE task
+ * @param array $mform form data, that has been used to updated the MUMIE task
+ * @return int $id id of updated grade item
+ */
+function mumie_update_instance($mumie, $mform) {
+    global $DB, $CFG;
+    $mumie->timemodified = time();
+    $mumie->id = $mumie->instance;
+    $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
+    \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+    mumie_grade_item_update($mumie);
+
+    return $DB->update_record("mumie", $mumie);
+}
+
+/**
+ * Delete a MUMIE task from the database
+ * @param int $id ID of the MUMIE task that should be deleted
+ * @return boolean Success/Failure
+ */
+function mumie_delete_instance($id) {
+    global $DB, $CFG;
+
+    if (!$mumie = $DB->get_record("mumie", array("id" => $id))) {
+        return false;
+    }
+
+    $cm = get_coursemodule_from_instance('mumie', $id);
+    \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
+
+    return $DB->delete_records("mumie", array("id" => $mumie->id));
+}
+
+/**
+ * Given a coursemodule object, this function returns the extra
+ * information needed to print this activity in various places.
+ *
+ * @param stdClass $coursemodule
+ */
+function mumie_get_coursemodule_info($coursemodule) {
+    global $DB, $USER, $CFG;
+
+    if (!$mumie = $DB->get_record("mumie", array("id" => $coursemodule->instance))) {
+        return null;
+    }
+
+    $info = new cached_cm_info();
+    $info->name = $mumie->name;
+
+    // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
+    if ($mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
+        $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";
+    }
+
+    return $info;
+}
+
+/**
+ * List of features supported in URL module
+ * @param string $feature FEATURE_xx constant for requested feature
+ * @return mixed True if module supports feature, false if not, null if doesn't know
+ */
+function mumie_supports($feature) {
+    switch ($feature) {
+        case FEATURE_GRADE_HAS_GRADE:
+            return true;
+        case FEATURE_COMPLETION_HAS_RULES:
+            return true;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        default:
+            return null;
+    }
+}
+
+/**
+ * Create grade item for given mumie task
+ * Keep in mind that grade reset is NOT supported by this plugin
+ *
+ * @category grade
+ * @param object $mumie object with extra cmidnumber
+ * @param mixed $grades optional array/object of grade(s)
+ * @return int 0 if ok, error code otherwise
+ */
+function mumie_grade_item_update($mumie, $grades = null) {
+
+    global $CFG;
+    require_once ($CFG->libdir . '/gradelib.php');
+    if (array_key_exists('cmidnumber', $mumie)) {
+        $params = array('itemname' => $mumie->name, 'idnumber' => $mumie->cmidnumber);
+    } else {
+        $params = array('itemname' => $mumie->name);
+    }
+    if (isset($mumie->grade) && $mumie->grade > 0) {
+        $params['grademax'] = $mumie->grade;
+        $params['grademin'] = 0;
+    }
+    $params['gradetype'] = GRADE_TYPE_VALUE;
+    $params['multfactor'] = $mumie->points / 100;
+
+    return grade_update('mod/mumie', $mumie->course, 'mod', 'mumie', $mumie->id, 0, $grades, $params);
+}
+
+/**
+ * Update activity grades
+ *
+ * @param stdClass $mumie The mumie instance
+ * @param int      $userid Specific user only, 0 means all.
+ * @param bool     $nullifnone Not used
+ */
+function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
+    global $CFG;
+    require_once ($CFG->libdir . '/gradelib.php');
+    require_once ($CFG->dirroot . '/mod/mumie/gradesync.php');
+
+    mumie_grade_item_update($mumie, mod_mumie\gradesync::get_mumie_grades($mumie, $userid));
+}
+
+/**
+ * Hook used to updated grades for MUMIE tasks, whenever a gradebook is opened
+ * @return void
+ */
+function mumie_before_standard_top_of_body_html() {
+    global $PAGE, $CFG;
+
+    if (!strpos($PAGE->url, '/grade/report/')) {
+        return "";
+    }
+
+    require_once ($CFG->dirroot . '/mod/mumie/gradesync.php');
+    mod_mumie\gradesync::update();
+
+    return "";
+}
+
+/**
+ * Get mumieserver_form as a fragment
+ *
+ * @param stdClass $args context and formdata
+ * @return string html code necessary to display mumieserver form as fragment
+ */
+function mod_mumie_output_fragment_new_mumieserver_form($args) {
+    global $CFG;
+    require_once ($CFG->dirroot . '/mod/mumie/mumieserver_form.php');
+
+    $args = (object) $args;
+
+    $context = $args->context;
+    $o = '';
+
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+    $mumieserver = new stdClass();
+
+    require_capability('mod/mumie:addserver', $context);
+
+    $editoroptions = [
+        'maxfiles' => EDITOR_UNLIMITED_FILES,
+        'maxbytes' => $course->maxbytes,
+        'trust' => false,
+        'context' => $context,
+        'noclean' => true,
+        'subdirs' => false,
+    ];
+
+    $mumieserver = file_prepare_standard_editor(
+        $mumieserver,
+        'description',
+        $editoroptions,
+        $context,
+        'mumieserver',
+        'description',
+        null
+    );
+
+    $mform = new mumieserver_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
+
+    $mform->set_data($mumieserver);
+
+    if (!empty($args->jsonformdata) && strcmp($args->jsonformdata, "{}") !== 0) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+
+    ob_start();
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+
+    return $o;
+}
+
+/**
+ * Obtains the automatic completion state for this MUMIE task
+ *
+ * This is a code fragment copied from mod_quiz version 2018051400
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not. (If no conditions, then return
+ *   value depends on comparison type)
+ */
+function mumie_get_completion_state($course, $cm, $userid, $type) {
+
+    global $DB, $CFG;
+    $mumie = $DB->get_record('mumie', array('id' => $cm->instance), '*', MUST_EXIST);
+
+    if ($mumie->completionpass) {
+        require_once ($CFG->libdir . '/gradelib.php');
+        $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
+            'itemmodule' => 'mumie', 'iteminstance' => $cm->instance, 'outcomeid' => null));
+
+        if ($item) {
+            $grades = grade_grade::fetch_users_grades($item, array($userid), false);
+            if (!empty($grades[$userid])) {
+                return $grades[$userid]->is_passed($item);
+            }
+        }
+    }
+    return false;
+}
