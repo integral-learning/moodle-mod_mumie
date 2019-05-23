@@ -1,7 +1,7 @@
 # moodle-mod_mumie
 
 ## Welcome to MUMIE Task
-This plugin allows teachers to add exercises from the e-learning Platfom [MUMIE](https://www.mumie.net/) as activity moodules in their moodle courses. MUMIE Single Sign On is not meant to be used as a standalone, but in combination with [MUMIE Task](https://github.com/integral-learning/moodle-mod_mumie). Together, these two plugins allow the integration of MUMIE content into your moodle courses.
+This plugin allows teachers to add exercises from the e-learning Platfom [MUMIE](https://www.mumie.net/) as activity moodules in their moodle courses. MUMIE Single Sign On is not meant to be used as a standalone, but in combination with [MUMIE Single Sign On](https://github.com/integral-learning/moodle-auth_mumie/). Together, these two plugins allow the integration of MUMIE content into your moodle courses.
 
 ## What is MUMIE?
 **Explorative Math Learning**
