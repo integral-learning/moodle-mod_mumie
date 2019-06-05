@@ -1,4 +1,4 @@
-define(['jquery', 'core/templates', 'core/modal_factory', 'mod_mumie/mumie_server_config', 'core/ajax'],
+define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_server_config', 'core/ajax'],
     function () {
         var addServerButton = document.getElementById("id_add_server_button");
         var serverDropDown = document.getElementById("id_server");
@@ -37,7 +37,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'mod_mumie/mumie_serve
                 } else {
                     require(['core/ajax'], function (ajax) {
                         ajax.call([{
-                            methodname: 'mod_mumie_get_available_courses',
+                            methodname: 'auth_mumie_get_available_courses',
                             args: {
                                 contextid: contextid
                             },
@@ -71,7 +71,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'mod_mumie/mumie_serve
                     });
                 }
 
-                require(['mod_mumie/mumie_server_config'], function (MumieServer) {
+                require(['auth_mumie/mumie_server_config'], function (MumieServer) {
                     MumieServer.init(addServerButton, contextid);
                 });
             }

@@ -77,11 +77,11 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         This means that a missing server is not always automatically restored
         and needs to be added manually before the task can be edited
          */
-        $recordnameexists = $DB->record_exists("mumie_servers", array("name" => $data->name));
-        $recordurlexists = $DB->record_exists("mumie_servers", array("url_prefix" => $data->url_prefix));
+        $recordnameexists = $DB->record_exists("auth_mumie_servers", array("name" => $data->name));
+        $recordurlexists = $DB->record_exists("auth_mumie_servers", array("url_prefix" => $data->url_prefix));
 
         if (!$recordnameexists && !$recordurlexists) {
-            $DB->insert_record('mumie_servers', $data);
+            $DB->insert_record('auth_mumie_servers', $data);
         }
     }
 }

@@ -57,28 +57,6 @@ $string['mumieintro'] = 'Aktivitätsbeschreibung';
 $string['nomumieinstance'] = 'In diesem Kurs gibt es keine MUMIE-Instanzen';
 $string['name'] = 'Name';
 
-// Used in settings.php.
-$string['mumie_table_header_name'] = 'Servername';
-$string['mumie_table_header_url'] = 'URL-Prefix';
-$string['mumie_server_list_heading'] = 'Konfigurierte MUMIE-Server';
-$string['mumie_edit_button'] = 'Bearbeiten';
-$string['mumie_delete_button'] = 'Löschen';
-$string['mumie_add_server_button'] = 'MUMIE-Server hinzufügen';
-
-// Used in mumieserver form.
-$string['mumie_form_required'] = 'Pflichtfeld';
-$string['mumie_form_server_not_existing'] = 'Für diese URL existiert kein MUMIE-Server';
-$string['mumie_form_already_existing_config'] = 'Es gibt bereits eine Serverkonfiguration für diesen URL-Prefix';
-$string['mumie_form_already_existing_name'] = 'Es gibt bereits eine Serverkonfiguration für diesen Namen';
-$string['mumie_form_title'] = 'MUMIE-Serverkonfiguration';
-$string['mumie_form_server_config'] = 'MUMIE-Serverkonfiguration';
-$string['mumie_server_name'] = 'Servername';
-$string['mumie_server_name_help'] = 'Bitte wählen Sie einen eindeutigen Namen für diese Konfiguration.';
-$string['mumie_form_server_btn_submit'] = 'Speichern';
-$string['mumie_form_server_btn_cancel'] = 'Abbrechen';
-$string['mumie_url_prefix'] = 'URL-Prefix';
-$string['mumie_url_prefix_help'] = 'Bitte geben Sie die URL des MUMIE-Servers ein.  <br><br> z.B. <b>https://www.ombplus.de/ombplus</b> <br><br> Für jede URL kann nur ein Server konfiguriert werden.';
-
 // These strings are used in add activity form.
 $string['mumie_form_activity_header'] = 'Allgemein';
 $string['mumie_form_activity_name'] = 'Name';

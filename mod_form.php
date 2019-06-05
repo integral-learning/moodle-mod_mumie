@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once ($CFG->dirroot . '/course/moodleform_mod.php');
-require_once ($CFG->dirroot . '/mod/mumie/locallib.php');
+require_once ($CFG->dirroot . '/auth/mumie/locallib.php');
 
 /**
  * This moodle form is used to insert or update MumieServer in the database
@@ -47,7 +47,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform = &$this->_form;
 
-        $coursesforserver = mod_mumie\locallib::get_available_courses_for_all_servers();
+        $coursesforserver = auth_mumie\locallib::get_available_courses_for_all_servers();
         $serveroptions = array();
         $courseoptions = array();
         $problemoptions = array();
@@ -163,8 +163,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function populate_options(&$serveroptions, &$courseoptions, &$problemoptions, &$languageoptions) {
 
-        $availablecourses = mod_mumie\locallib::get_available_courses_for_all_servers();
-        foreach (mod_mumie\locallib::get_all_mumie_servers() as $server) {
+        $availablecourses = auth_mumie\locallib::get_available_courses_for_all_servers();
+        foreach (auth_mumie\locallib::get_all_mumie_servers() as $server) {
             $serveroptions[$server->url_prefix] = $server->name;
             self::populate_course_options(
                 $availablecourses[$server->name]["courses"],
@@ -242,7 +242,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function set_data($data) {
 
-        $filter = array_filter(mod_mumie\locallib::get_all_mumie_servers(), function ($server) use ($data) {
+        $filter = array_filter(auth_mumie\locallib::get_all_mumie_servers(), function ($server) use ($data) {
             if (!isset($data->server)) {
                 return false;
             }
