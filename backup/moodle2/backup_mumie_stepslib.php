@@ -48,7 +48,7 @@ class backup_mumie_structure_step extends backup_activity_structure_step {
         $mumie->add_child($serverconfig);
         $serverconfig->set_source_sql('
             SELECT *
-                FROM `{auth_mumie_servers}`
+                FROM {auth_mumie_servers}
             WHERE url_prefix =
                 (SELECT server
                     FROM {mumie}
