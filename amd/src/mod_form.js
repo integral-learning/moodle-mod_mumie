@@ -12,7 +12,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         return {
             init: function (contextid) {
 
-                var isEdit = nameElem.getAttribute("value").length > 0;
+                var isEdit = nameElem.getAttribute('value') !== null && nameElem.getAttribute("value").length > 0;
 
                 if (isEdit && !serverConfigExists()) {
                     require(['core/str', "core/notification"], function (str, notification) {
