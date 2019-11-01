@@ -43,8 +43,6 @@ class mod_mumie_mod_form extends moodleform_mod {
     public function definition() {
         global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
 
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
-
         $mform = &$this->_form;
 
         $coursesforserver = auth_mumie\locallib::get_available_courses_for_all_servers();

@@ -44,7 +44,7 @@ function xmldb_mumie_upgrade($oldversion) {
 
     if ($oldversion < 2019110100) {
         $table = new xmldb_table('mumie');
-        $field = new xmldb_field('use_encrypted_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
+        $field = new xmldb_field('use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }

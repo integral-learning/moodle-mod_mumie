@@ -27,6 +27,7 @@ namespace mod_mumie;
 defined('MOODLE_INTERNAL') || die();
 
 require_once ($CFG->dirroot . '/mod/mumie/lib.php');
+require_once ($CFG->dirroot . '/auth/mumie/lib.php');
 /**
  * This file defines the class gradesync
  *
@@ -106,10 +107,10 @@ class gradesync {
 
         if ($userid == 0) {
             foreach (get_enrolled_users(\context_course::instance($COURSE->id)) as $user) {
-                array_push($syncids, self::get_sync_id($user->id));
+                array_push($syncids, self::get_sync_id($user->id, $mumie->use_hashed_id));
             }
         } else {
-            $syncids = array(self::get_sync_id($userid));
+            $syncids = array(self::get_sync_id($userid, $mumie->use_hashed_id));
         }
 
         $mumieids = array(self::get_mumie_id($mumie));
@@ -122,7 +123,7 @@ class gradesync {
 
         foreach ($xapigrades as $xapigrade) {
             $grade = new \stdClass();
-            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name);
+            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
             $grade->rawgrade = 100 * $xapigrade->result->score->raw;
 
             $grades[$grade->userid] = $grade;
@@ -152,20 +153,30 @@ class gradesync {
     /**
      * Get a unique syncid from a userid that can be used on the MUMIE server as username
      * @param int $userid
+     * @param int $hashid indicates whether the id should be hashed
      * @return string unique username for MUMIE servers derived from the moodle userid
      */
-    public static function get_sync_id($userid) {
+    public static function get_sync_id($userid, $hashid) {
         $org = get_config('auth_mumie', 'mumie_org');
+        if ($hashid == 1) {
+            $userid = auth_mumie_get_hashed_id($userid);
+        }
         return "GSSO_" . $org . "_" . $userid;
     }
 
     /**
      * Get moodleUserID from syncid
      * @param string $syncid
+     * @param int $hashid indicates whether the id was hashed
      * @return string of moodle user
      */
-    public static function get_moodle_user_id($syncid) {
-        return substr(strrchr($syncid, "_"), 1);
+    public static function get_moodle_user_id($syncid, $hashid) {
+        $userid = substr(strrchr($syncid, "_"), 1);
+        if ($hashid == 1) {
+            global $DB;
+            $userid = $DB->get_record('auth_mumie_id_hashes', array("hash" => $userid))->the_user;
+        }
+        return $userid;
     }
 
     /**

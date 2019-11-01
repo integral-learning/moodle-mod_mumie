@@ -31,5 +31,5 @@ $plugin->requires = 2015041700;
 $plugin->release = "v1.1";
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = array(
-    'auth_mumie' => 2019060500,
+    'auth_mumie' => 2019110104,
 );
