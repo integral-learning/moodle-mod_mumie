@@ -38,5 +38,16 @@ defined('MOODLE_INTERNAL') || die;
  */
 function xmldb_mumie_upgrade($oldversion) {
     // Currently there is no need for an upgrade.php, but this file is necessary.
+
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2019110100) {
+        $table = new xmldb_table('mumie');
+        $field = new xmldb_field('use_encrypted_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
     return true;
 }

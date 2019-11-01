@@ -39,6 +39,7 @@ function mumie_add_instance($mumie, $mform) {
     global $DB, $CFG;
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
+    $mumie->use_encrypted_id = get_config('auth_mumie', 'encryption_enabled');
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     return $mumie->id;
