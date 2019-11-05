@@ -39,7 +39,7 @@ function mumie_add_instance($mumie, $mform) {
     global $DB, $CFG;
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
-    $mumie->use_hashed_id = get_config('auth_mumie', 'id_hashing_enabled');
+    $mumie->use_hashed_id = 1;
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     return $mumie->id;

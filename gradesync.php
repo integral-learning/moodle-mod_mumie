@@ -157,9 +157,15 @@ class gradesync {
      * @return string unique username for MUMIE servers derived from the moodle userid
      */
     public static function get_sync_id($userid, $hashid) {
+        global $DB;
         $org = get_config('auth_mumie', 'mumie_org');
         if ($hashid == 1) {
-            $userid = auth_mumie_get_hashed_id($userid);
+            $hashidtable = 'auth_mumie_id_hashes';
+            $hash = auth_mumie_get_hashed_id($userid);
+            if (!$DB->get_record($hashidtable, array("the_user" => $userid))) {
+                $DB->insert_record($hashidtable, array("the_user" => $userid, "hash" => $hash));
+            }
+            $userid = $hash;
         }
         return "GSSO_" . $org . "_" . $userid;
     }
@@ -172,9 +178,10 @@ class gradesync {
      */
     public static function get_moodle_user_id($syncid, $hashid) {
         $userid = substr(strrchr($syncid, "_"), 1);
+        $hashidtable = 'auth_mumie_id_hashes';
         if ($hashid == 1) {
             global $DB;
-            $userid = $DB->get_record('auth_mumie_id_hashes', array("hash" => $userid))->the_user;
+            $userid = $DB->get_record($hashidtable, array("hash" => $userid))->the_user;
         }
         return $userid;
     }

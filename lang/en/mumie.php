@@ -73,3 +73,18 @@ $string['completionpass_help'] = 'If enabled, this activity is considered comple
 Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
 $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
+
+// Used in mumieserver form.
+$string['mumie_form_required'] = 'required';
+$string['mumie_form_server_not_existing'] = 'There is no MUMIE server for this URL';
+$string['mumie_form_already_existing_config'] = 'There is already a configuration for this URL prefix';
+$string['mumie_form_already_existing_name'] = 'There is already a configuration for this name';
+$string['mumie_form_title'] = 'Configure MUMIE Server';
+$string['mumie_form_server_config'] = 'MUMIE server configuration';
+$string['mumie_server_name'] = 'Server name';
+$string['mumie_server_name_help'] = 'Please insert a unique name for this configuration.';
+$string['mumie_form_server_btn_submit'] = 'Submit';
+$string['mumie_form_server_btn_cancel'] = 'Cancel';
+$string['mumie_url_prefix'] = 'MUMIE URL Prefix';
+$string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
+$string['mumie_form_required_hashing_decision'] = 'An important admin decision about ID hashing is pending. MUMIE Tasks cannot be created or edited until a choice has been made. <br>Please contact your Moodle administrator!';
