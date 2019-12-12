@@ -26,6 +26,8 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once ($CFG->dirroot . '/course/moodleform_mod.php');
 require_once ($CFG->dirroot . '/auth/mumie/locallib.php');
+require_once ($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+
 
 /**
  * This moodle form is used to insert or update MumieServer in the database
@@ -45,7 +47,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform = &$this->_form;
 
-        $coursesforserver = auth_mumie\locallib::get_available_courses_for_all_servers();
+        $coursesforserver = auth_mumie\mumie_server::get_all_servers_with_structure();
         $serveroptions = array();
         $courseoptions = array();
         $problemoptions = array();
@@ -76,6 +78,8 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
+
+        $mform->addElement('html', '<div id="mumie_filter_wrapper"></div>');
 
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
@@ -161,11 +165,15 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function populate_options(&$serveroptions, &$courseoptions, &$problemoptions, &$languageoptions) {
 
-        $availablecourses = auth_mumie\locallib::get_available_courses_for_all_servers();
-        foreach (auth_mumie\locallib::get_all_mumie_servers() as $server) {
-            $serveroptions[$server->url_prefix] = $server->name;
+        //$availablecourses = auth_mumie\locallib::get_available_courses_for_all_servers();
+        $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
+        //debugging("servers with strucutre: " . json_encode($servers));
+
+        foreach ($servers as $server) {
+            //debugging("server with strucutre: " . json_encode($server));
+            $serveroptions[$server->get_url_prefix()] = $server->get_name();
             self::populate_course_options(
-                $availablecourses[$server->name]["courses"],
+                $server->get_courses(),
                 $courseoptions,
                 $problemoptions,
                 $languageoptions
@@ -182,11 +190,10 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_course_options($server, &$courseoptions, &$problemoptions, &$languageoptions) {
-        foreach (array_keys($server) as $coursekey) {
-            $course = $server[$coursekey];
-            $courseoptions[$course["name"]] = $course["name"];
-            self::populate_task_options($course, $problemoptions, $languageoptions);
+    private function populate_course_options($courses, &$courseoptions, &$problemoptions, &$languageoptions) {
+        foreach ($courses as $course) {
+            $courseoptions[$course->get_name()] = $course->get_name();
+            self::populate_problem_options($course, $problemoptions, $languageoptions);
         }
     }
 
@@ -198,14 +205,14 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_task_options($course, &$problemoptions, &$languageoptions) {
-        foreach ($course["tasks"] as $task) {
-            $link = $task['link'];
+    private function populate_problem_options($course, &$problemoptions, &$languageoptions) {
+        foreach ($course->get_tasks() as $problem) {
+            $link = $problem->get_link();
 
-            foreach ($task['headline'] as $headline) {
-                $languagelink = $link . '?lang=' . $headline['language'];
-                $languageoptions[$headline['language']] = $headline['language'];
-                $problemoptions[$languagelink] = $headline['name'];
+            foreach ($problem->get_headline() as $headline) {
+                $languagelink = $link . '?lang=' . $headline->language;
+                $languageoptions[$headline->language] = $headline->language;
+                $problemoptions[$languagelink] = $headline->name;
             }
         }
     }
@@ -240,12 +247,12 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function set_data($data) {
 
-        $filter = array_filter(auth_mumie\locallib::get_all_mumie_servers(), function ($server) use ($data) {
+        $filter = array_filter(auth_mumie\mumie_server::get_all_servers(), function ($server) use ($data) {
             if (!isset($data->server)) {
                 return false;
             }
 
-            return $server->url_prefix === $data->server;
+            return $server->get_url_prefix() === $data->server;
         });
 
         if (count($filter) < 1 && isset($data->server)) {

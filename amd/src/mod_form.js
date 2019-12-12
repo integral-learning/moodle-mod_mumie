@@ -1,18 +1,266 @@
 define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_server_config', 'core/ajax'],
     function () {
         var addServerButton = document.getElementById("id_add_server_button");
-        var serverDropDown = document.getElementById("id_server");
-        var courseDropDown = document.getElementById("id_mumie_course");
-        var languageDropDown = document.getElementById("id_language");
-        var taskDropDown = document.getElementById("id_taskurl");
-        var nameElem = document.getElementById("id_name");
-        var coursefileElem = document.getElementsByName("mumie_coursefile")[0];
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
-        var availableCourses = {};
+
+        var serverController = (function () {
+            var serverStructure;
+            var serverDropDown = document.getElementById("id_server");
+
+            return {
+                init: function (structure) {
+                    serverStructure = structure;
+                    serverDropDown.onchange = function () {
+                        courseController.updateOptions();
+                        langController.updateOptions();
+                        filterController.updateOptions();
+                        taskController.updateOptions();
+                    };
+                },
+                getSelectedServer: function () {
+                    var selectedServerName = serverDropDown.options[serverDropDown.selectedIndex].text;
+
+                    for (var i in serverStructure) {
+                        var server = serverStructure[i];
+                        if (server.name == selectedServerName) {
+                            return server;
+                        }
+                    }
+                },
+                setDropDownListeners: function () {
+
+                },
+                disable: function () {
+                    serverDropDown.disabled = true;
+                    removeChildElems(serverDropDown);
+                }
+
+            };
+        })();
+
+        var courseController = (function () {
+            var courseDropDown = document.getElementById("id_mumie_course");
+            var coursefileElem = document.getElementsByName("mumie_coursefile")[0];
+
+            function addOptionForCourse(course) {
+                var optionCourse = document.createElement("option");
+                optionCourse.setAttribute("value", course.name);
+                optionCourse.text = course.name;
+                courseDropDown.append(optionCourse);
+            }
+
+            function updateCoursefilePath() {
+                coursefileElem.value = courseController.getSelectedCourse().coursefile;
+            }
+
+            return {
+                init: function () {
+                    courseDropDown.onchange = function () {
+                        langController.updateOptions();
+                        filterController.updateOptions();
+                        taskController.updateOptions();
+                    };
+                    courseController.updateOptions();
+                },
+                getSelectedCourse: function () {
+                    var selectedCourseName = courseDropDown.options[courseDropDown.selectedIndex].text;
+                    var courses = serverController.getSelectedServer().courses;
+                    for (var i in courses) {
+                        var course = courses[i];
+                        if (course.name == selectedCourseName) {
+                            return course;
+                        }
+                    }
+                },
+                setDropDownListeners: function () {
+
+                },
+                disable: function () {
+                    courseDropDown.disabled = true;
+                    removeChildElems(courseDropDown);
+                },
+                updateOptions: function (selectedCourseFile) {
+                    removeChildElems(courseDropDown);
+                    courseDropDown.selectedIndex = 0;
+                    var courses = serverController.getSelectedServer().courses;
+                    for (var i in courses) {
+                        var course = courses[i];
+                        addOptionForCourse(course);
+                        if (course.coursefile == selectedCourseFile) {
+                            courseDropDown.selectedIndex = courseDropDown.childElementCount - 1;
+                        }
+                    }
+                    updateCoursefilePath();
+                }
+            };
+        })();
+
+        var langController = (function () {
+            var languageDropDown = document.getElementById("id_language");
+
+            function addLanguageOption(lang) {
+                var optionLang = document.createElement("option");
+                optionLang.setAttribute("value", lang);
+                optionLang.text = lang;
+                languageDropDown.append(optionLang);
+            }
+            return {
+                init: function () {
+
+                    languageDropDown.onchange = function () {
+                        taskController.updateOptions();
+                    };
+                    langController.updateOptions();
+                },
+                getSelectedLanguage: function () {
+                    return languageDropDown.options[languageDropDown.selectedIndex].text;
+                },
+                disable: function () {
+                    languageDropDown.disabled = true;
+                    removeChildElems(languageDropDown);
+                },
+                updateOptions: function () {
+                    var currentLang = langController.getSelectedLanguage();
+                    removeChildElems(languageDropDown);
+                    languageDropDown.selectedIndex = 0;
+                    var languages = courseController.getSelectedCourse().languages;
+                    for (var i in languages) {
+                        var lang = languages[i];
+                        addLanguageOption(lang);
+                        if (lang == currentLang) {
+                            languageDropDown.selectedIndex = languageDropDown.childElementCount - 1;
+                        }
+                    }
+                }
+            };
+        })();
+
+        var taskController = (function () {
+            var taskDropDown = document.getElementById("id_taskurl");
+            var nameElem = document.getElementById("id_name");
+
+            function updateName() {
+                nameElem.value = getHeadline(taskController.getSelectedTask());
+            }
+
+            function getHeadline(task) {
+                for (var i in task.headline) {
+                    var localHeadline = task.headline[i];
+                    if (localHeadline.language == langController.getSelectedLanguage()) {
+                        return localHeadline.name;
+                    }
+                }
+                return null;
+            }
+
+            function getLocalizedLink(task) {
+                return task.link + "?lang=" + langController.getSelectedLanguage();
+            }
+
+            function addTaskOption(task) {
+                if (getHeadline(task) !== null) {
+                    var optionTask = document.createElement("option");
+                    optionTask.setAttribute("value", getLocalizedLink(task));
+                    optionTask.text = getHeadline(task);
+                    taskDropDown.append(optionTask);
+                }
+            }
+
+            return {
+                init: function () {
+                    updateName();
+                    taskDropDown.onchange = function () {
+                        updateName();
+                    };
+                    taskController.updateOptions();
+                },
+                getSelectedTask: function () {
+                    var selectedLink = taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value');
+                    var tasks = courseController.getSelectedCourse().tasks;
+                    for (var i in tasks) {
+                        var task = tasks[i];
+                        if (selectedLink == getLocalizedLink(task)) {
+                            return task;
+                        }
+                    }
+                },
+                disable: function () {
+                    taskDropDown.disabled = true;
+                    removeChildElems(taskDropDown);
+                },
+                updateOptions: function (selectTaskByLink) {
+                    removeChildElems(taskDropDown);
+                    taskDropDown.selectedIndex = 0;
+                    var tasks = courseController.getSelectedCourse().tasks;
+                    for (var i in tasks) {
+                        var task = tasks[i];
+                        addTaskOption(task);
+                        if (selectTaskByLink === getLocalizedLink(task)) {
+                            taskDropDown.selectedIndex = taskDropDown.childElementCount - 1;
+                        }
+                    }
+                    updateName();
+                },
+            };
+        })();
+
+        var filterController = (function () {
+            var filterWrapper = document.getElementById("mumie_filter_wrapper");
+
+            function addFilter(tag) {
+                var filter = document.createElement('div');
+                filter.classList.add('row', 'fitem', 'form-group');
+
+                var label = document.createElement('label');
+                label.innerText = tag.name;
+                label.classList.add('col-md-3');
+                filter.appendChild(label);
+                filter.appendChild(createSelectionBox(tag));
+
+                filterWrapper.appendChild(filter);
+
+            }
+
+            function createSelectionBox(tag) {
+                var selectionBox = document.createElement('div');
+                selectionBox.classList.add('col-md-9', 'felement', 'mumie_selection_box');
+                for (var i in tag.values) {
+                    var inputWrapper = document.createElement('div');
+
+                    var value = tag.values[i];
+                    var checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = value;
+
+                    var label = document.createElement('label');
+                    label.innerText = value;
+                    label.style = "padding-left: 5px";
+                    inputWrapper.appendChild(checkbox);
+                    inputWrapper.appendChild(label);
+                    selectionBox.appendChild(inputWrapper);
+                }
+                return selectionBox;
+            }
+
+            return {
+                init: function () {
+                    this.updateOptions();
+                },
+                updateOptions: function () {
+                    var tags = courseController.getSelectedCourse().tags;
+                    removeChildElems(filterWrapper);
+                    for (var i in tags) {
+                        var tag = tags[i];
+                        addFilter(tag);
+                    }
+                }
+            };
+
+        })();
+
         return {
             init: function (contextid) {
-
-                var isEdit = nameElem.getAttribute('value');
+                var isEdit = document.getElementById("id_name").getAttribute('value');
 
                 if (isEdit && !serverConfigExists()) {
                     require(['core/str', "core/notification"], function (str, notification) {
@@ -26,25 +274,27 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             });
                         }).fail(notification.exception);
                     });
-                    serverDropDown.disabled = true;
-                    courseDropDown.disabled = true;
-                    languageDropDown.disabled = true;
-                    taskDropDown.disabled = true;
-                    removeChildElems(courseDropDown);
-                    removeChildElems(serverDropDown);
-                    removeChildElems(languageDropDown);
-                    removeChildElems(taskDropDown);
+                    serverController.disable();
+                    courseController.disable();
+                    langController.disable();
+                    taskController.disable();
                 } else {
                     require(['core/ajax'], function (ajax) {
                         ajax.call([{
-                            methodname: 'auth_mumie_get_available_courses',
+                            methodname: 'auth_mumie_get_server_structure',
                             args: {
                                 contextid: contextid
                             },
-                            done: function (res) {
-                                availableCourses = JSON.parse(res);
+                            done: function (serverStructure) {
+
+                                serverController.init(JSON.parse(serverStructure));
+                                courseController.init();
+                                taskController.init();
+                                langController.init();
+                                filterController.init();
 
                                 if (isEdit) {
+                                    
                                     var exName = nameElem.getAttribute("value");
                                     var exCourse = courseDropDown.options[courseDropDown.selectedIndex].text;
                                     var exTask = taskDropDown.options[taskDropDown.selectedIndex].getAttribute("value");
@@ -52,16 +302,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                     updateCoursesDropDownOptions(exCourse);
                                     updateLanguageDropDownOptions(exLanguage);
                                     updateTaskDropDownOptions(exTask);
-                                    setSelectionListeners();
-                                    updateCoursefilePath();
                                     nameElem.value = exName;
-
-                                } else {
-                                    updateCoursesDropDownOptions();
-                                    updateLanguageDropDownOptions();
-                                    updateTaskDropDownOptions();
-                                    setSelectionListeners();
-                                    updateCoursefilePath();
+                                    
                                 }
                             },
                             fail: function (ex) {
@@ -77,149 +319,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
         };
 
-        function updateCoursesDropDownOptions(displayCourse) {
-            if (Object.keys(availableCourses).length == 0) {
-                return;
-            }
-            var selectedServerName = serverDropDown.options[serverDropDown.selectedIndex].text;
-            var possibleCourses = availableCourses[selectedServerName]["courses"];
-
-            removeChildElems(courseDropDown);
-
-            for (var i in possibleCourses) {
-                var course = possibleCourses[i];
-                var optionCourse = document.createElement("option");
-                optionCourse.setAttribute("value", course.name);
-                optionCourse.text = course.name;
-                courseDropDown.append(optionCourse);
-
-                if (course.name === displayCourse) {
-                    courseDropDown.selectedIndex = i;
-                }
-            }
-        }
-
-        function updateLanguageDropDownOptions(displayLang) {
-            if (Object.keys(availableCourses).length == 0) {
-                return;
-            }
-
-            removeChildElems(languageDropDown);
-
-            var selectedCourseName = courseDropDown.options[courseDropDown.selectedIndex].text;
-            var selectedServerName = serverDropDown.options[serverDropDown.selectedIndex].text;
-
-            for (var lang in getAvailableLanguages(selectedServerName, selectedCourseName)) {
-                var optionLang = document.createElement("option");
-                optionLang.setAttribute("value", lang);
-                optionLang.text = lang;
-                languageDropDown.append(optionLang);
-
-                if (lang === displayLang) {
-                    languageDropDown.selectedIndex = languageDropDown.options.length - 1;
-                }
-            }
-        }
-
-        function updateTaskDropDownOptions(displayTask) {
-            if (Object.keys(availableCourses).length == 0) {
-                return;
-            }
-            var selectedCourseName = courseDropDown.options[courseDropDown.selectedIndex].text;
-            var selectedServerName = serverDropDown.options[serverDropDown.selectedIndex].text;
-            var selectedLanguage = languageDropDown.options[languageDropDown.selectedIndex].text;
-
-            var possibleTasks = availableCourses[selectedServerName]["courses"].find(function (course) {
-                return course.name === selectedCourseName;
-            }).tasks;
-
-            removeChildElems(taskDropDown);
-
-            for (var i in possibleTasks) {
-                var link = possibleTasks[i]['link'] + '?lang=' + selectedLanguage;
-                var name = null;
-                var headlines = possibleTasks[i]['headline'];
-                for (var j in headlines) {
-                    var headline = headlines[j];
-                    if (headline['language'] === selectedLanguage) {
-                        name = headline['name'];
-                        break;
-                    }
-                }
-                var optionTask = document.createElement("option");
-                optionTask.setAttribute("value", link);
-                optionTask.text = name;
-                if (name !== null) {
-                    taskDropDown.append(optionTask);
-                }
-
-                if (link === displayTask) {
-                    taskDropDown.selectedIndex = i;
-                }
-            }
-            updateName();
-        }
-
         function removeChildElems(elem) {
             while (elem.firstChild) {
                 elem.removeChild(elem.firstChild);
             }
         }
 
-        function updateName() {
-            var selectedTaskName = taskDropDown.options[taskDropDown.selectedIndex].text;
-            nameElem.value = selectedTaskName;
-        }
-
-        function updateCoursefilePath() {
-            if (Object.keys(availableCourses).length == 0) {
-                return;
-            }
-            var selServerName = serverDropDown.options[serverDropDown.selectedIndex].text;
-            coursefileElem.value = availableCourses[selServerName]["courses"][courseDropDown.selectedIndex]["pathToCourseFile"];
-        }
-
-        function setSelectionListeners() {
-            serverDropDown.onchange = function () {
-                updateCoursesDropDownOptions();
-                updateLanguageDropDownOptions(languageDropDown.options[languageDropDown.selectedIndex].text);
-                updateTaskDropDownOptions();
-                updateCoursefilePath();
-            };
-
-            courseDropDown.onchange = function () {
-                updateLanguageDropDownOptions(languageDropDown.options[languageDropDown.selectedIndex].text);
-                updateTaskDropDownOptions();
-                updateCoursefilePath();
-            };
-
-            languageDropDown.onchange = function () {
-                updateTaskDropDownOptions();
-            };
-
-            taskDropDown.onchange = function () {
-                updateName();
-            };
-        }
-
         function serverConfigExists() {
-            return missingConfig.getAttribute("value") === "";
-        }
-
-        function getAvailableLanguages(serverName, courseName) {
-
-            var availableLang = [];
-            var possibleTasks = availableCourses[serverName]["courses"].find(function (course) {
-                return course.name === courseName;
-            }).tasks;
-
-            for (var i in possibleTasks) {
-                var task = possibleTasks[i];
-                for (var j in task['headline']) {
-                    var headline = task['headline'][j];
-                    availableLang[headline['language']] = headline['language'];
-                }
-            }
-            return availableLang;
+            return document.getElementsByName("mumie_missing_config")[0].getAttribute("value") === "";
         }
     });
