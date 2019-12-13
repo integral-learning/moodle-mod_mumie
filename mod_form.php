@@ -79,11 +79,11 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
 
-        $mform->addElement('html', '<div id="mumie_filter_wrapper"></div>');
-
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
-
+        
+        $mform->addElement('html', '<div id="mumie_filter_section" class="form-group row  fitem" hidden><div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable col-md-9"><i class="fa fa-caret-down mumie-icon"></i>Filter MUMIE problems</span><div id="mumie_filter_wrapper" hidden class="col-md-9"></div></div>');
+        
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
         $launchoptions[MUMIE_LAUNCH_CONTAINER_WINDOW] = get_string("mumie_form_activity_container_window", "mod_mumie");
