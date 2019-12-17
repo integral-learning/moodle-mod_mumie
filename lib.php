@@ -37,6 +37,7 @@ define("MUMIE_TASK_TABLE", "mumie");
  */
 function mumie_add_instance($mumie, $mform) {
     global $DB, $CFG;
+    debugging("mumie instance: " . json_encode($mumie));
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
@@ -53,6 +54,7 @@ function mumie_add_instance($mumie, $mform) {
  */
 function mumie_update_instance($mumie, $mform) {
     global $DB, $CFG;
+    debugging("mumie instance: " . json_encode($mumie));
     $mumie->timemodified = time();
     $mumie->id = $mumie->instance;
     $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
@@ -100,7 +102,9 @@ function mumie_get_coursemodule_info($coursemodule) {
     if ($mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
         $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";
     }
+    debugging("cm info is: " .json_encode($info));
 
+    $info->customdata['timeclose'] = $mumie->due_date;
     return $info;
 }
 

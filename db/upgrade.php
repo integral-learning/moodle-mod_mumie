@@ -50,4 +50,12 @@ function xmldb_mumie_upgrade($oldversion) {
         }
     }
     return true;
+
+    if($oldversion < 2019121700) {
+        $table = new xmldb_table('mumie');
+        $field = new xmldb_field('due_date', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
 }
