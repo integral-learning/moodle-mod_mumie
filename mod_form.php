@@ -106,8 +106,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("points", PARAM_INT);
         $mform->addHelpButton("points", "mumie_form_points", "mumie");
 
-        $mform->addElement('date_time_selector', 'due_date', get_string("mumie_due_date", "mod_mumie"),  array('optional' => true));
-        $mform->addHelpButton("due_date", 'mumie_form_due_date', 'mumie');
+        $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"),  array('optional' => true));
+        $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
 
 
         // Add standard elements, common to all modules.

@@ -143,10 +143,10 @@ class gradesync {
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
-        if(!$mumie->due_date) {
+        if(!$mumie->duedate) {
             return true;
         }
-        if($mumie->due_date < $potentialgrade->timecreated) {
+        if($mumie->duedate < $potentialgrade->timecreated) {
             return false;
         }
 

@@ -114,10 +114,10 @@ function mumie_cm_info_view(cm_info $cm) {
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie=$DB->get_record('mumie', array('id'=>$cm->instance));
-    if($mumie->due_date){
+    if($mumie->duedate){
         $cm->set_after_link(' ' . 
         html_writer::tag('p', get_string('mumie_due_date','mod_mumie'), array('class' => 'tag-info tag'))
-        . html_writer::tag('span', strftime( get_string('strftimedaydatetime', 'langconfig'),$mumie->due_date), array('style' =>'margin-left: 1em'))
+        . html_writer::tag('span', strftime( get_string('strftimedaydatetime', 'langconfig'),$mumie->duedate), array('style' =>'margin-left: 1em'))
     );
     }
 }
