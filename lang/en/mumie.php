@@ -73,6 +73,8 @@ $string['completionpass_help'] = 'If enabled, this activity is considered comple
 Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
 $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
+$string['mumie_form_due_date'] = 'Due date';
+$string['mumie_form_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
@@ -88,3 +90,7 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumie_form_required_hashing_decision'] = 'An important admin decision about ID hashing is pending. MUMIE Tasks cannot be created or edited until a choice has been made. <br>Please contact your Moodle administrator!';
+
+//Used in course view
+$string['mumie_due_date'] = 'Deadline';
+$string['mumie_due_date_help'] = 'If enabled, grades of tasks that were submitted after the selected date will not be synchronized with Moodle.';

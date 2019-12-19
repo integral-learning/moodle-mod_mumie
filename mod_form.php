@@ -106,7 +106,9 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("points", PARAM_INT);
         $mform->addHelpButton("points", "mumie_form_points", "mumie");
 
-        $mform->addElement('date_time_selector', 'due_date', 'task is due:');
+        $mform->addElement('date_time_selector', 'due_date', get_string("mumie_due_date", "mod_mumie"),  array('optional' => true));
+        $mform->addHelpButton("due_date", 'mumie_form_due_date', 'mumie');
+
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -167,12 +169,9 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function populate_options(&$serveroptions, &$courseoptions, &$problemoptions, &$languageoptions) {
 
-        //$availablecourses = auth_mumie\locallib::get_available_courses_for_all_servers();
         $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
-        //debugging("servers with strucutre: " . json_encode($servers));
 
         foreach ($servers as $server) {
-            //debugging("server with strucutre: " . json_encode($server));
             $serveroptions[$server->get_url_prefix()] = $server->get_name();
             self::populate_course_options(
                 $server->get_courses(),

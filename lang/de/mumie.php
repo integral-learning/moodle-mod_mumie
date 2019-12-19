@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die;
 
 $string['pluginname'] = 'MUMIE Task';
 $string['modulename'] = 'MUMIE Task';
-
 $string['modulename_help'] = '<p>Dieses Aktivität-Modul ermöglicht die Nutzung von Inhalten der MUMIE-Plattform auf Moodle und eine automatische Synchronisierung der dort erzielten Noten.
 Ein MUMIE Task steht hierbei für eine einzelne benote Aufgabe eines MUMIE-Kurses.</p>
 <p><strong>Was ist MUMIE?</strong></p>
@@ -87,3 +86,9 @@ Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook ang
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
+$string['mumie_form_due_date'] = 'Abgabefrist';
+$string['mumie_form_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
+
+//Used in course view
+$string['mumie_due_date'] = 'Abgabefrist';
+$string['mumie_due_date_help'] = 'Wenn diese Option aktiviert ist, werden die Punkte von Abgaben, die nach dem ausgewählten Datum erfolgt sind, nicht in das Moodle-Gradebook übernommen.';

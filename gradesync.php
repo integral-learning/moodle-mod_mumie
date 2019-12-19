@@ -125,11 +125,35 @@ class gradesync {
             $grade = new \stdClass();
             $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
             $grade->rawgrade = 100 * $xapigrade->result->score->raw;
-
-            $grades[$grade->userid] = $grade;
+            $grade->timecreated = strtotime($xapigrade->timestamp);
+            if(self::include_grade($mumie, $grades, $grade)) {
+                $grades[$grade->userid] = $grade;
+            }
         }
 
         return $grades;
+    }
+
+    /**
+     * Indicate whether a grade was archived before the task was due and is the latest one currently available
+     * 
+     * @param stdClass $mumie instance if MUMIE task we want to get grades for
+     * @param array $grades an array of all grades we have selected so far
+     * @param stdClass $potentialgrade the grade in question
+     * @return boolean Whether the grade should be added to $grades
+     */
+    public static function include_grade($mumie, $grades, $potentialgrade) {
+        if(!$mumie->due_date) {
+            return true;
+        }
+        if($mumie->due_date < $potentialgrade->timecreated) {
+            return false;
+        }
+
+        if(isset($grades[$potentialgrade->userid]) && $grades[$potentialgrade->userid]->timecreated > $potentialgrade->timecreated) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -142,7 +166,7 @@ class gradesync {
      */
     public static function get_xapi_grades($mumie, $syncids, $mumieids) {
         $payload = json_encode(array("users" => $syncids, "course" => $mumie->mumie_coursefile,
-            "objectIds" => $mumieids, "lastSync" => $mumie->lastsync));
+            "objectIds" => $mumieids, "lastSync" => $mumie->lastsync, "includeAll" => true));
         $ch = self::create_post_curl_request($mumie->server . "/public/xapi", $payload);
         $result = curl_exec($ch);
 

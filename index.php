@@ -59,10 +59,10 @@ $table->attributes['class'] = 'generaltable mod_index';
 
 if ($usesections) {
     $strsectionname = get_string('sectionname', 'format_' . $course->format);
-    $table->head = array($strsectionname, $strname);
+    $table->head = array($strsectionname, $strname, get_string("mumie_due_date", "mod_mumie"));
     $table->align = array("center", "left");
 } else {
-    $table->head = array($strname);
+    $table->head = array($strname, get_string("mumie_due_date", "mod_mumie"));
 }
 
 foreach ($mumies as $mumie) {
@@ -74,10 +74,16 @@ foreach ($mumies as $mumie) {
         $link = "<a href=\"view.php?id=$mumie->coursemodule\">$mumie->name</a>";
     }
 
-    if ($usesections) {
-        $table->data[] = array(get_section_name($course, $mumie->section), $link);
+    if($mumie->due_date) {
+        $duedate = strftime( "%A, %e. %B %l:%M %P",$mumie->due_date);
     } else {
-        $table->data[] = array($link);
+        $duedate = "";
+    }
+
+    if ($usesections) {
+        $table->data[] = array(get_section_name($course, $mumie->section), $link, $duedate);
+    } else {
+        $table->data[] = array($link, $duedate);
     }
 }
 
