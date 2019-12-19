@@ -75,7 +75,7 @@ foreach ($mumies as $mumie) {
     }
 
     if($mumie->due_date) {
-        $duedate = strftime( "%A, %e. %B %l:%M %P",$mumie->due_date);
+        $duedate = strftime( get_string('strftimedaydatetime', 'langconfig'),$mumie->due_date);
     } else {
         $duedate = "";
     }

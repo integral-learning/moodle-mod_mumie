@@ -117,7 +117,7 @@ function mumie_cm_info_view(cm_info $cm) {
     if($mumie->due_date){
         $cm->set_after_link(' ' . 
         html_writer::tag('p', get_string('mumie_due_date','mod_mumie'), array('class' => 'tag-info tag'))
-    . html_writer::tag('span', strftime( "%A, %e. %B %l:%M %P",$mumie->due_date), array('style' =>'margin-left: 1em'))
+        . html_writer::tag('span', strftime( get_string('strftimedaydatetime', 'langconfig'),$mumie->due_date), array('style' =>'margin-left: 1em'))
     );
     }
 }
