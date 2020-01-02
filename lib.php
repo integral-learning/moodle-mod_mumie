@@ -57,6 +57,11 @@ function mumie_update_instance($mumie, $mform) {
     $mumie->id = $mumie->instance;
     $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
     \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+
+    $oldmumie = $DB->get_record("mumie", array("id" => $mumie->id));
+    if($oldmumie->duedate != $mumie->duedate) {
+        mumie_grade_item_update($mumie, 'reset');
+    }
     mumie_grade_item_update($mumie);
 
     return $DB->update_record("mumie", $mumie);
@@ -161,6 +166,11 @@ function mumie_grade_item_update($mumie, $grades = null) {
         $params['grademax'] = $mumie->grade;
         $params['grademin'] = 0;
     }
+    if ($grades  === 'reset') {
+        $params['reset'] = true;
+        $grades = null;
+    }
+
     $params['gradetype'] = GRADE_TYPE_VALUE;
     $params['multfactor'] = $mumie->points / 100;
 

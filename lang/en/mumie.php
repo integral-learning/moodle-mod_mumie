@@ -75,6 +75,8 @@ $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
 $string['mumie_form_due_date'] = 'Due date';
 $string['mumie_form_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
+$string['mumie_form_due_date_warning'] = '<b>Warning:</b> Changing this property resets the gradebook for this task. This includes grades that were entered manually!';
+
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
