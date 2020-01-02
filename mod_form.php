@@ -65,12 +65,14 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "server", get_string('mumie_form_activity_server', "mod_mumie"), $serveroptions);
         $mform->addHelpButton("server", 'mumie_form_activity_server', 'mumie');
 
-        $contentbutton = $mform->addElement(
-            'button',
-            'add_server_button',
-            get_string("mumie_form_add_server_button", "mod_mumie"),
-            array()
-        );
+        if(has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
+            $contentbutton = $mform->addElement(
+                'button',
+                'add_server_button',
+                get_string("mumie_form_add_server_button", "mod_mumie"),
+                array()
+            );
+        }
 
         $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
 
