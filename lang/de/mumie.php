@@ -94,3 +94,7 @@ $string['mumie_form_due_date_warning'] = '<b>Achtung:</b> Falls diese Option ge�
 //Used in course view
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_due_date_help'] = 'Wenn diese Option aktiviert ist, werden die Punkte von Abgaben, die nach dem ausgewählten Datum erfolgt sind, nicht in das Moodle-Gradebook übernommen.';
+
+// Used for drag&drop functionality
+$string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';
+$string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';

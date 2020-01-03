@@ -239,3 +239,54 @@ function mumie_get_completion_state($course, $cm, $userid, $type) {
     }
     return false;
 }
+
+/**
+ * Register the ability to handle drag and drop file uploads
+ * @return array containing details of the files / types the mod can handle
+ */
+function mumie_dndupload_register() {
+    return  array('files' => array(
+        array('extension' => 'json', 'message' => get_string('dndupload_message', 'mod_mumie'))
+    ));
+}
+
+/**
+ * Handle a file that has been uploaded
+ * @param object $uploadinfo details of the file / content that has been uploaded
+ * @return int instance id of the newly created mod
+ */
+function mumie_dndupload_handle($uploadinfo) {
+    global $CFG;
+    
+    $context = context_module::instance($uploadinfo->coursemodule);
+    file_save_draft_area_files($uploadinfo->draftitemid, $context->id, 'mod_mumie', 'package', 0);
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($context->id, 'mod_mumie', 'package', 0, 'sortorder, itemid, filepath, filename', false);
+    $file = reset($files);
+    
+    $upload = json_decode($file->get_content());
+    require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+    if(!isset($upload->link) || !isset($upload->path_to_coursefile) 
+    || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {
+        throw new moodle_exception('parameter_missing','mod_mumie');
+    }
+    $server = new auth_mumie\mumie_server();
+    $server->set_url_prefix($upload->server);
+    if(!$server->is_valid_mumie_server()) {
+        throw new moodle_exception('mumie_form_server_not_existing','auth_mumie');
+        
+        //TODO: [DISCUSS] Add server automatically, if user has capability to so?
+    }
+    $mumie = new stdClass();
+    $mumie->taskurl = $upload->link . '?lang=' . $upload->language;
+    $mumie->mumie_coursefile = $upload->path_to_coursefile;
+    $mumie->language = $upload->language;
+    $mumie->name = $upload->name;
+    $mumie->course = $uploadinfo->course->id;
+    $mumie->server = $server->get_url_prefix();
+    $mumie->mumie_course = $upload->course;
+    $mumie->intro= '';
+    $mumie->points = 100;
+
+    return mumie_add_instance($mumie, null);
+}
