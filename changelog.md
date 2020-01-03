@@ -2,6 +2,11 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.3] TODO: DATE
+### Fixed
+- Capabilities are now given a proper name
+- The capability of auth_mumie to add MUMIE servers can now be removed without causing an error in the add MUMIE Task form.
+
 ## [v1.2] - 2019-11-05
 Attention: Installing this update will create new MUMIE acounts for all users. Old MUMIE tasks will keep working, but they wont share a grade pool with newly created ones.
 ### Added
