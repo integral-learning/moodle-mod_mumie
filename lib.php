@@ -256,7 +256,7 @@ function mumie_dndupload_register() {
  * @return int instance id of the newly created mod
  */
 function mumie_dndupload_handle($uploadinfo) {
-    global $CFG;
+    global $CFG, $COURSE, $USER;
     
     $context = context_module::instance($uploadinfo->coursemodule);
     file_save_draft_area_files($uploadinfo->draftitemid, $context->id, 'mod_mumie', 'package', 0);
@@ -273,9 +273,14 @@ function mumie_dndupload_handle($uploadinfo) {
     $server = new auth_mumie\mumie_server();
     $server->set_url_prefix($upload->server);
     if(!$server->is_valid_mumie_server()) {
-        throw new moodle_exception('mumie_form_server_not_existing','auth_mumie');
-        
-        //TODO: [DISCUSS] Add server automatically, if user has capability to so?
+        throw new moodle_exception('mumie_form_server_not_existing','auth_mumie');        
+    } if (!$server->config_exists_for_url()) {
+        if(has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
+            $server->set_name($server->get_url_prefix());
+            $server->upsert();
+        } else {
+            throw new moodle_exception(get_string('server_config_missing','mod_mumie', $server->get_url_prefix() ));        
+        }
     }
     $mumie = new stdClass();
     $mumie->taskurl = $upload->link . '?lang=' . $upload->language;
