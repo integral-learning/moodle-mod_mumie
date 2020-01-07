@@ -108,8 +108,6 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"),  array('optional' => true));
         $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
-        $mform->addElement('html', '<div class="form-group row  fitem "><div class="col-md-3"></div><div class="col-md-9">'. get_string('mumie_form_due_date_warning', 'mod_mumie') . '</div><div>');
-
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -152,6 +150,12 @@ class mod_mumie_mod_form extends moodleform_mod {
                 } else {
                     $errors['gradepass'] = get_string('gradetopassmustbeset', 'mumie');
                 }
+            }
+        }
+
+        if($data['duedate'] ) {
+            if(time()-$data['duedate']>0) {
+                $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
             }
         }
 

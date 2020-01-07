@@ -88,7 +88,8 @@ $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
 $string['mumie_form_due_date'] = 'Abgabefrist';
 $string['mumie_form_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
-$string['mumie_form_due_date_warning'] = '<b>Achtung:</b> Falls diese Option geändert wird, wird das Moodle-Gradebook für diese MumieTask zurückgesetzt. Dies betrifft auch Noten, die von Hand eingetragen wurden!';
+$string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
+
 
 
 //Used in course view
