@@ -95,3 +95,7 @@ $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann 
 //Used in course view
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_due_date_help'] = 'Wenn diese Option aktiviert ist, werden die Punkte von Abgaben, die nach dem ausgewählten Datum erfolgt sind, nicht in das Moodle-Gradebook übernommen.';
+
+// Capabilities
+$string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
+$string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';

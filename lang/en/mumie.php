@@ -96,3 +96,7 @@ $string['mumie_form_required_hashing_decision'] = 'An important admin decision a
 //Used in course view
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_due_date_help'] = 'If enabled, grades of tasks that were submitted after the selected date will not be synchronized with Moodle.';
+
+// Capabilities
+$string['mumie:addinstance'] = 'Add a new MUMIE Task';
+$string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
