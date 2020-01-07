@@ -100,3 +100,7 @@ $string['mumie_due_date_help'] = 'If enabled, grades of tasks that were submitte
 // Used for drag&drop functionality
 $string['parameter_missing'] = 'The uploaded file is incompatible!';
 $string['dndupload_message'] = 'Add as a new MUMIE Task';
+
+// Capabilities
+$string['mumie:addinstance'] = 'Add a new MUMIE Task';
+$string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';

@@ -67,12 +67,14 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "server", get_string('mumie_form_activity_server', "mod_mumie"), $serveroptions);
         $mform->addHelpButton("server", 'mumie_form_activity_server', 'mumie');
 
-        $contentbutton = $mform->addElement(
-            'button',
-            'add_server_button',
-            get_string("mumie_form_add_server_button", "mod_mumie"),
-            array()
-        );
+        if(has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
+            $contentbutton = $mform->addElement(
+                'button',
+                'add_server_button',
+                get_string("mumie_form_add_server_button", "mod_mumie"),
+                array()
+            );
+        }
 
         $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
 
@@ -82,7 +84,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
         
-        $mform->addElement('html', '<div id="mumie_filter_section" class="form-group row  fitem" hidden><div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable col-md-9"><i class="fa fa-caret-down mumie-icon"></i>Filter MUMIE problems</span><div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9"></div></div>');
+        $mform->addElement('html', '<div id="mumie_filter_section" class="form-group row  fitem" hidden><div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9"><i class="fa fa-caret-down mumie-icon"></i>Filter MUMIE problems</span><div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement"></div></div>');
         
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");

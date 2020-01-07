@@ -98,3 +98,7 @@ $string['mumie_due_date_help'] = 'Wenn diese Option aktiviert ist, werden die Pu
 // Used for drag&drop functionality
 $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';
 $string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';
+
+// Capabilities
+$string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
+$string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';
