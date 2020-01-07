@@ -10,6 +10,7 @@ All important changes to this plugin will be documented in this file.
 
 ### Added
 - When creating a MUMIE Task, MUMIE problems can be filtered by keywords.
+- A due date can now be set for MUMIE Tasks
 
 ## [v1.2] - 2019-11-05
 Attention: Installing this update will create new MUMIE acounts for all users. Old MUMIE tasks will keep working, but they wont share a grade pool with newly created ones.
