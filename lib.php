@@ -57,11 +57,6 @@ function mumie_update_instance($mumie, $mform) {
     $mumie->id = $mumie->instance;
     $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
     \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
-
-    $oldmumie = $DB->get_record("mumie", array("id" => $mumie->id));
-    if($oldmumie->duedate != $mumie->duedate) {
-        mumie_grade_item_update($mumie, 'reset');
-    }
     mumie_grade_item_update($mumie);
 
     return $DB->update_record("mumie", $mumie);

@@ -10,6 +10,7 @@ All important changes to this plugin will be documented in this file.
 
 ### Added
 - When creating a MUMIE Task, MUMIE problems can be filtered by keywords.
+- A due date can now be set for MUMIE Tasks
 - Automatically add MUMIE Tasks by dragging and dropping MUMIE Problems from MUMIE courses into a MOODLE course.
 
 ## [v1.2] - 2019-11-05
