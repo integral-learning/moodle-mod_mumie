@@ -87,3 +87,7 @@ Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook ang
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
+
+// Capabilities
+$string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
+$string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';

@@ -49,7 +49,7 @@ class gradesync {
 
         if ($isreportpage) {
             $userid = $USER->id;
-            if (has_capability("mod/assign:viewgrades", \context_course::instance($COURSE->id), $USER)) {
+            if (has_capability("mod/mumie:viewgrades", \context_course::instance($COURSE->id), $USER)) {
                 // User id = 0 => update grades for all users!
                 $userid = 0;
             }

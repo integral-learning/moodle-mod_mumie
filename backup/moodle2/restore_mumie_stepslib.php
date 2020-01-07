@@ -57,6 +57,7 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         $data = (object) $data;
         $oldid = $data->id;
         $data->course = $this->get_courseid();
+        $data->use_hashed_id = 1;
 
         $newitemid = $DB->insert_record('mumie', $data);
         $this->apply_activity_instance($newitemid);

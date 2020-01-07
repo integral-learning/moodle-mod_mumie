@@ -88,3 +88,7 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumie_form_required_hashing_decision'] = 'An important admin decision about ID hashing is pending. MUMIE Tasks cannot be created or edited until a choice has been made. <br>Please contact your Moodle administrator!';
+
+// Capabilities
+$string['mumie:addinstance'] = 'Add a new MUMIE Task';
+$string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
