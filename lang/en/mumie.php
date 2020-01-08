@@ -76,6 +76,13 @@ $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this a
 $string['mumie_form_due_date'] = 'Due date';
 $string['mumie_form_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
+$string['mumie_form_grade_pool'] = 'Grade pool';
+$string['mumie_form_grade_pool_help'] = 'Choose whether to share a grade pool with other MOODLE courses or to use a private one.
+<br>If sharing is enabled, points that were earned for MUMIE problems in other courses will be automatically synchronized with this course\'s gradebook.
+<br>If private pool is selected, this course will neither be able to import nor to export grades.';
+$string['mumie_form_grade_pool_warning'] = '<b style="color:red">Warning:</b><br> This decision is <b>final</b> and affects all other MUMIE Tasks in this course';
+$string['mumie_form_grade_pool_shared'] = 'Shared';
+$string['mumie_form_grade_pool_private'] = 'Private';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
@@ -90,7 +97,6 @@ $string['mumie_form_server_btn_submit'] = 'Submit';
 $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
-$string['mumie_form_required_hashing_decision'] = 'An important admin decision about ID hashing is pending. MUMIE Tasks cannot be created or edited until a choice has been made. <br>Please contact your Moodle administrator!';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';

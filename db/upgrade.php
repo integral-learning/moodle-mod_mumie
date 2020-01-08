@@ -58,5 +58,13 @@ function xmldb_mumie_upgrade($oldversion) {
         }
     }
 
+    if ($oldversion < 2020010705) {
+        $table = new xmldb_table('mumie');
+        $field = new xmldb_field('privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
     return true;
 }

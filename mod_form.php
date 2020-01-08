@@ -114,6 +114,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"), array('optional' => true));
         $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
 
+        $radioarray = array();
+        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('mumie_form_grade_pool_shared', 'mod_mumie'), 0);
+        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('mumie_form_grade_pool_private', 'mod_mumie'), 1);
+        $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array(' '), false);
+        $mform->addHelpButton('privategradepool', 'mumie_form_grade_pool', 'mumie');
+        $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
+
+        $mform->addElement('html', '<div class="form-group row  fitem "><div class="col-md-3"></div><div class="col-md-9">' . get_string('mumie_form_grade_pool_warning', 'mod_mumie') . '</div></div>');
+
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
         $mform->setAdvanced('cmidnumber');
