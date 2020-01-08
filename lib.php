@@ -106,19 +106,22 @@ function mumie_get_coursemodule_info($coursemodule) {
 
 /**
  * Add information about potential due dates to the list view
- * 
+ *
  * @param cm_info $cm
  */
 function mumie_cm_info_view(cm_info $cm) {
     global $CFG, $DB;
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
-    $mumie=$DB->get_record('mumie', array('id'=>$cm->instance));
-    if($mumie->duedate){
-        $cm->set_after_link(' ' . 
-        html_writer::tag('p', get_string('mumie_due_date','mod_mumie'), array('class' => 'tag-info tag'))
-        . html_writer::tag('span', strftime( get_string('strftimedaydatetime', 'langconfig'),$mumie->duedate), array('style' =>'margin-left: 1em'))
-    );
+    $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
+    if ($mumie->duedate) {
+        $cm->set_after_link(' ' .
+            html_writer::tag('p', get_string('mumie_due_date', 'mod_mumie'), array('class' => 'tag-info tag'))
+            . html_writer::tag('span',
+                strftime(get_string('strftimedaydatetime', 'langconfig'),
+                    $mumie->duedate), array('style' => 'margin-left: 1em')
+            )
+        );
     }
 }
 /**
@@ -141,7 +144,6 @@ function mumie_supports($feature) {
 
 /**
  * Create grade item for given mumie task
- * Keep in mind that grade reset is NOT supported by this plugin
  *
  * @category grade
  * @param object $mumie object with extra cmidnumber
@@ -161,7 +163,7 @@ function mumie_grade_item_update($mumie, $grades = null) {
         $params['grademax'] = $mumie->grade;
         $params['grademin'] = 0;
     }
-    if ($grades  === 'reset') {
+    if ($grades === 'reset') {
         $params['reset'] = true;
         $grades = null;
     }
@@ -240,8 +242,8 @@ function mumie_get_completion_state($course, $cm, $userid, $type) {
  * @return array containing details of the files / types the mod can handle
  */
 function mumie_dndupload_register() {
-    return  array('files' => array(
-        array('extension' => 'json', 'message' => get_string('dndupload_message', 'mod_mumie'))
+    return array('files' => array(
+        array('extension' => 'json', 'message' => get_string('dndupload_message', 'mod_mumie')),
     ));
 }
 
@@ -252,29 +254,29 @@ function mumie_dndupload_register() {
  */
 function mumie_dndupload_handle($uploadinfo) {
     global $CFG, $COURSE, $USER;
-    
+
     $context = context_module::instance($uploadinfo->coursemodule);
     file_save_draft_area_files($uploadinfo->draftitemid, $context->id, 'mod_mumie', 'package', 0);
     $fs = get_file_storage();
     $files = $fs->get_area_files($context->id, 'mod_mumie', 'package', 0, 'sortorder, itemid, filepath, filename', false);
     $file = reset($files);
-    
+
     $upload = json_decode($file->get_content());
-    require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
-    if(!isset($upload->link) || !isset($upload->path_to_coursefile) 
-    || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {
-        throw new moodle_exception('parameter_missing','mod_mumie');
+    require_once ($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+    if (!isset($upload->link) || !isset($upload->path_to_coursefile)
+        || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {
+        throw new moodle_exception('parameter_missing', 'mod_mumie');
     }
     $server = new auth_mumie\mumie_server();
     $server->set_url_prefix($upload->server);
-    if(!$server->is_valid_mumie_server()) {
-        throw new moodle_exception('mumie_form_server_not_existing','auth_mumie');        
-    } if (!$server->config_exists_for_url()) {
-        if(has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
+    if (!$server->is_valid_mumie_server()) {
+        throw new moodle_exception('mumie_form_server_not_existing', 'auth_mumie');
+    }if (!$server->config_exists_for_url()) {
+        if (has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
             $server->set_name($server->get_url_prefix());
             $server->upsert();
         } else {
-            throw new moodle_exception(get_string('server_config_missing','mod_mumie', $server->get_url_prefix() ));        
+            throw new moodle_exception(get_string('server_config_missing', 'mod_mumie', $server->get_url_prefix()));
         }
     }
     $mumie = new stdClass();
@@ -285,7 +287,7 @@ function mumie_dndupload_handle($uploadinfo) {
     $mumie->course = $uploadinfo->course->id;
     $mumie->server = $server->get_url_prefix();
     $mumie->mumie_course = $upload->course;
-    $mumie->intro= '';
+    $mumie->intro = '';
     $mumie->points = 100;
 
     return mumie_add_instance($mumie, null);

@@ -77,7 +77,6 @@ $string['mumie_form_due_date'] = 'Due date';
 $string['mumie_form_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
 
-
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
 $string['mumie_form_server_not_existing'] = 'There is no MUMIE server for this URL';
@@ -93,15 +92,15 @@ $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumie_form_required_hashing_decision'] = 'An important admin decision about ID hashing is pending. MUMIE Tasks cannot be created or edited until a choice has been made. <br>Please contact your Moodle administrator!';
 
-//Used in course view
+// Used in course view.
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_due_date_help'] = 'If enabled, grades of tasks that were submitted after the selected date will not be synchronized with Moodle.';
 
-// Used for drag&drop functionality
+// Used for drag&drop functionality.
 $string['parameter_missing'] = 'The uploaded file is incompatible!';
 $string['dndupload_message'] = 'Add as a new MUMIE Task';
 $string['server_config_missing'] = '<br><br>We could not find a configuration for the MUMIE server that is being used in this MUMIE Task. Please ask your administrator to add a MUMIE server configuration for the following URL prefix:<br><br><b>{$a}</b>';
 
-// Capabilities
+// Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';

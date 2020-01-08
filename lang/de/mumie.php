@@ -90,17 +90,15 @@ $string['mumie_form_due_date'] = 'Abgabefrist';
 $string['mumie_form_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
 
-
-
-//Used in course view
+// Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_due_date_help'] = 'Wenn diese Option aktiviert ist, werden die Punkte von Abgaben, die nach dem ausgewählten Datum erfolgt sind, nicht in das Moodle-Gradebook übernommen.';
 
-// Used for drag&drop functionality
+// Used for drag&drop functionality.
 $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';
 $string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';
 $string['server_config_missing'] = '<br><br>Es konnte keine Kofiguration für die MUMIE-Server-URL gefunden werden, die zum Erstellen dieser MUMIE Task benutzt wird. Bitten Sie Ihren Administrator eine MUMIE-Server-Konfiguration für die folgende URL zu erstellen:<br><br><b>{$a}</b>';
 
-// Capabilities
+// Capabilities.
 $string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
 $string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';

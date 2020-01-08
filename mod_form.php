@@ -28,7 +28,6 @@ require_once ($CFG->dirroot . '/course/moodleform_mod.php');
 require_once ($CFG->dirroot . '/auth/mumie/locallib.php');
 require_once ($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
-
 /**
  * This moodle form is used to insert or update MumieServer in the database
  *
@@ -67,7 +66,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "server", get_string('mumie_form_activity_server', "mod_mumie"), $serveroptions);
         $mform->addHelpButton("server", 'mumie_form_activity_server', 'mumie');
 
-        if(has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
+        if (has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
             $contentbutton = $mform->addElement(
                 'button',
                 'add_server_button',
@@ -83,9 +82,13 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
-        
-        $mform->addElement('html', '<div id="mumie_filter_section" class="form-group row  fitem" hidden><div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9"><i class="fa fa-caret-down mumie-icon"></i>Filter MUMIE problems</span><div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement"></div></div>');
-        
+
+        $mform->addElement('html', '<div id="mumie_filter_section" class="form-group row  fitem" hidden>
+        <div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9">
+        <i class="fa fa-caret-down mumie-icon"></i>Filter MUMIE problems</span>
+        <div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement">
+        </div></div>');
+
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
         $launchoptions[MUMIE_LAUNCH_CONTAINER_WINDOW] = get_string("mumie_form_activity_container_window", "mod_mumie");
@@ -108,7 +111,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("points", PARAM_INT);
         $mform->addHelpButton("points", "mumie_form_points", "mumie");
 
-        $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"),  array('optional' => true));
+        $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"), array('optional' => true));
         $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
 
         // Add standard elements, common to all modules.
@@ -155,8 +158,8 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
 
-        if($data['duedate'] ) {
-            if(time()-$data['duedate']>0) {
+        if ($data['duedate']) {
+            if (time() - $data['duedate'] > 0) {
                 $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
             }
         }
@@ -192,7 +195,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Populate course option list and then populate task options for all given courses of a MUMIE server
      *
-     * @param stdClass $server single instance of a MUMIE server containing a list of courses
+     * @param array $courses array containing a list of courses
      * @param array $courseoptions pointer to the array containing all available courses
      * @param array $problemoptions pointer to the array containing all available tasks
      * @param array $languageoptions pointer to the array containing all available languages

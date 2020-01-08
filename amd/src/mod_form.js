@@ -3,7 +3,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         var addServerButton = document.getElementById("id_add_server_button");
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
 
-
         var serverController = (function () {
             var serverStructure;
             var serverDropDown = document.getElementById("id_server");
@@ -141,7 +140,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var taskDropDown = document.getElementById("id_taskurl");
             var nameElem = document.getElementById("id_name");
 
-
             function updateName() {
                 nameElem.value = getHeadline(taskController.getSelectedTask());
             }
@@ -183,8 +181,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     );
                 },
                 getSelectedTask: function () {
-                    var selectedLink = taskDropDown.options[taskDropDown.selectedIndex] == undefined ?
-                        undefined : taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value');
+                    var selectedLink = taskDropDown.options[taskDropDown.selectedIndex] ==
+                        undefined ? undefined : taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value');
                     var tasks = courseController.getSelectedCourse().tasks;
                     for (var i in tasks) {
                         var task = tasks[i];
@@ -235,8 +233,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 filter.appendChild(label);
                 filter.appendChild(selectionBox);
                 filterWrapper.appendChild(filter);
-
-
             }
 
             function createSelectionBox(tag) {

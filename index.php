@@ -74,8 +74,8 @@ foreach ($mumies as $mumie) {
         $link = "<a href=\"view.php?id=$mumie->coursemodule\">$mumie->name</a>";
     }
 
-    if($mumie->duedate) {
-        $duedate = strftime( get_string('strftimedaydatetime', 'langconfig'),$mumie->duedate);
+    if ($mumie->duedate) {
+        $duedate = strftime(get_string('strftimedaydatetime', 'langconfig'), $mumie->duedate);
     } else {
         $duedate = "";
     }

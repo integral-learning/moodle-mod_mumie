@@ -126,31 +126,31 @@ class gradesync {
             $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
             $grade->rawgrade = 100 * $xapigrade->result->score->raw;
             $grade->timecreated = strtotime($xapigrade->timestamp);
-            if(self::include_grade($mumie, $grades, $grade)) {
+            if (self::include_grade($mumie, $grades, $grade)) {
                 $grades[$grade->userid] = $grade;
             }
         }
-
         return $grades;
     }
 
     /**
      * Indicate whether a grade was archived before the task was due and is the latest one currently available
-     * 
+     *
      * @param stdClass $mumie instance if MUMIE task we want to get grades for
      * @param array $grades an array of all grades we have selected so far
      * @param stdClass $potentialgrade the grade in question
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
-        if(!$mumie->duedate) {
+        if (!$mumie->duedate) {
             return true;
         }
-        if($mumie->duedate < $potentialgrade->timecreated) {
+        if ($mumie->duedate < $potentialgrade->timecreated) {
             return false;
         }
 
-        if(isset($grades[$potentialgrade->userid]) && $grades[$potentialgrade->userid]->timecreated > $potentialgrade->timecreated) {
+        if (isset($grades[$potentialgrade->userid])
+            && $grades[$potentialgrade->userid]->timecreated > $potentialgrade->timecreated) {
             return false;
         }
         return true;
