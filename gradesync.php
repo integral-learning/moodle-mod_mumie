@@ -107,10 +107,10 @@ class gradesync {
 
         if ($userid == 0) {
             foreach (get_enrolled_users(\context_course::instance($COURSE->id)) as $user) {
-                array_push($syncids, self::get_sync_id($user->id, $mumie->use_hashed_id));
+                array_push($syncids, self::get_sync_id($user->id, $mumie));
             }
         } else {
-            $syncids = array(self::get_sync_id($userid, $mumie->use_hashed_id));
+            $syncids = array(self::get_sync_id($userid, $mumie));
         }
 
         $mumieids = array(self::get_mumie_id($mumie));
@@ -177,16 +177,19 @@ class gradesync {
     /**
      * Get a unique syncid from a userid that can be used on the MUMIE server as username
      * @param int $userid
-     * @param int $hashid indicates whether the id should be hashed
+     * @param int $mumie
      * @return string unique username for MUMIE servers derived from the moodle userid
      */
-    public static function get_sync_id($userid, $hashid) {
+    public static function get_sync_id($userid, $mumie) {
         global $DB;
         $org = get_config('auth_mumie', 'mumie_org');
-        if ($hashid == 1) {
+        if ($mumie->use_hashed_id == 1) {
             $hashidtable = 'auth_mumie_id_hashes';
             $hash = auth_mumie_get_hashed_id($userid);
-            if (!$DB->get_record($hashidtable, array("the_user" => $userid))) {
+            if ($mumie->privategradepool) {
+                $hash .= '@gradepool' . $mumie->course . '@';
+            }
+            if (!$DB->get_record($hashidtable, array("the_user" => $userid, 'hash' => $hash))) {
                 $DB->insert_record($hashidtable, array("the_user" => $userid, "hash" => $hash));
             }
             $userid = $hash;
