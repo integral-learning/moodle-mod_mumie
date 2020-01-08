@@ -42,7 +42,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
+        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
 
         $mform = &$this->_form;
 
@@ -115,13 +115,20 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
 
         $radioarray = array();
-        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('mumie_form_grade_pool_shared', 'mod_mumie'), 0);
-        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('mumie_form_grade_pool_private', 'mod_mumie'), 1);
+        $isfirsttask = $this->is_first_task_of_course($COURSE->id);
+        if (!$isfirsttask) {
+            $attributes = array('disabled' => '');
+        } else {
+            $attributes = array();
+        }
+        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('mumie_form_grade_pool_shared', 'mod_mumie'), 0, $attributes);
+        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('mumie_form_grade_pool_private', 'mod_mumie'), 1, $attributes);
         $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array(' '), false);
         $mform->addHelpButton('privategradepool', 'mumie_form_grade_pool', 'mumie');
-        $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
-
         $mform->addElement('html', '<div class="form-group row  fitem "><div class="col-md-3"></div><div class="col-md-9">' . get_string('mumie_form_grade_pool_warning', 'mod_mumie') . '</div></div>');
+        if ($isfirsttask) {
+            $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
+        }
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -266,6 +273,10 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function set_data($data) {
+        global $COURSE, $DB;
+        if (!isset($data->privategradepool) && !$this->is_first_task_of_course($COURSE->id)) {
+            $data->privategradepool = array_values($DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id)))[0]->privategradepool;
+        }
 
         $filter = array_filter(auth_mumie\mumie_server::get_all_servers(), function ($server) use ($data) {
             if (!isset($data->server)) {
@@ -290,5 +301,13 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function completion_rule_enabled($data) {
         return !empty($data['completionpass']);
+    }
+
+    /**
+     * @param $courseid
+     */
+    private function is_first_task_of_course($courseid) {
+        global $DB;
+        return count($DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid))) < 1;
     }
 }
