@@ -89,6 +89,11 @@ $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der
 $string['mumie_form_due_date'] = 'Abgabefrist';
 $string['mumie_form_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
+$string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
+$string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit anderen Kursen geteilt werden.
+<br>Falls diese Option aktiviert ist, werden Punkte, die für das Bearbeiten von MUMIE-Aufgaben in anderen MOODLE-Kursen vergeben wurden, auch in diesen Kurs übernommen.
+<br>Falls diese Option deaktiviert ist, werden weder Punkte aus anderen MOODLE-Kursen übernommen noch werden hier erziehlte Punkte mit anderen Kursen geteilt.';
+$string['mumie_form_grade_pool_warning'] = '<b style="color:red">Achtung:</b><br> Diese Entscheidung ist <b>entgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
