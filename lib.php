@@ -268,15 +268,15 @@ function mumie_dndupload_handle($uploadinfo) {
         throw new moodle_exception('parameter_missing', 'mod_mumie');
     }
     $server = new auth_mumie\mumie_server();
-    $server->set_url_prefix($upload->server);
+    $server->set_urlprefix($upload->server);
     if (!$server->is_valid_mumie_server()) {
         throw new moodle_exception('mumie_form_server_not_existing', 'auth_mumie');
     }if (!$server->config_exists_for_url()) {
         if (has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
-            $server->set_name($server->get_url_prefix());
+            $server->set_name($server->get_urlprefix());
             $server->upsert();
         } else {
-            throw new moodle_exception(get_string('server_config_missing', 'mod_mumie', $server->get_url_prefix()));
+            throw new moodle_exception(get_string('server_config_missing', 'mod_mumie', $server->get_urlprefix()));
         }
     }
     $mumie = new stdClass();
@@ -285,7 +285,7 @@ function mumie_dndupload_handle($uploadinfo) {
     $mumie->language = $upload->language;
     $mumie->name = $upload->name;
     $mumie->course = $uploadinfo->course->id;
-    $mumie->server = $server->get_url_prefix();
+    $mumie->server = $server->get_urlprefix();
     $mumie->mumie_course = $upload->course;
     $mumie->intro = '';
     $mumie->points = 100;

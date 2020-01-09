@@ -25,7 +25,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once ($CFG->dirroot . '/course/moodleform_mod.php');
-require_once ($CFG->dirroot . '/auth/mumie/locallib.php');
 require_once ($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
 /**
@@ -125,7 +124,10 @@ class mod_mumie_mod_form extends moodleform_mod {
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('no'), 1, $attributes);
         $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array(' '), false);
         $mform->addHelpButton('privategradepool', 'mumie_form_grade_pool', 'mumie');
-        $mform->addElement('html', '<div class="form-group row  fitem "><div class="col-md-3"></div><div class="col-md-9">' . get_string('mumie_form_grade_pool_warning', 'mod_mumie') . '</div></div>');
+        $mform->addElement('html', '<div class="form-group row  fitem ">'
+            . '<div class="col-md-3"></div><div class="col-md-9">'
+            . get_string('mumie_form_grade_pool_warning', 'mod_mumie')
+            . '</div></div>');
         if ($isfirsttask) {
             $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
         }
@@ -198,7 +200,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
 
         foreach ($servers as $server) {
-            $serveroptions[$server->get_url_prefix()] = $server->get_name();
+            $serveroptions[$server->get_urlprefix()] = $server->get_name();
             self::populate_course_options(
                 $server->get_courses(),
                 $courseoptions,
@@ -274,8 +276,12 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function set_data($data) {
         global $COURSE, $DB;
-        if (!isset($data->privategradepool) && !$this->is_first_task_of_course($COURSE->id)) {
-            $data->privategradepool = array_values($DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id)))[0]->privategradepool;
+        if ($this->is_first_task_of_course($COURSE->id)) {
+            $data->privategradepool = -1;
+        } else if (!isset($data->privategradepool)) {
+            $data->privategradepool = array_values(
+                $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
+            )[0]->privategradepool;
         }
 
         $filter = array_filter(auth_mumie\mumie_server::get_all_servers(), function ($server) use ($data) {
@@ -283,7 +289,7 @@ class mod_mumie_mod_form extends moodleform_mod {
                 return false;
             }
 
-            return $server->get_url_prefix() === $data->server;
+            return $server->get_urlprefix() === $data->server;
         });
 
         if (count($filter) < 1 && isset($data->server)) {
@@ -304,7 +310,10 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * @param $courseid
+     * Check if there are already any MUMIE Tasks in the given course.
+     *
+     * @param int $courseid The course to check
+     * @return bool True, if there are no MUMIE Tasks in the course yet
      */
     private function is_first_task_of_course($courseid) {
         global $DB;
