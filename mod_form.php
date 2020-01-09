@@ -42,7 +42,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
+        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
 
         $mform = &$this->_form;
 
