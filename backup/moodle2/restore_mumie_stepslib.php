@@ -59,6 +59,12 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         $data->course = $this->get_courseid();
         $data->use_hashed_id = 1;
 
+        if ($existingtask = array_values($DB->get_records('mumie', array('course' => $data->course)))[0]) {
+            $data->privategradepool = $existingtask->privategradepool;
+        } else {
+            $data->privategradepool = $data->privategradepool ?? 0;
+        }
+
         $newitemid = $DB->insert_record('mumie', $data);
         $this->apply_activity_instance($newitemid);
     }
