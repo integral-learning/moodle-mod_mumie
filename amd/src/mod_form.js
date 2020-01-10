@@ -42,7 +42,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Add a new option the the 'MUMIE Course' drop down menu
-             * @param {Object} course 
+             * @param {Object} course
              */
             function addOptionForCourse(course) {
                 var optionCourse = document.createElement("option");
@@ -148,7 +148,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var nameElem = document.getElementById("id_name");
 
             /**
-             * Update the activity's name in the input field 
+             * Update the activity's name in the input field
              */
             function updateName() {
                 nameElem.value = getHeadline(taskController.getSelectedTask());
@@ -156,7 +156,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Get the task's headline for the currently selected language
-             * @param {Object} task 
+             * @param {Object} task
              * @returns  {string} the headline
              */
             function getHeadline(task) {
@@ -174,8 +174,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Add lanugage parameter to the task's link to display content in the selected language
-             * @param {Object} task 
-             * @returns {string} 
+             * @param {Object} task
+             * @returns {string}
              */
             function getLocalizedLink(task) {
                 return task.link + "?lang=" + langController.getSelectedLanguage();
@@ -183,7 +183,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Add a new option to the 'Problem' drop down menu
-             * @param {Object} task 
+             * @param {Object} task
              */
             function addTaskOption(task) {
                 if (getHeadline(task) !== null) {
@@ -245,7 +245,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Add a new filter category to the form for a given tag
-             * @param {Object} tag 
+             * @param {Object} tag
              */
             function addFilter(tag) {
                 var filter = document.createElement('div');
@@ -266,7 +266,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Create an element that contains checkboxes for all tag values
-             * @param {Object} tag 
+             * @param {Object} tag
              * @returns {Object} A div containing mulitple checkboxes
              */
             function createSelectionBox(tag) {
@@ -318,7 +318,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Toggle visibility of the given object
-             * @param {Object} elem 
+             * @param {Object} elem
              */
             function toggleVisibility(elem) {
                 elem.toggleAttribute('hidden');
@@ -342,9 +342,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * 
-             * @param {Object} task 
-             * @param {Array} filterSelection 
+             * Check if the task fullfills the requirements set by the filter selection
+             * @param {Object} task
+             * @param {Array} filterSelection
              * @returns {boolean}
              */
             function filterTask(task, filterSelection) {
@@ -371,8 +371,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Return true, of the two arrays have at least one entry in common
-             * @param {Array} array1 
-             * @param {Array} array2 
+             * @param {Array} array1
+             * @param {Array} array2
              * @returns {boolean}
              */
             function haveCommonEntry(array1, array2) {
@@ -463,7 +463,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         /**
          * Remove all child elements of a given html element
-         * @param {Object} elem 
+         * @param {Object} elem
          */
         function removeChildElems(elem) {
             while (elem.firstChild) {
@@ -473,7 +473,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         /**
          * Check, if the flag for an existing config is set
-         * @returns {boolean} 
+         * @returns {boolean}
          */
         function serverConfigExists() {
             return document.getElementsByName("mumie_missing_config")[0].getAttribute("value") === "";

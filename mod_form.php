@@ -24,8 +24,8 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-require_once ($CFG->dirroot . '/course/moodleform_mod.php');
-require_once ($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
 /**
  * This moodle form is used to insert or update MumieServer in the database
@@ -196,7 +196,6 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     private function populate_options(&$serveroptions, &$courseoptions, &$problemoptions, &$languageoptions) {
-
         $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
 
         foreach ($servers as $server) {
@@ -257,8 +256,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $items = array();
 
         $group = array();
-        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'mumie'),
-            array('group' => 'cpass'));
+        $group[] = $mform->createElement(
+            'advcheckbox',
+            'completionpass',
+            null,
+            get_string('completionpass', 'mumie'),
+            array('group' => 'cpass')
+        );
         $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
         $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'mumie'), ' &nbsp; ', false);
         $mform->addHelpButton('completionpassgroup', 'completionpass', 'mumie');

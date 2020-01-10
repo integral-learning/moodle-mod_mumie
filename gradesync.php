@@ -26,8 +26,8 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once ($CFG->dirroot . '/mod/mumie/lib.php');
-require_once ($CFG->dirroot . '/auth/mumie/lib.php');
+require_once($CFG->dirroot . '/mod/mumie/lib.php');
+require_once($CFG->dirroot . '/auth/mumie/lib.php');
 /**
  * This file defines the class gradesync
  *
@@ -56,9 +56,11 @@ class gradesync {
             foreach (self::get_mumie_tasks_from_course($COURSE->id) as $mumie) {
                 mumie_update_grades($mumie, $userid);
             }
-        } else if ($isoverviewpage) {
-            foreach (self::get_all_mumie_tasks_for_user($USER->id) as $mumie) {
-                mumie_update_grades($mumie, $USER->id);
+        } else {
+            if ($isoverviewpage) {
+                foreach (self::get_all_mumie_tasks_for_user($USER->id) as $mumie) {
+                    mumie_update_grades($mumie, $USER->id);
+                }
             }
         }
         return;
@@ -81,7 +83,6 @@ class gradesync {
      * @return array All MUMIE tasks that are in courses, the user is enrolled in
      */
     public static function get_all_mumie_tasks_for_user($userid) {
-
         $allmumietasks = array();
         foreach (enrol_get_all_users_courses($userid) as $course) {
             $mumietasks = self::get_mumie_tasks_from_course($course->id);
@@ -238,7 +239,10 @@ class gradesync {
         curl_setopt($ch, CURLOPT_USERAGENT, "My User Agent Name");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
             'Content-Type: application/json',
             'Content-Length: ' . strlen($payload),
             "X-API-Key: " . get_config('auth_mumie', 'mumie_api_key'),

@@ -37,7 +37,6 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
      * define the structure for restoration process
      */
     protected function define_structure() {
-
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
 

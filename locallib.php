@@ -26,7 +26,7 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once ($CFG->dirroot . '/mod/mumie/lib.php');
+require_once($CFG->dirroot . '/mod/mumie/lib.php');
 
 global $CFG;
 global $DB;

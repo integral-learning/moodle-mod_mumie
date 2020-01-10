@@ -24,7 +24,7 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-require_once ($CFG->dirroot . '/mod/mumie/backup/moodle2/backup_mumie_stepslib.php');
+require_once($CFG->dirroot . '/mod/mumie/backup/moodle2/backup_mumie_stepslib.php');
 
 /**
  * Defines backup_mumie_activity_task class

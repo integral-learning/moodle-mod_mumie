@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once ($CFG->dirroot . '/mod/mumie/locallib.php');
+require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
 define("MUMIE_TASK_TABLE", "mumie");
 
@@ -115,11 +115,16 @@ function mumie_cm_info_view(cm_info $cm) {
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
     if ($mumie->duedate) {
-        $cm->set_after_link(' ' .
+        $cm->set_after_link(
+            ' ' .
             html_writer::tag('p', get_string('mumie_due_date', 'mod_mumie'), array('class' => 'tag-info tag'))
-            . html_writer::tag('span',
-                strftime(get_string('strftimedaydatetime', 'langconfig'),
-                    $mumie->duedate), array('style' => 'margin-left: 1em')
+            . html_writer::tag(
+                'span',
+                strftime(
+                    get_string('strftimedaydatetime', 'langconfig'),
+                    $mumie->duedate
+                ),
+                array('style' => 'margin-left: 1em')
             )
         );
     }
@@ -151,9 +156,8 @@ function mumie_supports($feature) {
  * @return int 0 if ok, error code otherwise
  */
 function mumie_grade_item_update($mumie, $grades = null) {
-
     global $CFG;
-    require_once ($CFG->libdir . '/gradelib.php');
+    require_once($CFG->libdir . '/gradelib.php');
     if (array_key_exists('cmidnumber', $mumie)) {
         $params = array('itemname' => $mumie->name, 'idnumber' => $mumie->cmidnumber);
     } else {
@@ -183,8 +187,8 @@ function mumie_grade_item_update($mumie, $grades = null) {
  */
 function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
     global $CFG;
-    require_once ($CFG->libdir . '/gradelib.php');
-    require_once ($CFG->dirroot . '/mod/mumie/gradesync.php');
+    require_once($CFG->libdir . '/gradelib.php');
+    require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
     mumie_grade_item_update($mumie, mod_mumie\gradesync::get_mumie_grades($mumie, $userid));
 }
@@ -200,7 +204,7 @@ function mumie_before_standard_top_of_body_html() {
         return "";
     }
 
-    require_once ($CFG->dirroot . '/mod/mumie/gradesync.php');
+    require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
     mod_mumie\gradesync::update();
 
     return "";
@@ -218,12 +222,11 @@ function mumie_before_standard_top_of_body_html() {
  *   value depends on comparison type)
  */
 function mumie_get_completion_state($course, $cm, $userid, $type) {
-
     global $DB, $CFG;
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance), '*', MUST_EXIST);
 
     if ($mumie->completionpass) {
-        require_once ($CFG->libdir . '/gradelib.php');
+        require_once($CFG->libdir . '/gradelib.php');
         $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
             'itemmodule' => 'mumie', 'iteminstance' => $cm->instance, 'outcomeid' => null));
 
@@ -262,7 +265,7 @@ function mumie_dndupload_handle($uploadinfo) {
     $file = reset($files);
 
     $upload = json_decode($file->get_content());
-    require_once ($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+    require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
     if (!isset($upload->link) || !isset($upload->path_to_coursefile)
         || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {
         throw new moodle_exception('parameter_missing', 'mod_mumie');
@@ -271,7 +274,8 @@ function mumie_dndupload_handle($uploadinfo) {
     $server->set_urlprefix($upload->server);
     if (!$server->is_valid_mumie_server()) {
         throw new moodle_exception('mumie_form_server_not_existing', 'auth_mumie');
-    }if (!$server->config_exists_for_url()) {
+    }
+    if (!$server->config_exists_for_url()) {
         if (has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
             $server->set_name($server->get_urlprefix());
             $server->upsert();
