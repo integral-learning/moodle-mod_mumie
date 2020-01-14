@@ -18,7 +18,7 @@
  * Defines all backup steps that will be used by the backup_mumie_activity_task
  *
  * @package mod_mumie
- * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die;
  * Defines backup_mumie_activity_task class
  *
  * @package mod_mumie
- * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

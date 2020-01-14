@@ -18,7 +18,7 @@
  * Libary of internal functions used in mod_mumie
  *
  * @package mod_mumie
- * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -38,7 +38,7 @@ define("MUMIE_LAUNCH_CONTAINER_EMBEDDED", 1);
  * Libary of internal functions used in mod_mumie
  *
  * @package mod_mumie
- * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -18,7 +18,7 @@
  * This moodle form is used to insert or update MumieServer in the database
  *
  * @package mod_mumie
- * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
  * This moodle form is used to insert or update MumieServer in the database
  *
  * @package mod_mumie
- * @copyright  2019 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
