@@ -288,7 +288,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     label.style = "padding-left: 5px";
                     inputWrapper.appendChild(checkbox);
                     inputWrapper.appendChild(label);
-                    selectionBox.appendChild(inputWrapper);
+                    selectionBox.insertBefore(inputWrapper, selectionBox.firstChild);
                 }
                 return selectionBox;
             }

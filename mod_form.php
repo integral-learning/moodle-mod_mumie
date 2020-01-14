@@ -282,10 +282,12 @@ class mod_mumie_mod_form extends moodleform_mod {
         global $COURSE, $DB;
         if ($this->is_first_task_of_course($COURSE->id)) {
             $data->privategradepool = -1;
-        } else if (!isset($data->privategradepool)) {
-            $data->privategradepool = array_values(
-                $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
-            )[0]->privategradepool;
+        } else {
+            if (!isset($data->privategradepool)) {
+                $data->privategradepool = array_values(
+                    $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
+                )[0]->privategradepool;
+            }
         }
 
         $filter = array_filter(auth_mumie\mumie_server::get_all_servers(), function ($server) use ($data) {

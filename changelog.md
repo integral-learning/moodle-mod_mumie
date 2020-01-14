@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.3] TODO: DATE
+## [v1.3.0] TODO: DATE
 ### Fixed
 - Capabilities are now given a proper name
 - The capability of auth_mumie to add MUMIE servers can now be removed without causing an error in the add MUMIE Task form.

@@ -48,23 +48,21 @@ function xmldb_mumie_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+        upgrade_plugin_savepoint(true, 2019110100, 'mod', 'mumie');
     }
 
-    if ($oldversion < 2019121900) {
+    if ($oldversion < 2020011400) {
         $table = new xmldb_table('mumie');
         $field = new xmldb_field('duedate', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-    }
-
-    if ($oldversion < 2020010705) {
         $table = new xmldb_table('mumie');
         $field = new xmldb_field('privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+        upgrade_plugin_savepoint(true, 2020011400, 'mod', 'mumie');
     }
-
     return true;
 }
