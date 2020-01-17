@@ -72,12 +72,23 @@ class locallib {
      */
     public static function update_pending_gradepool($mumietask) {
         global $DB;
-        $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietask->id));
-        if ($oldrecord->privategradepool != $mumietask->privategradepool) {
+        $update = false;
+        if (!isset($mumie->id)) {
+            $update = true;
+        } else {
+            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietask->id));
+            if ($oldrecord->privategradepool != $mumietask->privategradepool) {
+                $update = true;
+            }
+        }
+
+        if ($update) {
             $tasks = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $mumietask->course));
             foreach ($tasks as $task) {
-                $task->privategradepool = $mumietask->privategradepool;
-                $DB->update_record(MUMIE_TASK_TABLE, $task);
+                if (!isset($task->privategradepool)) {
+                    $task->privategradepool = $mumietask->privategradepool;
+                    $DB->update_record(MUMIE_TASK_TABLE, $task);
+                }
             }
         }
     }

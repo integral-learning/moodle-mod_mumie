@@ -61,7 +61,7 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         if ($existingtask = array_values($DB->get_records('mumie', array('course' => $data->course)))[0]) {
             $data->privategradepool = $existingtask->privategradepool;
         } else {
-            $data->privategradepool = $data->privategradepool ?? 0;
+            $data->privategradepool = $data->privategradepool ?? null;
         }
 
         $newitemid = $DB->insert_record('mumie', $data);

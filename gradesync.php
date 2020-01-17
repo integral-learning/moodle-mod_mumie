@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/lib.php');
+require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+
 /**
  * This file defines the class gradesync
  *
@@ -103,7 +105,6 @@ class gradesync {
      */
     public static function get_mumie_grades($mumie, $userid) {
         global $COURSE, $DB;
-        $url = $mumie->server . '/public/xapi';
         $syncids = array();
 
         if ($userid == 0) {
@@ -166,9 +167,11 @@ class gradesync {
      * @return stdClass all requested grades for the given MUMIE task
      */
     public static function get_xapi_grades($mumie, $syncids, $mumieids) {
+        $mumieserver = new \auth_mumie\mumie_server();
+        $mumieserver->set_urlprefix($mumie->server);
         $payload = json_encode(array("users" => $syncids, "course" => $mumie->mumie_coursefile,
             "objectIds" => $mumieids, "lastSync" => $mumie->lastsync, "includeAll" => true));
-        $ch = self::create_post_curl_request($mumie->server . "/public/xapi", $payload);
+        $ch = self::create_post_curl_request($mumieserver->get_grade_sync_url(), $payload);
         $result = curl_exec($ch);
 
         curl_close($ch);

@@ -33,7 +33,7 @@ function mumie_set_privategradepool_default() {
     $tasks = $DB->get_records('mumie', array());
 
     foreach ($tasks as $task) {
-        if(!isset($task->privategradepool)) {
+        if (!isset($task->privategradepool)) {
             $task->privategradepool = 0;
             $DB->update_record('mumie', $task);
         }
