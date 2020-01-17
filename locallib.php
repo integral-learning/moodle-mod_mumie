@@ -53,4 +53,32 @@ class locallib {
         global $DB;
         return $DB->get_record(MUMIE_TASK_TABLE_NAME, array('id' => $id));
     }
+
+    /**
+     * Check if there are any MUMIE Tasks in the given course.
+     *
+     * @param int $courseid The course to check
+     * @return bool True, if there are no MUMIE Tasks in the course yet
+     */
+    public static function course_contains_mumie_tasks($courseid) {
+        global $DB;
+        return count($DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid))) < 1;
+    }
+
+    /**
+     * The function is called whenever a MUMIE task is updated or created.
+     * If a pending decision regarding gradepools was made, we need to update all other MUMIE Tasks in this course as well.
+     * @param stcClass $mumietask The update we are processing
+     */
+    public static function update_pending_gradepool($mumietask) {
+        global $DB;
+        $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietask->id));
+        if ($oldrecord->privategradepool != $mumietask->privategradepool) {
+            $tasks = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $mumietask->course));
+            foreach ($tasks as $task) {
+                $task->privategradepool = $mumietask->privategradepool;
+                $DB->update_record(MUMIE_TASK_TABLE, $task);
+            }
+        }
+    }
 }

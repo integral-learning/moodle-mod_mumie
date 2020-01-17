@@ -39,7 +39,7 @@ defined('MOODLE_INTERNAL') || die;
 function xmldb_mumie_upgrade($oldversion) {
     // Currently there is no need for an upgrade.php, but this file is necessary.
 
-    global $DB;
+    global $DB, $CFG;
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2019110100) {
@@ -51,7 +51,7 @@ function xmldb_mumie_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019110100, 'mod', 'mumie');
     }
 
-    if ($oldversion < 2020011400) {
+    if ($oldversion < 2020011702) {
         $table = new xmldb_table('mumie');
         $field = new xmldb_field('duedate', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
         if (!$dbman->field_exists($table, $field)) {
@@ -62,7 +62,9 @@ function xmldb_mumie_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        upgrade_plugin_savepoint(true, 2020011400, 'mod', 'mumie');
+        require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
+        mumie_set_privategradepool_default();
+        upgrade_plugin_savepoint(true, 2020011702, 'mod', 'mumie');
     }
     return true;
 }

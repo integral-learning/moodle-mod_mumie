@@ -40,6 +40,7 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
+    mod_mumie\locallib::update_pending_gradepool($mumie);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     return $mumie->id;
@@ -57,6 +58,8 @@ function mumie_update_instance($mumie, $mform) {
     $mumie->id = $mumie->instance;
     $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
     \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+    mod_mumie\locallib::update_pending_gradepool($mumie);
+
     mumie_grade_item_update($mumie);
 
     return $DB->update_record("mumie", $mumie);
@@ -105,7 +108,7 @@ function mumie_get_coursemodule_info($coursemodule) {
 }
 
 /**
- * Add information about potential due dates to the list view
+ * Add information about potential due dates or pending decisions to the list view
  *
  * @param cm_info $cm
  */
@@ -114,9 +117,9 @@ function mumie_cm_info_view(cm_info $cm) {
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
+    $info = '';
     if ($mumie->duedate) {
-        $cm->set_after_link(
-            ' ' .
+        $info .= ' ' .
             html_writer::tag('p', get_string('mumie_due_date', 'mod_mumie'), array('class' => 'tag-info tag'))
             . html_writer::tag(
                 'span',
@@ -125,9 +128,18 @@ function mumie_cm_info_view(cm_info $cm) {
                     $mumie->duedate
                 ),
                 array('style' => 'margin-left: 1em')
-            )
-        );
+            );
     }
+    if (!isset($mumie->privategradepool)) {
+        $info .= ' ' .
+            html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag'))
+            . html_writer::tag(
+                'span',
+                get_string('mumie_tag_disabled_help', 'mod_mumie'),
+                array('style' => 'margin-left: 1em')
+            );
+    }
+    $cm->set_after_link($info);
 }
 /**
  * List of features supported in URL module
@@ -293,6 +305,12 @@ function mumie_dndupload_handle($uploadinfo) {
     $mumie->mumie_course = $upload->course;
     $mumie->intro = '';
     $mumie->points = 100;
-
+    global $DB;
+    $exitingtasks = array_values(
+        $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
+    );
+    if (count($exitingtasks) > 0) {
+        $mumie->privategradepool = $exitingtasks[0]->privategradepool;
+    }
     return mumie_add_instance($mumie, null);
 }

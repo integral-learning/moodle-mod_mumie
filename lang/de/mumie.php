@@ -94,10 +94,13 @@ $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit
 <br>Falls diese Option aktiviert ist, werden Punkte, die für das Bearbeiten von MUMIE-Aufgaben in anderen MOODLE-Kursen vergeben wurden, auch in diesen Kurs übernommen.
 <br>Falls diese Option deaktiviert ist, werden weder Punkte aus anderen MOODLE-Kursen übernommen noch werden hier erziehlte Punkte mit anderen Kursen geteilt.';
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Achtung:</b><br> Diese Entscheidung ist <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
+$string['mumie_form_filter'] = 'MUMIE-Aufgaben filtern';
+
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
-$string['mumie_due_date_help'] = 'Wenn diese Option aktiviert ist, werden die Punkte von Abgaben, die nach dem ausgewählten Datum erfolgt sind, nicht in das Moodle-Gradebook übernommen.';
+$string['mumie_tag_disabled'] = 'Deaktiviert';
+$string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, da die Konfiguration noch nicht vollständig ist. Bitte öffnen Sie die Einstellungen dieser MUMIE-Task.';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';

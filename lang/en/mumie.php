@@ -81,6 +81,7 @@ $string['mumie_form_grade_pool_help'] = 'Choose whether to share a grade pool wi
 <br>If sharing is enabled, points that were earned for MUMIE problems in other courses will be automatically synchronized with this course\'s gradebook.
 <br>If not, this course will neither be able to import nor to export grades.';
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Warning:</b><br> This decision is <b>final</b> and affects all other MUMIE Tasks in this course';
+$string['mumie_form_filter'] = 'Filter MUMIE problems';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
@@ -98,7 +99,8 @@ $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. 
 
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
-$string['mumie_due_date_help'] = 'If enabled, grades of tasks that were submitted after the selected date will not be synchronized with Moodle.';
+$string['mumie_tag_disabled'] = 'Disabled';
+$string['mumie_tag_disabled_help'] = 'This activity is disabled because the configuration is not completed. Please open the settings of this MUMIE Task.';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'The uploaded file is incompatible!';

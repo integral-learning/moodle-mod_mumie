@@ -82,11 +82,16 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
 
-        $mform->addElement('html', '<div id="mumie_filter_section" class="form-group row  fitem" hidden>
-        <div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9">
-        <i class="fa fa-caret-down mumie-icon"></i>Filter MUMIE problems</span>
-        <div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement">
-        </div></div>');
+        $mform->addElement(
+            'html',
+            '<div id="mumie_filter_section" class="form-group row  fitem" hidden>
+            <div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9">
+             <i class="fa fa-caret-down mumie-icon"></i>'
+            . get_string('mumie_form_filter', 'mod_mumie')
+            . '</span>
+            <div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement">
+            </div></div>'
+        );
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
@@ -114,8 +119,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
 
         $radioarray = array();
-        $isfirsttask = $this->is_first_task_of_course($COURSE->id);
-        if (!$isfirsttask) {
+        $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
+        if ($disablegradepool) {
             $attributes = array('disabled' => '');
         } else {
             $attributes = array();
@@ -124,11 +129,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('no'), 1, $attributes);
         $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array(' '), false);
         $mform->addHelpButton('privategradepool', 'mumie_form_grade_pool', 'mumie');
-        $mform->addElement('html', '<div class="form-group row  fitem ">'
-            . '<div class="col-md-3"></div><div class="col-md-9">'
+
+        $mform->addElement(
+            'html',
+            '<div class="form-group row  fitem ">'
+            . '<div class="col-md-3"></div><div class="col-md-9 felement">'
             . get_string('mumie_form_grade_pool_warning', 'mod_mumie')
-            . '</div></div>');
-        if ($isfirsttask) {
+            . '</div></div>'
+        );
+        if (!$disablegradepool) {
             $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
         }
 
@@ -279,14 +288,16 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function set_data($data) {
-        global $COURSE, $DB;
-        if ($this->is_first_task_of_course($COURSE->id)) {
+        global $COURSE, $DB, $CFG;
+        require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+
+        if (mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
             $data->privategradepool = -1;
         } else {
             if (!isset($data->privategradepool)) {
                 $data->privategradepool = array_values(
                     $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
-                )[0]->privategradepool;
+                )[0]->privategradepool ?? -1;
             }
         }
 
@@ -315,14 +326,19 @@ class mod_mumie_mod_form extends moodleform_mod {
         return !empty($data['completionpass']);
     }
 
+
     /**
-     * Check if there are already any MUMIE Tasks in the given course.
+     * The decision regarding gradepools is final. We need to know whether we should disable the selection boxes.
      *
-     * @param int $courseid The course to check
-     * @return bool True, if there are no MUMIE Tasks in the course yet
+     * @param int $courseid id of the current course
+     * @return bool whether to disable gradepool selection
      */
-    private function is_first_task_of_course($courseid) {
+    private function disable_gradepool_selection($courseid) {
         global $DB;
-        return count($DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid))) < 1;
+        $records = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
+        if (count($records) < 1) {
+            return false;
+        }
+        return isset((array_values($records))[0]->privategradepool);
     }
 }

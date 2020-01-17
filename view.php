@@ -36,6 +36,15 @@ $cm = get_coursemodule_from_id('mumie', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 $mumietask = $DB->get_record('mumie', array('id' => $cm->instance));
+if (!isset($mumietask->privategradepool)) {
+    throw new moodle_exception(
+        'gradepool_decision_pending',
+        'mod_mumie',
+        '',
+        '',
+        get_string('mumie_tag_disabled_help', 'mod_mumie')
+    );
+}
 $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
 if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
     redirect($redirecturl);

@@ -15,21 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file defines the version of mod_mumie
+ * A library of functions used in the upgrade process
  *
  * @package mod_mumie
  * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-defined('MOODLE_INTERNAL') || die;
+/**
+ * This function is called during update to 2020011701.
+ * In older versions all grades where shared between courses. We need to enable this for all existing MUMIE Tasks.
+ */
+function mumie_set_privategradepool_default() {
+    global $DB;
+    $tasks = $DB->get_records('mumie', array());
 
-$plugin->version = 2020011702; // The current module version (Date: YYYYMMDDXX).
-$plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
-$plugin->requires = 2015041700;
-$plugin->release = "v1.3.0";
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array(
-    'auth_mumie' => 2020011400,
-);
+    foreach ($tasks as $task) {
+        if(!isset($task->privategradepool)) {
+            $task->privategradepool = 0;
+            $DB->update_record('mumie', $task);
+        }
+    }
+}
