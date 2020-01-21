@@ -77,7 +77,7 @@ $string['mumie_form_due_date'] = 'Due date';
 $string['mumie_form_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
-$string['mumie_form_grade_pool_help'] = 'Choose whether to share a grades with other MOODLE courses.
+$string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with other MOODLE courses.
 <br>If sharing is enabled, points that were earned for MUMIE problems in other courses will be automatically synchronized with this course\'s gradebook.
 <br>If not, this course will neither be able to import nor to export grades.';
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Warning:</b><br> This decision is <b>final</b> and affects all other MUMIE Tasks in this course';
