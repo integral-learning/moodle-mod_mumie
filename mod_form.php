@@ -120,10 +120,13 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $radioarray = array();
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
+        $gradepoolmsg = '';
         if ($disablegradepool) {
             $attributes = array('disabled' => '');
+            $gradepoolmsg = get_string('mumie_form_grade_pool_note', 'mod_mumie');
         } else {
             $attributes = array();
+            $gradepoolmsg = get_string('mumie_form_grade_pool_warning', 'mod_mumie');
         }
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('yes'), 0, $attributes);
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('no'), 1, $attributes);
@@ -134,7 +137,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             'html',
             '<div class="form-group row  fitem ">'
             . '<div class="col-md-3"></div><div class="col-md-9 felement">'
-            . get_string('mumie_form_grade_pool_warning', 'mod_mumie')
+            . $gradepoolmsg
             . '</div></div>'
         );
         if (!$disablegradepool) {
