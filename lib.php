@@ -253,30 +253,38 @@ function mumie_get_completion_state($course, $cm, $userid, $type) {
 }
 
 /**
- * Register the ability to handle drag and drop file uploads
+ * Register the ability to handle drag and drop of datatransfertype mumie/json
  * @return array containing details of the files / types the mod can handle
  */
 function mumie_dndupload_register() {
-    return array('files' => array(
-        array('extension' => 'json', 'message' => get_string('dndupload_message', 'mod_mumie')),
-    ));
+    return array(
+        'addtypes' => array(
+            array(
+                'identifier' => 'mumie/json', 'datatransfertypes' => array('mumie/json', 'mumie/json'),
+                'addmessage' => get_string('dnd_addmessage', 'mod_mumie'),
+                'namemessage' => '',
+                'priority' => 1)
+            ),
+        'types' => array(
+            array(
+                'identifier' => 'mumie/json',
+                'message' => get_string('dndupload_message', 'mod_mumie'),
+                'noname' => true),
+            )
+    );
 }
 
+
 /**
- * Handle a file that has been uploaded
- * @param object $uploadinfo details of the file / content that has been uploaded
+ * Handle content that has been uploaded
+ * @param object $uploadinfo details of the content that has been uploaded
  * @return int instance id of the newly created mod
  */
 function mumie_dndupload_handle($uploadinfo) {
     global $CFG, $COURSE, $USER;
 
     $context = context_module::instance($uploadinfo->coursemodule);
-    file_save_draft_area_files($uploadinfo->draftitemid, $context->id, 'mod_mumie', 'package', 0);
-    $fs = get_file_storage();
-    $files = $fs->get_area_files($context->id, 'mod_mumie', 'package', 0, 'sortorder, itemid, filepath, filename', false);
-    $file = reset($files);
-
-    $upload = json_decode($file->get_content());
+    $upload = json_decode(clean_param($uploadinfo->content, PARAM_RAW));
     require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
     if (!isset($upload->link) || !isset($upload->path_to_coursefile)
         || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {

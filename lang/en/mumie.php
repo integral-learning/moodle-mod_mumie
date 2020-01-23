@@ -107,6 +107,7 @@ $string['mumie_tag_disabled_help'] = 'This activity is disabled because the conf
 $string['parameter_missing'] = 'The uploaded file is incompatible!';
 $string['dndupload_message'] = 'Add as a new MUMIE Task';
 $string['server_config_missing'] = '<br><br>We could not find a configuration for the MUMIE server that is being used in this MUMIE Task. Please ask your administrator to add a MUMIE server configuration for the following URL prefix:<br><br><b>{$a}</b>';
+$string['dnd_addmessage'] = 'Add MUMIE Task here';
 
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
