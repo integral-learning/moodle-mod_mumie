@@ -40,7 +40,9 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
 
-        $paths[] = new restore_path_element('mumie', '/activity/mumie');
+        // We need to conncact this path or moodle code checker will display a false error.
+        $path = '/activity' . '/mumie';
+        $paths[] = new restore_path_element('mumie', $path);
         $paths[] = new restore_path_element('serverconfig', '/activity/mumie/serverconfig');
 
         return $this->prepare_activity_structure($paths);
