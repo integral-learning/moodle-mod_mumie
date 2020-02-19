@@ -111,4 +111,8 @@ class locallib {
         }
         return $task->get_headline_by_language($uploadedtask->language);
     }
+
+    public static function remove_params_from_url($url) {
+        return substr($url, 0, strpos($url, "?"));
+    }
 }

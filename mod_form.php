@@ -36,6 +36,7 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mumie_mod_form extends moodleform_mod {
+    private $problemoptions;
     /**
      * Define fields and default values for the mumie server form
      * @return void
@@ -52,6 +53,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $languageoptions = array();
 
         self::populate_options($serveroptions, $courseoptions, $problemoptions, $languageoptions);
+        $this->problemoptions = $problemoptions;
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
@@ -105,6 +107,9 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("hidden", "mumie_missing_config", null);
         $mform->setType("mumie_missing_config", PARAM_TEXT);
+        
+        $mform->addElement("hidden", "mumie_custom_problem", null);
+        $mform->setType("mumie_custom_problem", PARAM_TEXT);
 
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();
@@ -293,7 +298,6 @@ class mod_mumie_mod_form extends moodleform_mod {
     public function set_data($data) {
         global $COURSE, $DB, $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
-
         if (mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
             $data->privategradepool = -1;
         } else {
@@ -308,12 +312,36 @@ class mod_mumie_mod_form extends moodleform_mod {
             if (!isset($data->server)) {
                 return false;
             }
-
             return $server->get_urlprefix() === $data->server;
         });
 
         if (count($filter) < 1 && isset($data->server)) {
             $data->mumie_missing_config = $data->server;
+        }
+
+        $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
+        $server->load_structure();
+        $course = $server->get_course_by_coursefile($data->mumie_coursefile);
+        $task = $course->get_task_by_link($data->taskurl);
+        if (is_null($task)) {
+            /*
+            $customProblem = (array) json_decode(json_encode(\auth_mumie\mumie_problem::from_task_db_object($data)));
+            $customProblem['server'] = $data->server;
+            $data->mumie_custom_problem = json_encode($customProblem);
+            */
+            $customProblem = new \stdClass;
+            $customProblem->link = \mod_mumie\locallib::remove_params_from_url($data->taskurl);
+            $headline = [["language" => $data->language, "name" => $data->name]];
+            $customProblem->headline = $headline;
+            $customProblem->server = $data->server;
+            $customProblem->mumie_coursefile = $data->mumie_coursefile;
+
+            $data->mumie_custom_problem = json_encode($customProblem);
+            $mform = &$this->_form;
+            $option = array();
+            $option['text'] = $data->name;
+            $option['attr'] = ["value"=>$data->taskurl];
+            array_push($mform->getElement("taskurl")->_options, $option);
         }
 
         parent::set_data($data);

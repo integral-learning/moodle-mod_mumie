@@ -2,14 +2,40 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
     function() {
         var addServerButton = document.getElementById("id_add_server_button");
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
+        var customProblemElem = document.getElementsByName('mumie_custom_problem')[0];
 
         var serverController = (function() {
             var serverStructure;
             var serverDropDown = document.getElementById("id_server");
 
+            /**
+             * Add a custom MUMIE problem to the server structure.
+             *
+             * In some cases (e.g. drag&drop, changes in json coming from the MUMIE-Backend),
+             * users have added MUMIE problems that are not officially part of the server structure.
+             * We need to add those problems to the server structre or the user will not be able
+             * to edit the MUMIE task.
+             */
+            function addCustomProblem() {
+                var customProblem = JSON.parse(customProblemElem.value);
+                for (var i in serverStructure) {
+                    var server = serverStructure[i];
+                    if (server.urlprefix == customProblem.server) {
+                        for (var j in server.courses) {
+                            var course = server.courses[j];
+                            if (course.coursefile == customProblem.mumie_coursefile) {
+                                course.tasks.push(customProblem);
+                            }
+                        }
+                    }
+                }
+            }
             return {
                 init: function(structure) {
                     serverStructure = structure;
+                    if (customProblemElem.value) {
+                        addCustomProblem();
+                    }
                     serverDropDown.onchange = function() {
                         courseController.updateOptions();
                         langController.updateOptions();
