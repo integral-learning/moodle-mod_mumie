@@ -307,12 +307,12 @@ function mumie_dndupload_handle($uploadinfo) {
     $mumie->taskurl = $upload->link . '?lang=' . $upload->language;
     $mumie->mumie_coursefile = $upload->path_to_coursefile;
     $mumie->language = $upload->language;
-    $mumie->name = $upload->name;
     $mumie->course = $uploadinfo->course->id;
     $mumie->server = $server->get_urlprefix();
     $mumie->mumie_course = $upload->course;
     $mumie->intro = '';
     $mumie->points = 100;
+    $mumie->name = mod_mumie\locallib::get_default_name($upload) ?? $upload->name;
     global $DB;
     $exitingtasks = array_values(
         $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))

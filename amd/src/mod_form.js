@@ -31,8 +31,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 disable: function() {
                     serverDropDown.disabled = true;
                     removeChildElems(serverDropDown);
+                },
+                getAllServers: function() {
+                    return serverStructure;
                 }
-
             };
         })();
 
@@ -151,7 +153,21 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * Update the activity's name in the input field
              */
             function updateName() {
-                nameElem.value = getHeadline(taskController.getSelectedTask());
+                if (!isCustomName()) {
+                    nameElem.value = getHeadline(taskController.getSelectedTask());
+                }
+            }
+
+            /**
+             * Check whether the activity has a custom name
+             *
+             * @return {boolean} True, if there is no headline with that name in all tasks
+             */
+            function isCustomName() {
+                if (nameElem.value.length == 0) {
+                    return false;
+                }
+                return !getAllHeadlines().includes(nameElem.value);
             }
 
             /**
@@ -170,6 +186,42 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     }
                 }
                 return null;
+            }
+
+            /**
+             * Get all tasks that are available on all servers
+             *
+             * @return {Object} Array containing all available tasks
+             */
+            function getAllTasks() {
+                var tasks = [];
+                for (var i in serverController.getAllServers()) {
+                    var server = serverController.getAllServers()[i];
+                    for (var j in server.courses) {
+                        var course = server.courses[j];
+                        for (var m in course.tasks) {
+                            var task = course.tasks[m];
+                            tasks.push(task);
+                        }
+                    }
+                }
+                return tasks;
+            }
+
+            /**
+             * Get all possible headlines in all languages
+             * @returns {Object} Array containing all headlines
+             */
+            function getAllHeadlines() {
+                var headlines = [];
+                var tasks = getAllTasks();
+                for (var i in tasks) {
+                    var task = tasks[i];
+                    for (var n in task.headline) {
+                        headlines.push(task.headline[n].name);
+                    }
+                }
+                return headlines;
             }
 
             /**

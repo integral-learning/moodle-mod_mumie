@@ -92,4 +92,23 @@ class locallib {
             }
         }
     }
+
+    /**
+     * Get a default name for the uploaded MumieTask, if available.
+     * The droped MUMIE task's name is generated and does not look pretty. Search its server for a better name.
+     * @param stdClass $uploadedtask
+     * @return string
+     */
+    public static function get_default_name($uploadedtask) {
+        global $CFG;
+        require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+        $server = \auth_mumie\mumie_server::get_by_urlprefix($uploadedtask->server);
+        $server->load_structure();
+        $course = $server->get_course_by_coursefile($uploadedtask->path_to_coursefile);
+        $task = $course->get_task_by_link($uploadedtask->link);
+        if (is_null($task)) {
+            return;
+        }
+        return $task->get_headline_by_language($uploadedtask->language);
+    }
 }
