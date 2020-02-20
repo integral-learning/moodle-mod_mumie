@@ -1,6 +1,14 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+## [v1.3.1] - TODO: ENTER DATE
+### Added
+- MUMIE Problems can now be added to the server-course-task structure. This means that editing of MUMIE Tasks containing a problem that are not part of 
+the offical server structre is now supported as well.
+
+### Changed
+- Names for MUMIE Tasks that were entered by the user themself are no longer overwritten, when selecting another problem.
+- When creating a MUMIE Task with drag&drop, the plugin now tries get a human readable name from the server structure and then sets it as a new default name.
 
 ## [v1.3.0] - 2019-02-04
 ### Fixed

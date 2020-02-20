@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mumie_mod_form extends moodleform_mod {
-    private $problemoptions;
     /**
      * Define fields and default values for the mumie server form
      * @return void
@@ -46,14 +45,13 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform = &$this->_form;
 
-        $coursesforserver = auth_mumie\mumie_server::get_all_servers_with_structure();
+        $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
         $serveroptions = array();
         $courseoptions = array();
         $problemoptions = array();
         $languageoptions = array();
 
         self::populate_options($serveroptions, $courseoptions, $problemoptions, $languageoptions);
-        $this->problemoptions = $problemoptions;
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
@@ -107,9 +105,9 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("hidden", "mumie_missing_config", null);
         $mform->setType("mumie_missing_config", PARAM_TEXT);
-        
-        $mform->addElement("hidden", "mumie_custom_problem", null);
-        $mform->setType("mumie_custom_problem", PARAM_TEXT);
+
+        $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
+        $mform->setType("mumie_server_structure", PARAM_RAW);
 
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();
@@ -288,8 +286,17 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Set a hidden value, if the MUMIE server configuration, which has been used in this MUMIE task, has been deleted.
+     * Make some changes to the loaded data and the form.
+     *
+     * In some cases (e.g. drag&drop, changes in json coming from the MUMIE-Backend),
+     * users have added MUMIE problems that are not officially part of the server structure.
+     * We need to add those problems to the server structre or the user will not be able
+     * to edit the MUMIE task.
+     *
+     * Set a hidden value, if the MUMIE server configuration that has been used in this MUMIE task has been deleted.
      * Javascript uses this information to display an error message.
+     * 
+     * Remove pre-selection for gradepools, if the decision about it is still pending.
      *
      * This function is called, when a MUMIE task is edited.
      * @param stdClass $data instance of MUMIE task, that is being edited
@@ -298,6 +305,8 @@ class mod_mumie_mod_form extends moodleform_mod {
     public function set_data($data) {
         global $COURSE, $DB, $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+
+        // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
         if (mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
             $data->privategradepool = -1;
         } else {
@@ -307,41 +316,53 @@ class mod_mumie_mod_form extends moodleform_mod {
                 )[0]->privategradepool ?? -1;
             }
         }
+        // The following changes only apply to edits, so skip them if not neccessary.
+        if (!isset($data->server)) {
+            parent::set_data($data);
+            return;
+        }
 
-        $filter = array_filter(auth_mumie\mumie_server::get_all_servers(), function ($server) use ($data) {
-            if (!isset($data->server)) {
-                return false;
-            }
-            return $server->get_urlprefix() === $data->server;
+        // Set a flag, if the server configuration is missing!
+        $filter = array_filter(
+            auth_mumie\mumie_server::get_all_servers(), 
+            function ($server) use ($data) {
+                if (!isset($data->server)) {
+                    return false;
+                }
+                return $server->get_urlprefix() === $data->server;
         });
 
         if (count($filter) < 1 && isset($data->server)) {
             $data->mumie_missing_config = $data->server;
         }
 
+        // Check, whether we need to add a custom problem to the server structure.
         $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
         $server->load_structure();
         $course = $server->get_course_by_coursefile($data->mumie_coursefile);
         $task = $course->get_task_by_link($data->taskurl);
         if (is_null($task)) {
-            /*
-            $customProblem = (array) json_decode(json_encode(\auth_mumie\mumie_problem::from_task_db_object($data)));
-            $customProblem['server'] = $data->server;
-            $data->mumie_custom_problem = json_encode($customProblem);
-            */
-            $customProblem = new \stdClass;
-            $customProblem->link = \mod_mumie\locallib::remove_params_from_url($data->taskurl);
-            $headline = [["language" => $data->language, "name" => $data->name]];
-            $customProblem->headline = $headline;
-            $customProblem->server = $data->server;
-            $customProblem->mumie_coursefile = $data->mumie_coursefile;
+            // Add a problem derived from the edited task's taskurl to the server structure.
+            $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
+            $filteredservers = array_filter($serverstructure, function ($s) use ($data) {
+                return $s->get_urlprefix() == $data->server;
+            });
+            $filteredserver = array_values($filteredservers)[0];
 
-            $data->mumie_custom_problem = json_encode($customProblem);
+            $filteredserver->add_custom_problem_to_structure($data);
             $mform = &$this->_form;
+
+            // Save the updated server structure in the hidden input field.
+            $mform->removeElement('mumie_server_structure');
+            $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
+            $mform->setType("mumie_server_structure", PARAM_RAW);
+
+            // Add the custom problem as an option to the problem drop down menu.
             $option = array();
             $option['text'] = $data->name;
-            $option['attr'] = ["value"=>$data->taskurl];
+            $option['attr'] = ["value" => $data->taskurl];
             array_push($mform->getElement("taskurl")->_options, $option);
+            
         }
 
         parent::set_data($data);

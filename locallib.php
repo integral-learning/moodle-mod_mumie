@@ -95,24 +95,37 @@ class locallib {
 
     /**
      * Get a default name for the uploaded MumieTask, if available.
-     * The droped MUMIE task's name is generated and does not look pretty. Search its server for a better name.
+     *
+     * The droped MUMIE Task's name is automatically generated and does not look pretty.
+     * Search its server for a better name.
      * @param stdClass $uploadedtask
      * @return string
      */
     public static function get_default_name($uploadedtask) {
         global $CFG;
+        debugging("getting default name for: " . $uploadedtask->link);
         require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
         $server = \auth_mumie\mumie_server::get_by_urlprefix($uploadedtask->server);
         $server->load_structure();
         $course = $server->get_course_by_coursefile($uploadedtask->path_to_coursefile);
         $task = $course->get_task_by_link($uploadedtask->link);
         if (is_null($task)) {
+            debugging("________task is null!");
             return;
         }
         return $task->get_headline_by_language($uploadedtask->language);
     }
 
+    /**
+     * Remove all parameters from a given URL
+     *
+     * @param string $url
+     * @return string $url
+     */
     public static function remove_params_from_url($url) {
-        return substr($url, 0, strpos($url, "?"));
+        if(strpos($url, "?") !== false) {
+            $url = substr($url, 0, strpos($url, "?"));
+        }
+        return $url;
     }
 }
