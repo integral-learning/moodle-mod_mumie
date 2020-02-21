@@ -55,12 +55,14 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
+        
+        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"));
+        $mform->setType('name', PARAM_TEXT);
+        $mform->addRule('name', get_string('required'), 'required', null);
 
         $this->standard_intro_elements(get_string('mumieintro', 'mumie'));
         $mform->setAdvanced('introeditor');
-
-        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"));
-        $mform->setType('name', PARAM_TEXT);
+        $mform->setAdvanced('showdescription');
 
         $mform->addElement("select", "server", get_string('mumie_form_activity_server', "mod_mumie"), $serveroptions);
         $mform->addHelpButton("server", 'mumie_form_activity_server', 'mumie');
@@ -295,7 +297,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * Set a hidden value, if the MUMIE server configuration that has been used in this MUMIE task has been deleted.
      * Javascript uses this information to display an error message.
-     * 
+     *
      * Remove pre-selection for gradepools, if the decision about it is still pending.
      *
      * This function is called, when a MUMIE task is edited.
@@ -324,13 +326,14 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         // Set a flag, if the server configuration is missing!
         $filter = array_filter(
-            auth_mumie\mumie_server::get_all_servers(), 
+            auth_mumie\mumie_server::get_all_servers(),
             function ($server) use ($data) {
                 if (!isset($data->server)) {
                     return false;
                 }
                 return $server->get_urlprefix() === $data->server;
-        });
+            }
+        );
 
         if (count($filter) < 1 && isset($data->server)) {
             $data->mumie_missing_config = $data->server;
@@ -362,7 +365,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             $option['text'] = $data->name;
             $option['attr'] = ["value" => $data->taskurl];
             array_push($mform->getElement("taskurl")->_options, $option);
-            
         }
 
         parent::set_data($data);

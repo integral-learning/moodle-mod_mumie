@@ -99,6 +99,11 @@ function mumie_get_coursemodule_info($coursemodule) {
     $info = new cached_cm_info();
     $info->name = $mumie->name;
 
+    if ($coursemodule->showdescription) {
+        // Convert intro to html. Do not filter cached version, filters run at display time.
+        $info->content = format_module_intro('mumie', $mumie, $coursemodule->id, false);
+    }
+
     // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
     if ($mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
         $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";
@@ -154,6 +159,8 @@ function mumie_supports($feature) {
             return true;
         case FEATURE_BACKUP_MOODLE2:
             return true;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
         default:
             return null;
     }
@@ -198,6 +205,9 @@ function mumie_grade_item_update($mumie, $grades = null) {
  * @param bool     $nullifnone Not used
  */
 function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
+    if (!isset($mumie->privategradepool)) {
+        return;
+    }
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
     require_once($CFG->dirroot . '/mod/mumie/gradesync.php');

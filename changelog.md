@@ -10,26 +10,30 @@ the offical server structre is now supported as well.
 - Names for MUMIE Tasks that were entered by the user themself are no longer overwritten, when selecting another problem.
 - When creating a MUMIE Task with drag&drop, the plugin now tries get a human readable name from the server structure and then sets it as a new default name.
 
+### Fixed.
+- Description can now be set for MUMIE Tasks
+- Grades are now longer synchronized, if the decision about gradepools is still pending.
+
 ## [v1.3.0] - 2019-02-04
 ### Fixed
-- Capabilities are now given a proper name
+- Capabilities are now given a proper name.
 - The capability of auth_mumie to add MUMIE servers can now be removed without causing an error in the add MUMIE Task form.
-- User IDs are now hashed for SSO if a MUMIE Task was restored from a backup
+- User IDs are now hashed for SSO if a MUMIE Task was restored from a backup.
 
 ### Added
 - When creating a MUMIE Task, MUMIE problems can be filtered by keywords.
-- A due date can now be set for MUMIE Tasks
+- A due date can now be set for MUMIE Tasks.
 - Automatically add MUMIE Tasks by dragging and dropping MUMIE Problems from MUMIE courses into a MOODLE course.
-- Sharing grades for the same MUMIE problems with other MOODLE courses can be disabled
-- Prepared MUMIE Task creation via drag&drop from MUMIE. This will be possible after the next release of MUMIE
+- Sharing grades for the same MUMIE problems with other MOODLE courses can be disabled.
+- Prepared MUMIE Task creation via drag&drop from MUMIE. This will be possible after the next release of MUMIE.
 
 ## [v1.2] - 2019-11-05
 Attention: Installing this update will create new MUMIE acounts for all users. Old MUMIE tasks will keep working, but they wont share a grade pool with newly created ones.
 ### Added
-- MOODLE userid is now hashed to improve data security
+- MOODLE userid is now hashed to improve data security.
 
 ### Fixed
-- Error messages in mod_form are now displayed properly
+- Error messages in mod_form are now displayed properly.
 
 
 ## [v1.1] - 2019-09-26

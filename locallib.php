@@ -123,7 +123,7 @@ class locallib {
      * @return string $url
      */
     public static function remove_params_from_url($url) {
-        if(strpos($url, "?") !== false) {
+        if (strpos($url, "?") !== false) {
             $url = substr($url, 0, strpos($url, "?"));
         }
         return $url;
