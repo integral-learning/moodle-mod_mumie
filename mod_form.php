@@ -55,7 +55,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
-        
+
         $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null);
