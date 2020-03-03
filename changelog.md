@@ -1,10 +1,10 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
-## [v1.3.1] - TODO: ENTER DATE
+## [v1.3.1] - 2020-03-03
 ### Added
-- MUMIE Problems can now be added to the server-course-task structure. This means that editing of MUMIE Tasks containing a problem that are not part of 
-the offical server structre is now supported as well.
+- MUMIE Problems can now be added to the server-course-task structure. This means that the use of tasks that are not part of the offical server structre is now supported as well.
+
 
 ### Changed
 - Names for MUMIE Tasks that were entered by the user themself are no longer overwritten, when selecting another problem.
@@ -14,7 +14,7 @@ the offical server structre is now supported as well.
 - Description can now be set for MUMIE Tasks
 - Grades are now longer synchronized, if the decision about gradepools is still pending.
 
-## [v1.3.0] - 2019-02-04
+## [v1.3.0] - 2020-02-04
 ### Fixed
 - Capabilities are now given a proper name.
 - The capability of auth_mumie to add MUMIE servers can now be removed without causing an error in the add MUMIE Task form.
