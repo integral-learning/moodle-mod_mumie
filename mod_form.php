@@ -238,7 +238,9 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function populate_course_options($courses, &$courseoptions, &$problemoptions, &$languageoptions) {
         foreach ($courses as $course) {
-            $courseoptions[$course->get_name()] = $course->get_name();
+            foreach ($course->get_name() as $name) {
+                $courseoptions[$name->value] = $name->value;
+            }
             self::populate_problem_options($course, $problemoptions, $languageoptions);
         }
     }

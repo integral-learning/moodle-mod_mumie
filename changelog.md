@@ -1,6 +1,11 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+## [v1.3.2] - TODO
+### Added
+- When creating a new MUMIE Task, the user's prefered language is set as default.
+- MUMIE course names are now available in multiple languages
+
 ## [v1.3.1] - 2020-03-03
 ### Added
 - MUMIE Problems can now be added to the server-course-task structure. This means that the use of tasks that are not part of the offical server structre is now supported as well.
