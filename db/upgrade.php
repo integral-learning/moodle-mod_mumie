@@ -66,5 +66,14 @@ function xmldb_mumie_upgrade($oldversion) {
         mumie_set_privategradepool_default();
         upgrade_plugin_savepoint(true, 2020011702, 'mod', 'mumie');
     }
+
+    if ($oldversion < 2020040700) {
+        $table = new xmldb_table('mumie');
+        $field = new xmldb_field('isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_plugin_savepoint(true, 2020040700, 'mod', 'mumie');
+    }
     return true;
 }

@@ -83,6 +83,8 @@ $string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with oth
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Warning:</b><br> This decision is <b>final</b> and affects all other MUMIE Tasks in this course';
 $string['mumie_form_grade_pool_note'] = '<b>Note:</b><br> This decision was <b>final</b> and affects all other MUMIE Tasks in this course';
 $string['mumie_form_filter'] = 'Filter MUMIE problems';
+$string['mumie_form_complete_course'] = 'Link the entire course';
+$string['mumie_form_complete_course_help'] = 'The user will only be logged in and redirected to the course overview page. Grades will <b>not</b> be synchronized for this MUMIE Task.';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';

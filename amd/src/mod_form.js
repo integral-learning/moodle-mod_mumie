@@ -155,6 +155,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         var taskController = (function() {
             var taskDropDown = document.getElementById("id_taskurl");
             var nameElem = document.getElementById("id_name");
+            var useCompleteCourseElem = document.getElementById("id_mumie_complete_course");
 
             /**
              * Update the activity's name in the input field
@@ -222,11 +223,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function getAllHeadlines() {
                 var headlines = [];
                 var tasks = getAllTasks();
+                tasks.push(getPseudoTaskFromCourse(courseController.getSelectedCourse()));
                 for (var i in tasks) {
                     var task = tasks[i];
                     for (var n in task.headline) {
                         headlines.push(task.headline[n].name);
                     }
+                }
+                var course = courseController.getSelectedCourse();
+                for (var j in course.name) {
+                    var name = course.name[j];
+                    headlines.push(name.value);
                 }
                 return headlines;
             }
@@ -253,11 +260,55 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 }
             }
 
+            /**
+             * User can chose to select an entire course instead of a single problem. 
+             * If they do so, we simply add a pseudo problem linking to the courses overview page
+             * @param {Object} course 
+             */
+            function addPseudoTaskOption(course) {
+                var task = getPseudoTaskFromCourse(course);
+                var optionTask = document.createElement("option");
+                optionTask.setAttribute("value", getLocalizedLink(task));
+                optionTask.text = getHeadline(task);
+                taskDropDown.append(optionTask);
+            }
+
+            /**
+             * Get a task that links to a course's overview page
+             * @param {Object} course 
+             * @returns {Object} task
+             */
+            function getPseudoTaskFromCourse(course) {
+                var headline = [];
+                for (var i in course.name) {
+                    var name = course.name[i];
+                    headline.push({
+                        "name": name.value,
+                        "language": name.language
+                    });
+                }
+                return {
+                    "link": course.link,
+                    "headline": headline
+                };
+            }
+
+            /**
+             * Returns true, if the user has chosen to select the entire course instead of a single problem
+             * @returns {boolean}
+             */
+            function useCompleteCourse() {
+                return useCompleteCourseElem.checked;
+            }
+
             return {
                 init: function(isEdit) {
                     updateName();
                     taskDropDown.onchange = function() {
                         updateName();
+                    };
+                    useCompleteCourseElem.onchange = function() {
+                        taskController.updateOptions();
                     };
                     taskController.updateOptions(isEdit ?
                         taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value') : undefined
@@ -266,7 +317,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 getSelectedTask: function() {
                     var selectedLink = taskDropDown.options[taskDropDown.selectedIndex] ==
                         undefined ? undefined : taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value');
-                    var tasks = courseController.getSelectedCourse().tasks;
+                    var course = courseController.getSelectedCourse();
+                    var tasks = course.tasks.slice();
+                    tasks.push(getPseudoTaskFromCourse(course));
                     for (var i in tasks) {
                         var task = tasks[i];
                         if (selectedLink == getLocalizedLink(task)) {
@@ -282,16 +335,23 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 updateOptions: function(selectTaskByLink) {
                     removeChildElems(taskDropDown);
                     taskDropDown.selectedIndex = 0;
-                    var tasks = filterController.filterTasks(courseController.getSelectedCourse().tasks);
-                    for (var i in tasks) {
-                        var task = tasks[i];
-                        addTaskOption(task);
-                        if (selectTaskByLink === getLocalizedLink(task)) {
-                            taskDropDown.selectedIndex = taskDropDown.childElementCount - 1;
+                    if (useCompleteCourse()) {
+                        addPseudoTaskOption(courseController.getSelectedCourse());
+                    } else {
+                        var tasks = filterController.filterTasks(courseController.getSelectedCourse().tasks);
+                        for (var i in tasks) {
+                            var task = tasks[i];
+                            addTaskOption(task);
+                            if (selectTaskByLink === getLocalizedLink(task)) {
+                                taskDropDown.selectedIndex = taskDropDown.childElementCount - 1;
+                            }
                         }
                     }
                     updateName();
                 },
+                useCompleteCourse: function() {
+                    return useCompleteCourse();
+                }
             };
         })();
 
@@ -471,7 +531,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     return filterTasks(tasks, selectedTags);
                 }
             };
-
         })();
 
         return {

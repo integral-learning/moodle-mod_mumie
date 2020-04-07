@@ -5,6 +5,8 @@ All important changes to this plugin will be documented in this file.
 ### Added
 - When creating a new MUMIE Task, the user's prefered language is set as default.
 - MUMIE course names are now available in multiple languages
+- MUMIE Tasks can now link an entire course at once. Grades will not be synchronized for these kind of activities.
+
 
 ## [v1.3.1] - 2020-03-03
 ### Added

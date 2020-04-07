@@ -96,6 +96,8 @@ $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Achtung:</b><br> Diese Entscheidung ist <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
 $string['mumie_form_grade_pool_note'] = '<b>Hinweis:</b><br> Diese Entscheidung war <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
 $string['mumie_form_filter'] = 'MUMIE-Aufgaben filtern';
+$string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
+$string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 
 
 // Used in course view.

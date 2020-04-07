@@ -41,6 +41,7 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
     mod_mumie\locallib::update_pending_gradepool($mumie);
+    $mumie->isgraded = !($mumie->mumie_complete_course ?? 0);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     return $mumie->id;
@@ -59,7 +60,6 @@ function mumie_update_instance($mumie, $mform) {
     $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
     \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
     mod_mumie\locallib::update_pending_gradepool($mumie);
-
     mumie_grade_item_update($mumie);
 
     return $DB->update_record("mumie", $mumie);
@@ -176,6 +176,9 @@ function mumie_supports($feature) {
  */
 function mumie_grade_item_update($mumie, $grades = null) {
     global $CFG;
+    if (!$mumie->isgraded) {
+        return false;
+    }
     require_once($CFG->libdir . '/gradelib.php');
     if (array_key_exists('cmidnumber', $mumie)) {
         $params = array('itemname' => $mumie->name, 'idnumber' => $mumie->cmidnumber);

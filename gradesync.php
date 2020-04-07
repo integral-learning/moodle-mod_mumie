@@ -69,13 +69,13 @@ class gradesync {
     }
 
     /**
-     * Get all MUMIE tasks that are used in this course
+     * Get all graded MUMIE tasks that are used in this course
      * @param int $courseid
      * @return array All MUMIE tasks that are used in the given course
      */
     public static function get_mumie_tasks_from_course($courseid) {
         global $DB;
-        return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
+        return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid, "isgraded" => 1));
     }
 
     /**
