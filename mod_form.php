@@ -82,7 +82,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
-        $mform->setDefault("language", $USER->lang);
+        $mform->setDefault("language", optional_param("lang", $USER->lang, PARAM_ALPHA));
 
         $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');

@@ -47,14 +47,21 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              */
             function addOptionForCourse(course) {
                 var optionCourse = document.createElement("option");
-                for (var i in course.name) {
-                    var name = course.name[i];
-                    if (name.language == langController.getSelectedLanguage()) {
-                        optionCourse.setAttribute("value", name.value);
-                        optionCourse.text = name.value;
-                        courseDropDown.append(optionCourse);
+                var selectedLanguage = langController.getSelectedLanguage();
+                var name;
+                // If the currently selected server is not available on the server, we need to select another one.
+                if (!course.languages.includes(selectedLanguage)) {
+                    name = course.name[0];
+                } else {
+                    for (var i in course.name) {
+                        if (course.name[i].language == selectedLanguage) {
+                            name = course.name[i];
+                        }
                     }
                 }
+                optionCourse.setAttribute("value", name.value);
+                optionCourse.text = name.value;
+                courseDropDown.append(optionCourse);
             }
 
             /**
@@ -309,6 +316,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     };
                     useCompleteCourseElem.onchange = function() {
                         taskController.updateOptions();
+                        filterController.updateOptions();
                     };
                     taskController.updateOptions(isEdit ?
                         taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value') : undefined
@@ -514,6 +522,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     };
                 },
                 updateOptions: function() {
+                    if (taskController.useCompleteCourse()) {
+                        filterSection.style = "display: none";
+                    } else {
+                        filterSection.style = "display: flex";
+                    }
                     var tags = courseController.getSelectedCourse().tags;
                     selectedTags = [];
                     if (tags.length > 0) {
