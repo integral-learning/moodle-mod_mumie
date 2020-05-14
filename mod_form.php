@@ -374,7 +374,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         // This option must not be changed to avoid messing with grades in the database.
         $mform->getElement("mumie_complete_course");
         $mform->updateElementAttr("mumie_complete_course", array("disabled" => "disabled"));
-        
+
         // Check, whether we need to add a custom problem to the server structure.
         $task = $course->get_task_by_link($data->taskurl);
         if (is_null($task) && !$completecourse) {

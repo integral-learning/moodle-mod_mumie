@@ -268,9 +268,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * User can chose to select an entire course instead of a single problem. 
+             * User can chose to select an entire course instead of a single problem.
              * If they do so, we simply add a pseudo problem linking to the courses overview page
-             * @param {Object} course 
+             * @param {Object} course
              */
             function addPseudoTaskOption(course) {
                 var task = getPseudoTaskFromCourse(course);
@@ -282,7 +282,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Get a task that links to a course's overview page
-             * @param {Object} course 
+             * @param {Object} course
              * @returns {Object} task
              */
             function getPseudoTaskFromCourse(course) {
