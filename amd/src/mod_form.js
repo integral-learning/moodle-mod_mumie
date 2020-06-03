@@ -98,7 +98,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     courseDropDown.disabled = true;
                     removeChildElems(courseDropDown);
                 },
-                updateOptions: function(selectedCourseFile) {
+                updateOptions: function() {
+                    var selectedCourseFile = coursefileElem.value;
                     removeChildElems(courseDropDown);
                     courseDropDown.selectedIndex = 0;
                     var courses = serverController.getSelectedServer().courses;
