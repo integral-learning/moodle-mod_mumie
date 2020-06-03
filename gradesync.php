@@ -221,10 +221,14 @@ class gradesync {
      * Get the unique identifier for a MUMIE task
      *
      * @param stdClass $mumietask
-     * @return string id for MUMIE task on MUMIE server
+     * @return string id for MUMIE task on MUMIE/LEMON server
      */
     public static function get_mumie_id($mumietask) {
-        $id = substr($mumietask->taskurl, strlen("link/"));
+        $id = $mumietask->taskurl;
+        $prefix = "link/";
+        if (strpos($id, $prefix) !== false) {
+            $id = substr($mumietask->taskurl, strlen($prefix));
+        }
         $id = substr($id, 0, strpos($id, '?lang='));
         return $id;
     }
