@@ -6,6 +6,7 @@ All important changes to this plugin will be documented in this file.
 - When creating a new MUMIE Task, the user's prefered language is set as default.
 - MUMIE course names are now available in multiple languages
 - MUMIE Tasks can now link an entire course at once. Grades will not be synchronized for these kind of activities.
+- Teachers can now create MUMIE Tasks for LEMON servers
 
 ### Fixed
 - Course selection doesn't change anymore if selected language is updated
