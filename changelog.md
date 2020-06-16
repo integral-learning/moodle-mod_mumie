@@ -1,6 +1,11 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+
+## [v1.3.3] - TODO
+### Fixed
+- Fixed minified js files
+
 ## [v1.3.2] - 2020-06-09
 ### Added
 - When creating a new MUMIE Task, the user's prefered language is set as default.
