@@ -330,8 +330,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 
         // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
-        if (mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
-            $data->privategradepool = -1;
+        if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
+            $data->privategradepool = get_config('auth_mumie', 'defaultgradepool');
         } else {
             if (!isset($data->privategradepool)) {
                 $data->privategradepool = array_values(
@@ -422,6 +422,9 @@ class mod_mumie_mod_form extends moodleform_mod {
     private function disable_gradepool_selection($courseid) {
         global $DB;
         $records = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
+        if (get_config('auth_mumie', 'defaultgradepool') != -1) {
+            return true;
+        }
         if (count($records) < 1) {
             return false;
         }

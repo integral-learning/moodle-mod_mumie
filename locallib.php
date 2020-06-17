@@ -58,11 +58,11 @@ class locallib {
      * Check if there are any MUMIE Tasks in the given course.
      *
      * @param int $courseid The course to check
-     * @return bool True, if there are no MUMIE Tasks in the course yet
+     * @return bool True, if there are MUMIE Tasks in the course
      */
     public static function course_contains_mumie_tasks($courseid) {
         global $DB;
-        return count($DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid))) < 1;
+        return count($DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid))) > 0;
     }
 
     /**

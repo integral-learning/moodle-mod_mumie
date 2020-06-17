@@ -6,6 +6,9 @@ All important changes to this plugin will be documented in this file.
 ### Fixed
 - Fixed minified js files
 
+### Added
+- Admin can now decide whether grades should be shared between courses
+
 ## [v1.3.2] - 2020-06-09
 ### Added
 - When creating a new MUMIE Task, the user's prefered language is set as default.
