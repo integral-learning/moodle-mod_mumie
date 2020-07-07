@@ -246,6 +246,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
                 // If a user wants to use an entire course instead of a single problem, we need to define a pseduo problem to use.
                 $languagelink = $course->get_link() . '?lang=' . $name->language;
+                $languageoptions[$name->language] = $name->language;
                 $problemoptions[$languagelink] = $name->value;
             }
             self::populate_problem_options($course, $problemoptions, $languageoptions);
