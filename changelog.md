@@ -7,7 +7,8 @@ All important changes to this plugin will be documented in this file.
 - Fixed an issue where you couldn't link an entire course in a language for which there is no regular task defined.
 
 ### Added
-- Infobox to MUMIE Task form which explains that embedded MUMIE Tasks don't work in Safari due to technical limitations.
+- Added infobox to MUMIE Task form which explains that embedded MUMIE Tasks don't work in Safari due to technical limitations.
+- If an embedded MUMIE Task is opened with Safari, it will open in an tab instead of an iFrame.
 
 ## [v1.3.3] - 2020-06-17
 ### Fixed

@@ -105,7 +105,7 @@ function mumie_get_coursemodule_info($coursemodule) {
     }
 
     // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
-    if ($mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
+    if ($mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
         $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";
     }
 
