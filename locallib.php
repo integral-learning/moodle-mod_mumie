@@ -147,23 +147,23 @@ class locallib {
      * @return string name of the browser
      */
     private static function get_browser_name() {
-        $u_agent = $_SERVER['HTTP_USER_AGENT'];
-      
-        if (preg_match('/MSIE/i', $u_agent) && !preg_match('/Opera/i', $u_agent)) {
+        $useragent = $_SERVER['HTTP_USER_AGENT'];
+
+        if (preg_match('/MSIE/i', $useragent) && !preg_match('/Opera/i', $useragent)) {
             return 'Internet Explorer';
-        } elseif (preg_match('/Firefox/i', $u_agent)) {
+        } else if (preg_match('/Firefox/i', $useragent)) {
             return 'Mozilla Firefox';
-        } elseif (preg_match('/OPR/i', $u_agent)) {
+        } else if (preg_match('/OPR/i', $useragent)) {
             return 'Opera';
-        } elseif (preg_match('/Chrome/i', $u_agent) && !preg_match('/Edge/i', $u_agent)) {
+        } else if (preg_match('/Chrome/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
             return 'Google Chrome';
-        } elseif (preg_match('/Safari/i', $u_agent) && !preg_match('/Edge/i', $u_agent)) {
+        } else if (preg_match('/Safari/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
             return 'Apple Safari';
-        } elseif (preg_match('/Netscape/i', $u_agent)) {
+        } else if (preg_match('/Netscape/i', $useragent)) {
             return 'Netscape';
-        } elseif (preg_match('/Edge/i', $u_agent)) {
+        } else if (preg_match('/Edge/i', $useragent)) {
             return 'Edge';
-        } elseif (preg_match('/Trident/i', $u_agent)) {
+        } else if (preg_match('/Trident/i', $useragent)) {
             return 'Internet Explorer';
         }
         return '';
