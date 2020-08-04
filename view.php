@@ -47,12 +47,6 @@ if (!isset($mumietask->privategradepool)) {
 }
 $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
 if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
-    /*$isSafari = mod_mumie\locallib::is_safari_browser();
-    $isWindow = $mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW;
-    $u_agent = $_SERVER['HTTP_USER_AGENT'];
-
-    //echo "<script>console.log('isSafari: {$isSafari}');console.log('isWindow: {$isWindow}');console.log('useragent: {$u_agent}');</script>";
-    */
     redirect($redirecturl);
 } else {
     $PAGE->set_cm($cm, $course);

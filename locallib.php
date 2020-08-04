@@ -103,14 +103,12 @@ class locallib {
      */
     public static function get_default_name($uploadedtask) {
         global $CFG;
-        debugging("getting default name for: " . $uploadedtask->link);
         require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
         $server = \auth_mumie\mumie_server::get_by_urlprefix($uploadedtask->server);
         $server->load_structure();
         $course = $server->get_course_by_coursefile($uploadedtask->path_to_coursefile);
         $task = $course->get_task_by_link($uploadedtask->link);
         if (is_null($task)) {
-            debugging("________task is null!");
             return;
         }
         return $task->get_headline_by_language($uploadedtask->language);
@@ -131,89 +129,43 @@ class locallib {
 
     /**
      * Check whether the used browser is Apple's Safari.
-     * 
-     * Some functions of this plugin (like embedded MumieTasks)are not supported by Safari. 
+     *
+     * Some functions of this plugin (like embedded MumieTasks)are not supported by Safari.
      * That's why we need to implement fallback solutions.
-     * 
+     *
      * @return boolean is Safari?
      */
     public static function is_safari_browser() {
-       return self::getBrowser()['name'] == "Apple Safari";
-       //return self::getBrowser()['name'] == "Google Chrome";
+        return self::get_browser_name() === "Apple Safari";
     }
 
-    public static function getBrowser() { 
+    /**
+     * Get the name of the browser used to open moodle.
+     *
+     * Adapted from https://www.php.net/manual/en/function.get-browser.php#101125.
+     *
+     * @return string name of the browser
+     */
+    private static function get_browser_name() {
         $u_agent = $_SERVER['HTTP_USER_AGENT'];
-        $bname = 'Unknown';
-        $platform = 'Unknown';
-        $version= "";
       
-        //First get the platform?
-        if (preg_match('/linux/i', $u_agent)) {
-          $platform = 'linux';
-        }elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-          $platform = 'mac';
-        }elseif (preg_match('/windows|win32/i', $u_agent)) {
-          $platform = 'windows';
+        if (preg_match('/MSIE/i', $u_agent) && !preg_match('/Opera/i', $u_agent)) {
+            return 'Internet Explorer';
+        } elseif (preg_match('/Firefox/i', $u_agent)) {
+            return 'Mozilla Firefox';
+        } elseif (preg_match('/OPR/i', $u_agent)) {
+            return 'Opera';
+        } elseif (preg_match('/Chrome/i', $u_agent) && !preg_match('/Edge/i', $u_agent)) {
+            return 'Google Chrome';
+        } elseif (preg_match('/Safari/i', $u_agent) && !preg_match('/Edge/i', $u_agent)) {
+            return 'Apple Safari';
+        } elseif (preg_match('/Netscape/i', $u_agent)) {
+            return 'Netscape';
+        } elseif (preg_match('/Edge/i', $u_agent)) {
+            return 'Edge';
+        } elseif (preg_match('/Trident/i', $u_agent)) {
+            return 'Internet Explorer';
         }
-      
-        // Next get the name of the useragent yes seperately and for good reason
-        if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)){
-          $bname = 'Internet Explorer';
-          $ub = "MSIE";
-        }elseif(preg_match('/Firefox/i',$u_agent)){
-          $bname = 'Mozilla Firefox';
-          $ub = "Firefox";
-        }elseif(preg_match('/OPR/i',$u_agent)){
-          $bname = 'Opera';
-          $ub = "Opera";
-        }elseif(preg_match('/Chrome/i',$u_agent) && !preg_match('/Edge/i',$u_agent)){
-          $bname = 'Google Chrome';
-          $ub = "Chrome";
-        }elseif(preg_match('/Safari/i',$u_agent) && !preg_match('/Edge/i',$u_agent)){
-          $bname = 'Apple Safari';
-          $ub = "Safari";
-        }elseif(preg_match('/Netscape/i',$u_agent)){
-          $bname = 'Netscape';
-          $ub = "Netscape";
-        }elseif(preg_match('/Edge/i',$u_agent)){
-          $bname = 'Edge';
-          $ub = "Edge";
-        }elseif(preg_match('/Trident/i',$u_agent)){
-          $bname = 'Internet Explorer';
-          $ub = "MSIE";
-        }
-      
-        // finally get the correct version number
-        $known = array('Version', $ub, 'other');
-        $pattern = '#(?<browser>' . join('|', $known) .
-      ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
-        if (!preg_match_all($pattern, $u_agent, $matches)) {
-          // we have no matching number just continue
-        }
-        // see how many we have
-        $i = count($matches['browser']);
-        if ($i != 1) {
-          //we will have two since we are not using 'other' argument yet
-          //see if version is before or after the name
-          if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){
-              $version= $matches['version'][0];
-          }else {
-              $version= $matches['version'][1];
-          }
-        }else {
-          $version= $matches['version'][0];
-        }
-      
-        // check if we have a number
-        if ($version==null || $version=="") {$version="?";}
-      
-        return array(
-          'userAgent' => $u_agent,
-          'name'      => $bname,
-          'version'   => $version,
-          'platform'  => $platform,
-          'pattern'    => $pattern
-        );
-      } 
+        return '';
+    }
 }
