@@ -51,8 +51,8 @@ if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\lo
     $isWindow = $mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW;
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
 
-    echo "<script>console.log('isSafari: {$isSafari}');console.log('isWindow: {$isWindow}');console.log('useragent: {$u_agent}');</script>";
-    //redirect($redirecturl);
+    //echo "<script>console.log('isSafari: {$isSafari}');console.log('isWindow: {$isWindow}');console.log('useragent: {$u_agent}');</script>";
+    redirect($redirecturl);
 } else {
     $PAGE->set_cm($cm, $course);
     $context = context_module::instance($cm->id);
