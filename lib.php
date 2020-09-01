@@ -176,6 +176,8 @@ function mumie_supports($feature) {
  */
 function mumie_grade_item_update($mumie, $grades = null) {
     global $CFG;
+    //debugging("________________________________________");
+    //debugging(json_encode($mumie));
     if (!$mumie->isgraded) {
         return false;
     }
@@ -185,8 +187,8 @@ function mumie_grade_item_update($mumie, $grades = null) {
     } else {
         $params = array('itemname' => $mumie->name);
     }
-    if (isset($mumie->grade) && $mumie->grade > 0) {
-        $params['grademax'] = $mumie->grade;
+    if (isset($mumie->points) && $mumie->points > 0) {
+        $params['grademax'] = $mumie->points;
         $params['grademin'] = 0;
     }
     if ($grades === 'reset') {
