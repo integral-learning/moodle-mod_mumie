@@ -176,8 +176,6 @@ function mumie_supports($feature) {
  */
 function mumie_grade_item_update($mumie, $grades = null) {
     global $CFG;
-    //debugging("________________________________________");
-    //debugging(json_encode($mumie));
     if (!$mumie->isgraded) {
         return false;
     }
