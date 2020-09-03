@@ -48,9 +48,9 @@ function mumie_set_grade_max() {
 
     foreach ($tasks as $task) {
         if ($task->points != 100) {
-            $gradeitem = $DB->get_record("grade_items", array('itemmodule' => 'mumie', 'iteminstance' => $task->id));
+            $gradeitem = grade_item::fetch(array('itemmodule' => 'mumie', 'iteminstance' => $task->id));
             $gradeitem->grademax = $task->points;
-            $DB->update_record('grade_items', $gradeitem);
+            $gradeitem->update();
         }
     }
 }
