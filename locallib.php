@@ -151,19 +151,26 @@ class locallib {
 
         if (preg_match('/MSIE/i', $useragent) && !preg_match('/Opera/i', $useragent)) {
             return 'Internet Explorer';
-        } else if (preg_match('/Firefox/i', $useragent)) {
+        }
+        if (preg_match('/Firefox/i', $useragent)) {
             return 'Mozilla Firefox';
-        } else if (preg_match('/OPR/i', $useragent)) {
+        }
+        if (preg_match('/OPR/i', $useragent)) {
             return 'Opera';
-        } else if (preg_match('/Chrome/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
+        }
+        if (preg_match('/Chrome/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
             return 'Google Chrome';
-        } else if (preg_match('/Safari/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
+        }
+        if (preg_match('/Safari/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
             return 'Apple Safari';
-        } else if (preg_match('/Netscape/i', $useragent)) {
+        }
+        if (preg_match('/Netscape/i', $useragent)) {
             return 'Netscape';
-        } else if (preg_match('/Edge/i', $useragent)) {
+        }
+        if (preg_match('/Edge/i', $useragent)) {
             return 'Edge';
-        } else if (preg_match('/Trident/i', $useragent)) {
+        }
+        if (preg_match('/Trident/i', $useragent)) {
             return 'Internet Explorer';
         }
         return '';
