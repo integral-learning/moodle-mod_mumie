@@ -276,6 +276,11 @@ function mumie_dndupload_register() {
                 'identifier' => 'mumie/json', 'datatransfertypes' => array('mumie/json', 'mumie/json'),
                 'addmessage' => get_string('dnd_addmessage', 'mod_mumie'),
                 'namemessage' => '',
+                'priority' => 1),
+            array(
+                'identifier' => 'mumie/jsonArray', 'datatransfertypes' => array('mumie/jsonArray', 'mumie/jsonArray'),
+                'addmessage' => get_string('dnd_addmessage_multiple', 'mod_mumie'),
+                'namemessage' => '',
                 'priority' => 1)
             ),
         'types' => array(
@@ -283,7 +288,11 @@ function mumie_dndupload_register() {
                 'identifier' => 'mumie/json',
                 'message' => get_string('dndupload_message', 'mod_mumie'),
                 'noname' => true),
-            )
+            array(
+                'identifier' => 'mumie/jsonArray',
+                'message' => get_string('dndupload_message', 'mod_mumie'),
+                'noname' => true),
+            ),
     );
 }
 
@@ -296,8 +305,18 @@ function mumie_dndupload_register() {
 function mumie_dndupload_handle($uploadinfo) {
     global $CFG, $COURSE, $USER;
 
+    $courseid = required_param('course', PARAM_INT);
+    $section = required_param('section', PARAM_INT);
+    $type = required_param('type', PARAM_TEXT);
+
     $context = context_module::instance($uploadinfo->coursemodule);
     $upload = json_decode(clean_param($uploadinfo->content, PARAM_RAW));
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_dndupload_processor.php');
+    $processor = new mod_mumie\mumie_dndupload_processor($courseid, $section, $type, $upload);
+    $result = $processor->process();
+    debugging("____________________________-RESULT IS: " . $result);
+    return $result;
+    /*
     require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
     if (!isset($upload->link) || !isset($upload->path_to_coursefile)
         || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {
@@ -334,4 +353,5 @@ function mumie_dndupload_handle($uploadinfo) {
         $mumie->privategradepool = $exitingtasks[0]->privategradepool;
     }
     return mumie_add_instance($mumie, null);
+    */
 }
