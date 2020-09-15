@@ -2,6 +2,10 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.3.5] - TODO
+### Fixed
+- Fixed an issue where max grade was always displayed as 100 in grade book
+
 ## [v1.3.4] - 2020-08-04
 ### Fixed
 - Fixed an issue where you couldn't link an entire course in a language for which there is no regular task defined.

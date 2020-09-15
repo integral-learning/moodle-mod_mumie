@@ -39,18 +39,3 @@ function mumie_set_privategradepool_default() {
         }
     }
 }
-
-function mumie_set_grade_max() {
-    global $DB, $CFG;
-    require_once($CFG->dirroot . '/mod/mumie/lib.php');
-
-    $tasks = $DB->get_records('mumie', array());
-
-    foreach ($tasks as $task) {
-        if ($task->points != 100) {
-            $gradeitem = grade_item::fetch(array('itemmodule' => 'mumie', 'iteminstance' => $task->id));
-            $gradeitem->grademax = $task->points;
-            $gradeitem->update();
-        }
-    }
-}

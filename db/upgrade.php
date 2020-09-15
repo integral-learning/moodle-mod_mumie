@@ -75,10 +75,5 @@ function xmldb_mumie_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, 2020040700, 'mod', 'mumie');
     }
-
-    if ($oldversion < 2020090100) {
-        require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
-        mumie_set_grade_max();
-    }
     return true;
 }
