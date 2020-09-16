@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.3.5] - TODO
+## [v1.3.5] - 2020-09-16
 ### Fixed
 - Fixed an issue where max grade was always displayed as 100 in grade book
 
