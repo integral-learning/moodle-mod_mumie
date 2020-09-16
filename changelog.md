@@ -4,7 +4,8 @@ All important changes to this plugin will be documented in this file.
 
 ## [v1.3.5] - 2020-09-16
 ### Fixed
-- Fixed an issue where max grade was always displayed as 100 in grade book
+- Fixed an issue where max grade was always displayed as 100 in gradebook. 
+Existing MUMIE Tasks will __NOT__ be updated automatically. If you want to the correct max grade to be displayed, just open the activity and click save.
 
 ## [v1.3.4] - 2020-08-04
 ### Fixed
@@ -12,7 +13,7 @@ All important changes to this plugin will be documented in this file.
 
 ### Added
 - Added infobox to MUMIE Task form which explains that embedded MUMIE Tasks don't work in Safari due to technical limitations.
-- If an embedded MUMIE Task is opened with Safari, it will open in an tab instead of an iFrame.
+- If an embedded MUMIE Task is opened with Safari, it will open in a tab instead of an iFrame.
 
 ## [v1.3.3] - 2020-06-17
 ### Fixed
@@ -25,23 +26,23 @@ All important changes to this plugin will be documented in this file.
 ### Added
 - When creating a new MUMIE Task, the user's prefered language is set as default.
 - MUMIE course names are now available in multiple languages
-- MUMIE Tasks can now link an entire course at once. Grades will not be synchronized for these kind of activities.
+- MUMIE Tasks can now link an entire course at once. Grades will not be synchronized for these kinds of activities.
 - Teachers can now create MUMIE Tasks for LEMON servers
 
 ### Fixed
-- Course selection doesn't change anymore if selected language is updated
+- Course selection doesn't change anymore if the selected language is updated
 
 ## [v1.3.1] - 2020-03-03
 ### Added
-- MUMIE Problems can now be added to the server-course-task structure. This means that the use of tasks that are not part of the offical server structre is now supported as well.
+- MUMIE Problems can now be added to the server-course-task structure. This means that the use of tasks that are not part of the official server structure is now supported as well.
 
 ### Changed
 - Names for MUMIE Tasks that were entered by the user themself are no longer overwritten, when selecting another problem.
-- When creating a MUMIE Task with drag&drop, the plugin now tries get a human readable name from the server structure and then sets it as a new default name.
+- When creating a MUMIE Task with drag&amp;drop, the plugin now tries to get a human-readable name from the server structure and then sets it as a new default name.
 
 ### Fixed.
 - Description can now be set for MUMIE Tasks
-- Grades are now longer synchronized, if the decision about gradepools is still pending.
+- Grades are no longer synchronized if the decision about gradepools is still pending.
 
 ## [v1.3.0] - 2020-02-04
 ### Fixed
@@ -54,10 +55,10 @@ All important changes to this plugin will be documented in this file.
 - A due date can now be set for MUMIE Tasks.
 - Automatically add MUMIE Tasks by dragging and dropping MUMIE Problems from MUMIE courses into a MOODLE course.
 - Sharing grades for the same MUMIE problems with other MOODLE courses can be disabled.
-- Prepared MUMIE Task creation via drag&drop from MUMIE. This will be possible after the next release of MUMIE.
+- Prepared MUMIE Task creation via drag&amp;drop from MUMIE. This will be possible after the next release of MUMIE.
 
 ## [v1.2] - 2019-11-05
-Attention: Installing this update will create new MUMIE acounts for all users. Old MUMIE tasks will keep working, but they wont share a grade pool with newly created ones.
+Attention: Installing this update will create new MUMIE accounts for all users. Old MUMIE tasks will keep working, but they won't share a grade pool with newly created ones.
 ### Added
 - MOODLE userid is now hashed to improve data security.
 
