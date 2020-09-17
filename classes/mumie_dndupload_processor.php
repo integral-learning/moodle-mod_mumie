@@ -193,7 +193,7 @@ class mumie_dndupload_processor
         if (!$instanceid) {
             // Something has gone wrong - undo everything we can.
             course_delete_module($cm->id);
-            throw new moodle_exception('errorcreatingactivity', 'moodle', '', $this->module->name);
+            throw new \moodle_exception('errorcreatingactivity', 'moodle', '', $this->module->name);
         }
 
         // Note the section visibility
@@ -215,7 +215,9 @@ class mumie_dndupload_processor
         if (!isset($info->cms[$cm->id])) {
             // The course module has not been properly created in the course - undo everything.
             course_delete_module($cm->id);
-            throw new moodle_exception('errorcreatingactivity', 'moodle', '', $this->module->name);
+            //throw new \moodle_exception('errorcreatingactivity', 'moodle', '', $this->module->name);
+            throw new \moodle_exception('errorcreatingactivity', 'moodle', '', "TODO");
+
         }
         $mod = $info->get_cm($cm->id);
 
