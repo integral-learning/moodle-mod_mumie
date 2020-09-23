@@ -147,8 +147,8 @@ class mumie_dndupload_processor
 
     private function validate_upload_params($uploadinstance)
     {
-        if (!isset($uploadinstance->link) || !isset($uploadinstance->path_to_coursefile)
-            || !isset($uploadinstance->language) || !isset($uploadinstance->name) || !isset($uploadinstance->server) || !isset($uploadinstance->course)) {
+        if (empty($uploadinstance->link) || empty($uploadinstance->path_to_coursefile)
+            || empty($uploadinstance->language) || empty($uploadinstance->name) || empty($uploadinstance->server) || empty($uploadinstance->course)) {
             throw new \moodle_exception('parameter_missing', 'mod_mumie');
         }
     }
