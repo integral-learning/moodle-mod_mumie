@@ -133,16 +133,18 @@ class mumie_dndupload_processor
     private function get_course_gradepool_setting()
     {
         global $DB, $COURSE;
-        $privategradepool;
         $exitingtasks = array_values(
             $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
         );
+        $adminSetting = get_config('auth_mumie', 'defaultgradepool');
         debugging("\n________________EXISTING TASKS: " . count($exitingtasks));
         if (count($exitingtasks) > 0) {
-            $privategradepool = $exitingtasks[0]->privategradepool;
+            return $exitingtasks[0]->privategradepool;
+        } 
+        if($adminSetting != -1) {
+            return $adminSetting;
         }
-        //TODO: check if this actually works;
-        return $privategradepool;
+        return null;
     }
 
     private function validate_upload_params($uploadinstance)
