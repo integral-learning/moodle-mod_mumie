@@ -112,7 +112,6 @@ $string['server_config_missing'] = '<br><br>We could not find a configuration fo
 $string['dnd_addmessage'] = 'Add MUMIE Task here';
 $string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
 
-
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';

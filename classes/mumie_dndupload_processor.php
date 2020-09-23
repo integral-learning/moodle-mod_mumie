@@ -1,9 +1,9 @@
 <?php
 namespace mod_mumie;
+
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
-class mumie_dndupload_processor
-{
+class mumie_dndupload_processor {
     private $courseid;
     private $section;
     private $type;
@@ -13,8 +13,7 @@ class mumie_dndupload_processor
 
     private $gradepoolsettings;
 
-    public function __construct($courseid, $section, $type, $upload)
-    {
+    public function __construct($courseid, $section, $type, $upload) {
         $this->courseid = $courseid;
         $this->section = $section;
         $this->type = $type;
@@ -25,8 +24,7 @@ class mumie_dndupload_processor
         $this->course = $COURSE;
     }
 
-    public function process()
-    {
+    public function process() {
         require_capability('moodle/course:manageactivities', $this->coursecontext);
         require_sesskey();
 
@@ -40,8 +38,7 @@ class mumie_dndupload_processor
         return false;
     }
 
-    private function handle_single_upload()
-    {
+    private function handle_single_upload() {
         global $CFG;
         require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
         $server = new \auth_mumie\mumie_server();
@@ -58,8 +55,7 @@ class mumie_dndupload_processor
         return mumie_add_instance($mumie, null);
     }
 
-    private function handle_multi_upload()
-    {
+    private function handle_multi_upload() {
         // This array holds unique server objects;
         $servers = array();
         $this->upload = (array) $this->upload;
@@ -99,8 +95,7 @@ class mumie_dndupload_processor
         return $result;
     }
 
-    private function validate_servers($servers)
-    {
+    private function validate_servers($servers) {
         foreach ($servers as $server) {
             if (!$server->is_valid_mumie_server()) {
                 throw new \moodle_exception('mumie_form_server_not_existing', 'auth_mumie');
@@ -108,8 +103,7 @@ class mumie_dndupload_processor
         }
     }
 
-    private function create_missing_servers($servers)
-    {
+    private function create_missing_servers($servers) {
         $missingservers = array_filter(
             $servers,
             function ($server) {
@@ -130,8 +124,7 @@ class mumie_dndupload_processor
         }
     }
 
-    private function get_course_gradepool_setting()
-    {
+    private function get_course_gradepool_setting() {
         global $DB, $COURSE;
         $exitingtasks = array_values(
             $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
@@ -140,23 +133,21 @@ class mumie_dndupload_processor
         debugging("\n________________EXISTING TASKS: " . count($exitingtasks));
         if (count($exitingtasks) > 0) {
             return $exitingtasks[0]->privategradepool;
-        } 
-        if($adminSetting != -1) {
+        }
+        if ($adminSetting != -1) {
             return $adminSetting;
         }
         return null;
     }
 
-    private function validate_upload_params($uploadinstance)
-    {
+    private function validate_upload_params($uploadinstance) {
         if (empty($uploadinstance->link) || empty($uploadinstance->path_to_coursefile)
             || empty($uploadinstance->language) || empty($uploadinstance->name) || empty($uploadinstance->server) || empty($uploadinstance->course)) {
             throw new \moodle_exception('parameter_missing', 'mod_mumie');
         }
     }
 
-    private function create_mumie_from_uploadinstance($uploadinstance)
-    {
+    private function create_mumie_from_uploadinstance($uploadinstance) {
         $mumie = new \stdClass();
         $mumie->taskurl = $uploadinstance->link . '?lang=' . $uploadinstance->language;
         $mumie->mumie_coursefile = $uploadinstance->path_to_coursefile;
@@ -170,8 +161,7 @@ class mumie_dndupload_processor
         return $mumie;
     }
 
-    private function create_mumie_course_module($mumie)
-    {
+    private function create_mumie_course_module($mumie) {
         global $CFG, $DB, $COURSE;
         
         $mumieinstance = mumie_add_instance($mumie, null);
@@ -179,8 +169,7 @@ class mumie_dndupload_processor
         $this->finish_setup_course_module($mumieinstance, $cm);
     }
 
-    private function create_course_module()
-    {
+    private function create_course_module() {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/course/modlib.php');
         list($module, $context, $cw, $cm, $data) = prepare_new_moduleinfo_data($this->course, 'mumie', $this->section);
@@ -188,8 +177,7 @@ class mumie_dndupload_processor
         return $data;
     }
 
-    protected function finish_setup_course_module($instanceid, $cm)
-    {
+    protected function finish_setup_course_module($instanceid, $cm) {
         global $DB, $USER;
 
         if (!$instanceid) {
@@ -219,7 +207,6 @@ class mumie_dndupload_processor
             course_delete_module($cm->id);
             //throw new \moodle_exception('errorcreatingactivity', 'moodle', '', $this->module->name);
             throw new \moodle_exception('errorcreatingactivity', 'moodle', '', "TODO");
-
         }
         $mod = $info->get_cm($cm->id);
 
