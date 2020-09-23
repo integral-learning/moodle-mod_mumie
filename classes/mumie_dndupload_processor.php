@@ -30,6 +30,8 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
 /**
  * This processor is responsible for the creation of MUMIE Task that are being imported via dnd_handler.
+ * 
+ * Some functions are taken and adapted from course/dnduploadlib.php.
  *
  * @package mod_mumie
  * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
@@ -140,7 +142,6 @@ class mumie_dndupload_processor {
         // This array holds unique server objects.
         $servers = array();
         $this->upload = (array) $this->upload;
-        debugging(json_encode($this->upload));
         foreach ($this->upload as $uploadinstance) {
             $uploadinstance = json_decode($uploadinstance);
             $this->validate_upload_params($uploadinstance);
