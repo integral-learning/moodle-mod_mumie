@@ -103,7 +103,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         $launchoptions[MUMIE_LAUNCH_CONTAINER_WINDOW] = get_string("mumie_form_activity_container_window", "mod_mumie");
 
         $mform->addElement("select", "launchcontainer", get_string('mumie_form_activity_container', "mod_mumie"), $launchoptions);
+        $mform->setDefault("launchcontainer", MUMIE_LAUNCH_CONTAINER_WINDOW);
         $mform->addHelpButton("launchcontainer", "mumie_form_activity_container", "mumie");
+        $mform->addElement(
+            'html',
+            '<div class="form-group row  fitem ">'
+            . '<div class="col-md-3"></div><div class="col-md-9 felement">'
+            . get_string('mumie_form_launchcontainer_info', 'mod_mumie')
+            . '</div></div>'
+        );
 
         $mform->addElement("hidden", "mumie_coursefile", "");
         $mform->setType("mumie_coursefile", PARAM_TEXT);

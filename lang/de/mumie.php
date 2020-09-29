@@ -98,7 +98,7 @@ $string['mumie_form_grade_pool_note'] = '<b>Hinweis:</b><br> Diese Entscheidung 
 $string['mumie_form_filter'] = 'MUMIE-Aufgaben filtern';
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
-
+$string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen auf manchen Browsern und Betriebssystemen zu technischen Problemen. Daher empfehlen wir MUMIE-Tasks in einem neuen Fenster zu öffnen.';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
