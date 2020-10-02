@@ -1,6 +1,7 @@
 define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_server_config', 'core/ajax'],
     function() {
         var addServerButton = document.getElementById("id_add_server_button");
+        var problemSelectorButton = document.getElementById('id_prb_selector_btn');
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
         var serverController = (function() {
             var serverStructure;
@@ -579,6 +580,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         MumieServer.init(addServerButton, contextid);
                     });
                 }
+                problemSelectorButton.onclick = function() {
+                    window.open('http://localhost:7070/lms-browser?org=mi2&serverUrl=https%3A%2F%2Ftest.mumie.net%2Fombplus', '_blank');
+                };
+                window.addEventListener("message", (event) => {
+                    console.log("sadsd");
+                    console.log(event.data);
+                  }, false);
             }
         };
 

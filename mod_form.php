@@ -76,6 +76,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             );
         }
 
+        $contentbutton = $mform->addElement(
+            'button',
+            'prb_selector_btn',
+            'prb_selector',
+            array()
+        );
+
         $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
         $mform->addElement("checkbox", "mumie_complete_course", get_string('mumie_form_complete_course', 'mod_mumie'));
         $mform->addHelpButton("mumie_complete_course", 'mumie_form_complete_course', 'mumie');
