@@ -581,11 +581,16 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     });
                 }
                 problemSelectorButton.onclick = function() {
-                    window.open('http://localhost:7070/lms-browser?org=mi2&serverUrl=https%3A%2F%2Ftest.mumie.net%2Fombplus', '_blank');
+                    console.log(serverController.getSelectedServer().urlprefix);
+                    //window.open('http://localhost:7070/lms-browser?org=mi2&serverUrl=https%3A%2F%2Ftest.mumie.net%2Fombplus', '_blank');
+                    window.open('http://localhost:7070/lms-browser?org=mi2&serverUrl=' + encodeURIComponent(serverController.getSelectedServer().urlprefix), '_blank');
                 };
                 window.addEventListener("message", (event) => {
+                    //alert("Seleceted task: " + event.data.name);
+                    var importObj = JSON.parse(event.data);
+                    taskController.updateOptions(importObj.link + '?lang=' + importObj.language);
                     console.log("sadsd");
-                    console.log(event.data);
+                    console.log(JSON.parse(event.data));
                   }, false);
             }
         };
