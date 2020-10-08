@@ -2,6 +2,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
     function() {
         var addServerButton = document.getElementById("id_add_server_button");
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
+        var lmsSelectorUrl = 'http://localhost:7070';
         var serverController = (function() {
             var serverStructure;
             var serverDropDown = document.getElementById("id_server");
@@ -47,7 +48,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {Object} response
              */
             function sendResponse(response) {
-                problemSelectorWindow.postMessage(JSON.stringify(response), 'http://local.tobias.net');
+                problemSelectorWindow.postMessage(JSON.stringify(response), lmsSelectorUrl);
             }
 
             /**
@@ -74,11 +75,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function() {
                     problemSelectorButton.onclick = function() {
-                        problemSelectorWindow = window.open('http://local.tobias.net/lms-browser?org=mi2&serverUrl='
+                        problemSelectorWindow = window.open(lmsSelectorUrl + '/lms-browser?org=mi2&serverUrl='
                                 + encodeURIComponent(serverController.getSelectedServer().urlprefix)
                                 + "&lang="
                                 + systemLanguage
                                 + "&problem=" + taskController.getSelectedTask().link
+                                + "&origin=" + encodeURIComponent(window.location.origin)
                             , '_blank');
                     };
 
@@ -92,7 +94,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     window.addEventListener("message", (event) => {
                         console.log(event.data);
-                        if (event.origin != 'http://local.tobias.net') {
+                        console.log("origin: " + event.origin);
+                        console.log("lmsSelectorUrl: " + lmsSelectorUrl);
+                        if (event.origin != lmsSelectorUrl) {
                             return;
                         }
                         var importObj = JSON.parse(event.data);
