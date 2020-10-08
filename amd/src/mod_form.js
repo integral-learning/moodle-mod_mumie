@@ -47,7 +47,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {Object} response
              */
             function sendResponse(response) {
-                problemSelectorWindow.postMessage(JSON.stringify(response), problemSelectorWindow.origin);
+                problemSelectorWindow.postMessage(JSON.stringify(response), 'http://local.tobias.net');
             }
 
             /**
@@ -92,7 +92,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     window.addEventListener("message", (event) => {
                         console.log(event.data);
-                        if (event.origin != problemSelectorWindow.origin) {
+                        if (event.origin != 'http://local.tobias.net') {
                             return;
                         }
                         var importObj = JSON.parse(event.data);
