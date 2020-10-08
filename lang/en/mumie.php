@@ -86,6 +86,8 @@ $string['mumie_form_filter'] = 'Filter MUMIE problems';
 $string['mumie_form_complete_course'] = 'Link the entire course';
 $string['mumie_form_complete_course_help'] = 'The user will only be logged in and redirected to the course overview page. Grades will <b>not</b> be synchronized for this MUMIE Task.';
 $string['mumie_form_launchcontainer_info'] = 'Embedded MUMIE Tasks tend to cause issues on some browsers and operation systems so we recommend using New-Window-mode.';
+$string['mumie_form_prb_selector_btn'] = 'Open problem selector';
+$string['mumie_form_updated_selection'] = 'Successfully selected problem';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';

@@ -76,34 +76,28 @@ class mod_mumie_mod_form extends moodleform_mod {
             );
         }
 
-        $contentbutton = $mform->addElement(
-            'button',
-            'prb_selector_btn',
-            'prb_selector',
-            array()
-        );
-
         $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
         $mform->addElement("checkbox", "mumie_complete_course", get_string('mumie_form_complete_course', 'mod_mumie'));
         $mform->addHelpButton("mumie_complete_course", 'mumie_form_complete_course', 'mumie');
 
+        $contentbutton = $mform->addElement(
+            'button',
+            'prb_selector_btn',
+            get_string('mumie_form_prb_selector_btn', 'mod_mumie'),
+            array()
+        );
+        $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
+
         $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
         $mform->setDefault("language", optional_param("lang", $USER->lang, PARAM_ALPHA));
+        $mform->disabledIf('language', 'mumie_complete_course', 'notchecked');
+        
+        $mform->addElement("hidden", "mumie_system_language", optional_param("lang", $USER->lang, PARAM_ALPHA));
+        $mform->setType("mumie_system_language", PARAM_TEXT);
 
-        $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
+        $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions, array("disabled" => "disabled"));
         $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
-
-        $mform->addElement(
-            'html',
-            '<div id="mumie_filter_section" class="form-group row  fitem" hidden>
-            <div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9">
-             <i class="fa fa-caret-down mumie-icon"></i>'
-            . get_string('mumie_form_filter', 'mod_mumie')
-            . '</span>
-            <div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement">
-            </div></div>'
-        );
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
