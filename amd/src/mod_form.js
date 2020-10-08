@@ -74,7 +74,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function() {
                     problemSelectorButton.onclick = function() {
-                        problemSelectorWindow = window.open('http://localhost:7070/lms-browser?org=mi2&serverUrl='
+                        problemSelectorWindow = window.open('http://local.mumie.net/lms-browser?org=mi2&serverUrl='
                                 + encodeURIComponent(serverController.getSelectedServer().urlprefix)
                                 + "&lang="
                                 + systemLanguage
