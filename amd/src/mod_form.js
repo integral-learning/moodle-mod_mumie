@@ -40,14 +40,18 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         var problemSelectorController = (function() {
             var problemSelectorButton = document.getElementById('id_prb_selector_btn');
             var problemSelectorWindow;
-            var systemLanguage = document.getElementsByName("mumie_system_language")[0].value;
-
+            var mumieOrg = document.getElementsByName('mumie_org')[0].value;
 
             /**
              * Send a message to the problem selector window.
+             *
+             * Don't do anything, if there is no problem selector window.
              * @param {Object} response
              */
             function sendResponse(response) {
+                if (!problemSelectorWindow) {
+                    return;
+                }
                 problemSelectorWindow.postMessage(JSON.stringify(response), lmsSelectorUrl);
             }
 
@@ -72,16 +76,61 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     message: message
                 });
             }
+
+            /**
+             * Add an event listener that accepts messages from LMS-Browser and updates the selected problem.
+             */
+            function addMessageListener() {
+                window.addEventListener('message', (event) => {
+                    if (event.origin != lmsSelectorUrl) {
+                        return;
+                    }
+                    var importObj = JSON.parse(event.data);
+                    try {
+                        langController.setLanguage(importObj.language);
+                        taskController.updateOptions(importObj.link + '?lang=' + importObj.language);
+                        sendSuccess();
+                        window.focus();
+                        displayProblemSelectedMessage();
+                    } catch (error) {
+                        sendFailure(error.message);
+                    }
+                  }, false);
+            }
+
+            /**
+             * Display a success message in Moodle that a problem was successfully selected.
+             */
+            function displayProblemSelectedMessage() {
+                require(['core/str', "core/notification"], function(str, notification) {
+                    str.get_strings([{
+                        'key': 'mumie_form_updated_selection',
+                        component: 'mod_mumie'
+                    }]).done(function(s) {
+                        notification.addNotification({
+                            message: s[0],
+                            type: "info"
+                        });
+                    }).fail(notification.exception);
+                });
+            }
+
             return {
                 init: function() {
                     problemSelectorButton.onclick = function() {
-                        problemSelectorWindow = window.open(lmsSelectorUrl + '/lms-browser?org=mi2&serverUrl='
+                        problemSelectorWindow = window.open(
+                            lmsSelectorUrl
+                                + '/lms-browser?'
+                                + 'org='
+                                + mumieOrg
+                                + '&serverUrl='
                                 + encodeURIComponent(serverController.getSelectedServer().urlprefix)
                                 + "&lang="
-                                + systemLanguage
+                                + langController.getSelectedLanguage()
                                 + "&problem=" + taskController.getSelectedTask().link
                                 + "&origin=" + encodeURIComponent(window.location.origin)
-                            , '_blank');
+                            , '_blank'
+                        );
                     };
 
                     window.onclose = function() {
@@ -92,39 +141,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         sendSuccess();
                      }, false);
 
-                    window.addEventListener("message", (event) => {
-                        console.log(event.data);
-                        console.log("origin: " + event.origin);
-                        console.log("lmsSelectorUrl: " + lmsSelectorUrl);
-                        if (event.origin != lmsSelectorUrl) {
-                            return;
-                        }
-                        var importObj = JSON.parse(event.data);
-                        try {
-                            langController.setLanguage(importObj.language);
-                            taskController.updateOptions(importObj.link + '?lang=' + importObj.language);
-                            sendSuccess();
-                            require(['core/str', "core/notification"], function(str, notification) {
-                                str.get_strings([{
-                                    'key': 'mumie_form_updated_selection',
-                                    component: 'mod_mumie'
-                                }]).done(function(s) {
-                                    notification.addNotification({
-                                        message: s[0],
-                                        type: "info"
-                                    });
-                                }).fail(notification.exception);
-                            });
-                        } catch (error) {
-                            sendFailure(error.message);
-                        }
-                      }, false);
+                    addMessageListener();
                 },
                 disable: function() {
                     problemSelectorButton.disabled = true;
-                },
-                enable: function() {
-                    problemSelectorButton.disabled = false;
                 }
             };
         })();
@@ -236,6 +256,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         var option = languageDropDown.options[i];
                         if (option.value == lang) {
                             languageDropDown.selectedIndex = i;
+                            courseController.updateOptions();
                             return;
                         }
                     }
