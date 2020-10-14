@@ -62,7 +62,6 @@ function mumie_update_instance($mumie, $mform) {
     mod_mumie\locallib::update_pending_gradepool($mumie);
     
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
-    debugging(json_encode($grades));
     mumie_grade_item_update($mumie, $grades);
 
     return $DB->update_record("mumie", $mumie);
