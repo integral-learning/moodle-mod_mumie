@@ -120,7 +120,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     problemSelectorButton.onclick = function() {
                         problemSelectorWindow = window.open(
                             lmsSelectorUrl
-                                + '/lms-browser?'
+                                + '/lms-problem-selector?'
                                 + 'org='
                                 + mumieOrg
                                 + '&serverUrl='
