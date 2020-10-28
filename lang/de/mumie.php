@@ -63,7 +63,7 @@ $string['mumie_form_activity_server'] = 'MUMIE-Server';
 $string['mumie_form_activity_server_help'] = 'Bitte wählen Sie einen MUMIE-Server, um eine aktuelle Auswahl von verfügbaren Kursen und Aufgaben zu erhalten.';
 $string['mumie_form_activity_course'] = 'MUMIE-Kurs';
 $string['mumie_form_activity_problem'] = "MUMIE-Aufgabe";
-$string['mumie_form_activity_problem_help'] = "Eine MUMIE-Aufgabe ist eine einzelne benotete Aufgabe in MUMIE";
+$string['mumie_form_activity_problem_help'] = "Eine MUMIE-Aufgabe ist eine einzelne benotete Aufgabe in MUMIE.<br><br><b>Achtung:</b><br>Wenn Sie für eine bereits existierende MUMIE-Task eine andere Aufgabe auswählen, dann werden die Bewertungen für diese Aktivität zurückgesetzt";
 $string['mumie_form_activity_container'] = 'Startcontainer';
 $string['mumie_form_activity_container_help'] = 'Bitte wählen Sie, ob diese Aktivität in die Moodle-Umgebung eingebunden oder in einem neuen Browser-Tab geöffnet werden soll.<br><br>Bitte beachten Sie, dass eingebettete MUMIE Tasks aus technischen Gründen nicht mit Safari bearbeitet werden können. Für diese User wird diese MUMIE Task daher im gesamten Tab dargestellt.';
 $string['mumie_form_activity_container_embedded'] = 'Eingebunden';
@@ -98,7 +98,7 @@ $string['mumie_form_grade_pool_note'] = '<b>Hinweis:</b><br> Diese Entscheidung 
 $string['mumie_form_filter'] = 'MUMIE-Aufgaben filtern';
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
-
+$string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen auf manchen Browsern und Betriebssystemen zu technischen Problemen. Daher empfehlen wir MUMIE-Tasks in einem neuen Fenster zu öffnen.';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';

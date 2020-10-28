@@ -52,7 +52,7 @@ $string['mumie_form_activity_server'] = 'MUMIE server';
 $string['mumie_form_activity_server_help'] = 'Please select a MUMIE server to get an updated list of available tasks and courses.';
 $string['mumie_form_activity_course'] = 'MUMIE course';
 $string['mumie_form_activity_problem'] = "MUMIE problem";
-$string['mumie_form_activity_problem_help'] = "A MUMIE problem is a single graded exercise on MUMIE";
+$string['mumie_form_activity_problem_help'] = "A MUMIE problem is a single graded exercise on MUMIE. <br><br><b>Note:</b><br>Changing the problem of an existing MUMIE Task will reset the gradebook.";
 $string['mumie_form_activity_container'] = 'Launch container';
 $string['mumie_form_activity_container_help'] = 'Please select whether the activity should be openend in a new browser tab or embedded into moodle.<br><br>Please note that embedded MUMIE Tasks cannot be opened with Safari due to technical limitations. This MUMIE Task will be opened in a tab instead for Safari users';
 $string['mumie_form_activity_container_embedded'] = 'embedded';
@@ -85,6 +85,7 @@ $string['mumie_form_grade_pool_note'] = '<b>Note:</b><br> This decision was <b>f
 $string['mumie_form_filter'] = 'Filter MUMIE problems';
 $string['mumie_form_complete_course'] = 'Link the entire course';
 $string['mumie_form_complete_course_help'] = 'The user will only be logged in and redirected to the course overview page. Grades will <b>not</b> be synchronized for this MUMIE Task.';
+$string['mumie_form_launchcontainer_info'] = 'Embedded MUMIE Tasks tend to cause issues on some browsers and operation systems so we recommend using New-Window-mode.';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
