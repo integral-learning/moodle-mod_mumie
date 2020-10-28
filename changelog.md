@@ -7,6 +7,9 @@ All important changes to this plugin will be documented in this file.
 - "New Window"-mode is now the default option for new MUMIE Tasks
 - Added warning about potential issues with embedded MUMIE Tasks
 
+### Fixed
+- Duedate and isGraded are now properly saved during duplication and backup
+
 ## [v1.3.5] - 2020-09-16
 ### Fixed
 - Fixed an issue where max grade was always displayed as 100 in gradebook. 
