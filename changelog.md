@@ -6,6 +6,7 @@ All important changes to this plugin will be documented in this file.
 ### Changed
 - "New Window"-mode is now the default option for new MUMIE Tasks
 - Added warning about potential issues with embedded MUMIE Tasks
+- Changing a MUMIE Task's problem now resets its grades
 
 ### Fixed
 - Duedate and isGraded are now properly saved during duplication and backup
