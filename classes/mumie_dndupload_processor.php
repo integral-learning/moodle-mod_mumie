@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
 /**
  * This processor is responsible for the creation of MUMIE Task that are being imported via dnd_handler.
- * 
+ *
  * Some functions are taken and adapted from course/dnduploadlib.php.
  *
  * @package mod_mumie
