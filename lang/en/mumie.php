@@ -52,7 +52,7 @@ $string['mumie_form_activity_server'] = 'MUMIE server';
 $string['mumie_form_activity_server_help'] = 'Please select a MUMIE server to get an updated list of available tasks and courses.';
 $string['mumie_form_activity_course'] = 'MUMIE course';
 $string['mumie_form_activity_problem'] = "MUMIE problem";
-$string['mumie_form_activity_problem_help'] = "A MUMIE problem is a single graded exercise on MUMIE";
+$string['mumie_form_activity_problem_help'] = "A MUMIE problem is a single graded exercise on MUMIE. <br><br><b>Note:</b><br>Changing the problem of an existing MUMIE Task will reset the gradebook.";
 $string['mumie_form_activity_container'] = 'Launch container';
 $string['mumie_form_activity_container_help'] = 'Please select whether the activity should be openend in a new browser tab or embedded into moodle.<br><br>Please note that embedded MUMIE Tasks cannot be opened with Safari due to technical limitations. This MUMIE Task will be opened in a tab instead for Safari users';
 $string['mumie_form_activity_container_embedded'] = 'embedded';
@@ -113,6 +113,7 @@ $string['parameter_missing'] = 'The uploaded file is incompatible!';
 $string['dndupload_message'] = 'Add as a new MUMIE Task';
 $string['server_config_missing'] = '<br><br>We could not find a configuration for the MUMIE server that is being used in this MUMIE Task. Please ask your administrator to add a MUMIE server configuration for the following URL prefix:<br><br><b>{$a}</b>';
 $string['dnd_addmessage'] = 'Add MUMIE Task here';
+$string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
 
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
