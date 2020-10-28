@@ -178,7 +178,7 @@ class locallib {
 
     /**
      * Check whether a different problem was selected for an existing MUMIE Task.
-     * 
+     *
      * @param stdClass $mumietaskupdate the pending update.
      * @return boolean has a new problem been selected?
      */

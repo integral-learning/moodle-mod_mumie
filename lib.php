@@ -60,7 +60,7 @@ function mumie_update_instance($mumie, $mform) {
     $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
     \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
     mod_mumie\locallib::update_pending_gradepool($mumie);
-    
+
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 

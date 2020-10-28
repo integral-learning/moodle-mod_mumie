@@ -425,7 +425,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         if (count($records) < 1) {
             return false;
         }
-        return isset((array_values($records))[0]->privategradepool);
+        return isset(array_values($records)[0]->privategradepool);
     }
 
     /**
