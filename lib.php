@@ -278,6 +278,11 @@ function mumie_dndupload_register() {
                 'identifier' => 'mumie/json', 'datatransfertypes' => array('mumie/json', 'mumie/json'),
                 'addmessage' => get_string('dnd_addmessage', 'mod_mumie'),
                 'namemessage' => '',
+                'priority' => 1),
+            array(
+                'identifier' => 'mumie/jsonArray', 'datatransfertypes' => array('mumie/jsonArray', 'mumie/jsonArray'),
+                'addmessage' => get_string('dnd_addmessage_multiple', 'mod_mumie'),
+                'namemessage' => '',
                 'priority' => 1)
             ),
         'types' => array(
@@ -285,10 +290,13 @@ function mumie_dndupload_register() {
                 'identifier' => 'mumie/json',
                 'message' => get_string('dndupload_message', 'mod_mumie'),
                 'noname' => true),
-            )
+            array(
+                'identifier' => 'mumie/jsonArray',
+                'message' => get_string('dndupload_message', 'mod_mumie'),
+                'noname' => true),
+            ),
     );
 }
-
 
 /**
  * Handle content that has been uploaded
@@ -298,42 +306,14 @@ function mumie_dndupload_register() {
 function mumie_dndupload_handle($uploadinfo) {
     global $CFG, $COURSE, $USER;
 
+    $courseid = required_param('course', PARAM_INT);
+    $section = required_param('section', PARAM_INT);
+    $type = required_param('type', PARAM_TEXT);
+
     $context = context_module::instance($uploadinfo->coursemodule);
     $upload = json_decode(clean_param($uploadinfo->content, PARAM_RAW));
-    require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
-    if (!isset($upload->link) || !isset($upload->path_to_coursefile)
-        || !isset($upload->language) || !isset($upload->name) || !isset($upload->server) || !isset($upload->course)) {
-        throw new moodle_exception('parameter_missing', 'mod_mumie');
-    }
-    $server = new auth_mumie\mumie_server();
-    $server->set_urlprefix($upload->server);
-    if (!$server->is_valid_mumie_server()) {
-        throw new moodle_exception('mumie_form_server_not_existing', 'auth_mumie');
-    }
-    if (!$server->config_exists_for_url()) {
-        if (has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
-            $server->set_name($server->get_urlprefix());
-            $server->upsert();
-        } else {
-            throw new moodle_exception(get_string('server_config_missing', 'mod_mumie', $server->get_urlprefix()));
-        }
-    }
-    $mumie = new stdClass();
-    $mumie->taskurl = $upload->link . '?lang=' . $upload->language;
-    $mumie->mumie_coursefile = $upload->path_to_coursefile;
-    $mumie->language = $upload->language;
-    $mumie->course = $uploadinfo->course->id;
-    $mumie->server = $server->get_urlprefix();
-    $mumie->mumie_course = $upload->course;
-    $mumie->intro = '';
-    $mumie->points = 100;
-    $mumie->name = mod_mumie\locallib::get_default_name($upload) ?? $upload->name;
-    global $DB;
-    $exitingtasks = array_values(
-        $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
-    );
-    if (count($exitingtasks) > 0) {
-        $mumie->privategradepool = $exitingtasks[0]->privategradepool;
-    }
-    return mumie_add_instance($mumie, null);
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_dndupload_processor.php');
+    $processor = new mod_mumie\mumie_dndupload_processor($courseid, $section, $type, $upload);
+    $result = $processor->process();
+    return $result;
 }

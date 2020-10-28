@@ -3,13 +3,17 @@
 All important changes to this plugin will be documented in this file.
 
 ## [v1.3.6] - TODO
+### Fixed
+- Admin settings regarding gradepool are no longer ignored when Tasks are imported via d&d
+- Duedate and isGraded are now properly saved during duplication and backup
+
+### Added
+- It's now possible to import multiple MUMIE Tasks via drag & drop at once
+
 ### Changed
 - "New Window"-mode is now the default option for new MUMIE Tasks
 - Added warning about potential issues with embedded MUMIE Tasks
 - Changing a MUMIE Task's problem now resets its grades
-
-### Fixed
-- Duedate and isGraded are now properly saved during duplication and backup
 
 ## [v1.3.5] - 2020-09-16
 ### Fixed

@@ -110,6 +110,7 @@ $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';
 $string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';
 $string['server_config_missing'] = '<br><br>Es konnte keine Kofiguration für die MUMIE-Server-URL gefunden werden, die zum Erstellen dieser MUMIE Task benutzt wird. Bitten Sie Ihren Administrator eine MUMIE-Server-Konfiguration für die folgende URL zu erstellen:<br><br><b>{$a}</b>';
 $string['dnd_addmessage'] = 'MUMIE-Task hinzufügen';
+$string['dnd_addmessage_multiple'] = 'MUMIE-Tasks hinzufügen';
 
 // Capabilities.
 $string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
