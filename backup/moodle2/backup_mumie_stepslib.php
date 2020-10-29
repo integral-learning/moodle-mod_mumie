@@ -42,7 +42,7 @@ class backup_mumie_structure_step extends backup_activity_structure_step {
             'name', 'intro', 'introformat', 'timecreated',
             'timemodified', 'taskurl', 'launchcontainer',
             'mumie_course', 'language', 'server', 'mumie_coursefile',
-            'lastsync', 'points', 'completionpass', 'privategradepool'));
+            'lastsync', 'points', 'completionpass', 'privategradepool', 'duedate', 'isgraded'));
 
         $serverconfig = new backup_nested_element("serverconfig", array('id'), array('name', 'url_prefix'));
         $mumie->add_child($serverconfig);

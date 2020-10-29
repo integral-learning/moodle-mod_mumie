@@ -175,4 +175,18 @@ class locallib {
         }
         return '';
     }
+
+    /**
+     * Check whether a different problem was selected for an existing MUMIE Task.
+     *
+     * @param stdClass $mumietaskupdate the pending update.
+     * @return boolean has a new problem been selected?
+     */
+    public static function has_problem_changed($mumietaskupdate) {
+        global $DB;
+        $oldtask = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietaskupdate->id));
+        $oldurl = self::remove_params_from_url($oldtask->taskurl);
+        $newurl = self::remove_params_from_url($mumietaskupdate->taskurl);
+        return $oldurl != $newurl;
+    }
 }
