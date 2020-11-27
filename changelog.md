@@ -2,6 +2,10 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.3.7] - TODO
+### Fixed
+- Missing server configuration no longer disables js in mod_mumie form
+
 ## [v1.3.6] - 2020-10-29
 ### Fixed
 - Admin settings regarding gradePool are no longer ignored when Tasks are imported via d&d
