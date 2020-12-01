@@ -2,7 +2,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
     function() {
         var addServerButton = document.getElementById("id_add_server_button");
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
-        var lmsSelectorUrl = 'https://lemon.mumie.net';
+        var lmsSelectorUrl = 'https://pool.mumie.net';
         var serverController = (function() {
             var serverStructure;
             var serverDropDown = document.getElementById("id_server");
