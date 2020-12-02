@@ -66,6 +66,7 @@ $string['mumie_form_points'] = 'Maximum points';
 $string['mumie_form_points_help'] = 'Please enter the maximal amout of points a student can get for completing the activity.<br>Grades are calculated and updated automatically.';
 $string['mumie_form_missing_server'] = 'We could not find a configuration for the MUMIE server that is being used in this MUMIE Task.<br><br>
 The properties <i>MUMIE server</i>, <i>MUMIE course</i>, <i>MUMIE problem</i> and <i>Language</i> are locked for editing until a new MUMIE server is added for the following URL prefix:<br><br>';
+$string['mumie_form_no_server_conf'] = 'No MUMIE server configuration found';
 // This is taken and adapted from mod_quiz version 2018051400.
 $string['completionpass'] = 'Require passing grade';
 $string['completionpass_help'] = 'If enabled, this activity is considered completed when the student receives a passing grade, with the pass grade set in the gradebook.

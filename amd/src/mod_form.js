@@ -486,29 +486,39 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
 
+        /**
+         *  Disable all dropdown menus and show notification
+         * @param {string} errorKey
+         */
+        function disableDropDownMenus(errorKey) {
+            require(['core/str', "core/notification"], function(str, notification) {
+                str.get_strings([{
+                    'key':  errorKey,
+                    component: 'mod_mumie'
+                }]).done(function(s) {
+                    notification.addNotification({
+                        message: s[0] + "<b>" + missingConfig.getAttribute("value") + "</b>",
+                        type: "problem"
+                    });
+                }).fail(notification.exception);
+            });
+            serverController.disable();
+            courseController.disable();
+            langController.disable();
+            taskController.disable();
+            problemSelectorController.disable();
+        }
+
         return {
             init: function(contextid) {
                 var isEdit = document.getElementById("id_name").getAttribute('value');
-
+                var serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
-                    require(['core/str', "core/notification"], function(str, notification) {
-                        str.get_strings([{
-                            'key': 'mumie_form_missing_server',
-                            component: 'mod_mumie'
-                        }]).done(function(s) {
-                            notification.addNotification({
-                                message: s[0] + "<b>" + missingConfig.getAttribute("value") + "</b>",
-                                type: "problem"
-                            });
-                        }).fail(notification.exception);
-                    });
-                    serverController.disable();
-                    courseController.disable();
-                    langController.disable();
-                    taskController.disable();
-                    problemSelectorController.disable();
+                    disableDropDownMenus('mumie_form_missing_server');
+                } else if (!serverStructure.length) {
+                    disableDropDownMenus('mumie_form_no_server_conf');
                 } else {
-                    serverController.init(JSON.parse(document.getElementsByName('mumie_server_structure')[0].value));
+                    serverController.init(serverStructure);
                     courseController.init(isEdit);
                     taskController.init(isEdit);
                     langController.init();

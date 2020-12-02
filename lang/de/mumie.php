@@ -77,6 +77,7 @@ $string['mumie_form_points'] = 'Maximal erreichbare Punkte';
 $string['mumie_form_points_help'] = 'Bitte geben Sie die maximal erreichbaren Punkte ein, die ein Student durch das Bearbeiten dieser Aufgabe erreichen kann.<br>Die Noten werden automatisch in das Moodle-Gradebook übertragen.';
 $string['mumie_form_missing_server'] = 'Es konnte keine Kofiguration für die MUMIE-Server-URL gefunden werden, die zum Erstellen dieser MUMIE Task benutzt wurde.<br><br>
 Die Felder <i>MUMIE-Server</i>, <i>MUMIE-Kurs</i>, <i>MUMIE-Aufgabe</i> und <i>Sprache</i> können nicht verändert werden bis ein MUMIE-Server für die folgende URL gespeichert wurde:<br><br>';
+$string['mumie_form_no_server_conf'] = 'Es konnte keine MUMIE-Server-Konfiguration gefunden werden.';
 // This is taken and adapted from mod_quiz version 2018051400.
 $string['completionpass'] = ' Bewertung für Bestehen notwendig';
 $string['completionpass_help'] = 'Wenn diese Option aktiviert ist, wird die Aktivität als abgeschlossen betrachtet, sobald eine Bewertung vorliegt. Icons für die erfolgreiche oder erfolglose Bearbeitung können angezeigt werden,
