@@ -158,7 +158,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
 
-        $jsparams =array(
+        $jsparams = array(
             json_encode($context->id),
             get_config('auth_mumie', 'mumie_problem_selector_url'),
             $USER->lang
