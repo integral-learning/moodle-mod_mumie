@@ -96,9 +96,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         );
         $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
 
-        $mform->addElement('hidden', 'problem_selector_url', get_config('auth_mumie', 'mumie_problem_selector_url'));
-        $mform->setType('problem_selector_url', PARAM_TEXT);
-
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
         $launchoptions[MUMIE_LAUNCH_CONTAINER_WINDOW] = get_string("mumie_form_activity_container_window", "mod_mumie");
@@ -160,7 +157,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->add_action_buttons();
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
-        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', array(json_encode($context->id)));
+
+        $jsparams =array(
+            json_encode($context->id),
+            get_config('auth_mumie', 'mumie_problem_selector_url'),
+            $USER->lang
+        );
+        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
 
     /**

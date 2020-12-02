@@ -2,7 +2,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
     function() {
         var addServerButton = document.getElementById("id_add_server_button");
         var missingConfig = document.getElementsByName("mumie_missing_config")[0];
-        var lmsSelectorUrl = document.getElementsByName('problem_selector_url')[0].value;
+        var lmsSelectorUrl;
+        var systemLanguage;
         var serverController = (function() {
             var serverStructure;
             var serverDropDown = document.getElementById("id_server");
@@ -125,10 +126,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + mumieOrg
                                 + '&serverUrl='
                                 + encodeURIComponent(serverController.getSelectedServer().urlprefix)
-                                + "&lang="
+                                + '&lang='
                                 + langController.getSelectedLanguage()
-                                + "&problem=" + taskController.getSelectedTask().link
-                                + "&origin=" + encodeURIComponent(window.location.origin)
+                                + '&problem=' + taskController.getSelectedTask().link
+                                + '&origin=' + encodeURIComponent(window.location.origin)
+                                + '&moodleLang=' + systemLanguage
                             , '_blank'
                         );
                     };
@@ -510,7 +512,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextid) {
+            init: function(contextid, prbSelectorUrl, lang) {
+                lmsSelectorUrl = prbSelectorUrl;
+                systemLanguage = lang;
                 var isEdit = document.getElementById("id_name").getAttribute('value');
                 var serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
