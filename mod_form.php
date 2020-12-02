@@ -95,8 +95,8 @@ class mod_mumie_mod_form extends moodleform_mod {
             array()
         );
         $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
-        
-        $mform->addElement('hidden','problem_selector_url', get_config('auth_mumie', 'mumie_problem_selector_url'));
+
+        $mform->addElement('hidden', 'problem_selector_url', get_config('auth_mumie', 'mumie_problem_selector_url'));
         $mform->setType('problem_selector_url', PARAM_TEXT);
 
         $launchoptions = array();
