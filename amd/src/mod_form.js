@@ -14,7 +14,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     serverDropDown.onchange = function() {
                         courseController.updateOptions();
                         langController.updateOptions();
-                        taskController.updateOptions();
                     };
                 },
                 getSelectedServer: function() {
@@ -89,7 +88,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     var importObj = JSON.parse(event.data);
                     try {
                         langController.setLanguage(importObj.language);
-                        taskController.updateOptions(importObj.link + '?lang=' + importObj.language);
+                        taskController.setSelection(importObj.link + '?lang=' + importObj.language);
                         sendSuccess();
                         window.focus();
                         displayProblemSelectedMessage();
@@ -119,6 +118,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function() {
                     problemSelectorButton.onclick = function() {
+                        var selectedTask = taskController.getSelectedTask();
                         problemSelectorWindow = window.open(
                             lmsSelectorUrl
                                 + '/lms-problem-selector?'
@@ -128,7 +128,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + encodeURIComponent(serverController.getSelectedServer().urlprefix)
                                 + '&lang='
                                 + langController.getSelectedLanguage()
-                                + '&problem=' + taskController.getSelectedTask().link
+                                + (selectedTask ? ('&problem=' + selectedTask.link) : '')
                                 + '&origin=' + encodeURIComponent(window.location.origin)
                                 + '&moodleLang=' + systemLanguage
                             , '_blank'
@@ -190,7 +190,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     courseDropDown.onchange = function() {
                         updateCoursefilePath();
                         langController.updateOptions();
-                        taskController.updateOptions();
                     };
                     courseController.updateOptions(isEdit ? coursefileElem.value : false);
                 },
@@ -245,7 +244,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 init: function() {
 
                     languageDropDown.onchange = function() {
-                        taskController.updateOptions();
                         courseController.updateOptions();
                     };
                     langController.updateOptions();
@@ -285,8 +283,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
         var taskController = (function() {
-            var taskDropDown = document.getElementById("id_taskurl");
+            var taskSelectionInput = document.getElementsByName("taskurl")[0];
             var nameElem = document.getElementById("id_name");
+            var taskDisplayElement = document.getElementById("id_task_display_element");
             var useCompleteCourseElem = document.getElementById("id_mumie_complete_course");
 
             /**
@@ -296,6 +295,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 if (!isCustomName()) {
                     nameElem.value = getHeadline(taskController.getSelectedTask());
                 }
+                taskDisplayElement.value = getHeadline(taskController.getSelectedTask());
             }
 
             /**
@@ -375,35 +375,19 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {Object} task
              * @returns {string}
              */
-            function getLocalizedLink(task) {
-                return task.link + "?lang=" + langController.getSelectedLanguage();
+            function getLocalizedLinkFromTask(task) {
+                return getLocalizedLink(task.link);
             }
 
             /**
-             * Add a new option to the 'Problem' drop down menu
-             * @param {Object} task
+             * Add language parameter to link
+             * @param {string} link
+             * @returns {string}
              */
-            function addTaskOption(task) {
-                if (getHeadline(task) !== null) {
-                    var optionTask = document.createElement("option");
-                    optionTask.setAttribute("value", getLocalizedLink(task));
-                    optionTask.text = getHeadline(task);
-                    taskDropDown.append(optionTask);
-                }
+            function getLocalizedLink(link) {
+                return link + "?lang=" + langController.getSelectedLanguage();
             }
 
-            /**
-             * User can chose to select an entire course instead of a single problem.
-             * If they do so, we simply add a pseudo problem linking to the courses overview page
-             * @param {Object} course
-             */
-            function addPseudoTaskOption(course) {
-                var task = getPseudoTaskFromCourse(course);
-                var optionTask = document.createElement("option");
-                optionTask.setAttribute("value", getLocalizedLink(task));
-                optionTask.text = getHeadline(task);
-                taskDropDown.append(optionTask);
-            }
 
             /**
              * Get a task that links to a course's overview page
@@ -434,51 +418,32 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             return {
-                init: function(isEdit) {
+                init: function() {
                     updateName();
-                    taskDropDown.onchange = function() {
-                        updateName();
-                    };
                     useCompleteCourseElem.onchange = function() {
-                        taskController.updateOptions();
+                        if (useCompleteCourse()) {
+                            var localizedLink = getLocalizedLink(courseController.getSelectedCourse().link);
+                            taskController.setSelection(localizedLink);
+                        } else {
+                            taskController.setSelection(null);
+                        }
                     };
-                    taskController.updateOptions(isEdit ?
-                        taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value') : undefined
-                    );
                 },
                 getSelectedTask: function() {
-                    var selectedLink = taskDropDown.options[taskDropDown.selectedIndex] ==
-                        undefined ? undefined : taskDropDown.options[taskDropDown.selectedIndex].getAttribute('value');
+                    var selectedLink = taskSelectionInput.value;
                     var course = courseController.getSelectedCourse();
                     var tasks = course.tasks.slice();
                     tasks.push(getPseudoTaskFromCourse(course));
                     for (var i in tasks) {
                         var task = tasks[i];
-                        if (selectedLink == getLocalizedLink(task)) {
+                        if (selectedLink == getLocalizedLinkFromTask(task)) {
                             return task;
                         }
                     }
                     return null;
                 },
-                disable: function() {
-                    taskDropDown.disabled = true;
-                    removeChildElems(taskDropDown);
-                },
-                updateOptions: function(selectTaskByLink) {
-                    removeChildElems(taskDropDown);
-                    taskDropDown.selectedIndex = 0;
-                    if (useCompleteCourse()) {
-                        addPseudoTaskOption(courseController.getSelectedCourse());
-                    } else {
-                        var tasks = courseController.getSelectedCourse().tasks;
-                        for (var i in tasks) {
-                            var task = tasks[i];
-                            addTaskOption(task);
-                            if (selectTaskByLink === getLocalizedLink(task)) {
-                                taskDropDown.selectedIndex = taskDropDown.childElementCount - 1;
-                            }
-                        }
-                    }
+                setSelection: function(newSelection) {
+                    taskSelectionInput.value = newSelection;
                     updateName();
                 },
                 useCompleteCourse: function() {
