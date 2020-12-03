@@ -442,16 +442,14 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param String $message The message to display
      */
-    private function add_info_box($message, $id) {
+    private function add_info_box($message) {
         $mform = &$this->_form;
         $mform->addElement(
             'html',
             '<div class="form-group row  fitem ">'
             . '<div class="col-md-3"></div>'
             . '<div class="col-md-9 felement">'
-            . "<span id={$id}>"
             . $message
-            . '</span>'
             . '</div></div>'
         );
     }
