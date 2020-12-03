@@ -88,7 +88,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("taskurl", PARAM_TEXT);
 
         $mform->addElement(
-            "text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true,"style"=>"width:80%;")
+            "text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true, "class" => "mumie_text_input")
         );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);

@@ -37,6 +37,6 @@
 
 }
 
-.mumie_text_input div input {
-    width: 80%;
+.mumie_text_input .form-inline .form-control {
+        width: 80%;  
 }
