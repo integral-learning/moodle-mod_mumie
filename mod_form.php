@@ -86,7 +86,9 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "taskurl", null);
         $mform->setType("taskurl", PARAM_TEXT);
 
-        $mform->addElement("text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true));
+        $mform->addElement(
+            "text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true)
+        );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
 
@@ -179,10 +181,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $server = \auth_mumie\mumie_server::get_by_urlprefix($data["server"]);
         $server->load_structure();
         $course = $server->get_course_by_coursefile($data["mumie_coursefile"]);
-        $taskExists = $course->get_task_by_link($data["taskurl"]);
-        
-        //$errors["prb_selector_btn"] = "taskUrl: " . json_encode($data["mumie_missing_config"]);
-
+        $taskexists = $course->get_task_by_link($data["taskurl"]);
 
         if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
             $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
@@ -192,11 +191,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             $errors["mumie_course"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
-        if (!isset($taskExists) && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
-            //$errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
+        if (!isset($taskexists) && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
             $errors["prb_selector_btn"] = "TODO: PLEASE SELECT PROBLEM";
         }
-
 
         if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
             $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
