@@ -375,10 +375,18 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {Object} task
              * @returns {string}
              */
-            function getLocalizedLink(task) {
-                return task.link + "?lang=" + langController.getSelectedLanguage();
+            function getLocalizedLinkFromTask(task) {
+                return getLocalizedLink(task.link);
             }
 
+            /**
+             * Add language parameter to link
+             * @param {string} link
+             * @returns {string}
+             */
+            function getLocalizedLink(link) {
+                return link + "?lang=" + langController.getSelectedLanguage();
+            }
 
 
             /**
@@ -412,9 +420,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function() {
                     updateName();
-                    //TODO: Lets do this later
                     useCompleteCourseElem.onchange = function() {
-                        taskController.updateOptions();
+                        if (useCompleteCourse()) {
+                            var localizedLink = getLocalizedLink(courseController.getSelectedCourse().link);
+                            taskController.setSelection(localizedLink);
+                        } else {
+                            taskController.setSelection(null);
+                        }
                     };
                 },
                 getSelectedTask: function() {
@@ -424,7 +436,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     tasks.push(getPseudoTaskFromCourse(course));
                     for (var i in tasks) {
                         var task = tasks[i];
-                        if (selectedLink == getLocalizedLink(task)) {
+                        if (selectedLink == getLocalizedLinkFromTask(task)) {
                             return task;
                         }
                     }
