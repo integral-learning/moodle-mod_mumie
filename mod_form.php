@@ -55,7 +55,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
 
-        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"));
+        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"), array("class" => "mumie_text_input"));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null);
 
@@ -82,12 +82,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
         $mform->setDefault("language", optional_param("lang", $USER->lang, PARAM_ALPHA));
+        $mform->hideIf('language', 'mumie_complete_course', 'notchecked');
 
         $mform->addElement("hidden", "taskurl", null);
         $mform->setType("taskurl", PARAM_TEXT);
 
         $mform->addElement(
-            "text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true)
+            "text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true,"style"=>"width:80%;")
         );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
