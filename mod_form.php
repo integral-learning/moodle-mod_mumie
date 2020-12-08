@@ -92,6 +92,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
+        $mform->hideIf('task_display_element', 'mumie_complete_course', 'checked');
+
 
         $contentbutton = $mform->addElement(
             'button',
@@ -99,7 +101,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             get_string('mumie_form_prb_selector_btn', 'mod_mumie'),
             array()
         );
-        $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
+        $mform->hideIf('prb_selector_btn', 'mumie_complete_course', 'checked');
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
