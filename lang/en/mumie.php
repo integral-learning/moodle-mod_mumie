@@ -54,7 +54,7 @@ $string['mumie_form_activity_course'] = 'MUMIE course';
 $string['mumie_form_activity_problem'] = "MUMIE problem";
 $string['mumie_form_activity_problem_help'] = "A MUMIE problem is a single graded exercise on MUMIE. <br><br><b>Note:</b><br>Changing the problem of an existing MUMIE Task will reset the gradebook.";
 $string['mumie_form_activity_container'] = 'Launch container';
-$string['mumie_form_activity_container_help'] = 'Please select whether the activity should be openend in a new browser tab or embedded into moodle.<br><br>Please note that embedded MUMIE Tasks cannot be opened with Safari due to technical limitations. This MUMIE Task will be opened in a tab instead for Safari users';
+$string['mumie_form_activity_container_help'] = 'Please select whether the activity should be opened in a new browser tab or embedded into moodle.<br><br>Please note that embedded MUMIE Tasks cannot be opened with Safari due to technical limitations. This MUMIE Task will be opened in a tab instead for Safari users';
 $string['mumie_form_activity_container_embedded'] = 'embedded';
 $string['mumie_form_activity_container_window'] = 'New window';
 $string['mumie_form_activity_language'] = 'Language';
@@ -63,7 +63,7 @@ $string['mumie_form_server_added'] = 'MUMIE server was added';
 $string['mumie_form_add_server_button'] = 'Add MUMIE server';
 $string['mumie_form_coursefile'] = 'Path to MUMIE course meta file';
 $string['mumie_form_points'] = 'Maximum points';
-$string['mumie_form_points_help'] = 'Please enter the maximal amout of points a student can get for completing the activity.<br>Grades are calculated and updated automatically.';
+$string['mumie_form_points_help'] = 'Please enter the maximal amount of points a student can get for completing the activity.<br>Grades are calculated and updated automatically.';
 $string['mumie_form_missing_server'] = 'We could not find a configuration for the MUMIE server that is being used in this MUMIE Task.<br><br>
 The properties <i>MUMIE server</i>, <i>MUMIE course</i>, <i>MUMIE problem</i> and <i>Language</i> are locked for editing until a new MUMIE server is added for the following URL prefix:<br><br>';
 $string['mumie_form_no_server_conf'] = 'No MUMIE server configuration found';

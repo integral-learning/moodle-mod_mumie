@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die;
  * xmldb_mumie_upgrade is the function that upgrades
  * the mod_mumie database when it's needed
  *
- * This function is automaticly called when version number in
+ * This function is automatically called when version number in
  * version.php changes.
  *
  * @param int $oldversion New old version number.
