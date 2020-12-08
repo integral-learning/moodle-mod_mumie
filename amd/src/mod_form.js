@@ -14,6 +14,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     serverDropDown.onchange = function() {
                         courseController.updateOptions();
                         langController.updateOptions();
+                        taskController.updateCompleteCourseVisibility();
                     };
                 },
                 getSelectedServer: function() {
@@ -190,6 +191,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     courseDropDown.onchange = function() {
                         updateCoursefilePath();
                         langController.updateOptions();
+                        taskController.updateCompleteCourseVisibility();
                     };
                     courseController.updateOptions(isEdit ? coursefileElem.value : false);
                 },
@@ -419,6 +421,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             return {
                 init: function() {
+                    taskController.updateCompleteCourseVisibility();
                     updateName();
                     useCompleteCourseElem.onchange = function() {
                         if (useCompleteCourse()) {
@@ -448,6 +451,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 useCompleteCourse: function() {
                     return useCompleteCourse();
+                },
+                updateCompleteCourseVisibility: function() {
+                    var visible = courseController.getSelectedCourse().link;
+                    useCompleteCourseElem.parentElement.parentElement.parentElement.parentElement.style =
+                     visible ? "display:block" : "display:none";
                 }
             };
         })();
