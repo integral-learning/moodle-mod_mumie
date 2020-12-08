@@ -430,6 +430,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         } else {
                             taskController.setSelection(null);
                         }
+                        // Circumvent moodle bug that ignores "disabled" if visibility has changed.
+                        taskDisplayElement.disabled = "1";
                     };
                 },
                 getSelectedTask: function() {
