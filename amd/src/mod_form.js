@@ -454,7 +454,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 updateCompleteCourseVisibility: function() {
                     var visible = courseController.getSelectedCourse().link;
-                    useCompleteCourseElem.parentElement.parentElement.parentElement.parentElement.style =
+                    useCompleteCourseElem.parentElement.parentElement.parentElement.style =
                      visible ? "display:block" : "display:none";
                 }
             };
