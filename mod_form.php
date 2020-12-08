@@ -55,7 +55,12 @@ class mod_mumie_mod_form extends moodleform_mod {
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
 
-        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"), array("class" => "mumie_text_input"));
+        $mform->addElement(
+            "text",
+            "name",
+            get_string("mumie_form_activity_name", "mod_mumie"),
+            array("class" => "mumie_text_input")
+        );
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null);
 
@@ -88,15 +93,17 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("taskurl", PARAM_TEXT);
 
         $mform->addElement(
-            "text", "task_display_element", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true, "class" => "mumie_text_input")
+            "text",
+            "task_display_element",
+            get_string('mumie_form_activity_problem', "mod_mumie"),
+            array("disabled" => true, "class" => "mumie_text_input")
         );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
         $mform->disabledIf('task_display_element', 'mumie_complete_course', 'unchecked');
         $mform->hideIf('task_display_element', 'mumie_complete_course', 'checked');
 
-
-        $contentbutton = $mform->addElement('button','prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
+        $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
         $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
         $mform->hideIf('prb_selector_btn', 'mumie_complete_course', 'checked');
 
