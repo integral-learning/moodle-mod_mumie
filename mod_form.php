@@ -185,10 +185,6 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function validation($data, $files) {
         $errors = array();
-        $server = \auth_mumie\mumie_server::get_by_urlprefix($data["server"]);
-        $server->load_structure();
-        $course = $server->get_course_by_coursefile($data["mumie_coursefile"]);
-        $taskexists = $course->get_task_by_link($data["taskurl"]);
 
         if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
             $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
@@ -198,8 +194,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             $errors["mumie_course"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
-        if (!isset($taskexists) && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
-            $errors["prb_selector_btn"] = "TODO: PLEASE SELECT PROBLEM";
+        $taskurlvalid = isset($data["taskurl"]) && $data["taskurl"] !== "";
+        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
+            $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
         if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
@@ -404,12 +401,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             $mform->removeElement('mumie_server_structure');
             $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
             $mform->setType("mumie_server_structure", PARAM_RAW);
-
-            // Add the custom problem as an option to the problem drop down menu.
-            $option = array();
-            $option['text'] = $data->name;
-            $option['attr'] = ["value" => $data->taskurl];
-            array_push($mform->getElement("taskurl")->_options, $option);
         }
 
         parent::set_data($data);
