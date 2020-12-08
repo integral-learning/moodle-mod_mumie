@@ -93,12 +93,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
 
-        $contentbutton = $mform->addElement(
-            'button',
-            'prb_selector_btn',
-            get_string('mumie_form_prb_selector_btn', 'mod_mumie'),
-            array()
-        );
+        $contentbutton = $mform->addElement('button','prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
         $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
 
         $launchoptions = array();
@@ -172,7 +167,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Valdiate the form data
+     * Validate the form data
      * @param array $data form data
      * @param array $files files uploaded
      * @return array associative array of errors
@@ -253,7 +248,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             foreach ($course->get_name() as $name) {
                 $courseoptions[$name->value] = $name->value;
 
-                // If a user wants to use an entire course instead of a single problem, we need to define a pseduo problem to use.
+                // If a user wants to use an entire course instead of a single problem, we need to define a pseudo problem to use.
                 $languagelink = $course->get_link() . '?lang=' . $name->language;
                 $languageoptions[$name->language] = $name->language;
             }
@@ -264,7 +259,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Populate task and language option list for a given course
      *
-     * @param stdClass $course single isntance of MUMIE course containing a list of tasks
+     * @param stdClass $course single instance of MUMIE course containing a list of tasks
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
@@ -305,7 +300,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Disable all options for grades if the user has choosen to link a course instead of a problem.
+     * Disable all options for grades if the user has chosen to link a course instead of a problem.
      */
     private function disable_grade_rules() {
         $mform = $this->_form;
@@ -346,7 +341,7 @@ class mod_mumie_mod_form extends moodleform_mod {
                 )[0]->privategradepool ?? -1;
             }
         }
-        // The following changes only apply to edits, so skip them if not neccessary.
+        // The following changes only apply to edits, so skip them if not necessary.
         if (!isset($data->server)) {
             parent::set_data($data);
             return;

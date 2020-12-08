@@ -99,7 +99,7 @@ class gradesync {
     /**
      * Get grades from MUMIE server for a given MUMIE task
      *
-     * @param stdClass $mumie instace of MUMIE task
+     * @param stdClass $mumie instance of MUMIE task
      * @param int $userid If userid = 0, update all users
      * @return array grades for the given MUMIE task
      */
