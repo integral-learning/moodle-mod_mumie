@@ -100,7 +100,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
-        $mform->disabledIf('task_display_element', 'mumie_complete_course', 'unchecked');
         $mform->hideIf('task_display_element', 'mumie_complete_course', 'checked');
 
         $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
@@ -114,7 +113,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "launchcontainer", get_string('mumie_form_activity_container', "mod_mumie"), $launchoptions);
         $mform->setDefault("launchcontainer", MUMIE_LAUNCH_CONTAINER_WINDOW);
         $mform->addHelpButton("launchcontainer", "mumie_form_activity_container", "mumie");
-        $this->add_info_box(get_string('mumie_form_launchcontainer_info', 'mod_mumie'), "mumie_launchcontainer_info");
+        $this->add_info_box(get_string('mumie_form_launchcontainer_info', 'mod_mumie'));
 
         $mform->addElement("hidden", "mumie_coursefile", "");
         $mform->setType("mumie_coursefile", PARAM_TEXT);
@@ -154,7 +153,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('no'), 1, $attributes);
         $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array(' '), false);
         $mform->addHelpButton('privategradepool', 'mumie_form_grade_pool', 'mumie');
-        $this->add_info_box($gradepoolmsg, "mumie_gradepool_info");
+        $this->add_info_box($gradepoolmsg);
 
         if (!$disablegradepool) {
             $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');

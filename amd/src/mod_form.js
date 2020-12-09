@@ -373,7 +373,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Add lanugage parameter to the task's link to display content in the selected language
+             * Add language parameter to the task's link to display content in the selected language
              * @param {Object} task
              * @returns {string}
              */
