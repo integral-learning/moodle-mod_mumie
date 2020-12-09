@@ -234,7 +234,7 @@ class mumie_dndupload_processor {
     }
 
     /**
-     * Make sure that there are all necesseary parameters set in the uploaded problem instance.
+     * Make sure that there are all necessary parameters set in the uploaded problem instance.
      *
      * @param \stdClass $uploadinstance a problem instance that's being imported
      */

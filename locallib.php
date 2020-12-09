@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Libary of internal functions used in mod_mumie
+ * Library of internal functions used in mod_mumie
  *
  * @package mod_mumie
  * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
@@ -35,7 +35,7 @@ define("MUMIE_LAUNCH_CONTAINER_WINDOW", 0);
 define("MUMIE_LAUNCH_CONTAINER_EMBEDDED", 1);
 
 /**
- * Libary of internal functions used in mod_mumie
+ * Library of internal functions used in mod_mumie
  *
  * @package mod_mumie
  * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
@@ -96,7 +96,7 @@ class locallib {
     /**
      * Get a default name for the uploaded MumieTask, if available.
      *
-     * The droped MUMIE Task's name is automatically generated and does not look pretty.
+     * The dropped MUMIE Task's name is automatically generated and does not look pretty.
      * Search its server for a better name.
      * @param stdClass $uploadedtask
      * @return string

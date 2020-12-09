@@ -48,15 +48,19 @@ class mod_mumie_mod_form extends moodleform_mod {
         $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
         $serveroptions = array();
         $courseoptions = array();
-        $problemoptions = array();
         $languageoptions = array();
 
-        self::populate_options($serveroptions, $courseoptions, $problemoptions, $languageoptions);
+        self::populate_options($serveroptions, $courseoptions, $languageoptions);
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
 
-        $mform->addElement("text", "name", get_string("mumie_form_activity_name", "mod_mumie"));
+        $mform->addElement(
+            "text",
+            "name",
+            get_string("mumie_form_activity_name", "mod_mumie"),
+            array("class" => "mumie_text_input")
+        );
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('required'), 'required', null);
 
@@ -83,20 +87,24 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
         $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
         $mform->setDefault("language", optional_param("lang", $USER->lang, PARAM_ALPHA));
+        $mform->hideIf('language', 'mumie_complete_course', 'notchecked');
 
-        $mform->addElement("select", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), $problemoptions);
-        $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
+        $mform->addElement("hidden", "taskurl", null);
+        $mform->setType("taskurl", PARAM_TEXT);
 
         $mform->addElement(
-            'html',
-            '<div id="mumie_filter_section" class="form-group row  fitem" hidden>
-            <div class="col-md-3"></div><span id="mumie_filter_header" class="mumie-collapsable felement col-md-9">
-             <i class="fa fa-caret-down mumie-icon"></i>'
-            . get_string('mumie_form_filter', 'mod_mumie')
-            . '</span>
-            <div class="col-md-3"></div><div id="mumie_filter_wrapper" hidden class="col-md-9  felement">
-            </div></div>'
+            "text",
+            "task_display_element",
+            get_string('mumie_form_activity_problem', "mod_mumie"),
+            array("disabled" => true, "class" => "mumie_text_input")
         );
+        $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
+        $mform->setType("task_display_element", PARAM_TEXT);
+        $mform->hideIf('task_display_element', 'mumie_complete_course', 'checked');
+
+        $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
+        $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
+        $mform->hideIf('prb_selector_btn', 'mumie_complete_course', 'checked');
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
@@ -115,6 +123,9 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
         $mform->setType("mumie_server_structure", PARAM_RAW);
+
+        $mform->addElement("hidden", "mumie_org", get_config("auth_mumie", "mumie_org"));
+        $mform->setType("mumie_org", PARAM_TEXT);
 
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();
@@ -156,11 +167,17 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->add_action_buttons();
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
-        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', array(json_encode($context->id)));
+
+        $jsparams = array(
+            json_encode($context->id),
+            get_config('auth_mumie', 'mumie_problem_selector_url'),
+            $USER->lang
+        );
+        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
 
     /**
-     * Valdiate the form data
+     * Validate the form data
      * @param array $data form data
      * @param array $files files uploaded
      * @return array associative array of errors
@@ -176,8 +193,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             $errors["mumie_course"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
-        if (!isset($data["taskurl"]) && !isset($data["mumie_missing_config"])) {
-            $errors["taskurl"] = get_string('mumie_form_required', 'mod_mumie');
+        $taskurlvalid = isset($data["taskurl"]) && $data["taskurl"] !== "";
+        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
+            $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
         if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
@@ -208,11 +226,10 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param stdClass $serveroptions pointer to the array containing all available servers
      * @param stdClass $courseoptions pointer to the array containing all available courses
-     * @param stdClass $problemoptions pointer to the array containing all available tasks
      * @param stdClass $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_options(&$serveroptions, &$courseoptions, &$problemoptions, &$languageoptions) {
+    private function populate_options(&$serveroptions, &$courseoptions, &$languageoptions) {
         $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
 
         foreach ($servers as $server) {
@@ -220,7 +237,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             self::populate_course_options(
                 $server->get_courses(),
                 $courseoptions,
-                $problemoptions,
                 $languageoptions
             );
         }
@@ -231,40 +247,36 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param array $courses array containing a list of courses
      * @param array $courseoptions pointer to the array containing all available courses
-     * @param array $problemoptions pointer to the array containing all available tasks
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_course_options($courses, &$courseoptions, &$problemoptions, &$languageoptions) {
+    private function populate_course_options($courses, &$courseoptions, &$languageoptions) {
         foreach ($courses as $course) {
             foreach ($course->get_name() as $name) {
                 $courseoptions[$name->value] = $name->value;
 
-                // If a user wants to use an entire course instead of a single problem, we need to define a pseduo problem to use.
+                // If a user wants to use an entire course instead of a single problem, we need to define a pseudo problem to use.
                 $languagelink = $course->get_link() . '?lang=' . $name->language;
                 $languageoptions[$name->language] = $name->language;
-                $problemoptions[$languagelink] = $name->value;
             }
-            self::populate_problem_options($course, $problemoptions, $languageoptions);
+            self::populate_problem_options($course, $languageoptions);
         }
     }
 
     /**
      * Populate task and language option list for a given course
      *
-     * @param stdClass $course single isntance of MUMIE course containing a list of tasks
-     * @param array $problemoptions pointer to the array containing all available tasks
+     * @param stdClass $course single instance of MUMIE course containing a list of tasks
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_problem_options($course, &$problemoptions, &$languageoptions) {
+    private function populate_problem_options($course, &$languageoptions) {
         foreach ($course->get_tasks() as $problem) {
             $link = $problem->get_link();
 
             foreach ($problem->get_headline() as $headline) {
                 $languagelink = $link . '?lang=' . $headline->language;
                 $languageoptions[$headline->language] = $headline->language;
-                $problemoptions[$languagelink] = $headline->name;
             }
         }
     }
@@ -295,7 +307,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Disable all options for grades if the user has choosen to link a course instead of a problem.
+     * Disable all options for grades if the user has chosen to link a course instead of a problem.
      */
     private function disable_grade_rules() {
         $mform = $this->_form;
@@ -336,7 +348,7 @@ class mod_mumie_mod_form extends moodleform_mod {
                 )[0]->privategradepool ?? -1;
             }
         }
-        // The following changes only apply to edits, so skip them if not neccessary.
+        // The following changes only apply to edits, so skip them if not necessary.
         if (!isset($data->server)) {
             parent::set_data($data);
             return;
@@ -388,12 +400,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             $mform->removeElement('mumie_server_structure');
             $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
             $mform->setType("mumie_server_structure", PARAM_RAW);
-
-            // Add the custom problem as an option to the problem drop down menu.
-            $option = array();
-            $option['text'] = $data->name;
-            $option['attr'] = ["value" => $data->taskurl];
-            array_push($mform->getElement("taskurl")->_options, $option);
         }
 
         parent::set_data($data);
@@ -438,7 +444,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             'html',
             '<div class="form-group row  fitem ">'
-            . '<div class="col-md-3"></div><div class="col-md-9 felement">'
+            . '<div class="col-md-3"></div>'
+            . '<div class="col-md-9 felement">'
             . $message
             . '</div></div>'
         );
