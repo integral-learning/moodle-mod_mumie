@@ -119,7 +119,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function() {
                     problemSelectorButton.onclick = function() {
-                        var selectedTask = taskController.getSelectedTask();
                         problemSelectorWindow = window.open(
                             lmsSelectorUrl
                                 + '/lms-problem-selector?'
@@ -127,11 +126,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + mumieOrg
                                 + '&serverUrl='
                                 + encodeURIComponent(serverController.getSelectedServer().urlprefix)
-                                + '&lang='
+                                + '&problemLang='
                                 + langController.getSelectedLanguage()
-                                + (selectedTask ? ('&problem=' + selectedTask.link) : '')
                                 + '&origin=' + encodeURIComponent(window.location.origin)
-                                + '&moodleLang=' + systemLanguage
+                                + '&uiLang=' + systemLanguage
                             , '_blank'
                         );
                     };
