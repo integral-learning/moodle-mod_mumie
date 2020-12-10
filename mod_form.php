@@ -84,10 +84,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("checkbox", "mumie_complete_course", get_string('mumie_form_complete_course', 'mod_mumie'));
         $mform->addHelpButton("mumie_complete_course", 'mumie_form_complete_course', 'mumie');
 
-        $mform->addElement("select", "language", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
-        $mform->addHelpButton("language", 'mumie_form_activity_language', 'mumie');
-        $mform->setDefault("language", optional_param("lang", $USER->lang, PARAM_ALPHA));
-        $mform->hideIf('language', 'mumie_complete_course', 'notchecked');
+        $mform->addElement("select", "language_dropdown", get_string('mumie_form_activity_language', "mod_mumie"), $languageoptions);
+        $mform->addHelpButton("language_dropdown", 'mumie_form_activity_language', 'mumie');
+        $mform->setDefault("language_dropdown", optional_param("lang", $USER->lang, PARAM_ALPHA));
+        $mform->hideIf('language_dropdown', 'mumie_complete_course', 'notchecked');
+
+        $mform->addElement("hidden", "language", $USER->lang, array("id" => "id_language"));
+        $mform->setType("language", PARAM_TEXT);
 
         $mform->addElement("hidden", "taskurl", null);
         $mform->setType("taskurl", PARAM_TEXT);
