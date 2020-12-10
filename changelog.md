@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.4.0] - 2020-12-09
+## [v1.4.0] - 2020-12-10
 ### Fixed
 - Missing server configuration no longer disables js in mod_mumie form
 - Corrected some spelling errors in strings and code documentation
