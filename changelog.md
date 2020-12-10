@@ -2,6 +2,14 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.4.0] - 2020-12-10
+### Fixed
+- Missing server configuration no longer disables js in mod_mumie form
+- Corrected some spelling errors in strings and code documentation
+
+### Changed
+- MUMIE Problems are no longer selected with internal filter and dropdown menu. Instead, an external and more advanced problem browser (powered by LEMON) is opened.
+
 ## [v1.3.6] - 2020-10-29
 ### Fixed
 - Admin settings regarding gradePool are no longer ignored when Tasks are imported via d&d

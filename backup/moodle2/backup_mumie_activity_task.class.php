@@ -53,7 +53,7 @@ class backup_mumie_activity_task extends backup_activity_task {
      * Code the transformations to perform in the activity in
      * order to get transportable (encoded) links
      * @param string $content to encode
-     * @return string encoded contet
+     * @return string encoded content
      */
     public static function encode_content_links($content) {
         global $CFG;

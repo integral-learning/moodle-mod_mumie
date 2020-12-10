@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page lists all instances of MUMIE task in a paricular course
+ * This page lists all instances of MUMIE task in a particular course
  *
  * This script is adapted from mod_lti version 2018051400
  *
