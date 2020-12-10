@@ -228,7 +228,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
         var langController = (function() {
-            var languageDropDown = document.getElementById("id_language");
+            var languageDropDown = document.getElementById("id_language_dropdown");
+            var languageElem = document.getElementById("id_language");
 
             /**
              * Add a new option to the language drop down menu
@@ -240,27 +241,48 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 optionLang.text = lang;
                 languageDropDown.append(optionLang);
             }
+
+            /**
+             * Update the selection of the drop down language with the given lang
+             * @param {string} lang
+             */
+            function setDropDownLanguage(lang) {
+                for (var i in languageDropDown.options) {
+                    var option = languageDropDown.options[i];
+                    if (option.value == lang) {
+                        languageDropDown.selectedIndex = i;
+                        courseController.updateOptions();
+                        return;
+                    }
+                }
+            }
+
+            /**
+             * Check if the given language exists in the currently selected course.
+             * @param {string} lang
+             * @returns {boolean} Whether the language exists
+             */
+            function languageExists(lang) {
+                return courseController.getSelectedCourse().languages.includes(lang);
+            }
             return {
                 init: function() {
-
                     languageDropDown.onchange = function() {
+                        languageElem.value = languageDropDown.options[languageDropDown.selectedIndex].text;
                         courseController.updateOptions();
+                        taskController.setSelection();
                     };
-                    langController.updateOptions();
+                    langController.updateOptions(langController.getSelectedLanguage());
                 },
                 getSelectedLanguage: function() {
-                    return languageDropDown.options[languageDropDown.selectedIndex].text;
+                    return languageElem.value;
                 },
                 setLanguage: function(lang) {
-                    for (var i in languageDropDown.options) {
-                        var option = languageDropDown.options[i];
-                        if (option.value == lang) {
-                            languageDropDown.selectedIndex = i;
-                            courseController.updateOptions();
-                            return;
-                        }
+                    if (!languageExists(lang)) {
+                        throw new Error("Selected language not available");
                     }
-                    throw new Error("Selected language not available");
+                    languageElem.value = lang;
+                    setDropDownLanguage(lang);
                 },
                 disable: function() {
                     languageDropDown.disabled = true;
@@ -274,10 +296,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     for (var i in languages) {
                         var lang = languages[i];
                         addLanguageOption(lang);
-                        if (lang == currentLang) {
-                            languageDropDown.selectedIndex = languageDropDown.childElementCount - 1;
-                        }
                     }
+                    setDropDownLanguage(currentLang);
                 }
             };
         })();
@@ -446,6 +466,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     return null;
                 },
                 setSelection: function(newSelection) {
+                    if (!newSelection && useCompleteCourse()) {
+                        newSelection = getLocalizedLink(courseController.getSelectedCourse().link);
+                    }
                     taskSelectionInput.value = newSelection;
                     updateName();
                 },
@@ -480,7 +503,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             serverController.disable();
             courseController.disable();
             langController.disable();
-            taskController.disable();
             problemSelectorController.disable();
         }
 
