@@ -124,26 +124,24 @@ function mumie_cm_info_view(cm_info $cm) {
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
+    $grade_item = $DB->get_record('grade_items', array('courseid' => $mumie->course, 'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'));
     $info = '';
     if ($mumie->duedate) {
-        $info .= ' ' .
-            html_writer::tag('p', get_string('mumie_due_date', 'mod_mumie'), array('class' => 'tag-info tag'))
-            . html_writer::tag(
-                'span',
-                strftime(
-                    get_string('strftimedaydatetime', 'langconfig'),
-                    $mumie->duedate
-                ),
-                array('style' => 'margin-left: 1em')
-            );
+        $content = get_string('mumie_due_date', 'mod_mumie') 
+            . ': ' 
+            . strftime(get_string('strftimedaydatetime', 'langconfig'), $mumie->duedate);
+
+        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
+    }
+    if ($grade_item->gradepass > 0) {
+        $content = get_string("gradepass", "grades") . ': ' . round($grade_item->gradepass, 1);
+        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
     if (!isset($mumie->privategradepool)) {
-        $info .= ' ' .
-            html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag'))
+        $info .= html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag mumie_tag'))
             . html_writer::tag(
                 'span',
-                get_string('mumie_tag_disabled_help', 'mod_mumie'),
-                array('style' => 'margin-left: 1em')
+                get_string('mumie_tag_disabled_help', 'mod_mumie')
             );
     }
     $cm->set_after_link($info);
