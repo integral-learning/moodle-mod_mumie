@@ -31,40 +31,48 @@ require_login();
 global $DB, $CFG, $USER, $PAGE;
 
 $id = optional_param('id', 0, PARAM_INT);
+$action = optional_param("action", "open", PARAM_ALPHANUM);
 
 $cm = get_coursemodule_from_id('mumie', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 $mumietask = $DB->get_record('mumie', array('id' => $cm->instance));
-if (!isset($mumietask->privategradepool)) {
-    throw new moodle_exception(
-        'gradepool_decision_pending',
-        'mod_mumie',
-        '',
-        '',
-        get_string('mumie_tag_disabled_help', 'mod_mumie')
-    );
-}
-$redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
-if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
-    redirect($redirecturl);
-} else {
-    $PAGE->set_cm($cm, $course);
-    $context = context_module::instance($cm->id);
-    $PAGE->set_context($context);
-    $PAGE->set_pagelayout('incourse');
-    $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
-    $PAGE->set_heading($course->fullname);
-    $PAGE->set_url(new moodle_url('/mod/mumie/view.php'), array('id' => $id));
 
-    echo $OUTPUT->header();
-    echo "<iframe
-        id='mumie_frame'
-        height = '600px' width = '100%'
-        src = '{$redirecturl}'
-        webkitallowfullscreen
-        mozallowfullscreen
-        allowfullscreen>
-    </iframe>";
-    echo $OUTPUT->footer();
+if ($action == "grading") {
+    echo "abc";
+    exit;
+} if ($action == "open") {
+
+    if (!isset($mumietask->privategradepool)) {
+        throw new moodle_exception(
+            'gradepool_decision_pending',
+            'mod_mumie',
+            '',
+            '',
+            get_string('mumie_tag_disabled_help', 'mod_mumie')
+        );
+    }
+    $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
+    if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
+        redirect($redirecturl);
+    } else {
+        $PAGE->set_cm($cm, $course);
+        $context = context_module::instance($cm->id);
+        $PAGE->set_context($context);
+        $PAGE->set_pagelayout('incourse');
+        $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
+        $PAGE->set_heading($course->fullname);
+        $PAGE->set_url(new moodle_url('/mod/mumie/view.php'), array('id' => $id));
+    
+        echo $OUTPUT->header();
+        echo "<iframe
+            id='mumie_frame'
+            height = '600px' width = '100%'
+            src = '{$redirecturl}'
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen>
+        </iframe>";
+        echo $OUTPUT->footer();
+    }
 }
