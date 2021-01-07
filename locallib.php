@@ -51,7 +51,7 @@ class locallib {
      */
     public static function get_mumie_task($id) {
         global $DB;
-        return $DB->get_record(MUMIE_TASK_TABLE_NAME, array('id' => $id));
+        return $DB->get_record(MUMIE_TASK_TABLE, array('id' => $id));
     }
 
     /**

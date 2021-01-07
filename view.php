@@ -37,11 +37,44 @@ $cm = get_coursemodule_from_id('mumie', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 $mumietask = $DB->get_record('mumie', array('id' => $cm->instance));
+$context = context_module::instance($cm->id);
+$PAGE->set_cm($cm, $course);
+$PAGE->set_context($context);
+$PAGE->set_pagelayout('incourse');
 
 if ($action == "grading") {
-    echo "abc";
-    exit;
-} if ($action == "open") {
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
+
+    $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
+
+    $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
+    $PAGE->set_heading("[TODO] - Due date Extension: " . $course->fullname);
+    $url = new moodle_url('/mod/mumie/view.php', array("id" => $id, "action" => "grading"));
+
+    $PAGE->set_url($url);
+    $PAGE->navbar->add("[TODO] Grading", $url);
+
+    echo $OUTPUT->header();
+    echo $grader->view_grading_table();
+    echo $OUTPUT->footer();
+
+} else if ($action = "show_extension_form") {
+    require_once($CFG->dirroot . '/mod/mumie/forms/duedate_form.php');
+    $data = new stdClass();
+    $data->mumieid = $mumietask->id;
+    $data->userid = required_param("userid", PARAM_INT);
+    if(empty($mform)) {
+        $mform = new duedate_form();
+    }
+    $mform->set_data($data);
+    $PAGE->set_url(new moodle_url('/mod/mumie/view.php'), array('id' => $id, 'userid' => $data->userid, 'action' => 'show_extension_form'));
+    $PAGE->navbar->add("[TODO] Grading", $url);
+    echo $OUTPUT->header();
+    $mform->display();
+    echo $OUTPUT->footer();
+} else if ($action = "submit_extension_form") {
+
+} else if ($action == "open") {
 
     if (!isset($mumietask->privategradepool)) {
         throw new moodle_exception(
@@ -57,7 +90,6 @@ if ($action == "grading") {
         redirect($redirecturl);
     } else {
         $PAGE->set_cm($cm, $course);
-        $context = context_module::instance($cm->id);
         $PAGE->set_context($context);
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_title($course->shortname . ': ' . $mumietask->name);

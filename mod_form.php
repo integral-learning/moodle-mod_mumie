@@ -142,6 +142,14 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"), array('optional' => true));
         $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
 
+        if (isset($this->_cm)) {
+            $this->add_info_box(
+                "<a target='_blank' class='btn btn-secondary' href="
+            . new moodle_url('/mod/mumie/view.php', array("id" => $this->_cm->id, "action" => "grading"))
+            . ">[TODO] Open grading page</a>"
+            );
+        }
+
         $radioarray = array();
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
         $gradepoolmsg = '';
