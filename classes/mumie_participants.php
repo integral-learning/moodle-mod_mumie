@@ -10,6 +10,8 @@ global $CFG;
 
 require_once($CFG->libdir . '/tablelib.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
+
 
 
 class mumie_participants extends \table_sql {
@@ -45,11 +47,58 @@ class mumie_participants extends \table_sql {
 
     public function col_duedate($data) {
         //return json_encode($data);
-        $formurl = new \moodle_url('/mod/mumie/duedateextension.php', array('id' => $this->cmid, 'mumie' => $this->mumie->id, 'userid' => $data->id));
+        //$formurl = new \moodle_url('/mod/mumie/duedateextension.php', array('id' => $this->cmid, 'mumie' => $this->mumie->id, 'userid' => $data->id));
+        //$formurlnew moodle_url('/mod/mumie/view.php'), array('id' => $id, 'userid' => $data->userid, 'action' => 'show_extension_form')
         //return $formurl;
-        return $data->duedate . "<a href = '" . $formurl . "' style='margin: 10px' class = 'mumie_list_edit_button' title='" . "[TODO] title" . "'>"
+
+        $extension = new mumie_duedate_extension($data->id, $this->mumie->id);
+        $extension->load();
+        if($extension->get_id() && $extension->get_id() > 0) {
+            return $data->duedate . $this->edit_duedate_button($extension) . $this->delete_duedate_button($extension);
+        } else {
+            return $this->add_duedate_button($extension);
+        }
+
+
+        return $data->duedate . "<span style='margin: 10px' class = 'mumie_duedate_extension_btn' title='" . "[TODO] title" . "'>"
         . '<span class="icon fa fa-cog fa-fw " title ="delete" aria-hidden="true" aria-label=""></span>'
         . "</a>";;
+    }
+
+    private function edit_duedate_button($extension) {
+        $formdata = array(
+            "mumie" => $extension->get_mumie(),
+            "userid" => $extension->get_userid(),
+            "id" => $extension->get_id()
+        );
+        return 
+        "<span class='mumie_duedate_edit_btn mumie_icon_btn'>"
+        . "<span class='icon fa fa-cog fa-fw'></span>"
+        . "<span style='display:none'>"
+        . json_encode($formdata)
+        . "</span>"
+        . "</span>";
+    }
+
+    private function delete_duedate_button($extension) {
+        $url = new \moodle_url('/mod/mumie/delete_duedate_extension.php', array("cmid" => $this->cmid, "id" => $extension->get_id()));
+        return "<a href=" . $url . " class='mumie_icon_btn'>"
+        . "<span class='icon fa fa-trash fa-fw'></span>"
+        . "</a>";
+    }
+
+    private function add_duedate_button($extension) {
+        $formdata = array(
+            "mumie" => $extension->get_mumie(),
+            "userid" => $extension->get_userid()
+        );
+        return 
+        "<span class='mumie_duedate_add_btn mumie_icon_btn'>"
+        . "<span class='icon fa fa-plus fa-fw'></span>"
+        . "<span style='display:none'>"
+        . json_encode($formdata)
+        . "</span>"
+        . "</span>";
     }
 
     /**

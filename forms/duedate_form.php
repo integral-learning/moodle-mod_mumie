@@ -17,9 +17,6 @@ class duedate_form extends moodleform {
 
         $mform->addElement("hidden", "userid");
         $mform->setType("userid", PARAM_INT);
-
-        $mform->addElement("hidden", "cmid");
-        $mform->setType("cmid", PARAM_INT);
     }
 
     /**

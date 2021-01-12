@@ -46,4 +46,14 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
         ),
     ),
+    'mod/mumie:grantextension' => array(
+        'captype' => 'read',
+        'riskbitmask' => RISK_PERSONAL,
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+        ),
+    ),
 );

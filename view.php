@@ -53,6 +53,7 @@ if ($action == "grading") {
 
     $PAGE->set_url($url);
     $PAGE->navbar->add("[TODO] Grading", $url);
+    $PAGE->requires->js_call_amd('mod_mumie/duedate_form', 'init', array(json_encode($context->id)));
 
     echo $OUTPUT->header();
     echo $grader->view_grading_table();

@@ -317,3 +317,61 @@ function mumie_dndupload_handle($uploadinfo) {
     $result = $processor->process();
     return $result;
 }
+
+/**
+ * Get mumieserver_form as a fragment
+ *
+ * @param stdClass $args context and formdata
+ * @return string html code necessary to display mumieserver form as fragment
+ */
+function mod_mumie_output_fragment_new_duedate_form($args) {
+    global $CFG;
+    require_once($CFG->dirroot . '/mod/mumie/duedate_form.php');
+
+    $args = (object) $args;
+
+    $context = $args->context;
+    $o = '';
+
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+    $extension = new stdClass();
+
+    $editoroptions = [
+        'maxfiles' => EDITOR_UNLIMITED_FILES,
+        'maxbytes' => $CFG->maxbytes,
+        'trust' => false,
+        'context' => $context,
+        'noclean' => true,
+        'subdirs' => false,
+    ];
+
+    $extension = file_prepare_standard_editor(
+        $extension,
+        'description',
+        $editoroptions,
+        $context,
+        'extension',
+        'description',
+        null
+    );
+
+    $mform = new mumie_duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
+
+    $mform->set_data($extension);
+
+    if (!empty($args->jsonformdata) && strcmp($args->jsonformdata, "{}") !== 0) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+
+    ob_start();
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+
+    return $o;
+}

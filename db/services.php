@@ -15,21 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file defines the version of mod_mumie
+ * MUMIE task external functions and service definitions
  *
  * @package mod_mumie
- * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2021010705; // The current module version (Date: YYYYMMDDXX).
-$plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
-$plugin->requires = 2015041700;
-$plugin->release = "v1.4.0";
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array(
-    'auth_mumie' => 2020120202,
+$functions = array(
+    'mod_mumie_submit_mumieduedate_form' => array(
+        'classname' => 'mod_mumie_external',
+        'methodname' => 'submit_mumieduedate_form',
+        'classpath' => 'mod/mumie/externallib.php',
+        'description' => 'Saves a duedate extension for a MUMIE Task from submitted form data',
+        'ajax' => true,
+        'type' => 'write'
+    )
 );
