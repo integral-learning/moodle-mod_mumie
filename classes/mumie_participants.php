@@ -41,10 +41,6 @@ class mumie_participants extends \table_sql {
         return $OUTPUT->user_picture($data, array('size' => 35, 'courseid' => $this->course->id, 'includefullname' => true));
     }
 
-    public function col_test($data) {
-        return $data->test;
-    }
-
     public function col_duedate($data) {
         //return json_encode($data);
         //$formurl = new \moodle_url('/mod/mumie/duedateextension.php', array('id' => $this->cmid, 'mumie' => $this->mumie->id, 'userid' => $data->id));
@@ -58,17 +54,13 @@ class mumie_participants extends \table_sql {
         } else {
             return $this->add_duedate_button($extension);
         }
-
-
-        return $data->duedate . "<span style='margin: 10px' class = 'mumie_duedate_extension_btn' title='" . "[TODO] title" . "'>"
-        . '<span class="icon fa fa-cog fa-fw " title ="delete" aria-hidden="true" aria-label=""></span>'
-        . "</a>";;
     }
 
     private function edit_duedate_button($extension) {
         $formdata = array(
             "mumie" => $extension->get_mumie(),
             "userid" => $extension->get_userid(),
+            //change to extensionid?
             "id" => $extension->get_id()
         );
         return 
@@ -81,7 +73,7 @@ class mumie_participants extends \table_sql {
     }
 
     private function delete_duedate_button($extension) {
-        $url = new \moodle_url('/mod/mumie/delete_duedate_extension.php', array("cmid" => $this->cmid, "id" => $extension->get_id()));
+        $url = new \moodle_url('/mod/mumie/delete_duedate_extension.php', array("cmid" => $this->cmid, "duedateid" => $extension->get_id()));
         return "<a href=" . $url . " class='mumie_icon_btn'>"
         . "<span class='icon fa fa-trash fa-fw'></span>"
         . "</a>";
@@ -124,7 +116,6 @@ class mumie_participants extends \table_sql {
 
         $this->rawdata = [];
         foreach ($rawdata as $user) {
-            $user->test = "abcd";
             $user->duedate = mumie_grader::get_duedate($this->mumie, $user->id);
             $this->rawdata[$user->id] = $user;
         }
@@ -155,9 +146,6 @@ class mumie_participants extends \table_sql {
 
         $headers[] = get_string('fullname');
         $columns[] = 'fullname';
-
-        $headers[] = "test";
-        $columns[] = 'test';
 
         $headers[] = '[TODO] duedate extension';
         $columns[] = 'duedate';

@@ -46,8 +46,8 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
         ),
     ),
-    'mod/mumie:grantextension' => array(
-        'captype' => 'read',
+    'mod/mumie:grantduedateextension' => array(
+        'captype' => 'write',
         'riskbitmask' => RISK_PERSONAL,
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
@@ -56,4 +56,14 @@ $capabilities = array(
             'teacher' => CAP_ALLOW,
         ),
     ),
+    'mod/mumie:revokeduedateextension' => array(
+        'captype' => 'write',
+        'riskbitmask' => RISK_PERSONAL,
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+        ),
+    )
 );

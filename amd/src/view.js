@@ -1,11 +1,11 @@
 define(['jquery', 'core/templates', 'core/modal_factory', 'mod_mumie/duedate_form'],
+//define(['jquery', 'core/templates', 'core/modal_factory'],
     function($) {
         return {
             init: function(contextid) {
-                //setAddDuedateListeners(contextid);
-                alert("asds");
-
-                //setEditDuedateListeners(contextid);
+                //throw Error("FOO");
+                setAddDuedateListeners(contextid);
+                setEditDuedateListeners(contextid);
             }
         };
 
@@ -32,14 +32,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'mod_mumie/duedate_for
          */
         function setEditDuedateListeners(contextid) {
             var editBtns = $(".mumie_duedate_edit_btn");
-            alert("asds");
 
             editBtns.each(function(i) {
                 var btn = editBtns[i];
                 var data = JSON.parse(btn.children[1].textContent);
                 var formdata = "id=" + data.id +
                     "&_qf__duedate_form=1&userid=" + data.userid + "&mumie=" + data.mumie + "&duedate=" + data.duedate;
-                require(['mod_mumie/duedate_form'], function(MumieDueDate) {
+                    require(['mod_mumie/duedate_form'], function(MumieDueDate) {
                     MumieDueDate.init(btn, contextid, formdata);
                 });
             });

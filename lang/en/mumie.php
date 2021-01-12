@@ -119,3 +119,5 @@ $string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
+$string['mumie:grantduedateextension'] = 'Grand a due date extension to individual students';
+$string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date extension for individual students';

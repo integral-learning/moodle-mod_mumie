@@ -326,12 +326,12 @@ function mumie_dndupload_handle($uploadinfo) {
  */
 function mod_mumie_output_fragment_new_duedate_form($args) {
     global $CFG;
-    require_once($CFG->dirroot . '/mod/mumie/duedate_form.php');
+    require_once($CFG->dirroot . '/mod/mumie/forms/duedate_form.php');
 
     $args = (object) $args;
 
     $context = $args->context;
-    $o = '';
+    $output = '';
 
     $formdata = [];
     if (!empty($args->jsonformdata)) {
@@ -359,7 +359,7 @@ function mod_mumie_output_fragment_new_duedate_form($args) {
         null
     );
 
-    $mform = new mumie_duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
+    $mform = new duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
 
     $mform->set_data($extension);
 
@@ -370,8 +370,8 @@ function mod_mumie_output_fragment_new_duedate_form($args) {
 
     ob_start();
     $mform->display();
-    $o .= ob_get_contents();
+    $output .= ob_get_contents();
     ob_end_clean();
 
-    return $o;
+    return $output;
 }

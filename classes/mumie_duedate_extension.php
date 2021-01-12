@@ -9,7 +9,7 @@ class mumie_duedate_extension {
 
     const MUMIE_DUEDATE_TABLE = "mumie_duedate" ;
 
-    function __construct($userid, $mumie) {
+    function __construct($userid = null, $mumie = null) {
         $this->userid = $userid;
         $this->mumie = $mumie;
     }
@@ -31,7 +31,7 @@ class mumie_duedate_extension {
         }
     }
 
-    private function create() {
+    private function update() {
         global $DB;
         $DB->update_record(
             self::MUMIE_DUEDATE_TABLE, 
@@ -44,7 +44,7 @@ class mumie_duedate_extension {
         );
     }
 
-    private function update() {
+    private function create() {
         global $DB;
         $DB->insert_record(
             self::MUMIE_DUEDATE_TABLE, 
@@ -56,15 +56,15 @@ class mumie_duedate_extension {
         );
     }
 
-    private function delete($id) {
+    private function delete() {
         global $DB;
         $DB->delete_records(self::MUMIE_DUEDATE_TABLE, array("id" => $this->id));
     }
 
-    public static function from_object($object) {
-        $duedate = new mumie_duedate_extension();
-        $duedate->set_mumie($object->mumie);
-        $duedate->set_userid($object->userid);
+    public static function from_object($object) {        
+        $duedate = new mumie_duedate_extension($object->userid, $object->mumie);
+        //$duedate->set_mumie($object->mumie);
+        //$duedate->set_userid($object->userid);
         $duedate->set_duedate($object->duedate);
         if ($object->id != 0) {
             $duedate->set_id($object->id);

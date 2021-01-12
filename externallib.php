@@ -1,6 +1,6 @@
 <?php
 
-defined('MOODLE_INTERNAL') || die;
+//defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . "/externallib.php");
 
@@ -29,7 +29,7 @@ class mod_mumie_external extends external_api {
         global $CFG;
 
         require_once($CFG->dirroot . '/mod/mumie/lib.php');
-        require_once($CFG->dirroot . '/mod/mumie/mumieduedate_form.php');
+        require_once($CFG->dirroot . '/mod/mumie/forms/duedate_form.php');
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
         // We always must pass webservice params through validate_parameters.
@@ -42,7 +42,7 @@ class mod_mumie_external extends external_api {
 
         // We always must call validate_context in a webservice.
         self::validate_context($context);
-        require_capability('mod/mumie:grantextension', $context);
+        require_capability('mod/mumie:grantduedateextension', $context);
 
         $serialiseddata = json_decode($params['jsonformdata']);
 

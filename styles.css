@@ -1,3 +1,9 @@
 .mumie_text_input .form-inline .form-control {
     width: 80%;
 }
+
+.mumie_icon_btn {
+    margin-left: 10px;
+    color: blue;
+    cursor: pointer;
+}

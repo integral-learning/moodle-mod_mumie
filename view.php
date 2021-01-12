@@ -53,28 +53,11 @@ if ($action == "grading") {
 
     $PAGE->set_url($url);
     $PAGE->navbar->add("[TODO] Grading", $url);
-    $PAGE->requires->js_call_amd('mod_mumie/duedate_form', 'init', array(json_encode($context->id)));
+    $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode(context_system::instance()->id)));
 
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
     echo $OUTPUT->footer();
-
-} else if ($action = "show_extension_form") {
-    require_once($CFG->dirroot . '/mod/mumie/forms/duedate_form.php');
-    $data = new stdClass();
-    $data->mumieid = $mumietask->id;
-    $data->userid = required_param("userid", PARAM_INT);
-    if(empty($mform)) {
-        $mform = new duedate_form();
-    }
-    $mform->set_data($data);
-    $PAGE->set_url(new moodle_url('/mod/mumie/view.php'), array('id' => $id, 'userid' => $data->userid, 'action' => 'show_extension_form'));
-    $PAGE->navbar->add("[TODO] Grading", $url);
-    echo $OUTPUT->header();
-    $mform->display();
-    echo $OUTPUT->footer();
-} else if ($action = "submit_extension_form") {
-
 } else if ($action == "open") {
 
     if (!isset($mumietask->privategradepool)) {

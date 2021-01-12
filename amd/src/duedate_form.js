@@ -100,7 +100,7 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/f
             var formData = this.modal.getRoot().find('form').serialize();
             // Now we can continue...
             Ajax.call([{
-                methodname: 'submit_mumie_submit_mumieduedate_form',
+                methodname: 'mod_mumie_submit_mumieduedate_form',
                 args: {
                     contextid: this.contextid,
                     jsonformdata: JSON.stringify(formData)
@@ -122,7 +122,7 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/f
             this.modal.getRoot().find('form').submit();
         };
 
-        return /** @alias module:auth_mumie/newserver */ {
+        return /** @alias module:mod_mumie/newduedate */ {
             // Public variables and functions.
             /**
              * Attach event listeners to initialize this module.
