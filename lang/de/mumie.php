@@ -103,6 +103,15 @@ $string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen au
 $string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 
+// Used in duedate form
+$string['mumie_duedate_form'] = 'Abgabefrist verlängern';
+
+// Used in view
+$string['mumie_duedate_extension'] = 'Due date extension';
+$string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
+$string['mumie_general_duedate'] = 'Allgemeine Abgabefrist dieser MUMIE-Task: {$a}';
+
+
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_tag_disabled'] = 'Deaktiviert';

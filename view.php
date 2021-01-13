@@ -48,12 +48,32 @@ if ($action == "grading") {
     $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
 
     $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
-    $PAGE->set_heading("[TODO] - Due date Extension: " . $course->fullname);
+    $PAGE->set_heading(get_string("mumie_duedate_extension", "mod_mumie") . ': ' . $mumietask->name);
     $url = new moodle_url('/mod/mumie/view.php', array("id" => $id, "action" => "grading"));
 
     $PAGE->set_url($url);
-    $PAGE->navbar->add("[TODO] Grading", $url);
-    $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode(context_system::instance()->id)));
+    $PAGE->navbar->add(get_string("mumie_duedate_extension", "mod_mumie"));
+    $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
+
+    if ($mumietask->duedate > 0){
+        $dateelem = html_writer::tag(
+            'p',
+            strftime(
+                get_string('strftimedaydatetime', 'langconfig'),
+                $mumietask->duedate
+            ),
+            array('style' => 'font-weight: bold; margin-top:10px;')
+        );
+        $notification = get_string(
+            "mumie_general_duedate", 
+            "mod_mumie", 
+            $dateelem
+        );
+    } else {
+        $notification = get_string("mumie_duedate_not_set", "mod_mumie");
+    }
+    \core\notification::info($notification);
+
 
     echo $OUTPUT->header();
     echo $grader->view_grading_table();

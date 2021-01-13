@@ -104,6 +104,15 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 
+// Used in duedate form
+$string['mumie_duedate_form'] = 'Grant a due date extension';
+
+// Used in view
+$string['mumie_duedate_extension'] = 'Due date extension';
+$string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
+$string['mumie_general_duedate'] = 'General due date set for the selected MUMIE Task: {$a}';
+
+
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_tag_disabled'] = 'Disabled';

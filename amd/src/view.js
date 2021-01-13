@@ -1,9 +1,7 @@
 define(['jquery', 'core/templates', 'core/modal_factory', 'mod_mumie/duedate_form'],
-//define(['jquery', 'core/templates', 'core/modal_factory'],
     function($) {
         return {
             init: function(contextid) {
-                //throw Error("FOO");
                 setAddDuedateListeners(contextid);
                 setEditDuedateListeners(contextid);
             }
