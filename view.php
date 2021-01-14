@@ -27,7 +27,6 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/mumie/lib.php');
 require_login();
 
-
 global $DB, $CFG, $USER, $PAGE;
 
 $id = optional_param('id', 0, PARAM_INT);
@@ -48,11 +47,11 @@ if ($action == "grading") {
     $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
 
     $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
-    $PAGE->set_heading(get_string("mumie_duedate_extension", "mod_mumie") . ': ' . $mumietask->name);
+    $PAGE->set_heading(get_string("mumie_grading_settings", "mod_mumie") . ': ' . $mumietask->name);
     $url = new moodle_url('/mod/mumie/view.php', array("id" => $id, "action" => "grading"));
 
     $PAGE->set_url($url);
-    $PAGE->navbar->add(get_string("mumie_duedate_extension", "mod_mumie"));
+    $PAGE->navbar->add(get_string("mumie_grading_settings", "mod_mumie"));
     $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
 
     if ($mumietask->duedate > 0){
@@ -111,4 +110,48 @@ if ($action == "grading") {
         </iframe>";
         echo $OUTPUT->footer();
     }
+} else if ($action == "submissions") {
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
+
+    require_capability("mod/mumie:viewgrades", $context);
+
+    $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
+
+    $userid = required_param("userid", PARAM_INT);
+
+    $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
+    $PAGE->set_heading(get_string("mumie_grading_settings", "mod_mumie") . ': ' . $mumietask->name);
+    $PAGE->set_url(new \moodle_url(
+        '/mod/mumie/view.php', 
+        array("action" => "submissions", "id" => $id, "userid" => $userid)
+    ));
+    $PAGE->navbar->add(get_string("mumie_grading_settings", "mod_mumie"), new moodle_url("/mod/mumie/view.php", array("action" => "grading", "id" => $id)));
+    $PAGE->navbar->add(get_string("mumie_submissions", "mod_mumie"));
+
+    echo $OUTPUT->header();
+    echo $grader->view_submissions($userid);
+    echo $OUTPUT->footer();
+} else if ($action == "overridegrade") {
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
+    require_capability("mod/mumie:overridegrades", $context);
+
+    $userid = required_param("userid", PARAM_INT);
+    //TODO: CHeck if grade is valid
+    $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
+    $grade = new stdClass();
+    //$grade->timecreated = required_param("gradetimestamp", PARAM_INT);
+    $grade->timecreated = time();
+    $grade->rawgrade = required_param("rawgrade", PARAM_INT);
+    $grade->overridden = gettype(time());
+    $grade->userid = $userid;
+    $grade->usermodified = $USER->id;
+    
+    if (!$grader->is_grade_valid($grade->rawgrade, $userid, $grade->timecreated)) {
+        \core\notification::error("TODO: GRADE IS INVALID");
+    }
+    
+    //TODO: Show success message
+    mumie_override_grade($mumietask, $grade);
+    \core\notification::success("TODO: CHANGED GRADE");
+    redirect(new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading")));
 }

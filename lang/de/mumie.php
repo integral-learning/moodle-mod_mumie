@@ -107,10 +107,20 @@ $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 
 // Used in view
-$string['mumie_duedate_extension'] = 'Due date extension';
+$string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist dieser MUMIE-Task: {$a}';
+$string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
 
+// Used in mumie_grader
+$string['mumie_submissions'] = 'Abgaben';
+$string['mumie_override_gradebook'] = 'In Moodle-Notenbuch übernehmen';
+$string['mumie_submission_date'] = 'Datum der Abgabe';
+$string['mumie_grade_percentage'] = 'Bewerung in %';
+$string['mumie_submissions_by'] = 'Abgaben von {$a}';
+$string['mumie_submissions_info'] = 'Neue Abgaben werden automatisch in das Moodle-Notenbuch übernommen, sofern die Abgabefrist noch nicht abgelaufen ist. 
+Sie können jedoch auch eine andere Abgabe auswählen, die für die Bewertung verwendet werden soll. 
+<br>Klicken Sie dazu einfach auf die entsprechende Schaltfläche in der Tabelle.';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
@@ -129,3 +139,4 @@ $string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
 $string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';
 $string['mumie:grantduedateextension'] = 'Die Abgabefrist einer MUMIE-Task für individuelle Studierende verlängern';
 $string['mumie:revokeduedateextension'] = 'Die Verlängerung der Abgabefrist einer MUMIE-Task für einen Studenten zurücknehmen';
+$string['mumie:overridegrades'] = 'Aktuelle Moodle-Bewertung für einen Studenten mit den Punkten einer beliebigen Abgabe für die ausgewählte MUMIE-Task überschreiben';

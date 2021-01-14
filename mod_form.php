@@ -162,7 +162,11 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('yes'), 0, $attributes);
         $radioarray[] = $mform->createElement('radio', 'privategradepool', '', get_string('no'), 1, $attributes);
-        $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array(' '), false);
+        $radioarray[] = $mform->createElement('radio', 'privategradepool', '', '<tr class="lastrow">
+        <td class="cell c0" style="">Wednesday, 26 February 2020, 11:40 PM</td>
+        <td class="cell c1 lastcol" style="">20</td>
+        </tr>', 1, $attributes);
+        $mform->addGroup($radioarray, 'privategradepool', get_string('mumie_form_grade_pool', 'mod_mumie'), array('<br> '), false);
         $mform->addHelpButton('privategradepool', 'mumie_form_grade_pool', 'mumie');
         $this->add_info_box($gradepoolmsg);
 

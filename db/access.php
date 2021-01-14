@@ -65,5 +65,14 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
         ),
-    )
+    ),
+    'mod/mumie:overridegrades' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 );
