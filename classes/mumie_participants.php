@@ -166,7 +166,7 @@ class mumie_participants extends \table_sql {
         $headers[] = get_string('mumie_duedate_extension', 'mod_mumie');
         $columns[] = 'duedate';
 
-        $headers[] = "TODO: Submissions";
+        $headers[] = get_string("mumie_submissions", "mod_mumie");
         $columns[] = 'submissions';
 
         $this->define_columns($columns);

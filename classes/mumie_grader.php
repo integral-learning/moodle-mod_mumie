@@ -132,6 +132,5 @@ class mumie_grader {
             }
         }
         return false;
-
     }
 }

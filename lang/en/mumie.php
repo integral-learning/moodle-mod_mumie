@@ -110,8 +110,10 @@ $string['mumie_duedate_form'] = 'Grant a due date extension';
 // Used in view
 $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
-$string['mumie_general_duedate'] = 'General due date set for the selected MUMIE Task: {$a}';
+$string['mumie_general_duedate'] = 'General due date:';
 $string['mumie_grading_settings'] = "Individual grading settings";
+$string['mumie_grade_overridden'] = 'Updated grade successfully!';
+$string['mumie_grade_invalid'] = 'Grade is invalid!';
 
 // used in mumie_grader
 $string['mumie_submissions'] = 'Submissions';
@@ -120,7 +122,8 @@ $string['mumie_submission_date'] = 'Submitted on';
 $string['mumie_grade_percentage'] = 'Grade in %';
 $string['mumie_submissions_by'] = 'Submissions by {$a}';
 $string['mumie_submissions_info'] = 'Grades are automatically updated in the Moodle gradebook to the latest submitted answer 
-within the due date. If you want to use a different submission, you can click on the corresponding button to overwrite the current grade.';
+within the due date. If you want to use a different submission, you can click on the corresponding button to overwrite the current grade.<br><br>
+This grade will not be replaced by new submissions and it will <b>not</b> be automatically scaled, if you change the MUMIE Task\'s maximum points';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
