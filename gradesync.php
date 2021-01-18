@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
 /**
  * This file defines the class gradesync
@@ -145,6 +146,11 @@ class gradesync {
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
         if (!$mumie->duedate) {
+            return true;
+        }
+        
+        $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
+        if ($extension->duedate < $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
             return true;
         }
         if ($mumie->duedate < $potentialgrade->timecreated) {
