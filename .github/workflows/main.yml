@@ -117,10 +117,10 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci behat --profile chrome
 
-      - name: filter_embedquestion phpunit with report
-        if: ${{ always() }}
-        run: moodle-plugin-ci phpunit -- /home/runner/work/moodle-report_embedquestion/moodle-report_embedquestion/moodle/filter/embedquestion
+#      - name: filter_embedquestion phpunit with report
+#        if: ${{ always() }}
+#        run: moodle-plugin-ci phpunit -- /home/runner/work/moodle-report_embedquestion/moodle-report_embedquestion/moodle/filter/embedquestion
 
-      - name: filter_embedquestion behat with report
-        if: ${{ always() }}
-        run: moodle-plugin-ci behat --profile chrome -- /home/runner/work/moodle-report_embedquestion/moodle-report_embedquestion/moodle/filter/embedquestion
+#      - name: filter_embedquestion behat with report
+#        if: ${{ always() }}
+#        run: moodle-plugin-ci behat --profile chrome -- /home/runner/work/moodle-report_embedquestion/moodle-report_embedquestion/moodle/filter/embedquestion
