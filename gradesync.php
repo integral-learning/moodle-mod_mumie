@@ -149,8 +149,7 @@ class gradesync {
             return true;
         }
         $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
-        echo 'console.log('. json_encode( $extension ) .')' ;
-        if (isset($extension->duedate) && $extension->duedate < $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
+        if (isset($extension->duedate) && $extension->duedate > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
             return true;
         }
         if ($mumie->duedate < $potentialgrade->timecreated) {
