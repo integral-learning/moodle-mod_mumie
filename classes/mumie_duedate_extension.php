@@ -184,11 +184,11 @@ class mumie_duedate_extension {
      * Individual due date extensions always overrule general due date settings.
      *
      * @param  int $userid
-     * @param  int $mumie
+     * @param  \stdClass $mumie
      * @return int
      */
     public static function get_effective_duedate($userid, $mumie) {
-        $extension = new mumie_duedate_extension($userid, $mumie);
+        $extension = new mumie_duedate_extension($userid, $mumie->id);
         $extension->load();
         if($extension->get_duedate()) {
             return $extension->get_duedate();

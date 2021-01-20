@@ -145,7 +145,7 @@ class gradesync {
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
-        $duedate = mumie_duedate_extension::get_effective_duedate($potentialgrade->userid, $mumie->id);
+        $duedate = mumie_duedate_extension::get_effective_duedate($potentialgrade->userid, $mumie);
         if (!isset($duedate) || $duedate == 0) {
             return true;
         }
