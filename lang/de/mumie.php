@@ -123,6 +123,8 @@ $string['mumie_submissions_by'] = 'Abgaben von {$a}';
 $string['mumie_submissions_info'] = 'Neue Abgaben werden automatisch in das Moodle-Notenbuch übernommen, sofern die Abgabefrist noch nicht abgelaufen ist. 
 Um eine andere Abgabe für die Bewertung zu verwenden, können Sie auf die entsprechende Schaltfläche in der Tabelle klicken.<br><br>
 Diese Bewertung wird auch durch zukünftige Abgaben des Studierenden nicht ersetzt werden. Sie wird außerdem <b>nicht</b> automatisch angepasst, wenn Sie nachträglich die Maximalpunktzahl der MUMIE-Task ändern.';
+$string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
+
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';

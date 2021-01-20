@@ -120,7 +120,7 @@ class mumie_grader {
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
         $user = \core_user::get_user($userid);
-        $grades = gradesync::get_mumie_grades($mumie, $userid);
+        $grades = gradesync::get_mumie_grades($this->mumie, $userid);
         
         /*
         $gradeA = new \stdClass();
@@ -131,11 +131,8 @@ class mumie_grader {
         $gradeB->rawgrade = 20;
         $grades = array($gradeA, $gradeB);
         */
-
-        usort($grades, function($a, $b) {
-            return $b->timecreated <=> $a->timecreated;
-        });
-
+        
+        
         $table = new \html_table();
         $table->attributes['class'] = 'generaltable auth_index mumie_server_list_container';
         $table->head = array(
@@ -143,36 +140,46 @@ class mumie_grader {
             get_string("mumie_submission_date", "mod_mumie"),
             get_string("mumie_override_gradebook", "mod_mumie")
         );
-
+        
         $output = "";
         $output .= \html_writer::tag("h2", get_string("mumie_submissions_by", "mod_mumie", fullname($user)));
         $output .= \html_writer::tag("p", get_string("mumie_submissions_info", "mod_mumie"), array("style" => "margin-top: 1.5em;"));
-        foreach($grades as $grade) {
-            $overrideurl = new \moodle_url(
-                "/mod/mumie/view.php", 
-                array(
-                    "id" => $this->cmid,
-                    "action" => "overridegrade",
-                    "userid" => $userid,
-                    "rawgrade" => $grade->rawgrade,
-                    "gradetimestamp" => $grade->timecreated
-                )
-            );
-
-            $overrideicon = \html_writer::start_tag("a", array("class" => "mumie_icon_button", "href" => $overrideurl))
-            . \html_writer::tag("span", "", array("class" => "icon fa fa-exchange fa-fw"))
-            . \html_writer::end_tag("a");
-
-            $table->data[] = array(
-                $grade->rawgrade,
-                strftime(
-                    get_string('strftimedaydatetime', 'langconfig'),
-                    $grade->timecreated
-                ),
-                $overrideicon
-            );
+        
+        if($grades) {
+            usort($grades, function($a, $b) {
+                return $b->timecreated <=> $a->timecreated;
+            });
+            
+            foreach($grades as $grade) {
+                $overrideurl = new \moodle_url(
+                    "/mod/mumie/view.php", 
+                    array(
+                        "id" => $this->cmid,
+                        "action" => "overridegrade",
+                        "userid" => $userid,
+                        "rawgrade" => $grade->rawgrade,
+                        "gradetimestamp" => $grade->timecreated
+                    )
+                );
+    
+                $overrideicon = \html_writer::start_tag("a", array("class" => "mumie_icon_button", "href" => $overrideurl))
+                . \html_writer::tag("span", "", array("class" => "icon fa fa-exchange fa-fw"))
+                . \html_writer::end_tag("a");
+    
+                $table->data[] = array(
+                    $grade->rawgrade,
+                    strftime(
+                        get_string('strftimedaydatetime', 'langconfig'),
+                        $grade->timecreated
+                    ),
+                    $overrideicon
+                );
+            }
+        } else {
+            $table->data[] = array(\html_writer::tag("i", get_string("mumie_no_submissions", "mod_mumie")), "", "");
         }
-        $output .= \html_writer::table($table);
+
+        $output .= \html_writer::table($table);  
         return $output;
     }
     

@@ -124,6 +124,7 @@ $string['mumie_submissions_by'] = 'Submissions by {$a}';
 $string['mumie_submissions_info'] = 'Grades are automatically updated in the Moodle gradebook to the latest submitted answer 
 within the due date. If you want to use a different submission, you can click on the corresponding button to overwrite the current grade.<br><br>
 This grade will not be replaced by new submissions and it will <b>not</b> be automatically scaled, if you change the MUMIE Task\'s maximum points';
+$string['mumie_no_submissions'] = 'No answers submitted';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
