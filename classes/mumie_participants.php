@@ -1,5 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file describes a class used to create a table of students with information about a MUMIE Tasks due date extensions and submissions.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace mod_mumie;
+
+defined('MOODLE_INTERNAL') || die;
 
 use core_user\table\participants_search;
 use core_table\local\filter\filterset;
@@ -10,14 +36,37 @@ require_once($CFG->libdir . '/tablelib.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
+/**
+ * mumie_participants is used to create a table of students with information about a MUMIE Tasks due date extensions and submissions.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mumie_participants extends \table_sql {
-
-    private $mumie;
-    private $cmid;
-
+    
     /**
-     * @param string $uniqueid a string identifying this table.Used as a key in
-     *                          session  vars.
+     * The instance of mumie activity the table is being created for.
+     *
+     * @var \stdClass
+     */
+    private $mumie;
+        
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
+    private $cmid;
+ 
+    /**
+     * Constructor
+     *
+     * @param  string $uniqueid a string identifying this table.Used as a key in session  vars.
+     * @param  \stdClass $mumie
+     * @param  int $cmid
+     * @return void
      */
     function __construct($uniqueid, $mumie, $cmid) {
         parent::__construct($uniqueid);
@@ -52,7 +101,13 @@ class mumie_participants extends \table_sql {
             return $this->add_duedate_button($extension);
         }
     }
-
+    
+    /**
+     * Generate the submissions colum
+     *
+     * @param  \stdClass $data
+     * @return string
+     */
     public function col_submissions($data) {
         $submissionurl = new \moodle_url('/mod/mumie/view.php', array("action" => "submissions", "id" => $this->cmid, "userid" => $data->id));
         return \html_writer::start_tag("a", array("class" => "mumie_icon_btn", "href" => $submissionurl))
@@ -155,8 +210,9 @@ class mumie_participants extends \table_sql {
      *
      * @param int $pagesize Size of page for paginated displayed table.
      * @param bool $useinitialsbar Whether to use the initials bar which will only be used if there is a fullname column defined.
+     * @param string $downloadhelpbutton
      */
-    public function out($pagesize, $useinitialsbar, $downloadhelpbutton='') {
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
         $headers = [];
         $columns = [];
 

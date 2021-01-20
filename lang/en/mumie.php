@@ -104,10 +104,10 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 
-// Used in duedate form
+// Used in duedate form.
 $string['mumie_duedate_form'] = 'Grant a due date extension';
 
-// Used in view
+// Used in view.
 $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
 $string['mumie_general_duedate'] = 'General due date:';
@@ -115,7 +115,7 @@ $string['mumie_grading_settings'] = "Individual grading settings";
 $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_invalid'] = 'Grade is invalid!';
 
-// used in mumie_grader
+// used in mumie_grader.
 $string['mumie_submissions'] = 'Submissions';
 $string['mumie_override_gradebook'] = 'Use in gradebook';
 $string['mumie_submission_date'] = 'Submitted on';

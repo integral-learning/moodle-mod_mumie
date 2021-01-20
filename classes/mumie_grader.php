@@ -1,20 +1,59 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file describes a class used to dispay information about a MUMIE Tasks due date extensions and submissions.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace mod_mumie;
+
 defined('MOODLE_INTERNAL') || die;
 
 use core_table\local\filter\filter;
 use core_table\local\filter\integer_filter;
 use core_user\table\participants_filterset;
 
-
+/**
+ * mumie_grader is used to display information about due date extensions and submissions.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mumie_grader {
     private $mumie;
     private $gradeitem;
     private $course;
     private $context;
     private $cmid;
-
+    
+    /**
+     * __construct
+     *
+     * @param  \stdClass $mumie
+     * @param  int $context
+     * @param  int $cmid course module id.
+     * @return void
+     */
     public function __construct($mumie, $context, $cmid) {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/mumie/locallib.php");
@@ -23,7 +62,12 @@ class mumie_grader {
         $this->context = $context;
         $this->cmid = $cmid;
     }
-
+    
+    /**
+     * Get a table of students with due date extensions and submissions as html string.
+     *
+     * @return string
+     */
     public function view_grading_table() {
         global $PAGE, $CFG;
         $output = "";
@@ -47,11 +91,16 @@ class mumie_grader {
 
         return $output;
     }
-
+    
+    /**
+     * Get formatted duedate or placeholder for a student.
+     *
+     * @param  \stdClass $mumie
+     * @param  int $userid
+     * @return string
+     */
     public static function get_duedate($mumie, $userid) {
         global $DB;
-
-
         $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
 
         return $duedate ? strftime(
@@ -59,7 +108,13 @@ class mumie_grader {
             $duedate->duedate
         ) : "-";
     }
-
+    
+    /**
+     * View all submissions by a student as html table.
+     *
+     * @param  int $userid
+     * @return string
+     */
     public function view_submissions($userid) {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
@@ -117,7 +172,15 @@ class mumie_grader {
         $output .= \html_writer::table($table);
         return $output;
     }
-
+    
+    /**
+     * Verify that the given parameters really belong to a MUMIE grade.
+     *
+     * @param  int $rawgrade
+     * @param  int $userid
+     * @param  int $timestamp
+     * @return boolean
+     */
     public function is_grade_valid($rawgrade, $userid, $timestamp) {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');

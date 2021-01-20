@@ -103,10 +103,10 @@ $string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen au
 $string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 
-// Used in duedate form
+// Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 
-// Used in view
+// Used in view.
 $string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist:';
@@ -114,7 +114,7 @@ $string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
 $string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
 $string['mumie_grade_invalid'] = 'Bewertung ungültig!';
 
-// Used in mumie_grader
+// Used in mumie_grader.
 $string['mumie_submissions'] = 'Abgaben';
 $string['mumie_override_gradebook'] = 'In Moodle-Notenbuch übernehmen';
 $string['mumie_submission_date'] = 'Datum der Abgabe';
