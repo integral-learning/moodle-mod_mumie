@@ -124,17 +124,22 @@ function mumie_cm_info_view(cm_info $cm) {
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
-    $grade_item = $DB->get_record('grade_items', array('courseid' => $mumie->course, 'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'));
+    $gradeitem = $DB->get_record(
+        'grade_items',
+        array(
+            'courseid' => $mumie->course,
+            'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'
+        ));
     $info = '';
     if ($mumie->duedate) {
-        $content = get_string('mumie_due_date', 'mod_mumie') 
-            . ': ' 
+        $content = get_string('mumie_due_date', 'mod_mumie')
+            . ': '
             . strftime(get_string('strftimedaydatetime', 'langconfig'), $mumie->duedate);
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
-    if ($grade_item->gradepass > 0) {
-        $content = get_string("gradepass", "grades") . ': ' . round($grade_item->gradepass, 1);
+    if ($gradeitem->gradepass > 0) {
+        $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
     if (!isset($mumie->privategradepool)) {
