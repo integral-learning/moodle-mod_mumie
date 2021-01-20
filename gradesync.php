@@ -145,15 +145,14 @@ class gradesync {
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
+        $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
+        $extension->load();
         if (!$mumie->duedate) {
             return true;
         }
-        $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
-        $extension->load();
-        \debugging("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".$extension->get_duedate());
-        // if (isset($extension->get_duedate()) && $extension->get_duedate() > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
-        //     return true;
-        // }
+        if (isset($extension->get_duedate()) && $extension->get_duedate() > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
+            return true;
+        }
         if ($mumie->duedate < $potentialgrade->timecreated) {
             return false;
         }
