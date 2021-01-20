@@ -120,7 +120,7 @@ class mumie_grader {
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
         $user = \core_user::get_user($userid);
-        $grades = grade_sync::get_mumie_grades($mumie, $userid);
+        $grades = gradesync::get_mumie_grades($mumie, $userid);
         
         /*
         $gradeA = new \stdClass();
@@ -131,7 +131,7 @@ class mumie_grader {
         $gradeB->rawgrade = 20;
         $grades = array($gradeA, $gradeB);
         */
-        
+
         usort($grades, function($a, $b) {
             return $b->timecreated <=> $a->timecreated;
         });
