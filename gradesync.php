@@ -136,6 +136,30 @@ class gradesync {
         return $grades;
     }
 
+    public static function get_all_grades_for_user($mumie, $userid) {
+        global $COURSE, $DB;
+        $syncids = array();
+
+        array_push($syncids, self::get_sync_id($userid, $mumie));
+
+        $mumieids = array(self::get_mumie_id($mumie));
+        $grades = array();
+        $xapigrades = self::get_xapi_grades($mumie, $syncids, $mumieids);
+
+        if (is_null($xapigrades)) {
+            return null;
+        }
+
+        foreach ($xapigrades as $xapigrade) {
+            $grade = new \stdClass();
+            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
+            $grade->rawgrade = 100 * $xapigrade->result->score->raw;
+            $grade->timecreated = strtotime($xapigrade->timestamp);
+            array_push($grades, $grade);
+        }
+        return $grades;
+    }
+
     /**
      * Indicate whether a grade was archived before the task was due and is the latest one currently available
      *

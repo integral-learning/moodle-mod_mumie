@@ -120,7 +120,7 @@ class mumie_grader {
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
         $user = \core_user::get_user($userid);
-        $grades = gradesync::get_mumie_grades($this->mumie, $userid);
+        $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
         
         /*
         $gradeA = new \stdClass();
@@ -195,7 +195,7 @@ class mumie_grader {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
-        $grades = gradesync::get_mumie_grades($this->mumie, $userid);
+        $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
         if(!$grades) {
             return false;
         }
