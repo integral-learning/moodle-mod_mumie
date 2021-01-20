@@ -148,11 +148,11 @@ class gradesync {
         if (!$mumie->duedate) {
             return true;
         }
-        $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
-        \debugging("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".json_encode($extension));
-        if (isset($extension->duedate) && $extension->duedate > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
-            return true;
-        }
+        //$extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
+        \debugging("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".json_encode($potentialgrade->userid));
+        // if (isset($extension->duedate) && $extension->duedate > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
+        //     return true;
+        // }
         if ($mumie->duedate < $potentialgrade->timecreated) {
             return false;
         }
