@@ -44,7 +44,6 @@ $PAGE->set_cm($cm, $course);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('incourse');
 
-
 if ($action == "grading") {
     require_capability("mod/mumie:grantduedateextension", $context);
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
@@ -58,7 +57,6 @@ if ($action == "grading") {
     $PAGE->set_url($url);
     $PAGE->navbar->add(get_string("mumie_grading_settings", "mod_mumie"));
     $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
-
 
     $duedateinfo = "";
     if ($mumietask->duedate > 0){
