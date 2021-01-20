@@ -2,6 +2,10 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.4.1] - TODO
+### Changed
+- Added passing grade as tag to MUMIE Task in course view
+
 ## [v1.4.0] - 2020-12-10
 ### Fixed
 - Missing server configuration no longer disables js in mod_mumie form
