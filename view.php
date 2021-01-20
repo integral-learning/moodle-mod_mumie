@@ -55,7 +55,9 @@ if ($action == "grading") {
     $PAGE->navbar->add(get_string("mumie_duedate_extension", "mod_mumie"));
     $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
 
-    if ($mumietask->duedate > 0){
+    $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
+
+    if ($mumietask->duedate > 0) {
         $dateelem = html_writer::tag(
             'p',
             strftime(
@@ -65,8 +67,8 @@ if ($action == "grading") {
             array('style' => 'font-weight: bold; margin-top:10px;')
         );
         $notification = get_string(
-            "mumie_general_duedate", 
-            "mod_mumie", 
+            "mumie_general_duedate",
+            "mod_mumie",
             $dateelem
         );
     } else {
@@ -77,6 +79,12 @@ if ($action == "grading") {
 
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
+    echo "<button id=taskButton >test</button>
+    <script type=\"text/javascript\">
+    document.getElementById(\"taskButton\").onclick = function () {
+        location.href = \"{$redirecturl}}\";
+    };
+    </script>";
     echo $OUTPUT->footer();
 } else if ($action == "open") {
 
@@ -89,7 +97,6 @@ if ($action == "grading") {
             get_string('mumie_tag_disabled_help', 'mod_mumie')
         );
     }
-    $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
     if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
         redirect($redirecturl);
     } else {
@@ -99,7 +106,7 @@ if ($action == "grading") {
         $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
         $PAGE->set_heading($course->fullname);
         $PAGE->set_url(new moodle_url('/mod/mumie/view.php'), array('id' => $id));
-    
+
         echo $OUTPUT->header();
         echo "<iframe
             id='mumie_frame'
