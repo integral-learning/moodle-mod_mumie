@@ -151,7 +151,8 @@ class gradesync {
         if (!$mumie->duedate && isset($userduedate)) {
             return true;
         }
-        if (isset($userduedate) && $userduedate  > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
+        if (isset($userduedate) && $userduedate  > $potentialgrade->timecreated 
+        && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
             return true;
         }
         if ($mumie->duedate < $potentialgrade->timecreated) {
