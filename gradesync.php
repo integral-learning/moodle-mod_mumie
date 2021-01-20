@@ -148,7 +148,7 @@ class gradesync {
         $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
         $extension->load();
         $userduedate = $extension->get_duedate();
-        if (!$mumie->duedate) {
+        if (!$mumie->duedate && isset($userduedate)) {
             return true;
         }
         if (isset($userduedate) && $userduedate  > $potentialgrade->timecreated && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
