@@ -139,31 +139,34 @@ class gradesync {
     /**
      * Indicate whether a grade was archived before the task was due and is the latest one currently available
      *
-     * @param stdClass $mumie instance if MUMIE task we want to get grades for
+     * @param stdClass $mumie instance of MUMIE task we want to get grades for
      * @param array $grades an array of all grades we have selected so far
      * @param stdClass $potentialgrade the grade in question
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
-        $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
-        $extension->load();
-        $userduedate = $extension->get_duedate();
-        if (!$mumie->duedate && isset($userduedate)) {
+        $duedate = mumie_duedate_extension::get_effective_duedate($potentialgrade->userid, $mumie->id);
+        if (!isset($duedate) || $duedate == 0) {
             return true;
         }
-        if (isset($userduedate) && $userduedate  > $potentialgrade->timecreated 
-        && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
-            return true;
-        }
-        if ($mumie->duedate < $potentialgrade->timecreated) {
+
+        if ($duedate < $potentialgrade->timecreated) {
             return false;
         }
 
-        if (isset($grades[$potentialgrade->userid])
-            && $grades[$potentialgrade->userid]->timecreated > $potentialgrade->timecreated) {
-            return false;
-        }
-        return true;
+        return self::is_latest_grade($grades, $potentialgrade);
+    }
+    
+    /**
+     * True, if the given grade is currently the latest available one.
+     *
+     * @param  array $grades List of the latest grades so far by user.
+     * @param  \stdClass $potentialgrade The grade we are testing
+     * @return boolean
+     */
+    private static function is_latest_grade($grades, $potentialgrade) {
+        return isset($grades[$potentialgrade->userid])
+        && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated;
     }
 
     /**
