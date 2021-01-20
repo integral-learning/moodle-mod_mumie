@@ -135,7 +135,14 @@ class gradesync {
         }
         return $grades;
     }
-
+    
+    /**
+     * Get all grades a user has archived for a given MUMIE Task
+     *
+     * @param  \stdClass $mumie
+     * @param  int $userid
+     * @return array
+     */
     public static function get_all_grades_for_user($mumie, $userid) {
         global $COURSE, $DB;
         $syncids = array();
@@ -169,15 +176,19 @@ class gradesync {
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
+        debugging("____________including grade: " . json_encode($potentialgrade));
         $duedate = mumie_duedate_extension::get_effective_duedate($potentialgrade->userid, $mumie);
         if (!isset($duedate) || $duedate == 0) {
+            debugging("no duedate set returning true");
             return true;
         }
 
         if ($duedate < $potentialgrade->timecreated) {
+            debugging("duedate has passed -> returning false");
             return false;
         }
 
+        debugging("is latest grade returning " . json_encode(self::is_latest_grade($grades, $potentialgrade)));
         return self::is_latest_grade($grades, $potentialgrade);
     }
     

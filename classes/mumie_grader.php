@@ -122,17 +122,6 @@ class mumie_grader {
         $user = \core_user::get_user($userid);
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
         
-        /*
-        $gradeA = new \stdClass();
-        $gradeA->timecreated = 1582790400;
-        $gradeA->rawgrade = 60;
-        $gradeB = new \stdClass();
-        $gradeB->timecreated = 1582760400;
-        $gradeB->rawgrade = 20;
-        $grades = array($gradeA, $gradeB);
-        */
-        
-        
         $table = new \html_table();
         $table->attributes['class'] = 'generaltable auth_index mumie_server_list_container';
         $table->head = array(

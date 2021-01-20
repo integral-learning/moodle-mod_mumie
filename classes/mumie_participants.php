@@ -252,5 +252,4 @@ class mumie_participants extends \table_sql {
     public function guess_base_url(): void {
         $this->baseurl = new \moodle_url('/mod/mumie/view.php', array('action' => "grading", 'id' => $this->cmid));
     }
-
 }
