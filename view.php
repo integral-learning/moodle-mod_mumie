@@ -79,12 +79,16 @@ if ($action == "grading") {
 
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
-    echo "<button id=taskButton class=\"btn btn-primary\" >Display MUMIE Task</button>
-    <script type=\"text/javascript\">
-    document.getElementById(\"taskButton\").onclick = function () {
-        location.href = \"{$redirecturl}}\";
-    };
-    </script>";
+    echo "<div class=\"col text-center\">
+            <button id=taskButton class=\"btn btn-primary\" >
+                Display MUMIE Task
+            </button>
+            <script type=\"text/javascript\">
+                document.getElementById(\"taskButton\").onclick = function () {
+                    location.href = \"{$redirecturl}}\";
+                };
+            </script>
+        </div>";
     echo $OUTPUT->footer();
 } else if ($action == "open") {
 
