@@ -165,8 +165,8 @@ class gradesync {
      * @return boolean
      */
     private static function is_latest_grade($grades, $potentialgrade) {
-        return isset($grades[$potentialgrade->userid])
-        && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated;
+        return !isset($grades[$potentialgrade->userid])
+        || $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated;
     }
 
     /**
