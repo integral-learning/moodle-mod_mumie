@@ -79,7 +79,7 @@ if ($action == "grading") {
 
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
-    echo "<button id=taskButton >test</button>
+    echo "<button id=taskButton class=\"MoodleQuickForm_button\" >test</button>
     <script type=\"text/javascript\">
     document.getElementById(\"taskButton\").onclick = function () {
         location.href = \"{$redirecturl}}\";
