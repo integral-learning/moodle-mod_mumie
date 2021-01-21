@@ -134,7 +134,7 @@ function mumie_cm_info_view(cm_info $cm) {
         ));
     $info = '';
     $effectiveduedate = mod_mumie/mumie_duedate_extension::get_effective_duedate($USER->id, $mumie);
-    if ($effectiveduedate) {
+    if (isset($effectiveduedate)) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
             . strftime(get_string('strftimedaydatetime', 'langconfig'), $effectiveduedate);
