@@ -133,7 +133,7 @@ function mumie_cm_info_view(cm_info $cm) {
             'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'
         ));
     $info = '';
-    $effectiveduedate = mod_mumie/mumie_duedate_extension::get_effective_duedate($USER->id, $mumie);
+    $effectiveduedate = mumie_duedate_extension::get_effective_duedate($USER->id, $mumie);
     if (isset($effectiveduedate)) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
