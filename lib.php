@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mumie\mumie_duedate_extension;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/mumie/locallib.php');
@@ -92,7 +94,7 @@ function mumie_delete_instance($id) {
  * @param stdClass $coursemodule
  */
 function mumie_get_coursemodule_info($coursemodule) {
-    global $DB, $USER, $CFG;
+    global $DB, $CFG;
 
     if (!$mumie = $DB->get_record("mumie", array("id" => $coursemodule->instance))) {
         return null;
@@ -120,7 +122,7 @@ function mumie_get_coursemodule_info($coursemodule) {
  * @param cm_info $cm
  */
 function mumie_cm_info_view(cm_info $cm) {
-    global $CFG, $DB;
+    global $DB, $USER;
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
@@ -131,7 +133,7 @@ function mumie_cm_info_view(cm_info $cm) {
             'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'
         ));
     $info = '';
-    if ($mumie->duedate) {
+    if (mod_mumie/mumie_duedate_extension::get_effective_duedate($USER->id, $mumie)) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
             . strftime(get_string('strftimedaydatetime', 'langconfig'), $mumie->duedate);
