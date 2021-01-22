@@ -152,6 +152,8 @@ if ($action == "grading") {
     $rawgrade = floatval(required_param("rawgrade", PARAM_RAW));
     $gradetimestamp = required_param("gradetimestamp", PARAM_INT);
 
+    $redirecturl = new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading"));
+    
     $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
     if (!$grader->is_grade_valid($rawgrade, $userid, $gradetimestamp)) {
         \core\notification::error(get_string("mumie_grade_invalid", "mod_mumie"));
@@ -165,7 +167,6 @@ if ($action == "grading") {
     $grade->userid = $userid;
     $grade->usermodified = $USER->id;
     
-    $redirecturl = new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading"));
     
     mumie_override_grade($mumietask, $grade);
     \core\notification::success(get_string("mumie_grade_overridden", "mod_mumie"));
