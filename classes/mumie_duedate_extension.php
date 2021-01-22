@@ -67,7 +67,7 @@ class mumie_duedate_extension {
 
     /**
      * Table name used in the database.
-     * 
+     *
      * @var string
      */
     const MUMIE_DUEDATE_TABLE = "mumie_duedate";

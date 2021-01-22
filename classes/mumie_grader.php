@@ -40,7 +40,6 @@ use core_user\table\participants_filterset;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mumie_grader {
-        
     /**
      * MUMIE Task instance we want to show more information about.
      *
