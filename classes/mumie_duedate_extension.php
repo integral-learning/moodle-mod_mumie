@@ -65,6 +65,11 @@ class mumie_duedate_extension {
      */
     private $duedate;
 
+    /**
+     * Table name used in the database.
+     * 
+     * @var string
+     */
     const MUMIE_DUEDATE_TABLE = "mumie_duedate";
 
     /**
@@ -247,10 +252,12 @@ class mumie_duedate_extension {
         return $this->mumie;
     }
 
+
     /**
      * Set the value of mumie.
      *
-     * @return  self
+     * @param  \stdClass $mumie
+     * @return void
      */
     public function set_mumie($mumie) {
         $this->mumie = $mumie;

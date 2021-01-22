@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * redirect the user to the SSO plugin auth_mumie to view MUMIE content
+ * External library for mod_mumie.
  *
  * @package mod_mumie
  * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
@@ -27,6 +27,14 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . "/externallib.php");
 
+/**
+ * External library for mod_mumie.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_mumie_external extends external_api {
     /**
      * Describes the parameters for submit_mumieduedate_form webservice.

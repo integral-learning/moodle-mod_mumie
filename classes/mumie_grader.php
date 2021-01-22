@@ -40,26 +40,40 @@ use core_user\table\participants_filterset;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mumie_grader {
+        
+    /**
+     * MUMIE Task instance we want to show more information about.
+     *
+     * @var \stdClass
+     */
     private $mumie;
-    private $gradeitem;
+
+    /**
+     * Course object the MUMIE Task is part of.
+     *
+     * @var \stdClass
+     */
     private $course;
-    private $context;
+
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
     private $cmid;
 
     /**
      * __construct
      *
      * @param  \stdClass $mumie
-     * @param  int $context
      * @param  int $cmid course module id.
      * @return void
      */
-    public function __construct($mumie, $context, $cmid) {
+    public function __construct($mumie, $cmid) {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/mumie/locallib.php");
         $this->mumie = $mumie;
         $this->course = $DB->get_record('course', array('id' => $this->mumie->course), '*', MUST_EXIST);
-        $this->context = $context;
         $this->cmid = $cmid;
     }
 

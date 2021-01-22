@@ -49,7 +49,7 @@ if ($action == "grading") {
     require_capability("mod/mumie:grantduedateextension", $context);
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
 
-    $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
+    $grader = new mod_mumie\mumie_grader($mumietask, $cm->id);
 
     $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
     $PAGE->set_heading(get_string("mumie_grading_settings", "mod_mumie") . ': ' . $mumietask->name);
@@ -129,7 +129,7 @@ if ($action == "grading") {
 
     require_capability("mod/mumie:viewgrades", $context);
 
-    $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
+    $grader = new mod_mumie\mumie_grader($mumietask, $cm->id);
 
     $userid = required_param("userid", PARAM_INT);
 
@@ -159,7 +159,7 @@ if ($action == "grading") {
 
     $redirecturl = new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading"));
 
-    $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
+    $grader = new mod_mumie\mumie_grader($mumietask, $cm->id);
     if (!$grader->is_grade_valid($rawgrade, $userid, $gradetimestamp)) {
         \core\notification::error(get_string("mumie_grade_invalid", "mod_mumie"));
         redirect($redirecturl);

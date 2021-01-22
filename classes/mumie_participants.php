@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file describes a class used to create a table of students
- * with information about a MUMIE Tasks due date extensions and submissions.
+ * Table of students with information about due dates and submissions.
  *
  * @package mod_mumie
  * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
@@ -38,8 +37,7 @@ require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
 /**
- * mumie_participants is used to create a table of students with information
- * about a MUMIE Tasks due date extensions and submissions.
+ * Table of students with information about due dates and submissions.
  *
  * @package mod_mumie
  * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
