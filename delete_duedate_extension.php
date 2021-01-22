@@ -3,7 +3,7 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
-require_login(0, false);
+require_login(null, false);
 
 $duedateid = required_param('duedateid', PARAM_INT);
 $cmid = required_param('cmid', PARAM_INT);
