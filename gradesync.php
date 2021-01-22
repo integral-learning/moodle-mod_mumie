@@ -170,9 +170,10 @@ class gradesync {
      */
     private static function xapi_to_moodle_grade($xapigrade, $mumie) {
         $grade = new \stdClass();
-            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
-            $grade->rawgrade = 100 * $xapigrade->result->score->raw;
-            $grade->timecreated = strtotime($xapigrade->timestamp);
+        $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
+        $grade->rawgrade = 100 * $xapigrade->result->score->raw;
+        $grade->timecreated = strtotime($xapigrade->timestamp);
+        return $grade;
     }
 
     /**
