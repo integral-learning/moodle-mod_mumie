@@ -84,7 +84,7 @@ if ($action == "grading") {
             "class" => "btn btn-primary", 
             "href" => $redirecturl, 
             "target" => "_blank", 
-            "style" => "margin-top:10px;width:100%;"
+            "style" => "margin:10px auto; display: table;"
         )
     );
     echo $OUTPUT->footer();
