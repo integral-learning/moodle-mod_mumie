@@ -175,7 +175,7 @@ class mumie_grader {
     /**
      * Verify that the given parameters really belong to a MUMIE grade.
      *
-     * @param  float $rawgrade
+     * @param  int $rawgrade
      * @param  int $userid
      * @param  int $timestamp
      * @return boolean
@@ -191,7 +191,7 @@ class mumie_grader {
         }
         foreach ($grades as $grade) {
             debugging("grade: " . json_encode($grade));
-            if ($grade->rawgrade == $rawgrade && $timestamp == $grade->timecreated) {
+            if (intval($grade->rawgrade) == $rawgrade && $timestamp == $grade->timecreated) {
                 return true;
             }
         }

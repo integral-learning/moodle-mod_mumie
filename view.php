@@ -149,11 +149,11 @@ if ($action == "grading") {
     require_capability("mod/mumie:overridegrades", $context);
 
     $userid = required_param("userid", PARAM_INT);
-    $rawgrade = floatval(required_param("rawgrade", PARAM_RAW));
+    $rawgrade = required_param("rawgrade", PARAM_RAW);
     $gradetimestamp = required_param("gradetimestamp", PARAM_INT);
 
     $redirecturl = new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading"));
-    
+
     $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
     if (!$grader->is_grade_valid($rawgrade, $userid, $gradetimestamp)) {
         \core\notification::error(get_string("mumie_grade_invalid", "mod_mumie"));
