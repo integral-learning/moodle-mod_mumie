@@ -134,10 +134,12 @@ function mumie_cm_info_view(cm_info $cm) {
         ));
     $info = '';
     $effectiveduedate = mumie_duedate_extension::get_effective_duedate($USER->id, $mumie);
+    debugging($effectiveduedate);
     if (isset($effectiveduedate)) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
-            . strftime(get_string('strftimedaydatetime', 'langconfig'), $effectiveduedate);
+            . strftime(get_string('strftimedaydatetime', 'langconfig'), $effective
+            duedate);
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
