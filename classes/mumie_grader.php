@@ -171,7 +171,7 @@ class mumie_grader {
             $table->data[] = array(\html_writer::tag("i", get_string("mumie_no_submissions", "mod_mumie")), "", "");
         }
 
-        $output .= \html_writer::table($table);  
+        $output .= \html_writer::table($table);
         return $output;
     }
 
