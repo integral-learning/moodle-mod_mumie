@@ -184,11 +184,13 @@ class mumie_grader {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
+        debugging("----IS grade valid - rawgrade: " . $rawgrade . " userid: " . $userid . " timestamp: " . $timestamp);
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
         if(!$grades) {
             return false;
         }
         foreach ($grades as $grade) {
+            debugging("grade: " . json_encode($grade));
             if ($grade->rawgrade == $rawgrade && $timestamp == $grade->timecreated) {
                 return true;
             }
