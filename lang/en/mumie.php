@@ -114,6 +114,7 @@ $string['mumie_general_duedate'] = 'General due date:';
 $string['mumie_grading_settings'] = "Individual grading settings";
 $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_invalid'] = 'Grade is invalid!';
+$string['mumie_open_task'] = 'Open MUMIE Task';
 
 // used in mumie_grader.
 $string['mumie_submissions'] = 'Submissions';
