@@ -150,14 +150,16 @@ if ($action == "grading") {
 
     $userid = required_param("userid", PARAM_INT);
     $rawgrade = floatval(required_param("rawgrade", PARAM_RAW));
+    $gradetimestamp = required_param("gradetimestamp", PARAM_INT);
+
     $grader = new mod_mumie\mumie_grader($mumietask, context_course::instance(SITEID), $cm->id);
-    if (!$grader->is_grade_valid($rawgrade, $userid, $grade->timecreated)) {
+    if (!$grader->is_grade_valid($rawgrade, $userid, $gradetimestamp)) {
         \core\notification::error(get_string("mumie_grade_invalid", "mod_mumie"));
         redirect($redirecturl);
     }
 
     $grade = new stdClass();
-    $grade->timecreated = required_param("gradetimestamp", PARAM_INT);
+    $grade->timecreated = $gradetimestamp;
     $grade->rawgrade = $rawgrade * $mumietask->points / 100;
     $grade->overridden = gettype(time());
     $grade->userid = $userid;
