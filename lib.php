@@ -378,3 +378,25 @@ function mod_mumie_output_fragment_new_duedate_form($args) {
 
     return $output;
 }
+
+/**
+ * Override a grade in the gradebook as if it was manually changed by a teacher.
+ *
+ * @param  \stdClass $mumie
+ * @param  \stdClass $grade
+ * @return void
+ */
+function mumie_override_grade($mumie, $grade) {
+    global $CFG;
+    require_once($CFG->libdir . '/gradelib.php');
+
+    $item = new \grade_item(array("itemmodule" => "mumie", "iteminstance" => $mumie->id), true);
+    return $item->update_final_grade(
+        $grade->userid, 
+        $grade->rawgrade, 
+        null, 
+        null, 
+        FORMAT_MOODLE, 
+        $grade->usermodified
+    );
+}

@@ -125,45 +125,88 @@ class gradesync {
         }
 
         foreach ($xapigrades as $xapigrade) {
-            $grade = new \stdClass();
-            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
-            $grade->rawgrade = 100 * $xapigrade->result->score->raw;
-            $grade->timecreated = strtotime($xapigrade->timestamp);
+            $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
             if (self::include_grade($mumie, $grades, $grade)) {
                 $grades[$grade->userid] = $grade;
             }
         }
         return $grades;
     }
+    
+    /**
+     * Get all grades a user has archived for a given MUMIE Task
+     *
+     * @param  \stdClass $mumie
+     * @param  int $userid
+     * @return array
+     */
+    public static function get_all_grades_for_user($mumie, $userid) {
+        global $COURSE, $DB;
+        $syncids = array();
+
+        array_push($syncids, self::get_sync_id($userid, $mumie));
+
+        $mumieids = array(self::get_mumie_id($mumie));
+        $grades = array();
+        $xapigrades = self::get_xapi_grades($mumie, $syncids, $mumieids);
+
+        if (is_null($xapigrades)) {
+            return null;
+        }
+
+        foreach ($xapigrades as $xapigrade) {
+            $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
+            array_push($grades, $grade);
+        }
+        return $grades;
+    }
+    
+    /**
+     * Transform Xapi grade to moodle grade objects.
+     *
+     * @param  \stdClass $xapigrade
+     * @param  \stdClass $mumie
+     * @return \stdClass
+     */
+    private static function xapi_to_moodle_grade($xapigrade, $mumie) {
+        $grade = new \stdClass();
+        $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
+        $grade->rawgrade = 100 * $xapigrade->result->score->raw;
+        $grade->timecreated = strtotime($xapigrade->timestamp);
+        return $grade;
+    }
 
     /**
      * Indicate whether a grade was archived before the task was due and is the latest one currently available
      *
-     * @param stdClass $mumie instance if MUMIE task we want to get grades for
+     * @param stdClass $mumie instance of MUMIE task we want to get grades for
      * @param array $grades an array of all grades we have selected so far
      * @param stdClass $potentialgrade the grade in question
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade($mumie, $grades, $potentialgrade) {
-        $extension = new mumie_duedate_extension($potentialgrade->userid, $mumie->id);
-        $extension->load();
-        $userduedate = $extension->get_duedate();
-        if (!$mumie->duedate && isset($userduedate)) {
+        $duedate = mumie_duedate_extension::get_effective_duedate($potentialgrade->userid, $mumie);
+        if (!isset($duedate) || $duedate == 0) {
             return true;
         }
-        if (isset($userduedate) && $userduedate  > $potentialgrade->timecreated 
-        && $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated ) {
-            return true;
-        }
-        if ($mumie->duedate < $potentialgrade->timecreated) {
+
+        if ($duedate < $potentialgrade->timecreated) {
             return false;
         }
 
-        if (isset($grades[$potentialgrade->userid])
-            && $grades[$potentialgrade->userid]->timecreated > $potentialgrade->timecreated) {
-            return false;
-        }
-        return true;
+        return self::is_latest_grade($grades, $potentialgrade);
+    }
+    
+    /**
+     * True, if the given grade is currently the latest available one.
+     *
+     * @param  array $grades List of the latest grades so far by user.
+     * @param  \stdClass $potentialgrade The grade we are testing
+     * @return boolean
+     */
+    private static function is_latest_grade($grades, $potentialgrade) {
+        return !isset($grades[$potentialgrade->userid])
+        || $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated;
     }
 
     /**

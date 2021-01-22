@@ -1,5 +1,31 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file describes a class used to create a table of students with information about a MUMIE Tasks due date extensions and submissions.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace mod_mumie;
+
+defined('MOODLE_INTERNAL') || die;
 
 use core_user\table\participants_search;
 use core_table\local\filter\filterset;
@@ -10,14 +36,37 @@ require_once($CFG->libdir . '/tablelib.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
+/**
+ * mumie_participants is used to create a table of students with information about a MUMIE Tasks due date extensions and submissions.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mumie_participants extends \table_sql {
-
-    private $mumie;
-    private $cmid;
-
+    
     /**
-     * @param string $uniqueid a string identifying this table.Used as a key in
-     *                          session  vars.
+     * The instance of mumie activity the table is being created for.
+     *
+     * @var \stdClass
+     */
+    private $mumie;
+        
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
+    private $cmid;
+ 
+    /**
+     * Constructor
+     *
+     * @param  string $uniqueid a string identifying this table.Used as a key in session  vars.
+     * @param  \stdClass $mumie
+     * @param  int $cmid
+     * @return void
      */
     function __construct($uniqueid, $mumie, $cmid) {
         parent::__construct($uniqueid);
@@ -54,6 +103,19 @@ class mumie_participants extends \table_sql {
     }
     
     /**
+     * Generate the submissions column
+     *
+     * @param  \stdClass $data
+     * @return string
+     */
+    public function col_submissions($data) {
+        $submissionurl = new \moodle_url('/mod/mumie/view.php', array("action" => "submissions", "id" => $this->cmid, "userid" => $data->id));
+        return \html_writer::start_tag("a", array("class" => "mumie_icon_btn", "href" => $submissionurl))
+        . \html_writer::tag("span", "", array("class" => "icon fa fa-list fa-fw"))
+        . \html_writer::end_tag("a");
+    }
+    
+    /**
      * Generate an edit button for a due date extension.
      *
      * @param  mumie_duedate_extension $extension
@@ -66,13 +128,10 @@ class mumie_participants extends \table_sql {
             "id" => $extension->get_id(),
             "duedate" => $extension->get_duedate()
         );
-        return 
-        "<span class='mumie_duedate_edit_btn mumie_icon_btn'>"
-        . "<span class='icon fa fa-cog fa-fw'></span>"
-        . "<span style='display:none'>"
-        . json_encode($formdata)
-        . "</span>"
-        . "</span>";
+        return \html_writer::start_tag("span", array("class" => "mumie_duedate_edit_btn mumie_icon_btn"))
+        . \html_writer::tag("span", "", array("class" => "icon fa fa-cog fa-fw"))
+        . \html_writer::tag("span", json_encode($formdata), array("style" => "display: none;"))
+        . \html_writer::end_tag("span");
     }
     
     /**
@@ -83,9 +142,9 @@ class mumie_participants extends \table_sql {
      */
     private function delete_duedate_button($extension) {
         $url = new \moodle_url('/mod/mumie/delete_duedate_extension.php', array("cmid" => $this->cmid, "duedateid" => $extension->get_id()));
-        return "<a href=" . $url . " class='mumie_icon_btn'>"
-        . "<span class='icon fa fa-trash fa-fw'></span>"
-        . "</a>";
+        return \html_writer::start_tag("a", array("href" => $url, "class" => "mumie_icon_btn"))
+        . \html_writer::tag("span", "", array("class" => "icon fa fa-trash fa-fw"))
+        . \html_writer::end_tag("a");
     }
     
     /**
@@ -99,13 +158,10 @@ class mumie_participants extends \table_sql {
             "mumie" => $extension->get_mumie(),
             "userid" => $extension->get_userid()
         );
-        return 
-        "<span class='mumie_duedate_add_btn mumie_icon_btn'>"
-        . "<span class='icon fa fa-plus fa-fw'></span>"
-        . "<span style='display:none'>"
-        . json_encode($formdata)
-        . "</span>"
-        . "</span>";
+        return \html_writer::start_tag("span", array("class" => "mumie_duedate_add_btn mumie_icon_btn"))
+        . \html_writer::tag("span", "", array("class" => "icon fa fa-plus fa-fw"))
+        . \html_writer::tag("span", json_encode($formdata), array("style" => "display: none;"))
+        . \html_writer::end_tag("span");
     }
 
     /**
@@ -154,8 +210,9 @@ class mumie_participants extends \table_sql {
      *
      * @param int $pagesize Size of page for paginated displayed table.
      * @param bool $useinitialsbar Whether to use the initials bar which will only be used if there is a fullname column defined.
+     * @param string $downloadhelpbutton
      */
-    public function out($pagesize, $useinitialsbar, $downloadhelpbutton='') {
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
         $headers = [];
         $columns = [];
 
@@ -164,6 +221,9 @@ class mumie_participants extends \table_sql {
 
         $headers[] = get_string('mumie_duedate_extension', 'mod_mumie');
         $columns[] = 'duedate';
+
+        $headers[] = get_string("mumie_submissions", "mod_mumie");
+        $columns[] = 'submissions';
 
         $this->define_columns($columns);
         $this->define_headers($headers);
@@ -190,7 +250,6 @@ class mumie_participants extends \table_sql {
      * Guess the base url for the participants table.
      */
     public function guess_base_url(): void {
-        $this->baseurl = new \moodle_url('/mod/mumie/grading.php', array('mumieid' => $this->mumie->id, 'id' => $this->cmid));
+        $this->baseurl = new \moodle_url('/mod/mumie/view.php', array('action' => "grading", 'id' => $this->cmid));
     }
-
 }
