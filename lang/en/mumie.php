@@ -144,4 +144,4 @@ $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
 $string['mumie:grantduedateextension'] = 'Grand a due date extension to individual students';
 $string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date extension for individual students';
-$string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting from all answers they have submitted in MUMIE for this MUMIE Task';
+$string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting a submission from all answers they have submitted for this MUMIE Task';

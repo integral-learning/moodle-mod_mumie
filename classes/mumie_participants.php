@@ -103,7 +103,7 @@ class mumie_participants extends \table_sql {
     }
     
     /**
-     * Generate the submissions colum
+     * Generate the submissions column
      *
      * @param  \stdClass $data
      * @return string

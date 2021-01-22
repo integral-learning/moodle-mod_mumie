@@ -143,4 +143,4 @@ $string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
 $string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';
 $string['mumie:grantduedateextension'] = 'Die Abgabefrist einer MUMIE-Task für individuelle Studierende verlängern';
 $string['mumie:revokeduedateextension'] = 'Die Verlängerung der Abgabefrist einer MUMIE-Task für einen Studenten zurücknehmen';
-$string['mumie:overridegrades'] = 'Aktuelle Moodle-Bewertung für einen Studenten mit den Punkten einer beliebigen Abgabe für die ausgewählte MUMIE-Task überschreiben';
+$string['mumie:overridegrades'] = 'Überschreiben einer Moodle-Bewertung für einen Studenten mit den Punkten einer beliebigen Abgabe für die ausgewählte MUMIE-Task';
