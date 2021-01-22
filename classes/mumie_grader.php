@@ -175,7 +175,7 @@ class mumie_grader {
     /**
      * Verify that the given parameters really belong to a MUMIE grade.
      *
-     * @param  int $rawgrade
+     * @param  float $rawgrade
      * @param  int $userid
      * @param  int $timestamp
      * @return boolean
