@@ -47,21 +47,20 @@ require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mumie_participants extends \table_sql {
-    
     /**
      * The instance of mumie activity the table is being created for.
      *
      * @var \stdClass
      */
     private $mumie;
-        
+
     /**
      * Course module id.
      *
      * @var int
      */
     private $cmid;
- 
+
     /**
      * Constructor
      *
@@ -87,7 +86,7 @@ class mumie_participants extends \table_sql {
 
         return $OUTPUT->user_picture($data, array('size' => 35, 'courseid' => $this->course->id, 'includefullname' => true));
     }
-    
+
     /**
      * Generate the duedate column
      *
@@ -103,7 +102,7 @@ class mumie_participants extends \table_sql {
             return $this->add_duedate_button($extension);
         }
     }
-    
+
     /**
      * Generate the submissions column
      *
@@ -119,7 +118,7 @@ class mumie_participants extends \table_sql {
         . \html_writer::tag("span", "", array("class" => "icon fa fa-list fa-fw"))
         . \html_writer::end_tag("a");
     }
-    
+
     /**
      * Generate an edit button for a due date extension.
      *
@@ -138,7 +137,7 @@ class mumie_participants extends \table_sql {
         . \html_writer::tag("span", json_encode($formdata), array("style" => "display: none;"))
         . \html_writer::end_tag("span");
     }
-    
+
     /**
      * Generate a delete button for a due date extension.
      *
@@ -154,7 +153,7 @@ class mumie_participants extends \table_sql {
         . \html_writer::tag("span", "", array("class" => "icon fa fa-trash fa-fw"))
         . \html_writer::end_tag("a");
     }
-    
+
     /**
      * Generate an add button for a due date extension.
      *

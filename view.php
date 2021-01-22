@@ -33,7 +33,7 @@ $id = optional_param('id', 0, PARAM_INT);
 $cm = get_coursemodule_from_id('mumie', $id, 0, false, MUST_EXIST);
 $context = context_module::instance($cm->id);
 $action = optional_param(
-    "action", 
+    "action",
     has_capability("mod/mumie:grantduedateextension", $context) ? "grading" : "open",
     PARAM_ALPHANUM
 );
@@ -79,12 +79,12 @@ if ($action == "grading") {
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
     echo html_writer::tag(
-        "a", 
-        "Open MUMIE Task", 
+        "a",
+        "Open MUMIE Task",
         array(
-            "class" => "btn btn-primary", 
-            "href" => $redirecturl, 
-            "target" => "_blank", 
+            "class" => "btn btn-primary",
+            "href" => $redirecturl,
+            "target" => "_blank",
             "style" => "margin:10px auto; display: table;"
         )
     );
@@ -136,7 +136,7 @@ if ($action == "grading") {
     $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
     $PAGE->set_heading(get_string("mumie_grading_settings", "mod_mumie") . ': ' . $mumietask->name);
     $PAGE->set_url(new \moodle_url(
-        '/mod/mumie/view.php', 
+        '/mod/mumie/view.php',
         array("action" => "submissions", "id" => $id, "userid" => $userid)
     ));
     $PAGE->navbar->add(
@@ -171,8 +171,7 @@ if ($action == "grading") {
     $grade->overridden = gettype(time());
     $grade->userid = $userid;
     $grade->usermodified = $USER->id;
-    
-    
+
     mumie_override_grade($mumietask, $grade);
     \core\notification::success(get_string("mumie_grade_overridden", "mod_mumie"));
     redirect($redirecturl);

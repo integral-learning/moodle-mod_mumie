@@ -35,10 +35,10 @@ class duedate_form extends moodleform {
         $mform = &$this->_form;
 
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"));
-        
+
         $mform->addElement("hidden", "mumie");
         $mform->setType("mumie", PARAM_INT);
-        
+
         $mform->addElement("hidden", "userid");
         $mform->setType("userid", PARAM_INT);
 

@@ -45,7 +45,7 @@ class mumie_grader {
     private $course;
     private $context;
     private $cmid;
-    
+
     /**
      * __construct
      *
@@ -62,7 +62,7 @@ class mumie_grader {
         $this->context = $context;
         $this->cmid = $cmid;
     }
-    
+
     /**
      * Get a table of students with due date extensions and submissions as html string.
      *
@@ -71,7 +71,7 @@ class mumie_grader {
     public function view_grading_table() {
         global $PAGE, $CFG;
         $output = "";
-        
+
         $filterset = new participants_filterset();
         $filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$this->course->id]));
         $filterset->add_filter(new integer_filter('roles', filter::JOINTYPE_DEFAULT, [5]));
@@ -91,7 +91,7 @@ class mumie_grader {
 
         return $output;
     }
-    
+
     /**
      * Get formatted duedate or placeholder for a student.
      *
@@ -108,7 +108,7 @@ class mumie_grader {
             $duedate->duedate
         ) : "-";
     }
-    
+
     /**
      * View all submissions by a student as html table.
      *
@@ -121,14 +121,14 @@ class mumie_grader {
 
         $user = \core_user::get_user($userid);
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
-        
+
         $table = new \html_table();
         $table->head = array(
             get_string("mumie_grade_percentage", "mod_mumie"),
             get_string("mumie_submission_date", "mod_mumie"),
             get_string("mumie_override_gradebook", "mod_mumie")
         );
-        
+
         $output = "";
         $output .= \html_writer::tag("h2", get_string("mumie_submissions_by", "mod_mumie", fullname($user)));
         $output .= \html_writer::tag(
@@ -136,15 +136,15 @@ class mumie_grader {
             get_string("mumie_submissions_info", "mod_mumie"),
             array("style" => "margin-top: 1.5em;")
         );
-        
+
         if ($grades) {
             usort($grades, function($a, $b) {
                 return $b->timecreated <=> $a->timecreated;
             });
-            
+
             foreach ($grades as $grade) {
                 $overrideurl = new \moodle_url(
-                    "/mod/mumie/view.php", 
+                    "/mod/mumie/view.php",
                     array(
                         "id" => $this->cmid,
                         "action" => "overridegrade",
@@ -153,11 +153,11 @@ class mumie_grader {
                         "gradetimestamp" => $grade->timecreated
                     )
                 );
-    
+
                 $overrideicon = \html_writer::start_tag("a", array("class" => "mumie_icon_button", "href" => $overrideurl))
                 . \html_writer::tag("span", "", array("class" => "icon fa fa-exchange fa-fw"))
                 . \html_writer::end_tag("a");
-    
+
                 $table->data[] = array(
                     $grade->rawgrade,
                     strftime(
@@ -170,12 +170,11 @@ class mumie_grader {
         } else {
             $table->data[] = array(\html_writer::tag("i", get_string("mumie_no_submissions", "mod_mumie")), "", "");
         }
-        
 
         $output .= \html_writer::table($table);  
         return $output;
     }
-    
+
     /**
      * Verify that the given parameters really belong to a MUMIE grade.
      *

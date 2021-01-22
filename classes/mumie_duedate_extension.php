@@ -43,21 +43,21 @@ class mumie_duedate_extension {
      * @var int
      */
     private $id;
-        
+
     /**
      * ID the student who was granted an extension.
      *
      * @var int
      */
     private $userid;
-        
+
     /**
      * Id of the MUMIE activity the extension was granted for.
      *
      * @var int
      */
     private $mumie;
-        
+
     /**
      * Timestamp of the due date.
      *
@@ -65,7 +65,7 @@ class mumie_duedate_extension {
      */
     private $duedate;
 
-    const MUMIE_DUEDATE_TABLE = "mumie_duedate" ;
+    const MUMIE_DUEDATE_TABLE = "mumie_duedate";
 
     /**
      * Constructor.
@@ -78,7 +78,7 @@ class mumie_duedate_extension {
         $this->userid = $userid;
         $this->mumie = $mumie;
     }
-    
+
     /**
      * Load an entry from the database.
      *
@@ -91,7 +91,7 @@ class mumie_duedate_extension {
             $this->id = $record->id;
         }
     }
-    
+
     /**
      * Upsert the due date in the database.
      *
@@ -105,7 +105,7 @@ class mumie_duedate_extension {
             $this->create();
         }
     }
-    
+
     /**
      * Update an existing record.
      *
@@ -114,7 +114,7 @@ class mumie_duedate_extension {
     private function update() {
         global $DB;
         $DB->update_record(
-            self::MUMIE_DUEDATE_TABLE, 
+            self::MUMIE_DUEDATE_TABLE,
             array(
                 "id" => $this->id,
                 "userid" => $this->userid,
@@ -123,7 +123,7 @@ class mumie_duedate_extension {
             )
         );
     }
-    
+
     /**
      * Create a new record in the database.
      *
@@ -132,7 +132,7 @@ class mumie_duedate_extension {
     private function create() {
         global $DB;
         $DB->insert_record(
-            self::MUMIE_DUEDATE_TABLE, 
+            self::MUMIE_DUEDATE_TABLE,
             array(
                 "userid" => $this->userid,
                 "mumie" => $this->mumie,
@@ -140,7 +140,7 @@ class mumie_duedate_extension {
             )
         );
     }
-    
+
     /**
      * Delete a record from the database.
      *
@@ -150,14 +150,14 @@ class mumie_duedate_extension {
         global $DB;
         $DB->delete_records(self::MUMIE_DUEDATE_TABLE, array("id" => $this->id));
     }
-    
+
     /**
      * Construct class instance from stdClass.
      *
      * @param  \stdClass $object
      * @return mumie_duedate_extension
      */
-    public static function from_object($object) {        
+    public static function from_object($object) {
         $duedate = new mumie_duedate_extension($object->userid, $object->mumie);
         $duedate->set_duedate($object->duedate);
         if ($object->id != 0) {
@@ -165,7 +165,7 @@ class mumie_duedate_extension {
         }
         return $duedate;
     }
-    
+
     /**
      * Delete a mumie_duedate_extension by id.
      *
@@ -177,10 +177,10 @@ class mumie_duedate_extension {
         $duedate->set_id($id);
         $duedate->delete();
     }
-    
+
     /**
      * Get the effective duedate for a student.
-     * 
+     *
      * Individual due date extensions always overrule general due date settings.
      *
      * @param  int $userid
@@ -195,7 +195,7 @@ class mumie_duedate_extension {
         }
         return $mumie->duedate;
     }
-        
+
     /**
      * Get id.
      *
@@ -222,8 +222,7 @@ class mumie_duedate_extension {
      *
      * @return int
      */
-    public function get_userid()
-    {
+    public function get_userid() {
         return $this->userid;
     }
 
@@ -233,8 +232,7 @@ class mumie_duedate_extension {
      * @param  int $userid
      * @return self
      */
-    public function set_userid($userid)
-    {
+    public function set_userid($userid) {
         $this->userid = $userid;
 
         return $this;
@@ -245,8 +243,7 @@ class mumie_duedate_extension {
      *
      * @return int
      */
-    public function get_mumie()
-    {
+    public function get_mumie() {
         return $this->mumie;
     }
 
@@ -254,9 +251,8 @@ class mumie_duedate_extension {
      * Set the value of mumie.
      *
      * @return  self
-     */ 
-    public function set_mumie($mumie)
-    {
+     */
+    public function set_mumie($mumie) {
         $this->mumie = $mumie;
 
         return $this;
@@ -267,8 +263,7 @@ class mumie_duedate_extension {
      *
      * @return int
      */
-    public function get_duedate()
-    {
+    public function get_duedate() {
         return $this->duedate;
     }
 
@@ -278,8 +273,7 @@ class mumie_duedate_extension {
      * @param  int $duedate
      * @return void
      */
-    public function set_duedate($duedate)
-    {
+    public function set_duedate($duedate) {
         $this->duedate = $duedate;
 
         return $this;

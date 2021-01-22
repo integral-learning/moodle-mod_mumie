@@ -132,7 +132,7 @@ class gradesync {
         }
         return $grades;
     }
-    
+
     /**
      * Get all grades a user has archived for a given MUMIE Task
      *
@@ -160,7 +160,7 @@ class gradesync {
         }
         return $grades;
     }
-    
+
     /**
      * Transform Xapi grade to moodle grade objects.
      *
@@ -196,7 +196,7 @@ class gradesync {
 
         return self::is_latest_grade($grades, $potentialgrade);
     }
-    
+
     /**
      * True, if the given grade is currently the latest available one.
      *
