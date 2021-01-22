@@ -78,12 +78,14 @@ if ($action == "grading") {
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
     echo "<div class='col text-center' style='margin-top:10px;'>
-            <button id=taskButton class='btn btn-primary' >
-                Open Mumie Task
-            </button>
+            <button id=taskButton class='btn btn-primary' >"
+                .
+                get_string("mumie_open_task", "mod_mumie")
+                .
+            "</button>
             <script type='text/javascript'>
                 document.getElementById('taskButton').onclick = function () {
-                    window.open('{$redirecturl}');
+                     window.open('{$redirecturl}');
                 };
             </script>
         </div>";
