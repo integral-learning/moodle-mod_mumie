@@ -111,7 +111,7 @@ $string['mumie_duedate_form'] = 'Grant a due date extension';
 $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
 $string['mumie_general_duedate'] = 'General due date set for the selected MUMIE Task: {$a}';
-
+$string['mumie_open_task'] = 'Open MUMIE Task';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';

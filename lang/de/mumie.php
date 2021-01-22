@@ -110,7 +110,7 @@ $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist dieser MUMIE-Task: {$a}';
-
+$string['mumie_open_task'] = 'MUMIE-Task öffnen';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
