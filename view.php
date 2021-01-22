@@ -74,6 +74,7 @@ if ($action == "grading") {
     }
     \core\notification::info($duedateinfo);
 
+    $redirecturl = new moodle_url('/mod/mumie/view.php', array('id' => $id, 'action' => 'open'));
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
     echo "<div class='col text-center' style='margin-top:10px;'>
