@@ -168,6 +168,6 @@ if ($action == "grading") {
     $redirecturl = new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading"));
     
     mumie_override_grade($mumietask, $grade);
-    \core\notification::success(get_string("mumie_grade_overridden"));
+    \core\notification::success(get_string("mumie_grade_overridden", "mod_mumie"));
     redirect($redirecturl);
 }
