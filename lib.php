@@ -392,11 +392,11 @@ function mumie_override_grade($mumie, $grade) {
 
     $item = new \grade_item(array("itemmodule" => "mumie", "iteminstance" => $mumie->id), true);
     return $item->update_final_grade(
-        $grade->userid, 
-        $grade->rawgrade, 
-        null, 
-        null, 
-        FORMAT_MOODLE, 
+        $grade->userid,
+        $grade->rawgrade,
+        null,
+        null,
+        FORMAT_MOODLE,
         $grade->usermodified
     );
 }
