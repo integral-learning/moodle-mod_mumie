@@ -125,10 +125,7 @@ class gradesync {
         }
 
         foreach ($xapigrades as $xapigrade) {
-            $grade = new \stdClass();
-            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
-            $grade->rawgrade = 100 * $xapigrade->result->score->raw;
-            $grade->timecreated = strtotime($xapigrade->timestamp);
+            $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
             if (self::include_grade($mumie, $grades, $grade)) {
                 $grades[$grade->userid] = $grade;
             }
@@ -158,13 +155,24 @@ class gradesync {
         }
 
         foreach ($xapigrades as $xapigrade) {
-            $grade = new \stdClass();
-            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
-            $grade->rawgrade = 100 * $xapigrade->result->score->raw;
-            $grade->timecreated = strtotime($xapigrade->timestamp);
+            $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
             array_push($grades, $grade);
         }
         return $grades;
+    }
+    
+    /**
+     * Transform Xapi grade to moodle grade objects.
+     *
+     * @param  \stdClass $xapigrade
+     * @param  \stdClass $mumie
+     * @return \stdClass
+     */
+    private static function xapi_to_moodle_grade($xapigrade, $mumie) {
+        $grade = new \stdClass();
+            $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
+            $grade->rawgrade = 100 * $xapigrade->result->score->raw;
+            $grade->timecreated = strtotime($xapigrade->timestamp);
     }
 
     /**
