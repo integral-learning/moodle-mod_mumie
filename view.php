@@ -60,7 +60,7 @@ if ($action == "grading") {
     $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
 
     $duedateinfo = "";
-    if ($mumietask->duedate > 0){
+    if ($mumietask->duedate > 0) {
         $duedateinfo .= html_writer::tag("h3", get_string("mumie_general_duedate", "mod_mumie"));
         $duedateinfo .= html_writer::tag(
             'p',
@@ -139,7 +139,11 @@ if ($action == "grading") {
         '/mod/mumie/view.php', 
         array("action" => "submissions", "id" => $id, "userid" => $userid)
     ));
-    $PAGE->navbar->add(get_string("mumie_grading_settings", "mod_mumie"), new moodle_url("/mod/mumie/view.php", array("action" => "grading", "id" => $id)));
+    $PAGE->navbar->add(
+        get_string("mumie_grading_settings", "mod_mumie"),
+        new moodle_url("/mod/mumie/view.php",
+        array("action" => "grading", "id" => $id))
+    );
     $PAGE->navbar->add(get_string("mumie_submissions", "mod_mumie"));
 
     echo $OUTPUT->header();

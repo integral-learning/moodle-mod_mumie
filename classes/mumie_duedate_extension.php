@@ -74,7 +74,7 @@ class mumie_duedate_extension {
      * @param  int $mumie The activity the extension is granted for.
      * @return void
      */
-    function __construct($userid = null, $mumie = null) {
+    public function __construct($userid = null, $mumie = null) {
         $this->userid = $userid;
         $this->mumie = $mumie;
     }
@@ -86,7 +86,7 @@ class mumie_duedate_extension {
      */
     public function load() {
         global $DB;
-        if($record = $DB->get_record("mumie_duedate", array("userid" => $this->userid, "mumie" => $this->mumie))) {
+        if ($record = $DB->get_record("mumie_duedate", array("userid" => $this->userid, "mumie" => $this->mumie))) {
             $this->duedate = $record->duedate;
             $this->id = $record->id;
         }
@@ -190,7 +190,7 @@ class mumie_duedate_extension {
     public static function get_effective_duedate($userid, $mumie) {
         $extension = new mumie_duedate_extension($userid, $mumie->id);
         $extension->load();
-        if($extension->get_duedate()) {
+        if ($extension->get_duedate()) {
             return $extension->get_duedate();
         }
         return $mumie->duedate;

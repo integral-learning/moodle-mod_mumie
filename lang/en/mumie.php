@@ -116,13 +116,13 @@ $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_invalid'] = 'Grade is invalid!';
 $string['mumie_open_task'] = 'Open MUMIE Task';
 
-// used in mumie_grader.
+// Used in mumie_grader.
 $string['mumie_submissions'] = 'Submissions';
 $string['mumie_override_gradebook'] = 'Use in gradebook';
 $string['mumie_submission_date'] = 'Submitted on';
 $string['mumie_grade_percentage'] = 'Grade in %';
 $string['mumie_submissions_by'] = 'Submissions by {$a}';
-$string['mumie_submissions_info'] = 'Grades are automatically updated in the Moodle gradebook to the latest submitted answer 
+$string['mumie_submissions_info'] = 'Grades are automatically updated in the Moodle gradebook to the latest submitted answer
 within the due date. If you want to use a different submission, you can click on the corresponding button to overwrite the current grade.<br><br>
 This grade will not be replaced by new submissions and it will <b>not</b> be automatically scaled, if you change the MUMIE Task\'s maximum points';
 $string['mumie_no_submissions'] = 'No answers submitted';

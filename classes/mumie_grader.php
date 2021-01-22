@@ -133,12 +133,12 @@ class mumie_grader {
         $output .= \html_writer::tag("h2", get_string("mumie_submissions_by", "mod_mumie", fullname($user)));
         $output .= \html_writer::tag("p", get_string("mumie_submissions_info", "mod_mumie"), array("style" => "margin-top: 1.5em;"));
         
-        if($grades) {
+        if ($grades) {
             usort($grades, function($a, $b) {
                 return $b->timecreated <=> $a->timecreated;
             });
             
-            foreach($grades as $grade) {
+            foreach ($grades as $grade) {
                 $overrideurl = new \moodle_url(
                     "/mod/mumie/view.php", 
                     array(
@@ -185,7 +185,7 @@ class mumie_grader {
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
-        if(!$grades) {
+        if (!$grades) {
             return false;
         }
         foreach ($grades as $grade) {
