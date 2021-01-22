@@ -131,7 +131,11 @@ class mumie_grader {
         
         $output = "";
         $output .= \html_writer::tag("h2", get_string("mumie_submissions_by", "mod_mumie", fullname($user)));
-        $output .= \html_writer::tag("p", get_string("mumie_submissions_info", "mod_mumie"), array("style" => "margin-top: 1.5em;"));
+        $output .= \html_writer::tag(
+            "p",
+            get_string("mumie_submissions_info", "mod_mumie"),
+            array("style" => "margin-top: 1.5em;")
+        );
         
         if ($grades) {
             usort($grades, function($a, $b) {
