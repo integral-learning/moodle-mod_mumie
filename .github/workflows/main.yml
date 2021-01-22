@@ -77,7 +77,7 @@ jobs:
           sudo locale-gen en_AU.UTF-8
       - name: Install Moodle
         run: |
-          moodle-plugin-ci add-plugin --branch main moodleou/moodle-filter_embedquestion
+          moodle-plugin-ci add-plugin --branch master integral-learning/moodle-mod_mumie
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: ${{ matrix.database }}
