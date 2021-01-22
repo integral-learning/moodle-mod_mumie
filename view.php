@@ -55,7 +55,7 @@ if ($action == "grading") {
     $PAGE->navbar->add(get_string("mumie_duedate_extension", "mod_mumie"));
     $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
 
-    if ($mumietask->duedate > 0){
+    if ($mumietask->duedate > 0) {
         $dateelem = html_writer::tag(
             'p',
             strftime(
@@ -65,8 +65,8 @@ if ($action == "grading") {
             array('style' => 'font-weight: bold; margin-top:10px;')
         );
         $notification = get_string(
-            "mumie_general_duedate", 
-            "mod_mumie", 
+            "mumie_general_duedate",
+            "mod_mumie",
             $dateelem
         );
     } else {
@@ -74,9 +74,21 @@ if ($action == "grading") {
     }
     \core\notification::info($notification);
 
-
+    $redirecturl = new moodle_url('/mod/mumie/view.php', array('id' => $id, 'action' => 'open'));
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
+    echo "<div class='col text-center' style='margin-top:10px;'>
+            <button id=taskButton class='btn btn-primary' >"
+                .
+                get_string("mumie_open_task", "mod_mumie")
+                .
+            "</button>
+            <script type='text/javascript'>
+                document.getElementById('taskButton').onclick = function () {
+                     window.open('{$redirecturl}');
+                };
+            </script>
+        </div>";
     echo $OUTPUT->footer();
 } else if ($action == "open") {
 
@@ -89,7 +101,9 @@ if ($action == "grading") {
             get_string('mumie_tag_disabled_help', 'mod_mumie')
         );
     }
+
     $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
+
     if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
         redirect($redirecturl);
     } else {
@@ -98,8 +112,8 @@ if ($action == "grading") {
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
         $PAGE->set_heading($course->fullname);
-        $PAGE->set_url(new moodle_url('/mod/mumie/view.php'), array('id' => $id));
-    
+        $PAGE->set_url(new moodle_url('/mod/mumie/view.php', array('id' => $id)));
+
         echo $OUTPUT->header();
         echo "<iframe
             id='mumie_frame'
