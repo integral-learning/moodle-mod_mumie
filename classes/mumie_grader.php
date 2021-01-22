@@ -123,7 +123,6 @@ class mumie_grader {
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
         
         $table = new \html_table();
-        $table->attributes['class'] = 'generaltable auth_index mumie_server_list_container';
         $table->head = array(
             get_string("mumie_grade_percentage", "mod_mumie"),
             get_string("mumie_submission_date", "mod_mumie"),
@@ -167,6 +166,7 @@ class mumie_grader {
         } else {
             $table->data[] = array(\html_writer::tag("i", get_string("mumie_no_submissions", "mod_mumie")), "", "");
         }
+        
 
         $output .= \html_writer::table($table);  
         return $output;
