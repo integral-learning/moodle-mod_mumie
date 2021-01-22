@@ -31,12 +31,13 @@ global $DB, $CFG, $USER, $PAGE;
 
 $id = optional_param('id', 0, PARAM_INT);
 $cm = get_coursemodule_from_id('mumie', $id, 0, false, MUST_EXIST);
-$action = optional_param("action", null, PARAM_ALPHANUM);
 $context = context_module::instance($cm->id);
+$action = optional_param(
+    "action", 
+    has_capability("mod/mumie:grantduedateextension", $context) ? "grading" : "open",
+    PARAM_ALPHANUM
+);
 
-if (!$action) {
-    $action = has_capability("mod/mumie:grantduedateextension", $context) ? "grading" : "open";
-}
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 $mumietask = $DB->get_record('mumie', array('id' => $cm->instance));
