@@ -122,7 +122,7 @@ function mumie_get_coursemodule_info($coursemodule) {
  * @param cm_info $cm
  */
 function mumie_cm_info_view(cm_info $cm) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
     require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
