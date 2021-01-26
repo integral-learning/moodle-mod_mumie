@@ -135,7 +135,7 @@ function mumie_cm_info_view(cm_info $cm) {
         ));
     $info = '';
 
-    $duedate = locallib::get_effective_duedate($USER->id,$mumie);
+    $duedate = locallib::get_effective_duedate($USER->id, $mumie);
     if (isset($duedate) && $duedate > 0) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
