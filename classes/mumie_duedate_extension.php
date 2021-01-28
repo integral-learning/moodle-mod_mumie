@@ -184,24 +184,6 @@ class mumie_duedate_extension {
     }
 
     /**
-     * Get the effective duedate for a student.
-     *
-     * Individual due date extensions always overrule general due date settings.
-     *
-     * @param  int $userid
-     * @param  \stdClass $mumie
-     * @return int
-     */
-    public static function get_effective_duedate($userid, $mumie) {
-        $extension = new mumie_duedate_extension($userid, $mumie->id);
-        $extension->load();
-        if ($extension->get_duedate()) {
-            return $extension->get_duedate();
-        }
-        return $mumie->duedate;
-    }
-
-    /**
      * Get id.
      *
      * @return int

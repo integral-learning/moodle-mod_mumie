@@ -193,6 +193,26 @@ class locallib {
         return $oldurl != $newurl;
     }
 
+    /**
+     * Get the effective duedate for a student.
+     *
+     * Individual due date extensions always overrule general due date settings.
+     *
+     * @param  int $userid
+     * @param  \stdClass $mumie
+     * @return int
+     */
+    public static function get_effective_duedate($userid, $mumie) {
+        global $CFG;
+        require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
+        $extension = new mumie_duedate_extension($userid, $mumie->id);
+        $extension->load();
+        if ($extension->get_duedate()) {
+            return $extension->get_duedate();
+        }
+        return $mumie->duedate;
+    }
+
     public static function create_calendar_event($mumie, $userid = 0) {
         global $CFG;
         require_once($CFG->dirroot.'/calendar/lib.php');
@@ -278,4 +298,5 @@ class locallib {
 
         return null;
     }
+
 }

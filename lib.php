@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mumie\locallib;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/mumie/locallib.php');
@@ -125,7 +127,8 @@ function mumie_get_coursemodule_info($coursemodule) {
  * @param cm_info $cm
  */
 function mumie_cm_info_view(cm_info $cm) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
+    require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
@@ -136,10 +139,12 @@ function mumie_cm_info_view(cm_info $cm) {
             'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'
         ));
     $info = '';
-    if ($mumie->duedate) {
+
+    $duedate = locallib::get_effective_duedate($USER->id, $mumie);
+    if (isset($duedate) && $duedate > 0) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
-            . strftime(get_string('strftimedaydatetime', 'langconfig'), $mumie->duedate);
+            . strftime(get_string('strftimedaydatetime', 'langconfig'), $duedate);
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
