@@ -145,3 +145,7 @@ $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
 $string['mumie:grantduedateextension'] = 'Grand a due date extension to individual students';
 $string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date extension for individual students';
 $string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting a submission from all answers they have submitted for this MUMIE Task';
+
+// Used in calendar.
+$string['mumie_calendar_duedate_name'] = '{$a} is due';
+$string['mumie_calendar_duedate_desc'] = 'Submissions after this deadline will not be used for grading';

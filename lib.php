@@ -44,6 +44,7 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->isgraded = !($mumie->mumie_complete_course ?? 0);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
+    mod_mumie\locallib::update_calendar($mumie);
     return $mumie->id;
 }
 
@@ -64,6 +65,8 @@ function mumie_update_instance($mumie, $mform) {
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
+    mod_mumie\locallib::update_calendar($mumie);
+
     return $DB->update_record("mumie", $mumie);
 }
 
@@ -81,6 +84,8 @@ function mumie_delete_instance($id) {
 
     $cm = get_coursemodule_from_instance('mumie', $id);
     \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
+
+    mod_mumie\locallib::delete_all_calendar_events($mumie);
 
     return $DB->delete_records("mumie", array("id" => $mumie->id));
 }

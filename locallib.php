@@ -33,6 +33,9 @@ global $DB;
 
 define("MUMIE_LAUNCH_CONTAINER_WINDOW", 0);
 define("MUMIE_LAUNCH_CONTAINER_EMBEDDED", 1);
+define("MUMIE_CALENDAR_EVENT_DUEDATE", "mumie_event_duedate");
+define("MUMIE_CALENDAR_EVENT_DUEDATE_EXTENSION", "mumie_event_extension");
+
 
 /**
  * Library of internal functions used in mod_mumie
@@ -188,5 +191,91 @@ class locallib {
         $oldurl = self::remove_params_from_url($oldtask->taskurl);
         $newurl = self::remove_params_from_url($mumietaskupdate->taskurl);
         return $oldurl != $newurl;
+    }
+
+    public static function create_calendar_event($mumie, $userid = 0) {
+        global $CFG;
+        require_once($CFG->dirroot.'/calendar/lib.php');
+
+        debugging("creating calendar event");
+        
+        $event = new \stdClass();
+        $event->eventtype = $MUMIE_CALENDAR_EVENT_DUEDATE;
+        $event->name = get_string("mumie_calendar_duedate_name", "mod_mumie", $mumie->name);
+        $event->description = get_string("mumie_calendar_duedate_desc", "mod_mumie");
+        $event->format = FORMAT_HTML;
+        $event->courseid = $mumie->course;
+        $event->userid = $userid;
+        $event->modulename = "mumie";
+        $event->instance = $mumie->id;
+        $event->timestart = $mumie->duedate;
+        $event->visible = instance_is_visible("mumie", $mumie);
+
+        \calendar_event::create($event);
+    }
+
+    public static function update_calendar($mumie, $userid = 0) {
+        global $CFG;
+        require_once($CFG->dirroot.'/calendar/lib.php');
+
+        $event = self::get_mumie_calendar_event($mumie, $userid);
+        debugging("EVENT is: " . json_encode($event));
+
+        $hasduedate = isset($mumie->duedate) && $mumie->duedate > 0;
+
+        debugging("has duedate: " . json_encode($hasduedate));
+
+        if(!$event && $hasduedate) {
+            debugging("creating calendar entry");
+            self::create_calendar_event($mumie, $userid);
+        } else if ($event && $hasduedate) {
+            debugging("updating calendar entry");
+            $update  = new \stdClass();
+            $update->name = get_string("mumie_calendar_duedate_name", "mod_mumie", $mumie->name);
+
+            $update->timestart = $mumie->duedate;
+            $event->update($update);
+        } else if ($event && !$hasduedate) {
+            debugging("deleting calendar entry");
+            $event->delete();
+        }
+    }
+
+    public static function delete_all_calendar_events($mumie) {
+        global $CFG;
+        require_once($CFG->dirroot.'/calendar/lib.php');
+        $eventrecords = $DB->get_records(
+            "event",
+            array(
+                "modulename" => "mumie",
+                "instance" => $mumie->id
+            )
+        );
+
+        foreach($records as $record) {
+            $event = \calendar_event::load($record->id);
+            $event->delete();
+        }
+    }
+
+
+    private static function get_mumie_calendar_event($mumie, $userid = 0) {
+        global $CFG, $DB;
+        require_once($CFG->dirroot.'/calendar/lib.php');
+
+        $oldeventdata = $DB->get_record(
+            "event",
+            array(
+//                "userid" => $userid,
+                "modulename" => "mumie",
+                "instance" => $mumie->id
+            )
+        );
+
+        if ($oldeventdata) {
+            return \calendar_event::load($oldeventdata->id);
+        }
+
+        return null;
     }
 }
