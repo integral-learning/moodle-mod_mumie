@@ -55,7 +55,7 @@ class mumie_calendar_service {
     /**
      * The due date event in the database.
      *
-     * @var mixed
+     * @var \calendar_event
      */
     private $event;
 

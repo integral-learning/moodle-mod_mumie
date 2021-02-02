@@ -6,6 +6,13 @@ All important changes to this plugin will be documented in this file.
 ### Changed
 - Added passing grade as tag to MUMIE Task in course view
 
+### Added
+- Teachers that open a MUMIE Task now are shown a new overview page
+- Teachers can now grant individual due date extensions to students
+- Teachers can now see timestamps and results of all submissions a student has made for a MUMIE Task
+- Teachers can now select a submission to overwrite the current grade in the gradebook
+- Due dates and due date extensions are now shown in the calendar
+
 ## [v1.4.0] - 2020-12-10
 ### Fixed
 - Missing server configuration no longer disables js in mod_mumie form
