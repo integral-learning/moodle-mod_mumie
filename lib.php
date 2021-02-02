@@ -416,7 +416,7 @@ function mumie_override_grade($mumie, $grade) {
 }
 
 /**
- * Is the event visible?
+ * Is the event visible for a given user?
  *
  * This is used to determine global visibility of an event in all places throughout Moodle. For example,
  * the ASSIGN_EVENT_TYPE_GRADINGDUE event will not be shown to students on their calendar, and
@@ -427,8 +427,7 @@ function mumie_override_grade($mumie, $grade) {
  */
 function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
     global $CFG, $USER;
- 
+
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service.php');
- 
     return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
 }

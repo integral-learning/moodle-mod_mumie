@@ -25,7 +25,6 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service.php');
-
 require_login(null, false);
 
 $duedateid = required_param('duedateid', PARAM_INT);

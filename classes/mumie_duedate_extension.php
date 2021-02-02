@@ -182,7 +182,7 @@ class mumie_duedate_extension {
         $duedate->set_id($id);
         $duedate->delete();
     }
-    
+
     /**
      * load_by_id
      *
@@ -193,7 +193,7 @@ class mumie_duedate_extension {
         global $DB;
         return self::from_object($DB->get_record("mumie_duedate", array("id" => $id)));
     }
-    
+
     /**
      * Delete all duedate extension for a given mumie task.
      *
