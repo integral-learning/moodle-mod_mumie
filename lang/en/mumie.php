@@ -147,5 +147,6 @@ $string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date 
 $string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting a submission from all answers they have submitted for this MUMIE Task';
 
 // Used in calendar.
-$string['mumie_calendar_duedate_name'] = '{$a} is due';
+$string['mumie_calendar_duedate_name'] = 'Due date: {$a}';
 $string['mumie_calendar_duedate_desc'] = 'Submissions after this deadline will not be used for grading';
+$string['mumie_calendar_duedate_extension'] = 'Extended due date: {$a}';

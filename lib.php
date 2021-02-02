@@ -28,6 +28,8 @@ use mod_mumie\locallib;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service.php');
+
 define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
 define("MUMIE_TASK_TABLE", "mumie");
 
@@ -46,7 +48,8 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->isgraded = !($mumie->mumie_complete_course ?? 0);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
-    mod_mumie\locallib::update_calendar($mumie);
+    $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
+    $calendarservice->update();
     return $mumie->id;
 }
 
@@ -67,7 +70,8 @@ function mumie_update_instance($mumie, $mform) {
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
-    mod_mumie\locallib::update_calendar($mumie);
+    $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
+    $calendarservice->update();
 
     return $DB->update_record("mumie", $mumie);
 }
@@ -80,15 +84,15 @@ function mumie_update_instance($mumie, $mform) {
 function mumie_delete_instance($id) {
     global $DB, $CFG;
 
+    require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
     if (!$mumie = $DB->get_record("mumie", array("id" => $id))) {
         return false;
     }
 
     $cm = get_coursemodule_from_instance('mumie', $id);
     \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
-
-    mod_mumie\locallib::delete_all_calendar_events($mumie);
-
+    mod_mumie\mumie_calendar_service::delete_all_calendar_events($mumie);
+    mod_mumie\mumie_duedate_extension::delete_all_for_mumie($id);
     return $DB->delete_records("mumie", array("id" => $mumie->id));
 }
 
@@ -409,4 +413,22 @@ function mumie_override_grade($mumie, $grade) {
         FORMAT_MOODLE,
         $grade->usermodified
     );
+}
+
+/**
+ * Is the event visible?
+ *
+ * This is used to determine global visibility of an event in all places throughout Moodle. For example,
+ * the ASSIGN_EVENT_TYPE_GRADINGDUE event will not be shown to students on their calendar, and
+ * ASSIGN_EVENT_TYPE_DUE events will not be shown to teachers.
+ *
+ * @param calendar_event $event
+ * @return bool Returns true if the event is visible to the current user, false otherwise.
+ */
+function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
+    global $CFG, $USER;
+ 
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service.php');
+ 
+    return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
 }

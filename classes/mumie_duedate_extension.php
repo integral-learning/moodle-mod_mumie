@@ -151,7 +151,7 @@ class mumie_duedate_extension {
      *
      * @return void
      */
-    private function delete() {
+    public function delete() {
         global $DB;
         $DB->delete_records(self::MUMIE_DUEDATE_TABLE, array("id" => $this->id));
     }
@@ -181,6 +181,28 @@ class mumie_duedate_extension {
         $duedate = new mumie_duedate_extension();
         $duedate->set_id($id);
         $duedate->delete();
+    }
+    
+    /**
+     * load_by_id
+     *
+     * @param  mixed $id
+     * @return void
+     */
+    public static function load_by_id($id) {
+        global $DB;
+        return self::from_object($DB->get_record("mumie_duedate", array("id" => $id)));
+    }
+    
+    /**
+     * Delete all duedate extension for a given mumie task.
+     *
+     * @param  int $mumie
+     * @return void
+     */
+    public static function delete_all_for_mumie($mumie) {
+        global $DB;
+        $DB->delete_records("mumie_duedate", array("mumie" => $mumie));
     }
 
     /**
