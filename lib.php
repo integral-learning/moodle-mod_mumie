@@ -28,7 +28,7 @@ use mod_mumie\locallib;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/mumie/locallib.php');
-require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
 
 define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
 define("MUMIE_TASK_TABLE", "mumie");
@@ -428,6 +428,6 @@ function mumie_override_grade($mumie, $grade) {
 function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
     global $CFG, $USER;
 
-    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service.php');
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
     return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
 }
