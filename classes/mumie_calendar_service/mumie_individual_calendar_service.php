@@ -26,6 +26,8 @@
  */
 namespace mod_mumie;
 
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->dirroot.'/mod/mumie/classes/mumie_duedate_extension.php');
 require_once($CFG->dirroot.'/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
 
@@ -48,7 +50,7 @@ class mumie_individual_calendar_service extends mumie_calendar_service {
      * @var int
      */
     private $userid;
-    
+
     /**
      * The extension we want to update the calendar for.
      *
@@ -72,15 +74,14 @@ class mumie_individual_calendar_service extends mumie_calendar_service {
      */
     public function __construct($mumie, $userid = 0) {
         parent::__construct($mumie);
-        $this->title =  get_string(
+        $this->title = get_string(
             "mumie_calendar_duedate_extension",
             "mod_mumie",
             $this->mumie->name
         );
         $this->userid = $userid;
-        $this->type = self::EVENT_TYPE;
         $this->event = $this->get_calendar_event(
-            $this->type,
+            self::EVENT_TYPE,
             $this->userid
         );
         $this->extension = new mumie_duedate_extension($this->userid, $this->mumie->id);
@@ -107,7 +108,7 @@ class mumie_individual_calendar_service extends mumie_calendar_service {
             $this->event->update($update, false);
         } else {
             $this->create_calendar_event(
-                $this->type,
+                self::EVENT_TYPE,
                 $this->extension->get_duedate(),
                 $this->userid
             );

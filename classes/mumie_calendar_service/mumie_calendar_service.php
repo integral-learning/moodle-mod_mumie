@@ -50,7 +50,7 @@ class mumie_calendar_service {
      * @var \calendar_event
      */
     protected $event;
-    
+
     /**
      * The title displayed in the calendar entry.
      *
@@ -64,13 +64,6 @@ class mumie_calendar_service {
      * @var string
      */
     const EVENT_TYPE = "duedate";
-    
-    /**
-     * Calendar event type
-     *
-     * @var string
-     */
-    private $type;
 
     /**
      * Constructor
@@ -85,10 +78,9 @@ class mumie_calendar_service {
         if (!is_object($mumie)) {
             $mumie = locallib::get_mumie_task($mumie);
         }
-        $this->type = self::EVENT_TYPE;
         $this->mumie = $mumie;
-        $this->event = $this->get_calendar_event($this->type);
-        $this->title =  get_string("mumie_calendar_duedate_name", "mod_mumie", $this->mumie->name);
+        $this->event = $this->get_calendar_event(self::EVENT_TYPE);
+        $this->title = get_string("mumie_calendar_duedate_name", "mod_mumie", $this->mumie->name);
     }
 
     /**
@@ -102,7 +94,7 @@ class mumie_calendar_service {
         $hasduedate = isset($this->mumie->duedate) && $this->mumie->duedate > 0;
         if (!$this->event && $hasduedate) {
             $this->create_calendar_event(
-                $this->type,
+                self::EVENT_TYPE,
                 $this->mumie->duedate
             );
         } else if ($this->event && $hasduedate) {
@@ -114,7 +106,7 @@ class mumie_calendar_service {
             $this->event->delete();
         }
     }
- 
+
     /**
      * Create a new calendar event for all users without due date extensions.
      *
@@ -126,7 +118,6 @@ class mumie_calendar_service {
     protected function create_calendar_event($eventtype, $timestart, $userid = null) {
         global $CFG;
         require_once($CFG->dirroot.'/calendar/lib.php');
-        debugging("create cal ev type: " . $this->type);
         $event = new \stdClass();
         $event->type = CALENDAR_EVENT_TYPE_ACTION;
         $event->eventtype = $eventtype;
@@ -134,7 +125,7 @@ class mumie_calendar_service {
         $event->description = get_string("mumie_calendar_duedate_desc", "mod_mumie");
         $event->format = FORMAT_HTML;
         $event->courseid = $this->mumie->course;
-        if($userid) {
+        if ($userid) {
             $event->userid = $userid;
         }
         $event->modulename = "mumie";
@@ -145,13 +136,13 @@ class mumie_calendar_service {
 
         \calendar_event::create($event, false);
     }
-    
+
     /**
      * Loads calendar event from the database.
      *
      * @param  string $type
      * @param  int $userid
-     * @return void
+     * @return \calendar_event
      */
     protected function get_calendar_event($type, $userid = null) {
         global $CFG, $DB;
