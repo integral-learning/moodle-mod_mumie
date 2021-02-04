@@ -61,6 +61,7 @@ class mod_mumie_external extends external_api {
 
         require_once($CFG->dirroot . '/mod/mumie/lib.php');
         require_once($CFG->dirroot . '/mod/mumie/forms/duedate_form.php');
+        require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_individual_calendar_service.php');
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
         // We always must pass webservice params through validate_parameters.
@@ -105,11 +106,15 @@ class mod_mumie_external extends external_api {
         if ($validateddata) {
             $duedate = mod_mumie\mumie_duedate_extension::from_object((object) $validateddata);
             $duedate->upsert();
+            $calendarservice = new mod_mumie\mumie_individual_calendar_service(
+                $duedate->get_mumie(),
+                $duedate->get_userid()
+            );
+            $calendarservice->update();
         } else {
             // Generate a warning.
             throw new moodle_exception('erroreditgroup', 'mumieduedate');
         }
-
         return $duedate->get_id();
     }
 

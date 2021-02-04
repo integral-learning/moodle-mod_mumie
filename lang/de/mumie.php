@@ -144,3 +144,8 @@ $string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';
 $string['mumie:grantduedateextension'] = 'Die Abgabefrist einer MUMIE-Task für individuelle Studierende verlängern';
 $string['mumie:revokeduedateextension'] = 'Die Verlängerung der Abgabefrist einer MUMIE-Task für einen Studenten zurücknehmen';
 $string['mumie:overridegrades'] = 'Überschreiben einer Moodle-Bewertung für einen Studenten mit den Punkten einer beliebigen Abgabe für die ausgewählte MUMIE-Task';
+
+// Used in calendar.
+$string['mumie_calendar_duedate_name'] = 'Abgabefirst: {$a}';
+$string['mumie_calendar_duedate_desc'] = 'Später Abgaben werden nicht in die Moodle-Bewertungen übernommen';
+$string['mumie_calendar_duedate_extension'] = 'Verlängerte Abgabefrist: {$a}';
