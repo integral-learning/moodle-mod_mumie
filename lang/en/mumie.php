@@ -104,6 +104,29 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 
+// Used in duedate form.
+$string['mumie_duedate_form'] = 'Grant a due date extension';
+
+// Used in view.
+$string['mumie_duedate_extension'] = 'Due date extension';
+$string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
+$string['mumie_general_duedate'] = 'General due date:';
+$string['mumie_grading_settings'] = "Individual grading settings";
+$string['mumie_grade_overridden'] = 'Updated grade successfully!';
+$string['mumie_grade_invalid'] = 'Grade is invalid!';
+$string['mumie_open_task'] = 'Open MUMIE Task';
+
+// Used in mumie_grader.
+$string['mumie_submissions'] = 'Submissions';
+$string['mumie_override_gradebook'] = 'Use in gradebook';
+$string['mumie_submission_date'] = 'Submitted on';
+$string['mumie_grade_percentage'] = 'Grade in %';
+$string['mumie_submissions_by'] = 'Submissions by {$a}';
+$string['mumie_submissions_info'] = 'Grades are automatically updated in the Moodle gradebook to the latest submitted answer
+within the due date. If you want to use a different submission, you can click on the corresponding button to overwrite the current grade.<br><br>
+This grade will not be replaced by new submissions and it will <b>not</b> be automatically scaled, if you change the MUMIE Task\'s maximum points';
+$string['mumie_no_submissions'] = 'No answers submitted';
+
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_tag_disabled'] = 'Disabled';
@@ -119,3 +142,11 @@ $string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
+$string['mumie:grantduedateextension'] = 'Grand a due date extension to individual students';
+$string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date extension for individual students';
+$string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting a submission from all answers they have submitted for this MUMIE Task';
+
+// Used in calendar.
+$string['mumie_calendar_duedate_name'] = 'Due date: {$a}';
+$string['mumie_calendar_duedate_desc'] = 'Submissions after this deadline will not be used for grading';
+$string['mumie_calendar_duedate_extension'] = 'Extended due date: {$a}';

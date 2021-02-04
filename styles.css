@@ -2,6 +2,12 @@
     width: 80%;
 }
 
+.mumie_icon_btn {
+    margin-left: 10px;
+    color: blue;
+    cursor: pointer;
+}
+
 .mumie_tag {
     margin-right: 1em;
     margin-left: 1em;

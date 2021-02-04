@@ -7,8 +7,7 @@ on:
   pull_request:
     branches:
       - dev
-      - master    
-
+      - master
 jobs:
   test:
     runs-on: 'ubuntu-latest'
@@ -79,7 +78,6 @@ jobs:
           sudo locale-gen en_AU.UTF-8
       - name: Install Moodle
         run: |
-          moodle-plugin-ci add-plugin --branch main moodleou/moodle-filter_embedquestion
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
         env:
           DB: ${{ matrix.database }}
@@ -120,6 +118,10 @@ jobs:
       - name: phpunit
         if: ${{ always() }}
         run: moodle-plugin-ci phpunit
+      
+      - name: PHPdoc
+        if: ${{ always() }}
+        run: moodle-plugin-ci phpdoc
 
       - name: behat
         if: ${{ always() }}
