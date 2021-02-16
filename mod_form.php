@@ -22,6 +22,9 @@
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use mod_mumie\course_module_repository;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
@@ -41,7 +44,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
+        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
 
         $mform = &$this->_form;
 
@@ -87,6 +90,12 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             "select",
             "language_dropdown",
+            get_string('mumie_form_activity_language', "mod_mumie"),
+            $languageoptions
+        );
+        $mform->addElement(
+            "select",
+            "language_dropdown2",
             get_string('mumie_form_activity_language', "mod_mumie"),
             $languageoptions
         );
@@ -175,6 +184,59 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->add_action_buttons();
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
+        require_once($CFG->dirroot . "/mod/mumie/classes/repository/course_module_repository.php");
+
+        $mform->addElement('header', 'general', "test");
+
+
+        $mform->addElement("hidden", "mumie_selected_task_properties", "");
+        $mform->setType("mumie_selected_task_properties", PARAM_RAW);
+
+        $mform->addElement("hidden", "mumie_selected_tasks", "");
+        $mform->setType("mumie_selected_tasks", PARAM_RAW);
+
+
+        $taskproperties=array("duedate","launchcontainer");
+        $taskpropertytable = new \html_table();
+        $taskpropertytable->head = array(
+            "name",
+            "select"
+        );
+
+        // for($i=0;$i,count($s);$i++){
+        //     $checkboxhtml = html_writer::checkbox("blub1", $s[$i]);
+        // }
+        foreach ($taskproperties as $taskproperty) {
+            $checkboxhtml = html_writer::checkbox("blub1", $taskproperty);
+            $taskpropertytable->data[] = array($taskproperty, $checkboxhtml);
+        }
+
+        $table=html_writer::table($taskpropertytable);
+
+        $mform->addElement(
+            'html',
+            $table);
+
+        // debugging(json_encode($t));
+        $table1 = new \html_table();
+        $table1->head = array(
+            "name",
+            "select"
+        );
+
+        $coursemodulerepository=new course_module_repository($DB);
+        $mumiemodules=$coursemodulerepository->get_mumie_modules_by_course($COURSE->id);
+        
+        foreach ($mumiemodules as $mumiemodule) {
+            $checkboxhtml = html_writer::checkbox("blub0", $mumiemodule->name);
+            $table1->data[] = array($mumiemodule->name, $checkboxhtml);
+        }
+
+        $mumiemoduletable=html_writer::table($table1);
+
+        $mform->addElement(
+            'html',
+            $mumiemoduletable);
 
         $jsparams = array(
             json_encode($context->id),
@@ -330,7 +392,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * In some cases (e.g. drag&drop, changes in json coming from the MUMIE-Backend),
      * users have added MUMIE problems that are not officially part of the server structure.
-     * We need to add those problems to the server structre or the user will not be able
+     * We need to add those problems to the server structure or the user will not be able
      * to edit the MUMIE task.
      *
      * Set a hidden value, if the MUMIE server configuration that has been used in this MUMIE task has been deleted.

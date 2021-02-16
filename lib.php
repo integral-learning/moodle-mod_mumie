@@ -60,6 +60,7 @@ function mumie_add_instance($mumie, $mform) {
  * @return int $id id of updated grade item
  */
 function mumie_update_instance($mumie, $mform) {
+    debugging(json_encode($mumie));
     global $DB, $CFG;
     $mumie->timemodified = time();
     $mumie->id = $mumie->instance;
