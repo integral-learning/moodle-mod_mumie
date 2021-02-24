@@ -358,7 +358,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
 
         foreach ($taskproperties as $taskproperty) {
-            $checkboxhtml = html_writer::checkbox("task_property", $taskproperty[1],false);
+            $checkboxhtml = html_writer::checkbox("task_property", $taskproperty[1], false);
             $taskpropertytable->data[] = array($taskproperty[0], $checkboxhtml);
         }
 
@@ -381,11 +381,11 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("hidden", "mumie_selected_tasks", "");
         $mform->setType("mumie_selected_tasks", PARAM_RAW);
-        $mumiemodules=get_all_instances_in_course("mumie", $COURSE);
+        $mumiemodules = get_all_instances_in_course("mumie", $COURSE);
 
-        if(!is_null($cm)) {
+        if (!is_null($cm)) {
             $mumiemodules = array_filter($mumiemodules, function($elem) use($cm){
-            return !($elem->id === $cm->instance);
+                return !($elem->id === $cm->instance);
             });
         }
 
@@ -398,8 +398,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $tasktables = array();
 
         foreach ($mumiemodules as $mumiemodule) {
-            $modulesection=$mumiemodule->section;
-            if($section != $modulesection) {
+            $modulesection = $mumiemodule->section;
+            if ($section != $modulesection) {
                 $tasktable = new \html_table();
                 array_push($tasktables, $tasktable);
                 $section = $modulesection;
@@ -410,16 +410,16 @@ class mod_mumie_mod_form extends moodleform_mod {
                     $checkboxhtml
                 );
             }
-            $checkboxhtml = html_writer::checkbox("task", $mumiemodule->id, false, '', 
+            $checkboxhtml = html_writer::checkbox("task", $mumiemodule->id, false, '',
             array(
-                "section"=> $modulesection
+                "section" => $modulesection
             ));
             $tasktable->data[] = array($mumiemodule->name, $checkboxhtml);
         }
 
         $htmltasktables = "";
-        foreach($tasktables as $a) {
-            $htmltasktables=$htmltasktables . html_writer::table($a);
+        foreach ($tasktables as $a) {
+            $htmltasktables = $htmltasktables . html_writer::table($a);
         }
 
         $mform->addElement(

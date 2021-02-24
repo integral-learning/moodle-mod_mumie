@@ -64,21 +64,21 @@ function mumie_add_instance($mumie, $mform) {
 function mumie_update_instance($mumie, $mform) {
     global $DB, $CFG;
     $mumie->timemodified = time();
-    if(property_exists($mumie, 'instance')) {
+    if (property_exists($mumie, 'instance')) {
         $mumie->id = $mumie->instance;
     };
-    if(property_exists($mumie, 'completionexpected')) {
+    if (property_exists($mumie, 'completionexpected')) {
         $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
         \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
     };
     mod_mumie\locallib::update_pending_gradepool($mumie);
-    
+
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
-    
+
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
     $calendarservice->update();
-   
+
     mumie_tasks_update($mumie);
     return $DB->update_record("mumie", $mumie);
 }
@@ -442,21 +442,21 @@ function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
 function mumie_tasks_update($mumie) {
     global $DB;
 
-    if(property_exists($mumie, 'mumie_selected_task_properties')
+    if (property_exists($mumie, 'mumie_selected_task_properties')
     &&property_exists($mumie, 'mumie_selected_task_properties')) {
 
         $selectedproperties = explode(", ", $mumie->mumie_selected_task_properties);
         $selectedtasks = explode(", ", $mumie->mumie_selected_tasks);
-        if(!in_array("", $selectedproperties)&&!in_array("", $selectedtasks)) {
-            foreach($selectedtasks as &$value) {
+        if (!in_array("", $selectedproperties)&&!in_array("", $selectedtasks)) {
+            foreach ($selectedtasks as &$value) {
                 $mumie1 = $DB->get_record("mumie", array("id" => $value));
-                foreach($selectedproperties as &$value1){
-                    $mumie1->$value1=$mumie->$value1;
+                foreach ($selectedproperties as &$value1){
+                    $mumie1->$value1 = $mumie->$value1;
                 }
-            mumie_update_instance($mumie1, []);
+                mumie_update_instance($mumie1, []);
             }
             $updatedtasks = count($selectedtasks);
-            if($updatedtasks > 1) {
+            if ($updatedtasks > 1) {
                 \core\notification::success(get_string("mumie_tasks_updated", "mod_mumie", $updatedtasks));
             } else {
                 \core\notification::success(get_string("mumie_task_updated", "mod_mumie", $updatedtasks));
