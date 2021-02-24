@@ -81,7 +81,7 @@ class locallib {
      * @param int $courseid The course to check
      * @return array array of MUMIE Modules
      */
-    public static function get_mumie_modules_by_course($courseid){
+    public static function get_mumie_modules_by_course($courseid) {
         global $DB;
         $mumiemodule = $DB->get_record(MODULE_TABLE, array("name" => 'mumie'));
         return $DB->get_records(COURSE_MODULE_TABLE, array("module" => $mumiemodule->id,  "course" => $courseid));

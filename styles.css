@@ -14,12 +14,12 @@
 }
 
 .mumie_table {
-  border-width: 1px;
-  border-color: rgb(0, 0, 0);
-  border-style: solid;
-  margin-bottom: 15px;
-  padding-top: 5px;
-  padding-right: 5px;
-  padding-bottom: 5px;
-  padding-left: 5px;
+    border-width: 1px;
+    border-color: rgb(0, 0, 0);
+    border-style: solid;
+    margin-bottom: 15px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
 }
