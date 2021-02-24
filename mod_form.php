@@ -356,7 +356,6 @@ class mod_mumie_mod_form extends moodleform_mod {
                         array(get_string('mumie_form_points', 'mod_mumie'), "points"));
                         $taskpropertytable = new \html_table();
 
-
         foreach ($taskproperties as $taskproperty) {
             $checkboxhtml = html_writer::checkbox("task_property", $taskproperty[1], false);
             $taskpropertytable->data[] = array($taskproperty[0], $checkboxhtml);

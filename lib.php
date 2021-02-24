@@ -450,7 +450,7 @@ function mumie_tasks_update($mumie) {
         if (!in_array("", $selectedproperties)&&!in_array("", $selectedtasks)) {
             foreach ($selectedtasks as &$value) {
                 $mumie1 = $DB->get_record("mumie", array("id" => $value));
-                foreach ($selectedproperties as &$value1){
+                foreach ($selectedproperties as &$value1) {
                     $mumie1->$value1 = $mumie->$value1;
                 }
                 mumie_update_instance($mumie1, []);
