@@ -82,18 +82,16 @@ class provider implements
             \mod_mumie\mumie_duedate_extension::get_all_for_user($userid)
         );
 
-        if (count($mumieids) > 0) {    
-            $sql = "SELECT c.id FROM {context} c 
-                    JOIN {course_modules} cm ON c.instanceid = cm.id
-                    JOIN {mumie_duedate} duedate ON cm.instance = duedate.mumie 
-                    WHERE c.contextlevel = :contextlevel AND duedate.userid = :userid";
+        $sql = "SELECT c.id FROM {mumie_duedate} duedate
+                JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                JOIN {context} c ON c.instanceid = cm.id
+                WHERE c.contextlevel = :contextlevel AND duedate.userid = :userid
+                ";
 
-            debugging(json_encode(array("contextlevel" => CONTEXT_MODULE, "userid" => $userid)));
-            $contextlist->add_from_sql(
-                $sql,
-                array("contextlevel" => CONTEXT_MODULE, "userid" => $userid)
-            );
-        }
+        $contextlist->add_from_sql(
+            $sql,
+            array("contextlevel" => CONTEXT_MODULE, "userid" => $userid)
+        );
         return $contextlist;
     }
 
@@ -110,11 +108,13 @@ class provider implements
             return;
         }
 
-        $sql = "SELECT userid
-            FROM {mumie_duedate}
-            WHERE mumie = :mumieid
-        ";
-        $userlist->add_from_sql('userid', $sql, array('mumieid' => $context->instance));
+        $sql = "SELECT duedate.userid AS userid
+                FROM {mumie_duedate} duedate
+                JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                JOIN {context} ctx ON ctx.instanceid = cm.id
+                WHERE ctx.instanceid = :instanceid
+                ";
+        $userlist->add_from_sql('userid', $sql, array('instanceid' => $context->__get("instanceid")));
     }
 
     /**
@@ -134,11 +134,12 @@ class provider implements
             debugging("exporting for context: - " . $context->__get("instanceid"));
             require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
             $sql = "SELECT duedate.duedate FROM {mumie_duedate} duedate
-                    JOIN {course_modules} cm on cm.instance = duedate.mumie
+                    JOIN {course_modules} cm ON cm.instance = duedate.mumie
                     JOIN {context} ctx ON ctx.instanceid = cm.id
                     WHERE ctx.instanceid = :instanceid
+                    AND duedate.userid = :userid
                     ";
-            $record = $DB->get_record_sql($sql, array('instanceid' => $context->__get("instanceid")));
+            $record = $DB->get_record_sql($sql, array('instanceid' => $context->__get("instanceid"), 'userid' => $userid));
 
             if ($record) {
                 writer::with_context($context)->export_data(
@@ -164,16 +165,16 @@ class provider implements
         debugging("deleting data for user");
 
         foreach ($contextlist->get_contexts() as $context) {
-            if ($context->contextlevel == CONTEXT_COURSE) {
+            if ($context->contextlevel == CONTEXT_MODULE) {
                 $sql = "id IN (SELECT duedate.id
                     FROM {mumie_duedate} duedate
-                    JOIN {mumie} mumie
-                    ON duedate.mumie = mumie.id
-                    WHERE mumie.course = :courseid))
+                    JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                    WHERE cm.id = :instanceid
+                    AND duedate.userid = :userid
+                    )
                 ";
 
-                // $records = $DB->get_records_sql($sql, array("courseid" => $context->instance));
-                $DB->delete_records_select('mumie_duedate', $sql, array('courseid' => $context->instance));
+                $DB->delete_records_select('mumie_duedate', $sql, array('instanceid' => $context->__get("instanceid"), 'userid' => $userid));
             }
         }
     }
@@ -188,18 +189,13 @@ class provider implements
 
         debugging("delete_data_for_all_users_in_context");
 
-        // if ($context->contextlevel == CONTEXT_USER) {
-        //     $DB->get_records('auth_mumie_id_hashes');
-        //     $DB->delete_records('auth_mumie_sso_tokens');
-        // } else if ($context->contextlevel == CONTEXT_COURSE) {
-        //     $courseid = $context->__get("instanceid");
-        //     $sql = "SELECT * FROM {auth_mumie_id_hashes} WHERE 'hash' LIKE = ':gradepool'";
-        //     $DB->get_records_sql($sql, array("gradepool" => "%@gradepool{$courseid}@"));
-        //     foreach ($records as $record) {
-        //         $DB->delete_records('auth_mumie_id_hashes', array('the_user', $userid));
-        //         $DB->delete_records('auth_mumie_sso_tokens', array('the_user', $record->hash));
-        //     }
-        // }
+        if ($context->contextlevel != CONTEXT_MODULE) {
+            return;
+        }
+
+        $cm = $DB->get_record('course_moduels', array('id' => $context->__get("instanceid")));
+
+        $DB->delete_records('mumie_duedate', array('mumie' => $cm->instance));
     }
 
     /**
@@ -209,15 +205,14 @@ class provider implements
      */
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
-
-
         debugging("delete_data_for_users");
-        // $context = $userlist->get_context();
+        $context = $userlist->get_context();
+        $userids = $userlist->get_userids();
 
-        // if ($context instanceof \context_user) {
-        //     self::delete_in_user_context($context, $userlist->get_userids());
-        // } else if ($context instanceof \context_course) {
-        //     self::delete_in_course_context($context, $userlist->get_userids());
-        // }
+        if ($context instanceof \context_module && count($userids) > 0) {
+            list($insql, $inparams) = $DB->get_in_or_equal($userids);
+            $sql = "userid $insql";
+            $DB->delete_records_select('mumie_duedate', $sql, $inparams);
+        }
     }
 }
