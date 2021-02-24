@@ -81,7 +81,7 @@ foreach ($mumies as $mumie) {
     }
 
     if ($usesections) {
-        $table->data[] = array(get_section_name($course, $mumie->section), $link, $duedate);
+        $table->data[] = array(get_section_name($course, $mumie->section), $link, $mumie->section);
     } else {
         $table->data[] = array($link, $duedate);
     }

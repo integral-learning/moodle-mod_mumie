@@ -342,6 +342,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 for (var i in task.headline) {
                     var localHeadline = task.headline[i];
                     if (localHeadline.language == langController.getSelectedLanguage()) {
+                        multiTaskController.setVisibility("display:block");
                         return localHeadline.name;
                     }
                 }
@@ -485,10 +486,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
 
         var multiTaskController = (function(){
-            var taskSelecetionInputs = document.getElementsByName("blub0");
-            window.console.log(taskSelecetionInputs);
+            var propertySelecetionInputs = document.getElementsByName("task_property");
+            var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
+            var selectedTaskProp = [];
+            var taskSelecetionInputs = document.getElementsByName("task");
             var selectedTasks = document.getElementsByName("mumie_selected_tasks")[0];
             var selectedTaskIds = [];
+            var sectionInputs = document.getElementsByName("section");
+            var taskDisplayElement = document.getElementById("id_task_display_element");
             function addTask(task, array) {
                 array.push(task);
             }
@@ -500,77 +505,73 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
             }
 
-            function updateselectedTasks(selectedTasks1,task, updateArray, array) {
-                updateArray(task, array);
-                selectedTasks1.value = array.toString();
+            function updateSelected(selectedElements, element, updateArray, array) {
+                updateArray(element, array);
+                selectedElements.value = array.toString();
             }
 
             return {
                 init: function() {
-                    for (let taskSelectionInput of taskSelecetionInputs){
-                        updateselectedTasks(selectedTasks,taskSelectionInput.getAttribute('value'),addTask,selectedTaskIds);
-                        taskSelectionInput.onchange = function(){
-                            if(this.getAttribute('checked')=='checked'){
-                                updateselectedTasks(selectedTasks,this.getAttribute('value'),removeTask,selectedTaskIds);
-                                this.setAttribute('checked','unchecked');
-                                window.console.log(this);
+                    if(!taskDisplayElement.value){
+                        multiTaskController.setVisibility("display:none");
+                    }
+                    taskSelecetionInputs.forEach(function(taskSelecetionInput){
+                        taskSelecetionInput.onchange = function(){
+                            if(!taskSelecetionInput.checked){
+                                updateSelected(selectedTasks,
+                                    taskSelecetionInput.value, removeTask, selectedTaskIds);
                             }
                             else{
-                                updateselectedTasks(selectedTasks,this.getAttribute('value'),addTask,selectedTaskIds);
-                                this.setAttribute('checked','checked');
-                                window.console.log(this);
+                                updateSelected(selectedTasks,
+                                    taskSelecetionInput.value, addTask, selectedTaskIds);
                             }
                         };
-                    }
+                    });
+
+                    propertySelecetionInputs.forEach(function(propertySelecetionInput){
+                            propertySelecetionInput.onchange = function(){
+                            if(!propertySelecetionInput.checked){
+                                updateSelected(selectedTaskProperties,
+                                    propertySelecetionInput.value,removeTask,selectedTaskProp);
+                            }
+                            else{
+                                updateSelected(selectedTaskProperties,propertySelecetionInput
+                                    .value,addTask,selectedTaskProp);
+                            }
+                        };
+                    });
+
+                    sectionInputs.forEach(function(sectionInput){
+                        sectionInput.onchange = function(){
+                        if(!sectionInput.checked){
+                            taskSelecetionInputs.forEach(function(taskSelecetionInput){
+                            if(taskSelecetionInput.getAttribute('section')===sectionInput.value){
+                                taskSelecetionInput.checked=false;
+                                updateSelected(selectedTasks, taskSelecetionInput
+                                .value, removeTask, selectedTaskIds);
+                                }
+                            });
+                        }
+                        else{
+                            taskSelecetionInputs.forEach(function(taskSelecetionInput){
+                            if(taskSelecetionInput.getAttribute('section')===sectionInput.value){
+                                taskSelecetionInput.checked=true;
+                                updateSelected(selectedTasks, taskSelecetionInput
+                                .value, addTask, selectedTaskIds);
+                            }
+                        });
+                        }
+                        };
+                    });
+                },
+                setVisibility: function(visibility) {
+                    propertySelecetionInputs[0].parentElement.parentElement
+                    .parentElement.parentElement.parentElement.parentElement.style =
+                    visibility;
                 }
             };
 
         })();
-
-        // var multiTaskController2 = (function(){
-        //     var taskPropertySelecetionInputs = document.getElementsByName("blub1");
-        //     var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
-        //     var selectedTaskProp = [];
-        //     window.console.log(taskPropertySelecetionInputs);
-        //     function addTask(task, array) {
-        //         array.push(task);
-        //     }
-
-        //     function removeTask(task, array) {
-        //     const index = array.indexOf(task);
-        //     if (index > -1) {
-        //         array.splice(index, 1);
-        //     }
-        //     }
-
-        //     function updateselectedTasks(selectedTasks1,task, updateArray, array) {
-        //         updateArray(task, array);
-        //         selectedTasks1.value = array.toString();
-        //     }
-
-        //     return {
-        //         init: function() {
-        //             for (let taskPropertySelecetionInput of taskPropertySelecetionInputs){
-        //                 window.console.log("test2");
-        //                 updateselectedTasks(selectedTaskProperties,taskPropertySelecetionInput
-        //                     .getAttribute('value'),addTask,selectedTaskProp);
-        //                 taskPropertySelecetionInput.onchange = function(){
-        //                     if(this.getAttribute('checked')=='checked'){
-        //                     updateselectedTasks(selectedTaskProperties,this.getAttribute('value'),removeTask,selectedTaskProp);
-        //                         this.setAttribute('checked','unchecked');
-        //                         window.console.log(this);
-        //                     }
-        //                     else{
-        //                         updateselectedTasks(selectedTaskProperties,this.getAttribute('value'),addTask,selectedTaskProp);
-        //                         this.setAttribute('checked','checked');
-        //                         window.console.log(this);
-        //                     }
-        //                 };
-        //             }
-        //         }
-        //     };
-
-        // })();
 
         /**
          *  Disable all dropdown menus and show notification
@@ -610,7 +611,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     taskController.init(isEdit);
                     langController.init();
                     multiTaskController.init();
-                    // multiTaskController2.init();
                     problemSelectorController.init();
                 }
                 if (addServerButton) {

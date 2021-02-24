@@ -102,6 +102,10 @@ $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und d
 $string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen auf manchen Browsern und Betriebssystemen zu technischen Problemen. Daher empfehlen wir MUMIE-Tasks in einem neuen Fenster zu öffnen.';
 $string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
+$string['mumie_form_tasks_edit'] = 'Auf andere MUMIE-Aufgaben anwenden';
+$string['mumie_form_tasks_edit_info'] = 'Die Werte der ausgewählten Eigenschaften des aktuellen MUMIE-Tasks werden auch auf die ausgewählten Tasks angewendet.';
+$string['mumie_form_tasks_selection_info'] = 'Die MUMIE-Aufgaben, für die die Änderungen gelten.';
+$string['mumie_form_task_properties_selection_info'] = 'Die Eigenschaften der aktuellen MUMIE-Aufgabe die für die Änderungen verwendet werden.';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
@@ -130,6 +134,8 @@ $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_tag_disabled'] = 'Deaktiviert';
 $string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, da die Konfiguration noch nicht vollständig ist. Bitte öffnen Sie die Einstellungen dieser MUMIE-Task.';
+$string['mumie_task_updated'] = ' Es wurde {$a} MUMIE task aktualisiert';
+$string['mumie_tasks_updated'] = 'Es wurden {$a} MUMIE tasks aktualisiert';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';
