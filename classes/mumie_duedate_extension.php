@@ -170,6 +170,21 @@ class mumie_duedate_extension {
         }
         return $duedate;
     }
+    
+    /**
+     * Construct array of class instances from object array
+     *
+     * @param  stdClass[] $objects
+     * @return mumie_duedate_extension[]
+     */
+    public static function from_objects($objects) {
+        return array_map(
+            function($object) {
+                return self::from_object($object);
+            },
+            $objects
+        );
+    }
 
     /**
      * Delete a mumie_duedate_extension by id.
@@ -288,5 +303,28 @@ class mumie_duedate_extension {
         $this->duedate = $duedate;
 
         return $this;
+    }
+    
+    /**
+     * get all due date extensions for a given user.
+     *
+     * @param  int $userid
+     * @return array
+     */
+    public static function get_all_for_user($userid) {
+        global $DB;
+        $records = $DB->get_records('mumie_duedate', array('userid' => $userid));
+        return self::from_objects($records);
+    }
+    
+    /**
+     * Delete all extensions for a given user.
+     *
+     * @param  int $userid
+     * @return void
+     */
+    public static function delete_all_for_user($userid) {
+        global $DB;
+        $DB->delete_records("mumie_duedate", array("userid" => $userid));
     }
 }
