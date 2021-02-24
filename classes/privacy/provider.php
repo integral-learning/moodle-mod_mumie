@@ -193,7 +193,7 @@ class provider implements
             return;
         }
 
-        $cm = $DB->get_record('course_moduels', array('id' => $context->__get("instanceid")));
+        $cm = $DB->get_record('course_modules', array('id' => $context->__get("instanceid")));
 
         $DB->delete_records('mumie_duedate', array('mumie' => $cm->instance));
     }
@@ -211,8 +211,17 @@ class provider implements
 
         if ($context instanceof \context_module && count($userids) > 0) {
             list($insql, $inparams) = $DB->get_in_or_equal($userids);
-            $sql = "userid $insql";
-            $DB->delete_records_select('mumie_duedate', $sql, $inparams);
+
+            $innserselect = "SELECT duedate.id FROM {mumie_duedate} duedate
+                            JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                            WHERE cm.id = ?
+                            AND duedate.userid $insql
+                            ";
+            $sql = "id IN ($innserselect)";
+
+            $params = array_merge(array($context->__get("instanceid")), $inparams);
+
+            $DB->delete_records_select('mumie_duedate', $sql, $params);
         }
     }
 }

@@ -316,15 +316,4 @@ class mumie_duedate_extension {
         $records = $DB->get_records('mumie_duedate', array('userid' => $userid));
         return self::from_objects($records);
     }
-    
-    /**
-     * Delete all extensions for a given user.
-     *
-     * @param  int $userid
-     * @return void
-     */
-    public static function delete_all_for_user($userid) {
-        global $DB;
-        $DB->delete_records("mumie_duedate", array("userid" => $userid));
-    }
 }
