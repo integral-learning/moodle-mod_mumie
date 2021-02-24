@@ -70,12 +70,12 @@ class locallib {
      * @param int $courseid The course to check
      * @return array array of MUMIE Tasks
      */
-    public static function get_mumie_tasks_by_course($courseid){
+    public static function get_mumie_tasks_by_course($courseid) {
         global $DB;
         return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
     }
 
-     /**
+    /**
      * Get all MUMIE Modules for a course
      *
      * @param int $courseid The course to check

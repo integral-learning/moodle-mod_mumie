@@ -47,9 +47,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
 
         $mform = &$this->_form;
-        
-        //debugging(json_encode($cm));
-
 
         $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
         $serveroptions = array();
@@ -180,9 +177,9 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
 
         $this->disable_grade_rules();
-       
+
         $mform->addElement('header', 'general', get_string('mumie_form_tasks_edit', 'mod_mumie'));
-       
+
         $mform->addElement(
             'html',
             '<div>'
@@ -199,7 +196,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         // Add standard buttons, common to all modules.
         $this->add_action_buttons();
         $context = context_course::instance($COURSE->id);
-        
 
         $jsparams = array(
             json_encode($context->id),
@@ -351,22 +347,23 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
 
-    private function add_property_selection(){
+    private function add_property_selection() {
         $mform = $this->_form;
         $mform->addElement("hidden", "mumie_selected_task_properties", "");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
-        $taskproperties=array(array(get_string('mumie_form_due_date', 'mod_mumie'),"duedate"),
-                        array(get_string('mumie_form_activity_container', 'mod_mumie'),"launchcontainer"),
-                        array(get_string('mumie_form_points', 'mod_mumie'),"points"));
+        $taskproperties = array(array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
+                        array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
+                        array(get_string('mumie_form_points', 'mod_mumie'), "points"));
                         $taskpropertytable = new \html_table();
+
 
         foreach ($taskproperties as $taskproperty) {
             $checkboxhtml = html_writer::checkbox("task_property", $taskproperty[1],false);
             $taskpropertytable->data[] = array($taskproperty[0], $checkboxhtml);
         }
 
-        $htmltaskpropertytable=html_writer::table($taskpropertytable);
-       
+        $htmltaskpropertytable = html_writer::table($taskpropertytable);
+
         $mform->addElement(
             'html',
             '<div>'
@@ -386,28 +383,28 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("mumie_selected_tasks", PARAM_RAW);
         $mumiemodules=get_all_instances_in_course("mumie", $COURSE);
 
-        if(!is_null($cm)){
+        if(!is_null($cm)) {
             $mumiemodules = array_filter($mumiemodules, function($elem) use($cm){
-                return !($elem->id === $cm->instance);
-                });
+            return !($elem->id === $cm->instance);
+            });
         }
 
         usort($mumiemodules, function($module1, $module2) {
             return $module1->section > $module2->section;
         });
 
-        $section=null;
-        $tasktable =null;
-        $tasktables=array();
+        $section = null;
+        $tasktable = null;
+        $tasktables = array();
 
         foreach ($mumiemodules as $mumiemodule) {
             $modulesection=$mumiemodule->section;
-            if($section!=$modulesection){
+            if($section != $modulesection) {
                 $tasktable = new \html_table();
-                array_push($tasktables,$tasktable);
-                $section=$modulesection;
+                array_push($tasktables, $tasktable);
+                $section = $modulesection;
                 $sectionname = get_section_name($COURSE->id, $modulesection);
-                $checkboxhtml = html_writer::checkbox("section", $modulesection,false);
+                $checkboxhtml = html_writer::checkbox("section", $modulesection, false);
                 $tasktable->head = array(
                     $sectionname,
                     $checkboxhtml
@@ -415,16 +412,15 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
             $checkboxhtml = html_writer::checkbox("task", $mumiemodule->id, false, '', 
             array(
-                "section"=>$modulesection
+                "section"=> $modulesection
             ));
             $tasktable->data[] = array($mumiemodule->name, $checkboxhtml);
         }
 
-        $htmltasktables="";
-        foreach($tasktables as $a){
+        $htmltasktables = "";
+        foreach($tasktables as $a) {
             $htmltasktables=$htmltasktables . html_writer::table($a);
         }
-    
 
         $mform->addElement(
             'html',
