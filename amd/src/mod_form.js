@@ -494,14 +494,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var sectionInputs = document.getElementsByName("section");
 
             /**
-             * Removes an element from an array
+             * Push an element to an array, if it's not already included.
+             *
+             * @param {string[]} array
              * @param {string} element
-             * @param {object} array
              */
-            function removeElement(element, array) {
-                const index = array.indexOf(element);
-                if (index > -1) {
-                    array.splice(index, 1);
+            function pushIfNotExists(array, element) {
+                if (!array.includes(element)) {
+                    array.push(element);
                 }
             }
 
@@ -512,7 +512,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 taskSelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
                         if (!checkbox.checked) {
-                            removeElement(checkbox.value, selectedTaskIds);
+                            selectedTaskIds = selectedTaskIds.filter(elem => elem != checkbox.value);
                         } else {
                             selectedTaskIds.push(checkbox.value);
                         }
@@ -528,7 +528,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 propertySelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
                         if (!checkbox.checked) {
-                            removeElement(checkbox.value, selectedTaskProp);
+                            selectedTaskProp = selectedTaskProp.filter(elem => elem != checkbox.value);
                         } else {
                             selectedTaskProp.push(checkbox.value);
                         }
@@ -543,23 +543,22 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function setSectionSelectionListeners() {
                 sectionInputs.forEach(function(sectionCheckbox) {
                     sectionCheckbox.onchange = function() {
-                    if (!sectionCheckbox.checked) {
-                        taskSelectionInputs.forEach(function(taskCheckbox) {
-                            if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
-                                taskCheckbox.checked = false;
-                                removeElement(taskCheckbox.value, selectedTaskIds);
-                            }
-                            selectedTasks.value = JSON.stringify(selectedTaskIds);
-                        });
-                    } else {
-                        taskSelectionInputs.forEach(function(taskCheckbox) {
-                            if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
-                                taskCheckbox.checked = true;
-                                selectedTaskIds.push(taskCheckbox.value);
-                            }
-                            selectedTasks.value = JSON.stringify(selectedTaskIds);
-                        });
-                    }
+                        if (!sectionCheckbox.checked) {
+                            taskSelectionInputs.forEach(function(taskCheckbox) {
+                                if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
+                                    taskCheckbox.checked = false;
+                                    selectedTaskIds = selectedTaskIds.filter(elem => taskCheckbox.value != elem);
+                                }
+                            });
+                        } else {
+                            taskSelectionInputs.forEach(function(taskCheckbox) {
+                                if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
+                                    taskCheckbox.checked = true;
+                                    pushIfNotExists(selectedTaskIds, taskCheckbox.value);
+                                }
+                            });
+                        }
+                        selectedTasks.value = JSON.stringify(selectedTaskIds);
                     };
                 });
             }
