@@ -494,36 +494,15 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var sectionInputs = document.getElementsByName("section");
 
             /**
-             * Adds an element to an array
-             * @param {string} element
-             * @param {object} array
-             */
-            function addTask(element, array) {
-                array.push(element);
-            }
-
-            /**
              * Removes an element from an array
              * @param {string} element
              * @param {object} array
              */
-            function removeTask(element, array) {
+            function removeElement(element, array) {
                 const index = array.indexOf(element);
                 if (index > -1) {
                     array.splice(index, 1);
                 }
-            }
-
-            /**
-             * Updates the hidden field of selected elements. Either an element is added or deleted.
-             * @param {object} selectedElements
-             * @param {string} element
-             * @param {function} updateArray
-             * @param {string} array
-             */
-            function updateSelected(selectedElements, element, updateArray, array) {
-                updateArray(element, array);
-                selectedElements.value = JSON.stringify(array);
             }
 
             /**
@@ -533,10 +512,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 taskSelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
                         if (!checkbox.checked) {
-                            updateSelected(selectedTasks, checkbox.value, removeTask, selectedTaskIds);
+                            removeElement(checkbox.value, selectedTaskIds);
                         } else {
-                            updateSelected(selectedTasks, checkbox.value, addTask, selectedTaskIds);
+                            selectedTaskIds.push(checkbox.value);
                         }
+                        selectedTasks.value = JSON.stringify(selectedTaskIds);
                     };
                 });
             }
@@ -548,10 +528,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 propertySelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
                         if (!checkbox.checked) {
-                            updateSelected(selectedTaskProperties, checkbox.value, removeTask, selectedTaskProp);
+                            removeElement(checkbox.value, selectedTaskProp);
                         } else {
-                            updateSelected(selectedTaskProperties, checkbox.value, addTask, selectedTaskProp);
+                            selectedTaskProp.push(checkbox.value);
                         }
+                        selectedTaskProperties.value = JSON.stringify(selectedTaskProp);
                     };
                 });
             }
@@ -566,15 +547,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         taskSelectionInputs.forEach(function(taskCheckbox) {
                             if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
                                 taskCheckbox.checked = false;
-                                updateSelected(selectedTasks, taskCheckbox.value, removeTask, selectedTaskIds);
+                                removeElement(taskCheckbox.value, selectedTaskIds);
                             }
+                            selectedTasks.value = JSON.stringify(selectedTaskIds);
                         });
                     } else {
                         taskSelectionInputs.forEach(function(taskCheckbox) {
                             if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
                                 taskCheckbox.checked = true;
-                                updateSelected(selectedTasks, taskCheckbox.value, addTask, selectedTaskIds);
+                                selectedTaskIds.push(taskCheckbox.value);
                             }
+                            selectedTasks.value = JSON.stringify(selectedTaskIds);
                         });
                     }
                     };
