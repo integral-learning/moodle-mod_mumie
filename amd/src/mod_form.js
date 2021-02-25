@@ -528,25 +528,25 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             return {
                 init: function() {
-                    taskSelectionInputs.forEach(function(taskSelecetionInput) {
-                        taskSelecetionInput.onchange = function() {
-                            if (!taskSelecetionInput.checked) {
+                    taskSelectionInputs.forEach(function(taskSelectionInput) {
+                        taskSelectionInput.onchange = function() {
+                            if (!taskSelectionInput.checked) {
                                 updateSelected(selectedTasks,
-                                    taskSelecetionInput.value, removeTask, selectedTaskIds);
+                                    taskSelectionInput.value, removeTask, selectedTaskIds);
                             } else {
                                 updateSelected(selectedTasks,
-                                    taskSelecetionInput.value, addTask, selectedTaskIds);
+                                    taskSelectionInput.value, addTask, selectedTaskIds);
                             }
                         };
                     });
 
-                    propertySelectionInputs.forEach(function(propertySelecetionInput) {
-                            propertySelecetionInput.onchange = function() {
-                            if (!propertySelecetionInput.checked) {
+                    propertySelectionInputs.forEach(function(propertySelectionInput) {
+                        propertySelectionInput.onchange = function() {
+                            if (!propertySelectionInput.checked) {
                                 updateSelected(selectedTaskProperties,
-                                    propertySelecetionInput.value, removeTask, selectedTaskProp);
+                                    propertySelectionInput.value, removeTask, selectedTaskProp);
                             } else {
-                                updateSelected(selectedTaskProperties, propertySelecetionInput
+                                updateSelected(selectedTaskProperties, propertySelectionInput
                                     .value, addTask, selectedTaskProp);
                             }
                         };
@@ -555,18 +555,18 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     sectionInputs.forEach(function(sectionInput) {
                         sectionInput.onchange = function() {
                         if (!sectionInput.checked) {
-                            taskSelectionInputs.forEach(function(taskSelecetionInput) {
-                            if (taskSelecetionInput.getAttribute('section') === sectionInput.value) {
-                                taskSelecetionInput.checked = false;
-                                updateSelected(selectedTasks, taskSelecetionInput
+                            taskSelectionInputs.forEach(function(taskSelectionInput) {
+                            if (taskSelectionInput.getAttribute('section') === sectionInput.value) {
+                                taskSelectionInput.checked = false;
+                                updateSelected(selectedTasks, taskSelectionInput
                                 .value, removeTask, selectedTaskIds);
                                 }
                             });
                         } else {
-                            taskSelectionInputs.forEach(function(taskSelecetionInput) {
-                            if (taskSelecetionInput.getAttribute('section') === sectionInput.value) {
-                                taskSelecetionInput.checked = true;
-                                updateSelected(selectedTasks, taskSelecetionInput
+                            taskSelectionInputs.forEach(function(taskSelectionInput) {
+                            if (taskSelectionInput.getAttribute('section') === sectionInput.value) {
+                                taskSelectionInput.checked = true;
+                                updateSelected(selectedTasks, taskSelectionInput
                                 .value, addTask, selectedTaskIds);
                             }
                         });
