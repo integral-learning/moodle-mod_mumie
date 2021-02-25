@@ -170,8 +170,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
         }
 
-        
-
         $mform->addElement('header', 'general', get_string('mumie_form_tasks_edit', 'mod_mumie'));
 
         $mform->addElement(
@@ -343,7 +341,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Adds the property selection to the form
+     * Adds the property selection, which is needed for the multi editing, to the form.
      */
     private function add_property_selection() {
         $mform = $this->_form;
@@ -376,7 +374,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Adds the task selection to the form
+     * Adds the task selection, which is needed for the multi editing, to the form.
      */
     private function add_task_selection() {
         global $COURSE;
