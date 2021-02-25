@@ -451,10 +451,10 @@ function mumie_update_multiple_tasks($mumie) {
         $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
         $selectedtasks = json_decode($mumie->mumie_selected_tasks);
         if (!empty($selectedproperties)&&!empty($selectedtasks)) {
-            foreach ($selectedtasks as $property) {
-                $record = $DB->get_record("mumie", array("id" => $property));
-                foreach ($selectedproperties as $taskid) {
-                    $record->$taskid = $mumie->$taskid;
+            foreach ($selectedtasks as $taskid) {
+                $record = $DB->get_record("mumie", array("id" => $taskid));
+                foreach ($selectedproperties as $property) {
+                    $record->$property = $mumie->$property;
                 }
                 mumie_update_instance($record, []);
             }

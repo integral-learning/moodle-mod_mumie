@@ -104,7 +104,7 @@ $string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 $string['mumie_form_tasks_edit'] = 'Auf andere MUMIE-Tasks anwenden';
 $string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
-$string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
+$string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
 $string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigenschaften dieser MUMIE-Task aus, die in anderen MUMIE-Tasks übernommen werden sollen.';
 
 // Used in duedate form.

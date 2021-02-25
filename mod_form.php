@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_mumie\course_module_repository;
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
@@ -176,6 +174,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             'html',
             '<div>'
             . get_string('mumie_form_tasks_edit_info', 'mod_mumie')
+            . '<br><br>'
             . '</div>'
         );
 
@@ -348,10 +347,11 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
         $taskproperties = array(
-                        array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
-                        array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
-                        array(get_string('mumie_form_points', 'mod_mumie'), "points"));
-                        $table = new \html_table();
+            array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
+            array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
+            array(get_string('mumie_form_points', 'mod_mumie'), "points")
+        );
+        $table = new \html_table();
 
         foreach ($taskproperties as $taskproperty) {
             $label = $taskproperty[0];
@@ -390,10 +390,6 @@ class mod_mumie_mod_form extends moodleform_mod {
                 return !($elem->id === $cm->instance);
             });
         }
-
-        usort($modules, function($module1, $module2) {
-            return $module1->section > $module2->section;
-        });
 
         $tables = array();
         foreach ($modules as $module) {
