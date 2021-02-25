@@ -345,8 +345,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function add_property_selection() {
         $mform = $this->_form;
-        $mform->addElement("hidden", "mumie_selected_task_properties",
-                            "[]", array("id" => "id_mumie_selected_task_properties"));
+        $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
         $taskproperties = array(
                         array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
@@ -381,8 +380,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         global $COURSE;
         $cm = &$this->_cm;
         $mform = $this->_form;
-        $mform->addElement("hidden", "mumie_selected_task",
-                            "[]", array("id" => "id_mumie_selected_task"));
+
+        $mform->addElement("hidden", "mumie_selected_tasks", "[]");
         $mform->setType("mumie_selected_tasks", PARAM_RAW);
         $modules = get_all_instances_in_course("mumie", $COURSE);
 
