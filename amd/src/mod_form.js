@@ -485,13 +485,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
 
         var multiTaskEditController = (function() {
-            var propertySelectionInputs = document.getElementsByName("task_property");
+            var propertySelectionInputs = document.getElementsByName("mumie_multi_edit_property");
             var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
             var selectedTaskProp = [];
-            var taskSelectionInputs = document.getElementsByName("task");
+            var taskSelectionInputs = document.getElementsByName("mumie_multi_edit_task");
             var selectedTasks = document.getElementsByName("mumie_selected_tasks")[0];
             var selectedTaskIds = [];
-            var sectionInputs = document.getElementsByName("section");
+            var sectionInputs = document.getElementsByName("mumie_multi_edit_section");
 
             /**
              * Push an element to an array, if it's not already included.

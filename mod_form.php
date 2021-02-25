@@ -355,8 +355,8 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         foreach ($taskproperties as $taskproperty) {
             $label = $taskproperty[0];
-            $id = $taskproperty[1];
-            $checkboxhtml = html_writer::checkbox("task_property", $id, false);
+            $value = $taskproperty[1];
+            $checkboxhtml = html_writer::checkbox("mumie_multi_edit_property", $value, false);
             $table->data[] = array($label, $checkboxhtml);
         }
 
@@ -398,14 +398,14 @@ class mod_mumie_mod_form extends moodleform_mod {
                 $table = new \html_table;
                 $table->head = array(
                     get_section_name($COURSE->id, $section),
-                    html_writer::checkbox("section", $section, false)
+                    html_writer::checkbox("mumie_multi_edit_section", $section, false)
                 );
                 $tables[$section] = $table;
             } else {
                 $table = $tables[$section];
             }
             $checkboxhtml = html_writer::checkbox(
-                "task",
+                "mumie_multi_edit_task",
                 $module->id,
                 false,
                 '',
