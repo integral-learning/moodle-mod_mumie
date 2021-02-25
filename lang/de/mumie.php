@@ -108,6 +108,7 @@ $string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, fü
 $string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigenschaften dieser MUMIE-Task aus, die in anderen MUMIE-Tasks übernommen werden sollen.';
 $string['mumie_form_properties'] = 'Eigenschaften';
 $string['mumie_form_topic'] = 'Thema: {$a}';
+$string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';

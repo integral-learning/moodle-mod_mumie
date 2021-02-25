@@ -392,6 +392,21 @@ class mod_mumie_mod_form extends moodleform_mod {
             });
         }
 
+        if (count($modules) < 1) {
+            $notfound = html_writer::tag(
+                'i',
+                "- " . get_string("mumie_no_other_task_found", "mod_mumie") ." -",
+                array("style" => "margin-left: 10px;")
+            );
+            $mform->addElement(
+                'html',
+                get_string('mumie_form_tasks_selection_info', 'mod_mumie')
+                . '<div class="mumie_table_wrapper">'
+                . $notfound
+                . '</div>' );
+            return;
+        }
+
         $tables = array();
         foreach ($modules as $module) {
             $section = $module->section;
@@ -427,9 +442,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement(
             'html',
-            '<div>'
-            . get_string('mumie_form_tasks_selection_info', 'mod_mumie')
-            .'<div>'
+            get_string('mumie_form_tasks_selection_info', 'mod_mumie')
             .'<div class="mumie_table_wrapper">'
             . $htmltables
             . '</div>' );

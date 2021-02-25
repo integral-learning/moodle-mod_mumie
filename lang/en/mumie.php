@@ -95,6 +95,7 @@ $string['mumie_form_tasks_selection_info'] = 'Choose the MUMIE Tasks you want to
 $string['mumie_form_task_properties_selection_info'] = 'Select the properties of the current MUMIE Task to apply to other MUMIE Tasks.';
 $string['mumie_form_properties'] = 'Properties';
 $string['mumie_form_topic'] = 'Topic: {$a}';
+$string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
