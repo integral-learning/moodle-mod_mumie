@@ -342,7 +342,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 for (var i in task.headline) {
                     var localHeadline = task.headline[i];
                     if (localHeadline.language == langController.getSelectedLanguage()) {
-                        multiTaskEditController.setVisibility("display:block");
                         return localHeadline.name;
                     }
                 }
@@ -493,7 +492,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var selectedTasks = document.getElementsByName("mumie_selected_tasks")[0];
             var selectedTaskIds = [];
             var sectionInputs = document.getElementsByName("section");
-            var taskDisplayElement = document.getElementById("id_task_display_element");
 
             /**
              * Adds an element to an array
@@ -530,9 +528,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             return {
                 init: function() {
-                    if (!taskDisplayElement.value) {
-                        multiTaskEditController.setVisibility("display:none");
-                    }
                     taskSelectionInputs.forEach(function(taskSelecetionInput) {
                         taskSelecetionInput.onchange = function() {
                             if (!taskSelecetionInput.checked) {
@@ -579,16 +574,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         };
                     });
                 },
-
-                /**
-                 * Updates the visibility of the multiTaskEdit unit
-                 * @param {string} visibility
-                 */
-                setVisibility: function(visibility) {
-                    propertySelectionInputs[0].parentElement.parentElement
-                    .parentElement.parentElement.parentElement.parentElement.style =
-                    visibility;
-                }
             };
 
         })();

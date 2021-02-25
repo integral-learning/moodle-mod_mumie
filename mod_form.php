@@ -54,7 +54,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         self::populate_options($serveroptions, $courseoptions, $languageoptions);
 
         // Adding the "general" fieldset, where all the common settings are shown.
-        $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
+        $mform->addElement('header', 'mumie_multi_edit', get_string('mumie_form_activity_header', 'mod_mumie'));
 
         $mform->addElement(
             "text",
