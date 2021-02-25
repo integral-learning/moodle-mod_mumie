@@ -29,7 +29,6 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
-require_once($CFG->dirroot . "/mod/mumie/classes/repository/course_module_repository.php");
 
 define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
 define("MUMIE_TASK_TABLE", "mumie");
@@ -51,7 +50,7 @@ function mumie_add_instance($mumie, $mform) {
     mumie_grade_item_update($mumie);
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
     $calendarservice->update();
-    mumie_tasks_update($mumie);
+    mumie_update_multiple_tasks($mumie);
     return $mumie->id;
 }
 
@@ -79,7 +78,7 @@ function mumie_update_instance($mumie, $mform) {
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
     $calendarservice->update();
 
-    mumie_tasks_update($mumie);
+    mumie_update_multiple_tasks($mumie);
     return $DB->update_record("mumie", $mumie);
 }
 
@@ -439,27 +438,31 @@ function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
     return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
 }
 
-function mumie_tasks_update($mumie) {
+/**
+ * Updates Mumie instances according to the values of the given MUMIE instance
+ * @param stdClass $mumie instance of MUMIE task to add
+ */
+function mumie_update_multiple_tasks($mumie) {
     global $DB;
 
     if (property_exists($mumie, 'mumie_selected_task_properties')
-    &&property_exists($mumie, 'mumie_selected_task_properties')) {
+    &&property_exists($mumie, 'mumie_selected_tasks')) {
 
-        $selectedproperties = explode(", ", $mumie->mumie_selected_task_properties);
-        $selectedtasks = explode(", ", $mumie->mumie_selected_tasks);
-        if (!in_array("", $selectedproperties)&&!in_array("", $selectedtasks)) {
-            foreach ($selectedtasks as &$value) {
-                $mumie1 = $DB->get_record("mumie", array("id" => $value));
-                foreach ($selectedproperties as &$value1) {
-                    $mumie1->$value1 = $mumie->$value1;
+        $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
+        $selectedtasks = json_decode($mumie->mumie_selected_tasks);
+        if (!empty($selectedproperties)&&!empty($selectedtasks)) {
+            foreach ($selectedtasks as $property) {
+                $record = $DB->get_record("mumie", array("id" => $property));
+                foreach ($selectedproperties as $taskid) {
+                    $record->$taskid = $mumie->$taskid;
                 }
-                mumie_update_instance($mumie1, []);
+                mumie_update_instance($record, []);
             }
             $updatedtasks = count($selectedtasks);
             if ($updatedtasks > 1) {
                 \core\notification::success(get_string("mumie_tasks_updated", "mod_mumie", $updatedtasks));
             } else {
-                \core\notification::success(get_string("mumie_task_updated", "mod_mumie", $updatedtasks));
+                \core\notification::success(get_string("mumie_task_updated", "mod_mumie"));
             }
         }
     }

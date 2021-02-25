@@ -342,7 +342,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 for (var i in task.headline) {
                     var localHeadline = task.headline[i];
                     if (localHeadline.language == langController.getSelectedLanguage()) {
-                        multiTaskController.setVisibility("display:block");
+                        multiTaskEditController.setVisibility("display:block");
                         return localHeadline.name;
                     }
                 }
@@ -485,7 +485,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
 
-        var multiTaskController = (function(){
+        var multiTaskEditController = (function(){
             var propertySelecetionInputs = document.getElementsByName("task_property");
             var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
             var selectedTaskProp = [];
@@ -494,26 +494,44 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var selectedTaskIds = [];
             var sectionInputs = document.getElementsByName("section");
             var taskDisplayElement = document.getElementById("id_task_display_element");
-            function addTask(task, array) {
-                array.push(task);
+
+            /**
+             * Adds an element to an array
+             * @param {string} element
+             * @param {object} array
+             */
+            function addTask(element, array) {
+                array.push(element);
             }
 
-            function removeTask(task, array) {
-            const index = array.indexOf(task);
+            /**
+             * Removes an element from an array
+             * @param {string} task
+             * @param {object} array
+             */
+            function removeTask(element, array) {
+            const index = array.indexOf(element);
             if (index > -1) {
                 array.splice(index, 1);
             }
             }
 
+            /**
+             * Updates the hidden field of selected elements. Either an element is added or deleted.
+             * @param {object} selectedElements
+             * @param {string} element
+             * @param {function} updateArray
+             * @param {string} array
+             */
             function updateSelected(selectedElements, element, updateArray, array) {
                 updateArray(element, array);
-                selectedElements.value = array.toString();
+                selectedElements.value = JSON.stringify(array);
             }
 
             return {
                 init: function() {
                     if(!taskDisplayElement.value){
-                        multiTaskController.setVisibility("display:none");
+                        multiTaskEditController.setVisibility("display:none");
                     }
                     taskSelecetionInputs.forEach(function(taskSelecetionInput){
                         taskSelecetionInput.onchange = function(){
@@ -564,6 +582,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         };
                     });
                 },
+
+                /**
+                 * Updates the visibility of the multiTaskEdit unit
+                 * @param {string} visibility
+                 */
                 setVisibility: function(visibility) {
                     propertySelecetionInputs[0].parentElement.parentElement
                     .parentElement.parentElement.parentElement.parentElement.style =
@@ -610,7 +633,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     courseController.init(isEdit);
                     taskController.init(isEdit);
                     langController.init();
-                    multiTaskController.init();
+                    multiTaskEditController.init();
                     problemSelectorController.init();
                 }
                 if (addServerButton) {

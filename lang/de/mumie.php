@@ -96,16 +96,16 @@ $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit
 <br>Falls diese Option deaktiviert ist, werden weder Punkte aus anderen MOODLE-Kursen übernommen noch werden hier erziehlte Punkte mit anderen Kursen geteilt.';
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Achtung:</b><br> Diese Entscheidung ist <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
 $string['mumie_form_grade_pool_note'] = '<b>Hinweis:</b><br> Diese Entscheidung war <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
-$string['mumie_form_filter'] = 'MUMIE-Aufgaben filtern';
+$string['mumie_form_filter'] = 'MUMIE-Tasks filtern';
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 $string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen auf manchen Browsern und Betriebssystemen zu technischen Problemen. Daher empfehlen wir MUMIE-Tasks in einem neuen Fenster zu öffnen.';
 $string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
-$string['mumie_form_tasks_edit'] = 'Auf andere MUMIE-Aufgaben anwenden';
-$string['mumie_form_tasks_edit_info'] = 'Die Werte der ausgewählten Eigenschaften des aktuellen MUMIE-Tasks werden auch auf die ausgewählten Tasks angewendet.';
-$string['mumie_form_tasks_selection_info'] = 'Die MUMIE-Aufgaben, für die die Änderungen gelten.';
-$string['mumie_form_task_properties_selection_info'] = 'Die Eigenschaften der aktuellen MUMIE-Aufgabe die für die Änderungen verwendet werden.';
+$string['mumie_form_tasks_edit'] = 'Auf andere MUMIE-Tasks anwenden';
+$string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
+$string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
+$string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigenschaften dieser MUMIE-Task aus, die in anderen MUMIE-Tasks übernommen werden sollen.';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
@@ -134,8 +134,8 @@ $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_tag_disabled'] = 'Deaktiviert';
 $string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, da die Konfiguration noch nicht vollständig ist. Bitte öffnen Sie die Einstellungen dieser MUMIE-Task.';
-$string['mumie_task_updated'] = ' Es wurde {$a} MUMIE task aktualisiert';
-$string['mumie_tasks_updated'] = 'Es wurden {$a} MUMIE tasks aktualisiert';
+$string['mumie_task_updated'] = 'Es wurde eine weitere MUMIE-Task aktualisiert';
+$string['mumie_tasks_updated'] = 'Es wurden {$a} weitere MUMIE-Tasks aktualisiert';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';

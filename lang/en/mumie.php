@@ -90,9 +90,9 @@ $string['mumie_form_launchcontainer_info'] = 'Embedded MUMIE Tasks tend to cause
 $string['mumie_form_prb_selector_btn'] = 'Open problem selector';
 $string['mumie_form_updated_selection'] = 'Successfully selected problem';
 $string['mumie_form_tasks_edit'] = 'Apply to other MUMIE Tasks';
-$string['mumie_form_tasks_edit_info'] = 'The values of the selected properties of the current MUMIE Task are also applied to the selected tasks.';
-$string['mumie_form_tasks_selection_info'] = 'The MUMIE Tasks for which the changes are applied.';
-$string['mumie_form_task_properties_selection_info'] = 'The properties of the current MUMIE Task used for the changes.';
+$string['mumie_form_tasks_edit_info'] = 'Choose properties you want to apply to other MUMIE Tasks in this course.';
+$string['mumie_form_tasks_selection_info'] = 'Choose the MUMIE Tasks you want to apply the selected changes to.';
+$string['mumie_form_task_properties_selection_info'] = 'Select the properties of the current MUMIE Task to apply to other MUMIE Tasks.';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
@@ -135,8 +135,8 @@ $string['mumie_no_submissions'] = 'No answers submitted';
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_tag_disabled'] = 'Disabled';
 $string['mumie_tag_disabled_help'] = 'This activity is disabled because the configuration is not completed. Please open the settings of this MUMIE Task.';
-$string['mumie_task_updated'] = '{$a} MUMIE task has been updated';
-$string['mumie_tasks_updated'] = '{$a} MUMIE tasks have been updated';
+$string['mumie_task_updated'] = 'One additional MUMIE Task has been updated';
+$string['mumie_tasks_updated'] = '{$a} additional MUMIE Tasks have been updated';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'The uploaded file is incompatible!';
