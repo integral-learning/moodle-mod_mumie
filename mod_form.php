@@ -352,6 +352,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             array(get_string('mumie_form_points', 'mod_mumie'), "points")
         );
         $table = new \html_table();
+        $table->head = array(get_string('mumie_form_properties', 'mod_mumie'));
 
         foreach ($taskproperties as $taskproperty) {
             $label = $taskproperty[0];
@@ -367,7 +368,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             '<div>'
             . get_string('mumie_form_task_properties_selection_info', 'mod_mumie')
             .'</div>'
-            .'<div class="mumie_table">'
+            .'<div class="mumie_table_wrapper">'
             . $htmltable
             . '</div>' );
 
@@ -397,7 +398,11 @@ class mod_mumie_mod_form extends moodleform_mod {
             if (!array_key_exists($section, $tables)) {
                 $table = new \html_table;
                 $table->head = array(
-                    get_section_name($COURSE->id, $section),
+                    get_string(
+                        'mumie_form_topic',
+                        'mod_mumie',
+                        get_section_name($COURSE->id, $section)
+                    ),
                     html_writer::checkbox("mumie_multi_edit_section", $section, false)
                 );
                 $tables[$section] = $table;
@@ -425,7 +430,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             '<div>'
             . get_string('mumie_form_tasks_selection_info', 'mod_mumie')
             .'<div>'
-            .'<div class="mumie_table">'
+            .'<div class="mumie_table_wrapper">'
             . $htmltables
             . '</div>' );
     }
