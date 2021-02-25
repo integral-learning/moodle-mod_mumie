@@ -158,7 +158,7 @@ function mumie_cm_info_view(cm_info $cm) {
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
-    if ($gradeitem->gradepass > 0) {
+    if ($gradeitem&&$gradeitem->gradepass > 0) {
         $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
