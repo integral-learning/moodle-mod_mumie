@@ -508,10 +508,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {object} array
              */
             function removeTask(element, array) {
-            const index = array.indexOf(element);
-            if (index > -1) {
-                array.splice(index, 1);
-            }
+                const index = array.indexOf(element);
+                if (index > -1) {
+                    array.splice(index, 1);
+                }
             }
 
             /**
@@ -526,56 +526,68 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 selectedElements.value = JSON.stringify(array);
             }
 
-            return {
-                init: function() {
-                    taskSelectionInputs.forEach(function(taskSelectionInput) {
-                        taskSelectionInput.onchange = function() {
-                            if (!taskSelectionInput.checked) {
-                                updateSelected(selectedTasks,
-                                    taskSelectionInput.value, removeTask, selectedTaskIds);
-                            } else {
-                                updateSelected(selectedTasks,
-                                    taskSelectionInput.value, addTask, selectedTaskIds);
-                            }
-                        };
-                    });
-
-                    propertySelectionInputs.forEach(function(propertySelectionInput) {
-                        propertySelectionInput.onchange = function() {
-                            if (!propertySelectionInput.checked) {
-                                updateSelected(selectedTaskProperties,
-                                    propertySelectionInput.value, removeTask, selectedTaskProp);
-                            } else {
-                                updateSelected(selectedTaskProperties, propertySelectionInput
-                                    .value, addTask, selectedTaskProp);
-                            }
-                        };
-                    });
-
-                    sectionInputs.forEach(function(sectionInput) {
-                        sectionInput.onchange = function() {
-                        if (!sectionInput.checked) {
-                            taskSelectionInputs.forEach(function(taskSelectionInput) {
-                            if (taskSelectionInput.getAttribute('section') === sectionInput.value) {
-                                taskSelectionInput.checked = false;
-                                updateSelected(selectedTasks, taskSelectionInput
-                                .value, removeTask, selectedTaskIds);
-                                }
-                            });
+            /**
+             * Set selection listeners for other MUMIE Tasks in the course.
+             */
+            function setTaskSelectionListeners() {
+                taskSelectionInputs.forEach(function(checkbox) {
+                    checkbox.onchange = function() {
+                        if (!checkbox.checked) {
+                            updateSelected(selectedTasks, checkbox.value, removeTask, selectedTaskIds);
                         } else {
-                            taskSelectionInputs.forEach(function(taskSelectionInput) {
-                            if (taskSelectionInput.getAttribute('section') === sectionInput.value) {
-                                taskSelectionInput.checked = true;
-                                updateSelected(selectedTasks, taskSelectionInput
-                                .value, addTask, selectedTaskIds);
+                            updateSelected(selectedTasks, checkbox.value, addTask, selectedTaskIds);
+                        }
+                    };
+                });
+            }
+
+            /**
+             * Set selection listeners for properties to apply to MUMIE Tasks in the course.
+             */
+            function setPropertySelectionListeners() {
+                propertySelectionInputs.forEach(function(checkbox) {
+                    checkbox.onchange = function() {
+                        if (!checkbox.checked) {
+                            updateSelected(selectedTaskProperties, checkbox.value, removeTask, selectedTaskProp);
+                        } else {
+                            updateSelected(selectedTaskProperties, checkbox.value, addTask, selectedTaskProp);
+                        }
+                    };
+                });
+            }
+
+            /**
+             * Set selection listeners for entire section of MUMIE Tasks in the course
+             */
+            function setSectionSelectionListeners() {
+                sectionInputs.forEach(function(sectionCheckbox) {
+                    sectionCheckbox.onchange = function() {
+                    if (!sectionCheckbox.checked) {
+                        taskSelectionInputs.forEach(function(taskCheckbox) {
+                            if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
+                                taskCheckbox.checked = false;
+                                updateSelected(selectedTasks, taskCheckbox.value, removeTask, selectedTaskIds);
                             }
                         });
-                        }
-                        };
-                    });
+                    } else {
+                        taskSelectionInputs.forEach(function(taskCheckbox) {
+                            if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
+                                taskCheckbox.checked = true;
+                                updateSelected(selectedTasks, taskCheckbox.value, addTask, selectedTaskIds);
+                            }
+                        });
+                    }
+                    };
+                });
+            }
+
+            return {
+                init: function() {
+                    setTaskSelectionListeners();
+                    setPropertySelectionListeners();
+                    setSectionSelectionListeners();
                 },
             };
-
         })();
 
         /**
