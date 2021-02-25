@@ -487,10 +487,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         var multiTaskEditController = (function(){
             var propertySelecetionInputs = document.getElementsByName("task_property");
-            var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
+            var selectedTaskProperties = document.getElementById("id_mumie_selected_task_properties");
             var selectedTaskProp = [];
             var taskSelecetionInputs = document.getElementsByName("task");
-            var selectedTasks = document.getElementsByName("mumie_selected_tasks")[0];
+            var selectedTasks = document.getElementById("mumie_selected_tasks");
             var selectedTaskIds = [];
             var sectionInputs = document.getElementsByName("section");
             var taskDisplayElement = document.getElementById("id_task_display_element");
