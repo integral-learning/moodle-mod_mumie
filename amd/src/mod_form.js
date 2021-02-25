@@ -485,11 +485,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
 
-        var multiTaskEditController = (function(){
-            var propertySelecetionInputs = document.getElementsByName("task_property");
+        var multiTaskEditController = (function() {
+            var propertySelectionInputs = document.getElementsByName("task_property");
             var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
             var selectedTaskProp = [];
-            var taskSelecetionInputs = document.getElementsByName("task");
+            var taskSelectionInputs = document.getElementsByName("task");
             var selectedTasks = document.getElementsByName("mumie_selected_tasks")[0];
             var selectedTaskIds = [];
             var sectionInputs = document.getElementsByName("section");
@@ -506,7 +506,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Removes an element from an array
-             * @param {string} task
+             * @param {string} element
              * @param {object} array
              */
             function removeTask(element, array) {
@@ -530,50 +530,47 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             return {
                 init: function() {
-                    if(!taskDisplayElement.value){
+                    if (!taskDisplayElement.value) {
                         multiTaskEditController.setVisibility("display:none");
                     }
-                    taskSelecetionInputs.forEach(function(taskSelecetionInput){
-                        taskSelecetionInput.onchange = function(){
-                            if(!taskSelecetionInput.checked){
+                    taskSelectionInputs.forEach(function(taskSelecetionInput) {
+                        taskSelecetionInput.onchange = function() {
+                            if (!taskSelecetionInput.checked) {
                                 updateSelected(selectedTasks,
                                     taskSelecetionInput.value, removeTask, selectedTaskIds);
-                            }
-                            else{
+                            } else {
                                 updateSelected(selectedTasks,
                                     taskSelecetionInput.value, addTask, selectedTaskIds);
                             }
                         };
                     });
 
-                    propertySelecetionInputs.forEach(function(propertySelecetionInput){
-                            propertySelecetionInput.onchange = function(){
-                            if(!propertySelecetionInput.checked){
+                    propertySelectionInputs.forEach(function(propertySelecetionInput) {
+                            propertySelecetionInput.onchange = function() {
+                            if (!propertySelecetionInput.checked) {
                                 updateSelected(selectedTaskProperties,
-                                    propertySelecetionInput.value,removeTask,selectedTaskProp);
-                            }
-                            else{
-                                updateSelected(selectedTaskProperties,propertySelecetionInput
-                                    .value,addTask,selectedTaskProp);
+                                    propertySelecetionInput.value, removeTask, selectedTaskProp);
+                            } else {
+                                updateSelected(selectedTaskProperties, propertySelecetionInput
+                                    .value, addTask, selectedTaskProp);
                             }
                         };
                     });
 
-                    sectionInputs.forEach(function(sectionInput){
-                        sectionInput.onchange = function(){
-                        if(!sectionInput.checked){
-                            taskSelecetionInputs.forEach(function(taskSelecetionInput){
-                            if(taskSelecetionInput.getAttribute('section')===sectionInput.value){
-                                taskSelecetionInput.checked=false;
+                    sectionInputs.forEach(function(sectionInput) {
+                        sectionInput.onchange = function() {
+                        if (!sectionInput.checked) {
+                            taskSelectionInputs.forEach(function(taskSelecetionInput) {
+                            if (taskSelecetionInput.getAttribute('section') === sectionInput.value) {
+                                taskSelecetionInput.checked = false;
                                 updateSelected(selectedTasks, taskSelecetionInput
                                 .value, removeTask, selectedTaskIds);
                                 }
                             });
-                        }
-                        else{
-                            taskSelecetionInputs.forEach(function(taskSelecetionInput){
-                            if(taskSelecetionInput.getAttribute('section')===sectionInput.value){
-                                taskSelecetionInput.checked=true;
+                        } else {
+                            taskSelectionInputs.forEach(function(taskSelecetionInput) {
+                            if (taskSelecetionInput.getAttribute('section') === sectionInput.value) {
+                                taskSelecetionInput.checked = true;
                                 updateSelected(selectedTasks, taskSelecetionInput
                                 .value, addTask, selectedTaskIds);
                             }
@@ -588,7 +585,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                  * @param {string} visibility
                  */
                 setVisibility: function(visibility) {
-                    propertySelecetionInputs[0].parentElement.parentElement
+                    propertySelectionInputs[0].parentElement.parentElement
                     .parentElement.parentElement.parentElement.parentElement.style =
                     visibility;
                 }
