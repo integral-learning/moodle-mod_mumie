@@ -13,7 +13,14 @@
 }
 
 .mumie_table_wrapper {
-    border: 1px solid black;
     margin: 10px;
-    padding: 5px;
+    padding: 10px;
+}
+
+.mumie_table {
+    display: contents;
+}
+
+.mumie_table thead tr th {
+    border-bottom: 1px solid black;
 }
