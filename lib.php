@@ -23,9 +23,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mumie\locallib;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
+
 define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
 define("MUMIE_TASK_TABLE", "mumie");
 
@@ -44,6 +48,9 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->isgraded = !($mumie->mumie_complete_course ?? 0);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
+    $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
+    $calendarservice->update();
+    mumie_update_multiple_tasks($mumie);
     return $mumie->id;
 }
 
@@ -56,14 +63,22 @@ function mumie_add_instance($mumie, $mform) {
 function mumie_update_instance($mumie, $mform) {
     global $DB, $CFG;
     $mumie->timemodified = time();
-    $mumie->id = $mumie->instance;
-    $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
-    \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+    if (property_exists($mumie, 'instance')) {
+        $mumie->id = $mumie->instance;
+    };
+    if (property_exists($mumie, 'completionexpected')) {
+        $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
+        \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+    };
     mod_mumie\locallib::update_pending_gradepool($mumie);
 
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
+    $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
+    $calendarservice->update();
+
+    mumie_update_multiple_tasks($mumie);
     return $DB->update_record("mumie", $mumie);
 }
 
@@ -75,13 +90,15 @@ function mumie_update_instance($mumie, $mform) {
 function mumie_delete_instance($id) {
     global $DB, $CFG;
 
+    require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
     if (!$mumie = $DB->get_record("mumie", array("id" => $id))) {
         return false;
     }
 
     $cm = get_coursemodule_from_instance('mumie', $id);
     \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
-
+    mod_mumie\mumie_calendar_service::delete_all_calendar_events($mumie);
+    mod_mumie\mumie_duedate_extension::delete_all_for_mumie($id);
     return $DB->delete_records("mumie", array("id" => $mumie->id));
 }
 
@@ -120,30 +137,36 @@ function mumie_get_coursemodule_info($coursemodule) {
  * @param cm_info $cm
  */
 function mumie_cm_info_view(cm_info $cm) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
+    require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 
     $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
+    $gradeitem = $DB->get_record(
+        'grade_items',
+        array(
+            'courseid' => $mumie->course,
+            'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'
+        ));
     $info = '';
-    if ($mumie->duedate) {
-        $info .= ' ' .
-            html_writer::tag('p', get_string('mumie_due_date', 'mod_mumie'), array('class' => 'tag-info tag'))
-            . html_writer::tag(
-                'span',
-                strftime(
-                    get_string('strftimedaydatetime', 'langconfig'),
-                    $mumie->duedate
-                ),
-                array('style' => 'margin-left: 1em')
-            );
+
+    $duedate = locallib::get_effective_duedate($USER->id, $mumie);
+    if (isset($duedate) && $duedate > 0) {
+        $content = get_string('mumie_due_date', 'mod_mumie')
+            . ': '
+            . strftime(get_string('strftimedaydatetime', 'langconfig'), $duedate);
+
+        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
+    }
+    if ($gradeitem&&$gradeitem->gradepass > 0) {
+        $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
+        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
     if (!isset($mumie->privategradepool)) {
-        $info .= ' ' .
-            html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag'))
+        $info .= html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag mumie_tag'))
             . html_writer::tag(
                 'span',
-                get_string('mumie_tag_disabled_help', 'mod_mumie'),
-                array('style' => 'margin-left: 1em')
+                get_string('mumie_tag_disabled_help', 'mod_mumie')
             );
     }
     $cm->set_after_link($info);
@@ -316,4 +339,131 @@ function mumie_dndupload_handle($uploadinfo) {
     $processor = new mod_mumie\mumie_dndupload_processor($courseid, $section, $type, $upload);
     $result = $processor->process();
     return $result;
+}
+
+/**
+ * Get mumieserver_form as a fragment
+ *
+ * @param stdClass $args context and formdata
+ * @return string html code necessary to display mumieserver form as fragment
+ */
+function mod_mumie_output_fragment_new_duedate_form($args) {
+    global $CFG;
+    require_once($CFG->dirroot . '/mod/mumie/forms/duedate_form.php');
+
+    $args = (object) $args;
+
+    $context = $args->context;
+    $output = '';
+
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+    $extension = new stdClass();
+
+    $editoroptions = [
+        'maxfiles' => EDITOR_UNLIMITED_FILES,
+        'maxbytes' => $CFG->maxbytes,
+        'trust' => false,
+        'context' => $context,
+        'noclean' => true,
+        'subdirs' => false,
+    ];
+
+    $extension = file_prepare_standard_editor(
+        $extension,
+        'description',
+        $editoroptions,
+        $context,
+        'extension',
+        'description',
+        null
+    );
+
+    $mform = new duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
+
+    $mform->set_data($extension);
+
+    if (!empty($args->jsonformdata) && strcmp($args->jsonformdata, "{}") !== 0) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+
+    ob_start();
+    $mform->display();
+    $output .= ob_get_contents();
+    ob_end_clean();
+
+    return $output;
+}
+
+/**
+ * Override a grade in the gradebook as if it was manually changed by a teacher.
+ *
+ * @param  \stdClass $mumie
+ * @param  \stdClass $grade
+ * @return void
+ */
+function mumie_override_grade($mumie, $grade) {
+    global $CFG;
+    require_once($CFG->libdir . '/gradelib.php');
+
+    $item = new \grade_item(array("itemmodule" => "mumie", "iteminstance" => $mumie->id), true);
+    return $item->update_final_grade(
+        $grade->userid,
+        $grade->rawgrade,
+        null,
+        null,
+        FORMAT_MOODLE,
+        $grade->usermodified
+    );
+}
+
+/**
+ * Is the event visible for a given user?
+ *
+ * This is used to determine global visibility of an event in all places throughout Moodle. For example,
+ * the ASSIGN_EVENT_TYPE_GRADINGDUE event will not be shown to students on their calendar, and
+ * ASSIGN_EVENT_TYPE_DUE events will not be shown to teachers.
+ *
+ * @param calendar_event $event
+ * @return bool Returns true if the event is visible to the current user, false otherwise.
+ */
+function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
+    global $CFG, $USER;
+
+    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
+    return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
+}
+
+/**
+ * Updates Mumie instances according to the values of the given MUMIE instance
+ * @param stdClass $mumie instance of MUMIE task to add
+ */
+function mumie_update_multiple_tasks($mumie) {
+    global $DB;
+
+    if (property_exists($mumie, 'mumie_selected_task_properties')
+    &&property_exists($mumie, 'mumie_selected_tasks')) {
+
+        $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
+        $selectedtasks = json_decode($mumie->mumie_selected_tasks);
+        if (!empty($selectedproperties)&&!empty($selectedtasks)) {
+            foreach ($selectedtasks as $taskid) {
+                $record = $DB->get_record("mumie", array("id" => $taskid));
+                foreach ($selectedproperties as $property) {
+                    $record->$property = $mumie->$property;
+                }
+                mumie_update_instance($record, []);
+            }
+            $updatedtasks = count($selectedtasks);
+            if ($updatedtasks > 1) {
+                \core\notification::success(get_string("mumie_tasks_updated", "mod_mumie", $updatedtasks));
+            } else {
+                \core\notification::success(get_string("mumie_task_updated", "mod_mumie"));
+            }
+        }
+    }
 }

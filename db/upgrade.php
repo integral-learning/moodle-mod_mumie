@@ -75,5 +75,21 @@ function xmldb_mumie_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, 2020040700, 'mod', 'mumie');
     }
+
+    if ($oldversion < 2021011303) {
+        $table = new xmldb_table('mumie_duedate');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
+    }
     return true;
 }

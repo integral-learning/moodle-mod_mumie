@@ -89,6 +89,13 @@ $string['mumie_form_complete_course_help'] = 'The user will only be logged in an
 $string['mumie_form_launchcontainer_info'] = 'Embedded MUMIE Tasks tend to cause issues on some browsers and operation systems so we recommend using New-Window-mode.';
 $string['mumie_form_prb_selector_btn'] = 'Open problem selector';
 $string['mumie_form_updated_selection'] = 'Successfully selected problem';
+$string['mumie_form_tasks_edit'] = 'Apply to other MUMIE Tasks';
+$string['mumie_form_tasks_edit_info'] = 'You can apply some of the settings selected above also automatically to other MUMIE Tasks of this course.';
+$string['mumie_form_tasks_selection_info'] = 'Choose the MUMIE Tasks you want to apply the selected changes to.';
+$string['mumie_form_task_properties_selection_info'] = 'Select the properties of the current MUMIE Task to apply to other MUMIE Tasks.';
+$string['mumie_form_properties'] = 'Properties';
+$string['mumie_form_topic'] = 'Topic: {$a}';
+$string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
@@ -104,10 +111,35 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 
+// Used in duedate form.
+$string['mumie_duedate_form'] = 'Grant a due date extension';
+
+// Used in view.
+$string['mumie_duedate_extension'] = 'Due date extension';
+$string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
+$string['mumie_general_duedate'] = 'General due date:';
+$string['mumie_grading_settings'] = "Individual grading settings";
+$string['mumie_grade_overridden'] = 'Updated grade successfully!';
+$string['mumie_grade_invalid'] = 'Grade is invalid!';
+$string['mumie_open_task'] = 'Open MUMIE Task';
+
+// Used in mumie_grader.
+$string['mumie_submissions'] = 'Submissions';
+$string['mumie_override_gradebook'] = 'Use in gradebook';
+$string['mumie_submission_date'] = 'Submitted on';
+$string['mumie_grade_percentage'] = 'Grade in %';
+$string['mumie_submissions_by'] = 'Submissions by {$a}';
+$string['mumie_submissions_info'] = 'Grades are automatically updated in the Moodle gradebook to the latest submitted answer
+within the due date. If you want to use a different submission, you can click on the corresponding button to overwrite the current grade.<br><br>
+This grade will not be replaced by new submissions and it will <b>not</b> be automatically scaled, if you change the MUMIE Task\'s maximum points';
+$string['mumie_no_submissions'] = 'No answers submitted';
+
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_tag_disabled'] = 'Disabled';
 $string['mumie_tag_disabled_help'] = 'This activity is disabled because the configuration is not completed. Please open the settings of this MUMIE Task.';
+$string['mumie_task_updated'] = 'One additional MUMIE Task has been updated';
+$string['mumie_tasks_updated'] = '{$a} additional MUMIE Tasks have been updated';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'The uploaded file is incompatible!';
@@ -119,3 +151,11 @@ $string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
+$string['mumie:grantduedateextension'] = 'Grand a due date extension to individual students';
+$string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date extension for individual students';
+$string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting a submission from all answers they have submitted for this MUMIE Task';
+
+// Used in calendar.
+$string['mumie_calendar_duedate_name'] = 'Due date: {$a}';
+$string['mumie_calendar_duedate_desc'] = 'Submissions after this deadline will not be used for grading';
+$string['mumie_calendar_duedate_extension'] = 'Extended due date: {$a}';

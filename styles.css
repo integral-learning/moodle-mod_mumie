@@ -1,3 +1,26 @@
 .mumie_text_input .form-inline .form-control {
     width: 80%;
 }
+
+.mumie_icon_btn {
+    margin-left: 10px;
+    color: blue;
+    cursor: pointer;
+}
+
+.mumie_tag {
+    margin: 5px;
+}
+
+.mumie_table_wrapper {
+    margin: 10px;
+    padding: 10px;
+}
+
+.mumie_table {
+    display: contents;
+}
+
+.mumie_table thead tr th {
+    border-bottom: 1px solid black;
+}

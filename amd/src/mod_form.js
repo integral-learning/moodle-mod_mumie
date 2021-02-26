@@ -484,6 +484,94 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
 
+        var multiTaskEditController = (function() {
+            var propertySelectionInputs = document.getElementsByName("mumie_multi_edit_property");
+            var selectedTaskProperties = document.getElementsByName("mumie_selected_task_properties")[0];
+            var selectedTaskProp = [];
+            var taskSelectionInputs = document.getElementsByName("mumie_multi_edit_task");
+            var selectedTasks = document.getElementsByName("mumie_selected_tasks")[0];
+            var selectedTaskIds = [];
+            var sectionInputs = document.getElementsByName("mumie_multi_edit_section");
+
+            /**
+             * Push an element to an array, if it's not already included.
+             *
+             * @param {string[]} array
+             * @param {string} element
+             */
+            function pushIfNotExists(array, element) {
+                if (!array.includes(element)) {
+                    array.push(element);
+                }
+            }
+
+            /**
+             * Set selection listeners for other MUMIE Tasks in the course.
+             */
+            function setTaskSelectionListeners() {
+                taskSelectionInputs.forEach(function(checkbox) {
+                    checkbox.onchange = function() {
+                        if (!checkbox.checked) {
+                            selectedTaskIds = selectedTaskIds.filter(elem => elem != checkbox.value);
+                        } else {
+                            selectedTaskIds.push(checkbox.value);
+                        }
+                        selectedTasks.value = JSON.stringify(selectedTaskIds);
+                    };
+                });
+            }
+
+            /**
+             * Set selection listeners for properties to apply to MUMIE Tasks in the course.
+             */
+            function setPropertySelectionListeners() {
+                propertySelectionInputs.forEach(function(checkbox) {
+                    checkbox.onchange = function() {
+                        if (!checkbox.checked) {
+                            selectedTaskProp = selectedTaskProp.filter(elem => elem != checkbox.value);
+                        } else {
+                            selectedTaskProp.push(checkbox.value);
+                        }
+                        selectedTaskProperties.value = JSON.stringify(selectedTaskProp);
+                    };
+                });
+            }
+
+            /**
+             * Set selection listeners for entire section of MUMIE Tasks in the course
+             */
+            function setSectionSelectionListeners() {
+                sectionInputs.forEach(function(sectionCheckbox) {
+                    sectionCheckbox.onchange = function() {
+                        if (!sectionCheckbox.checked) {
+                            taskSelectionInputs.forEach(function(taskCheckbox) {
+                                if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
+                                    taskCheckbox.checked = false;
+                                    selectedTaskIds = selectedTaskIds.filter(elem => taskCheckbox.value != elem);
+                                }
+                            });
+                        } else {
+                            taskSelectionInputs.forEach(function(taskCheckbox) {
+                                if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
+                                    taskCheckbox.checked = true;
+                                    pushIfNotExists(selectedTaskIds, taskCheckbox.value);
+                                }
+                            });
+                        }
+                        selectedTasks.value = JSON.stringify(selectedTaskIds);
+                    };
+                });
+            }
+
+            return {
+                init: function() {
+                    setTaskSelectionListeners();
+                    setPropertySelectionListeners();
+                    setSectionSelectionListeners();
+                },
+            };
+        })();
+
         /**
          *  Disable all dropdown menus and show notification
          * @param {string} errorKey
@@ -521,6 +609,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     courseController.init(isEdit);
                     taskController.init(isEdit);
                     langController.init();
+                    multiTaskEditController.init();
                     problemSelectorController.init();
                 }
                 if (addServerButton) {

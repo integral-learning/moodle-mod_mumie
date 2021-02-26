@@ -96,17 +96,49 @@ $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit
 <br>Falls diese Option deaktiviert ist, werden weder Punkte aus anderen MOODLE-Kursen übernommen noch werden hier erziehlte Punkte mit anderen Kursen geteilt.';
 $string['mumie_form_grade_pool_warning'] = '<b style="color:red">Achtung:</b><br> Diese Entscheidung ist <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
 $string['mumie_form_grade_pool_note'] = '<b>Hinweis:</b><br> Diese Entscheidung war <b>endgültig</b> und gilt auch für alle anderen MUMIE Tasks in diesem Kurs';
-$string['mumie_form_filter'] = 'MUMIE-Aufgaben filtern';
+$string['mumie_form_filter'] = 'MUMIE-Tasks filtern';
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 $string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen auf manchen Browsern und Betriebssystemen zu technischen Problemen. Daher empfehlen wir MUMIE-Tasks in einem neuen Fenster zu öffnen.';
 $string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
+$string['mumie_form_tasks_edit'] = 'In anderen MUMIE-Tasks übernehmen';
+$string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
+$string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
+$string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigenschaften dieser MUMIE-Task aus, die in anderen MUMIE-Tasks übernommen werden sollen.';
+$string['mumie_form_properties'] = 'Eigenschaften';
+$string['mumie_form_topic'] = 'Thema: {$a}';
+$string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
+
+// Used in duedate form.
+$string['mumie_duedate_form'] = 'Abgabefrist verlängern';
+
+// Used in view.
+$string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
+$string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
+$string['mumie_general_duedate'] = 'Allgemeine Abgabefrist:';
+$string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
+$string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
+$string['mumie_grade_invalid'] = 'Bewertung ungültig!';
+$string['mumie_open_task'] = 'MUMIE-Task öffnen';
+
+// Used in mumie_grader.
+$string['mumie_submissions'] = 'Abgaben';
+$string['mumie_override_gradebook'] = 'In Moodle-Notenbuch übernehmen';
+$string['mumie_submission_date'] = 'Datum der Abgabe';
+$string['mumie_grade_percentage'] = 'Bewerung in %';
+$string['mumie_submissions_by'] = 'Abgaben von {$a}';
+$string['mumie_submissions_info'] = 'Neue Abgaben werden automatisch in das Moodle-Notenbuch übernommen, sofern die Abgabefrist noch nicht abgelaufen ist.
+Um eine andere Abgabe für die Bewertung zu verwenden, können Sie auf die entsprechende Schaltfläche in der Tabelle klicken.<br><br>
+Diese Bewertung wird auch durch zukünftige Abgaben des Studierenden nicht ersetzt werden. Sie wird außerdem <b>nicht</b> automatisch angepasst, wenn Sie nachträglich die Maximalpunktzahl der MUMIE-Task ändern.';
+$string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_tag_disabled'] = 'Deaktiviert';
 $string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, da die Konfiguration noch nicht vollständig ist. Bitte öffnen Sie die Einstellungen dieser MUMIE-Task.';
+$string['mumie_task_updated'] = 'Es wurde eine weitere MUMIE-Task aktualisiert';
+$string['mumie_tasks_updated'] = 'Es wurden {$a} weitere MUMIE-Tasks aktualisiert';
 
 // Used for drag&drop functionality.
 $string['parameter_missing'] = 'Die hochgeladene Datei ist nicht kompatibel!';
@@ -118,3 +150,11 @@ $string['dnd_addmessage_multiple'] = 'MUMIE-Tasks hinzufügen';
 // Capabilities.
 $string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
 $string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';
+$string['mumie:grantduedateextension'] = 'Die Abgabefrist einer MUMIE-Task für individuelle Studierende verlängern';
+$string['mumie:revokeduedateextension'] = 'Die Verlängerung der Abgabefrist einer MUMIE-Task für einen Studenten zurücknehmen';
+$string['mumie:overridegrades'] = 'Überschreiben einer Moodle-Bewertung für einen Studenten mit den Punkten einer beliebigen Abgabe für die ausgewählte MUMIE-Task';
+
+// Used in calendar.
+$string['mumie_calendar_duedate_name'] = 'Abgabefirst: {$a}';
+$string['mumie_calendar_duedate_desc'] = 'Später Abgaben werden nicht in die Moodle-Bewertungen übernommen';
+$string['mumie_calendar_duedate_extension'] = 'Verlängerte Abgabefrist: {$a}';
