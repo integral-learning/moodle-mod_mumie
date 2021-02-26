@@ -50,6 +50,7 @@ function mumie_add_instance($mumie, $mform) {
     mumie_grade_item_update($mumie);
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
     $calendarservice->update();
+    mumie_update_multiple_tasks($mumie);
     return $mumie->id;
 }
 
@@ -62,9 +63,13 @@ function mumie_add_instance($mumie, $mform) {
 function mumie_update_instance($mumie, $mform) {
     global $DB, $CFG;
     $mumie->timemodified = time();
-    $mumie->id = $mumie->instance;
-    $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
-    \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+    if (property_exists($mumie, 'instance')) {
+        $mumie->id = $mumie->instance;
+    };
+    if (property_exists($mumie, 'completionexpected')) {
+        $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
+        \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+    };
     mod_mumie\locallib::update_pending_gradepool($mumie);
 
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
@@ -73,6 +78,7 @@ function mumie_update_instance($mumie, $mform) {
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
     $calendarservice->update();
 
+    mumie_update_multiple_tasks($mumie);
     return $DB->update_record("mumie", $mumie);
 }
 
@@ -152,7 +158,7 @@ function mumie_cm_info_view(cm_info $cm) {
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
-    if ($gradeitem->gradepass > 0) {
+    if ($gradeitem&&$gradeitem->gradepass > 0) {
         $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
     }
@@ -430,4 +436,34 @@ function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
 
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
     return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
+}
+
+/**
+ * Updates Mumie instances according to the values of the given MUMIE instance
+ * @param stdClass $mumie instance of MUMIE task to add
+ */
+function mumie_update_multiple_tasks($mumie) {
+    global $DB;
+
+    if (property_exists($mumie, 'mumie_selected_task_properties')
+    &&property_exists($mumie, 'mumie_selected_tasks')) {
+
+        $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
+        $selectedtasks = json_decode($mumie->mumie_selected_tasks);
+        if (!empty($selectedproperties)&&!empty($selectedtasks)) {
+            foreach ($selectedtasks as $taskid) {
+                $record = $DB->get_record("mumie", array("id" => $taskid));
+                foreach ($selectedproperties as $property) {
+                    $record->$property = $mumie->$property;
+                }
+                mumie_update_instance($record, []);
+            }
+            $updatedtasks = count($selectedtasks);
+            if ($updatedtasks > 1) {
+                \core\notification::success(get_string("mumie_tasks_updated", "mod_mumie", $updatedtasks));
+            } else {
+                \core\notification::success(get_string("mumie_task_updated", "mod_mumie"));
+            }
+        }
+    }
 }

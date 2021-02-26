@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.4.1] - TODO
+## [v1.4.1] - 2021-02-26
 ### Changed
 - Added passing grade as tag to MUMIE Task in course view
 
@@ -12,6 +12,10 @@ All important changes to this plugin will be documented in this file.
 - Teachers can now see timestamps and results of all submissions a student has made for a MUMIE Task
 - Teachers can now select a submission to overwrite the current grade in the gradebook
 - Due dates and due date extensions are now shown in the calendar
+- The MUMIE Task properties _duedate_, _max points_ and _launch container_ can now be changed for multiple MUMIE Tasks at once
+
+### Fixed
+- Removed an error message that was displayed in course view, if the "use complete course" option was selected for a MUMIE Task.
 
 ## [v1.4.0] - 2020-12-10
 ### Fixed
