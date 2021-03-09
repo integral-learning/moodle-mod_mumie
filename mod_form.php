@@ -36,12 +36,14 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_mumie_mod_form extends moodleform_mod {
+class mod_mumie_mod_form extends moodleform_mod
+{
     /**
      * Define fields and default values for the mumie server form
      * @return void
      */
-    public function definition() {
+    public function definition()
+    {
         global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
 
         $mform = &$this->_form;
@@ -173,9 +175,9 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             'html',
             '<div>'
-            . get_string('mumie_form_tasks_edit_info', 'mod_mumie')
-            . '<br><br>'
-            . '</div>'
+                . get_string('mumie_form_tasks_edit_info', 'mod_mumie')
+                . '<br><br>'
+                . '</div>'
         );
 
         $this->add_property_selection();
@@ -204,7 +206,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $files files uploaded
      * @return array associative array of errors
      */
-    public function validation($data, $files) {
+    public function validation($data, $files)
+    {
         $errors = array();
 
         if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
@@ -216,7 +219,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
 
         $taskurlvalid = isset($data["taskurl"]) && $data["taskurl"] !== "";
-        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
+        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) || $data["mumie_missing_config"] === "")) {
             $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
@@ -251,7 +254,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param stdClass $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_options(&$serveroptions, &$courseoptions, &$languageoptions) {
+    private function populate_options(&$serveroptions, &$courseoptions, &$languageoptions)
+    {
         $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
 
         foreach ($servers as $server) {
@@ -272,7 +276,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_course_options($courses, &$courseoptions, &$languageoptions) {
+    private function populate_course_options($courses, &$courseoptions, &$languageoptions)
+    {
         foreach ($courses as $course) {
             foreach ($course->get_name() as $name) {
                 $courseoptions[$name->value] = $name->value;
@@ -292,7 +297,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
-    private function populate_problem_options($course, &$languageoptions) {
+    private function populate_problem_options($course, &$languageoptions)
+    {
         foreach ($course->get_tasks() as $problem) {
             $link = $problem->get_link();
 
@@ -309,7 +315,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * This function is copied from mod_quiz version 2018051400
      * @return array containing the name of the mform group that has been added to the form
      */
-    public function add_completion_rules() {
+    public function add_completion_rules()
+    {
         $mform = $this->_form;
         $items = array();
 
@@ -331,7 +338,8 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Disable all options for grades if the user has chosen to link a course instead of a problem.
      */
-    private function disable_grade_rules() {
+    private function disable_grade_rules()
+    {
         $mform = $this->_form;
         $mform->disabledIf('gradepass', 'mumie_complete_course', 'checked');
         $mform->disabledIf('duedate[enabled]', 'mumie_complete_course', 'checked');
@@ -342,7 +350,8 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Adds the property selection, which is needed for the multi editing, to the form.
      */
-    private function add_property_selection() {
+    private function add_property_selection()
+    {
         $mform = $this->_form;
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
@@ -367,18 +376,19 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             'html',
             '<div>'
-            . get_string('mumie_form_task_properties_selection_info', 'mod_mumie')
-            .'</div>'
-            .'<div class="mumie_table_wrapper">'
-            . $htmltable
-            . '</div>' );
-
+                . get_string('mumie_form_task_properties_selection_info', 'mod_mumie')
+                . '</div>'
+                . '<div class="mumie_table_wrapper">'
+                . $htmltable
+                . '</div>'
+        );
     }
 
     /**
      * Adds the task selection, which is needed for the multi editing, to the form.
      */
-    private function add_task_selection() {
+    private function add_task_selection()
+    {
         global $COURSE;
         $cm = &$this->_cm;
         $mform = $this->_form;
@@ -388,7 +398,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $modules = get_all_instances_in_course("mumie", $COURSE);
 
         if (!is_null($cm)) {
-            $modules = array_filter($modules, function($elem) use($cm){
+            $modules = array_filter($modules, function ($elem) use ($cm) {
                 return !($elem->id === $cm->instance);
             });
         }
@@ -396,15 +406,16 @@ class mod_mumie_mod_form extends moodleform_mod {
         if (count($modules) < 1) {
             $notfound = html_writer::tag(
                 'i',
-                "- " . get_string("mumie_no_other_task_found", "mod_mumie") ." -",
+                "- " . get_string("mumie_no_other_task_found", "mod_mumie") . " -",
                 array("style" => "margin-left: 10px;")
             );
             $mform->addElement(
                 'html',
                 get_string('mumie_form_tasks_selection_info', 'mod_mumie')
-                . '<div class="mumie_table_wrapper">'
-                . $notfound
-                . '</div>' );
+                    . '<div class="mumie_table_wrapper">'
+                    . $notfound
+                    . '</div>'
+            );
             return;
         }
 
@@ -437,7 +448,8 @@ class mod_mumie_mod_form extends moodleform_mod {
                 '',
                 array(
                     "section" => $section
-            ));
+                )
+            );
             $table->data[] = array($module->name, $checkboxhtml);
         }
 
@@ -449,9 +461,10 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             'html',
             get_string('mumie_form_tasks_selection_info', 'mod_mumie')
-            .'<div class="mumie_table_wrapper">'
-            . $htmltables
-            . '</div>' );
+                . '<div class="mumie_table_wrapper">'
+                . $htmltables
+                . '</div>'
+        );
     }
 
     /**
@@ -508,11 +521,11 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
 
         // Check whether the task represents an entire course. If so, check the responding box in the form.
-        $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
-        $server->load_structure();
         $mform = &$this->_form;
-        $course = $server->get_course_by_coursefile($data->mumie_coursefile);
-        if ($course) {
+        $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
+        if ($server->get_urlprefix()) {
+            $server->load_structure();
+            $course = $server->get_course_by_coursefile($data->mumie_coursefile);
             $completecourse = $data->taskurl == $course->get_link() . "?lang=" . $data->language;
             if ($completecourse) {
                 $data->mumie_complete_course = 1;
@@ -548,7 +561,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $data Input data (not yet validated)
      * @return bool True if one or more rules is enabled, false if none are.
      */
-    public function completion_rule_enabled($data) {
+    public function completion_rule_enabled($data)
+    {
         return !empty($data['completionpass']);
     }
 
@@ -559,7 +573,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param int $courseid id of the current course
      * @return bool whether to disable gradepool selection
      */
-    private function disable_gradepool_selection($courseid) {
+    private function disable_gradepool_selection($courseid)
+    {
         global $DB;
         $records = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
         if (get_config('auth_mumie', 'defaultgradepool') != -1) {
@@ -576,15 +591,16 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param String $message The message to display
      */
-    private function add_info_box($message) {
+    private function add_info_box($message)
+    {
         $mform = &$this->_form;
         $mform->addElement(
             'html',
             '<div class="form-group row  fitem ">'
-            . '<div class="col-md-3"></div>'
-            . '<div class="col-md-9 felement">'
-            . $message
-            . '</div></div>'
+                . '<div class="col-md-3"></div>'
+                . '<div class="col-md-9 felement">'
+                . $message
+                . '</div></div>'
         );
     }
 }
