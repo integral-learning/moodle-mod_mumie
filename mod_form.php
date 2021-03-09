@@ -509,7 +509,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         // Check whether the task represents an entire course. If so, check the responding box in the form.
         $mform = &$this->_form;
         $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
-        if ($server->get_urlprefix()) {
+        if ($server->get_id()) {
             $server->load_structure();
             $course = $server->get_course_by_coursefile($data->mumie_coursefile);
             $completecourse = $data->taskurl == $course->get_link() . "?lang=" . $data->language;
