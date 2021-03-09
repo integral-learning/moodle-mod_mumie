@@ -471,8 +471,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param stdClass $data instance of MUMIE task, that is being edited
      * @return void
      */
-    public function set_data($data)
-    {
+    public function set_data($data) {
         global $COURSE, $DB, $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 
