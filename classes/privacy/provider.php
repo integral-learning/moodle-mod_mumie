@@ -50,6 +50,7 @@ class provider implements
      * @return  collection     A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection) : collection {
+        debugging("getMetadata");
         $collection->add_database_table(
             'mumie_duedate',
             [
@@ -73,7 +74,6 @@ class provider implements
         $contextlist = new contextlist();
         $contextlist->set_component('mod_mumie');
 
-        debugging("get contexts for userid");
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
         $mumieids = array_map(
             function($extension) {
@@ -103,7 +103,6 @@ class provider implements
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
 
-        debugging("getting users in context");
         if (!is_a($context, \context_module::class)) {
             return;
         }
@@ -124,22 +123,31 @@ class provider implements
      */
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB, $CFG;
-        debugging("exporting userdata");
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
             // Check that the context is a course context.
             if ($context->contextlevel != CONTEXT_MODULE) {
                 continue;
             }
-            debugging("exporting for context: - " . $context->__get("instanceid"));
             require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
             $sql = "SELECT duedate.duedate FROM {mumie_duedate} duedate
                     JOIN {course_modules} cm ON cm.instance = duedate.mumie
                     JOIN {context} ctx ON ctx.instanceid = cm.id
+                    JOIN {modules} modules ON modules.id = cm.module
                     WHERE ctx.instanceid = :instanceid
                     AND duedate.userid = :userid
+                    AND modules.name = :mumie
+                    AND ctx.contextlevel = :ctxlvl
                     ";
-            $record = $DB->get_record_sql($sql, array('instanceid' => $context->__get("instanceid"), 'userid' => $userid));
+            $record = $DB->get_record_sql(
+                $sql,
+                array(
+                    'instanceid' => $context->__get("instanceid"),
+                    'userid' => $userid,
+                    'mumie' => 'mumie',
+                    'ctxlvl' => CONTEXT_MODULE
+                )
+            );
 
             if ($record) {
                 writer::with_context($context)->export_data(
@@ -161,8 +169,6 @@ class provider implements
         global $DB, $CFG;
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
         $userid = $contextlist->get_user()->id;
-
-        debugging("deleting data for user");
 
         foreach ($contextlist->get_contexts() as $context) {
             if ($context->contextlevel == CONTEXT_MODULE) {
@@ -187,8 +193,6 @@ class provider implements
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
 
-        debugging("delete_data_for_all_users_in_context");
-
         if ($context->contextlevel != CONTEXT_MODULE) {
             return;
         }
@@ -205,7 +209,6 @@ class provider implements
      */
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
-        debugging("delete_data_for_users");
         $context = $userlist->get_context();
         $userids = $userlist->get_userids();
 
