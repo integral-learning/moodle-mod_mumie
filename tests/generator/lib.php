@@ -16,7 +16,22 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class mod_mumie_generator extends testing_module_generator {
+/**
+ * MUMIE Task module test data generator class
+ *
+ * @package mod_mumie
+ * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class mod_mumie_generator extends testing_module_generator {    
+    /**
+     * Create a mumie instance.
+     *
+     * @param  mixed $record
+     * @param  mixed $options
+     * @return stdClass
+     */
     public function create_instance($record = null, array $options = null) {
         global $CFG;
 
@@ -45,9 +60,5 @@ class mod_mumie_generator extends testing_module_generator {
         }
 
         return parent::create_instance($record, (array)$options);
-    }
-
-    public function create_login($mumie, $userid) {
-
     }
 }

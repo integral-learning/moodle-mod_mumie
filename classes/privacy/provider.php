@@ -17,7 +17,7 @@
 /**
  * This class provides an interface to export and delete user data.
  *
- * @package auth_mumie
+ * @package mod_mumie
  * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -34,7 +34,7 @@ use core_privacy\local\request\writer;
 /**
  * This class provides an interface to export and delete user data.
  *
- * @package auth_mumie
+ * @package mod_mumie
  * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
