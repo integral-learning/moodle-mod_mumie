@@ -205,7 +205,7 @@ function mumie_grade_item_update($mumie, $grades = null) {
         return false;
     }
     require_once($CFG->libdir . '/gradelib.php');
-    if (array_key_exists('cmidnumber', $mumie)) {
+    if (isset($mumie->cmidnumber)) {
         $params = array('itemname' => $mumie->name, 'idnumber' => $mumie->cmidnumber);
     } else {
         $params = array('itemname' => $mumie->name);
