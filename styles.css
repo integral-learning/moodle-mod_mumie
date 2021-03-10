@@ -9,6 +9,18 @@
 }
 
 .mumie_tag {
-    margin-right: 1em;
-    margin-left: 1em;
+    margin: 5px;
+}
+
+.mumie_table_wrapper {
+    margin: 10px;
+    padding: 10px;
+}
+
+.mumie_table {
+    display: contents;
+}
+
+.mumie_table thead tr th {
+    border-bottom: 1px solid black;
 }

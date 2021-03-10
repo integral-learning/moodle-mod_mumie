@@ -22,6 +22,7 @@
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
@@ -41,7 +42,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER;
+        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
 
         $mform = &$this->_form;
 
@@ -53,7 +54,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         self::populate_options($serveroptions, $courseoptions, $languageoptions);
 
         // Adding the "general" fieldset, where all the common settings are shown.
-        $mform->addElement('header', 'general', get_string('mumie_form_activity_header', 'mod_mumie'));
+        $mform->addElement('header', 'mumie_multi_edit', get_string('mumie_form_activity_header', 'mod_mumie'));
 
         $mform->addElement(
             "text",
@@ -166,6 +167,19 @@ class mod_mumie_mod_form extends moodleform_mod {
         if (!$disablegradepool) {
             $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
         }
+
+        $mform->addElement('header', 'general', get_string('mumie_form_tasks_edit', 'mod_mumie'));
+
+        $mform->addElement(
+            'html',
+            '<div>'
+            . get_string('mumie_form_tasks_edit_info', 'mod_mumie')
+            . '<br><br>'
+            . '</div>'
+        );
+
+        $this->add_property_selection();
+        $this->add_task_selection();
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -326,11 +340,126 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
+     * Adds the property selection, which is needed for the multi editing, to the form.
+     */
+    private function add_property_selection() {
+        $mform = $this->_form;
+        $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
+        $mform->setType("mumie_selected_task_properties", PARAM_RAW);
+        $taskproperties = array(
+            array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
+            array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
+            array(get_string('mumie_form_points', 'mod_mumie'), "points")
+        );
+        $table = new \html_table();
+        $table->attributes['class'] = 'generaltable mumie_table';
+        $table->head = array(get_string('mumie_form_properties', 'mod_mumie'), ' ');
+
+        foreach ($taskproperties as $taskproperty) {
+            $label = $taskproperty[0];
+            $value = $taskproperty[1];
+            $checkboxhtml = html_writer::checkbox("mumie_multi_edit_property", $value, false);
+            $table->data[] = array($label, $checkboxhtml);
+        }
+
+        $htmltable = html_writer::table($table);
+
+        $mform->addElement(
+            'html',
+            '<div>'
+            . get_string('mumie_form_task_properties_selection_info', 'mod_mumie')
+            .'</div>'
+            .'<div class="mumie_table_wrapper">'
+            . $htmltable
+            . '</div>' );
+
+    }
+
+    /**
+     * Adds the task selection, which is needed for the multi editing, to the form.
+     */
+    private function add_task_selection() {
+        global $COURSE;
+        $cm = &$this->_cm;
+        $mform = $this->_form;
+
+        $mform->addElement("hidden", "mumie_selected_tasks", "[]");
+        $mform->setType("mumie_selected_tasks", PARAM_RAW);
+        $modules = get_all_instances_in_course("mumie", $COURSE);
+
+        if (!is_null($cm)) {
+            $modules = array_filter($modules, function($elem) use($cm){
+                return !($elem->id === $cm->instance);
+            });
+        }
+
+        if (count($modules) < 1) {
+            $notfound = html_writer::tag(
+                'i',
+                "- " . get_string("mumie_no_other_task_found", "mod_mumie") ." -",
+                array("style" => "margin-left: 10px;")
+            );
+            $mform->addElement(
+                'html',
+                get_string('mumie_form_tasks_selection_info', 'mod_mumie')
+                . '<div class="mumie_table_wrapper">'
+                . $notfound
+                . '</div>' );
+            return;
+        }
+
+        $tables = array();
+        foreach ($modules as $module) {
+            $section = $module->section;
+            if (!array_key_exists($section, $tables)) {
+                $table = new \html_table;
+                $table->attributes['class'] = 'generaltable mumie_table';
+                $table->head = array(
+                    get_string(
+                        'mumie_form_topic',
+                        'mod_mumie',
+                        get_section_name($COURSE->id, $section)
+                    ),
+                    html_writer::checkbox(
+                        "mumie_multi_edit_section",
+                        $section,
+                        false
+                    )
+                );
+                $tables[$section] = $table;
+            } else {
+                $table = $tables[$section];
+            }
+            $checkboxhtml = html_writer::checkbox(
+                "mumie_multi_edit_task",
+                $module->id,
+                false,
+                '',
+                array(
+                    "section" => $section
+            ));
+            $table->data[] = array($module->name, $checkboxhtml);
+        }
+
+        $htmltables = "";
+        foreach ($tables as $a) {
+            $htmltables = $htmltables . html_writer::table($a);
+        }
+
+        $mform->addElement(
+            'html',
+            get_string('mumie_form_tasks_selection_info', 'mod_mumie')
+            .'<div class="mumie_table_wrapper">'
+            . $htmltables
+            . '</div>' );
+    }
+
+    /**
      * Make some changes to the loaded data and the form.
      *
      * In some cases (e.g. drag&drop, changes in json coming from the MUMIE-Backend),
      * users have added MUMIE problems that are not officially part of the server structure.
-     * We need to add those problems to the server structre or the user will not be able
+     * We need to add those problems to the server structure or the user will not be able
      * to edit the MUMIE task.
      *
      * Set a hidden value, if the MUMIE server configuration that has been used in this MUMIE task has been deleted.

@@ -61,8 +61,18 @@ class locallib {
      * @return bool True, if there are MUMIE Tasks in the course
      */
     public static function course_contains_mumie_tasks($courseid) {
+        return count(self::get_mumie_tasks_by_course($courseid)) > 0;
+    }
+
+    /**
+     * Get all MUMIE Tasks for a course
+     *
+     * @param int $courseid The course to check
+     * @return array array of MUMIE Tasks
+     */
+    public static function get_mumie_tasks_by_course($courseid) {
         global $DB;
-        return count($DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid))) > 0;
+        return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
     }
 
     /**
