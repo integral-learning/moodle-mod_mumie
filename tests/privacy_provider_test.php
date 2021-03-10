@@ -95,7 +95,11 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         // Test with both users.
         $userlist2 = new \core_privacy\local\request\userlist($context2, 'mod_mumie');
         provider::get_users_in_context($userlist2);
-        $this->assertEquals([$user1->id, $user2->id], $userlist2->get_userids());
+        $expectedusers = [$user1->id, $user2->id];
+        $foundusers = $userlist2->get_userids();
+        sort($expectedusers);
+        sort($foundusers);
+        $this->assertEquals($expectedusers, $foundusers);
 
         // Test with no data.
         $userlist3 = new \core_privacy\local\request\userlist($context3, 'mod_mumie');
