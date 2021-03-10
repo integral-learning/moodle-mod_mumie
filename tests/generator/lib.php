@@ -31,7 +31,7 @@ class mod_mumie_generator extends testing_module_generator {
      * @param  mixed $record
      * @param  array $options
      * @return stdClass mumie instance
-     */    
+     */
     public function create_instance($record = null, array $options = null) {
         global $CFG;
 
