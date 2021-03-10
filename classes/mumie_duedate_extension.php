@@ -170,7 +170,7 @@ class mumie_duedate_extension {
         }
         return $duedate;
     }
-    
+
     /**
      * Construct array of class instances from object array
      *
@@ -304,7 +304,7 @@ class mumie_duedate_extension {
 
         return $this;
     }
-    
+
     /**
      * get all due date extensions for a given user.
      *

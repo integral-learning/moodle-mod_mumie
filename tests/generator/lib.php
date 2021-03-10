@@ -24,14 +24,14 @@ defined('MOODLE_INTERNAL') || die();
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_mumie_generator extends testing_module_generator {    
+class mod_mumie_generator extends testing_module_generator {
     /**
      * Create a mumie instance.
      *
      * @param  mixed $record
-     * @param  mixed $options
-     * @return stdClass
-     */
+     * @param  array $options
+     * @return stdClass mumie instance
+     */    
     public function create_instance($record = null, array $options = null) {
         global $CFG;
 

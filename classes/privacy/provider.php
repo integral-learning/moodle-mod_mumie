@@ -43,11 +43,11 @@ class provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\plugin\provider,
     \core_privacy\local\request\core_userlist_provider {
-        /**
+    /**
      * Returns meta data about this system.
      *
      * @param   collection $collection The initialised item collection to add items to.
-     * @return  collection     A listing of user data stored through this system.
+     * @return  collection A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection) : collection {
         debugging("getMetadata");
@@ -180,7 +180,11 @@ class provider implements
                     )
                 ";
 
-                $DB->delete_records_select('mumie_duedate', $sql, array('instanceid' => $context->__get("instanceid"), 'userid' => $userid));
+                $DB->delete_records_select(
+                    'mumie_duedate',
+                    $sql,
+                    array('instanceid' => $context->__get("instanceid"), 'userid' => $userid)
+                );
             }
         }
     }

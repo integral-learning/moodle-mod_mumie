@@ -37,7 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
-    
     public function test_get_contexts_for_userid_no_data() {
         global $USER;
         $this->setAdminUser();
@@ -46,7 +45,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
     }
 
     public function test_get_contexts_for_userid_with_data() {
-
         $course = $this->getDataGenerator()->create_course();
         $user = $this->getDataGenerator()->create_user();
         $anotheruser = $this->getDataGenerator()->create_user();
@@ -140,7 +138,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         );
     }
 
-    function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context() {
         global $DB;
 
         $course1 = $this->getDataGenerator()->create_course();
@@ -249,15 +247,28 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->assertFalse($writer2->has_any_data());
     }
 
-    public function setUp() {
+    protected function setUp() {
         $this->resetAfterTest(true);
     }
-
+    
+    /**
+     * Create a course module instance of MUMIE Task in a given course for testing.
+     *
+     * @param  mixed $course
+     * @return void
+     */
     protected function create_test_mumie_cm($course) {
         global $DB;
-        return $this->getDataGenerator()->create_module('mumie',['course' => $course->id]);
+        return $this->getDataGenerator()->create_module('mumie', ['course' => $course->id]);
     }
-
+    
+    /**
+     * Add duedate to a MUMIE Task for a given user.
+     *
+     * @param  stdClass $mumie
+     * @param  stdClass $user
+     * @return void
+     */
     protected function add_duedate($mumie, $user) {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
