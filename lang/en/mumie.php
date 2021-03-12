@@ -164,4 +164,4 @@ $string['mumie_calendar_duedate_extension'] = 'Extended due date: {$a}';
 $string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID of MUMIE Task the extension is for';
 $string['privacy:metadata:mod_mumie_duedate_extensions:duedate'] = 'Timestamp of due date extension';
 $string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID to whom the extension is granted';
-$string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Due extensions';
+$string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Due data extensions';

@@ -38,11 +38,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
     public function test_get_contexts_for_userid_no_data() {
-        global $USER;
         $this->resetAfterTest(true);
-
-        $this->setAdminUser();
-        $contextlist = provider::get_contexts_for_userid($USER->id);
+        $user = $this->getDataGenerator()->create_user();
+        $contextlist = provider::get_contexts_for_userid($user->id);
         $this->assertCount(0, $contextlist);
     }
 
@@ -54,7 +52,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $anotheruser = $this->getDataGenerator()->create_user();
 
         $mumie = $this->create_test_mumie_cm($course);
-        $anothermumie = $this->create_test_mumie_cm($course);
 
         $this->add_duedate($mumie, $user);
 
@@ -112,7 +109,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course2 = $this->getDataGenerator()->create_course();
 
         $m1 = $this->create_test_mumie_cm($course1);
         $m2 = $this->create_test_mumie_cm($course1);
@@ -127,7 +123,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->add_duedate($m1, $user3);
 
         $context1 = context_module::instance($m1->cmid);
-        $context2 = context_module::instance($m2->cmid);
 
         $approveduserlist = new \core_privacy\local\request\approved_userlist(
             $context1,
@@ -154,7 +149,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course2 = $this->getDataGenerator()->create_course();
 
         $m1 = $this->create_test_mumie_cm($course1);
         $m2 = $this->create_test_mumie_cm($course1);
@@ -169,7 +163,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->add_duedate($m1, $user3);
 
         $context1 = context_module::instance($m1->cmid);
-        $context2 = context_module::instance($m2->cmid);
 
         provider::delete_data_for_all_users_in_context($context1);
 
@@ -186,7 +179,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course2 = $this->getDataGenerator()->create_course();
 
         $m1 = $this->create_test_mumie_cm($course1);
         $m2 = $this->create_test_mumie_cm($course1);
@@ -240,7 +232,6 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
-        $course2 = $this->getDataGenerator()->create_course();
 
         $m1 = $this->create_test_mumie_cm($course1);
         $m2 = $this->create_test_mumie_cm($course1);

@@ -50,7 +50,6 @@ class provider implements
      * @return  collection A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection) : collection {
-        debugging("getMetadata");
         $collection->add_database_table(
             'mumie_duedate',
             [
@@ -75,12 +74,6 @@ class provider implements
         $contextlist->set_component('mod_mumie');
 
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
-        $mumieids = array_map(
-            function($extension) {
-                return $extension->get_mumie();
-            },
-            \mod_mumie\mumie_duedate_extension::get_all_for_user($userid)
-        );
 
         $sql = "SELECT c.id FROM {mumie_duedate} duedate
                 JOIN {course_modules} cm ON cm.instance = duedate.mumie
@@ -219,12 +212,12 @@ class provider implements
         if ($context instanceof \context_module && count($userids) > 0) {
             list($insql, $inparams) = $DB->get_in_or_equal($userids);
 
-            $innserselect = "SELECT duedate.id FROM {mumie_duedate} duedate
-                            JOIN {course_modules} cm ON cm.instance = duedate.mumie
-                            WHERE cm.id = ?
-                            AND duedate.userid $insql
-                            ";
-            $sql = "id IN ($innserselect)";
+            $sql = "id IN (
+                SELECT duedate.id FROM {mumie_duedate} duedate
+                    JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                    WHERE cm.id = ?
+                    AND duedate.userid $insql
+            )";
 
             $params = array_merge(array($context->__get("instanceid")), $inparams);
 
