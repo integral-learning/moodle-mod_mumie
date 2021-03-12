@@ -58,7 +58,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $contextlist = provider::get_contexts_for_userid($user->id);
         $this->assertCount(1, $contextlist);
 
-        // Make sure that there is no data for the control group.
+        // Make sure that there are no contexts for the control group in a non-empty DB.
         $contextlist = provider::get_contexts_for_userid($anotheruser->id);
         $this->assertCount(0, $contextlist);
     }
@@ -260,7 +260,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
      * Create a course module instance of MUMIE Task in a given course for testing.
      *
      * @param  mixed $course
-     * @return void
+     * @return stdClass
      */
     protected function create_test_mumie_cm($course) {
         global $DB;
