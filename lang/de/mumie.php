@@ -158,3 +158,9 @@ $string['mumie:overridegrades'] = 'Überschreiben einer Moodle-Bewertung für ei
 $string['mumie_calendar_duedate_name'] = 'Abgabefirst: {$a}';
 $string['mumie_calendar_duedate_desc'] = 'Später Abgaben werden nicht in die Moodle-Bewertungen übernommen';
 $string['mumie_calendar_duedate_extension'] = 'Verlängerte Abgabefrist: {$a}';
+
+// Privacy.
+$string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID der MUMIE-Task, für die Abgabefrist verlängert wurde';
+$string['privacy:metadata:mod_mumie_duedate_extensions:duedate'] = 'Zeitpunkt der Fristverlängerung';
+$string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID des Nutzers, für den die Fristverlängerung gilt';
+$string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Abgabefristverlängerungen';

@@ -159,3 +159,9 @@ $string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting
 $string['mumie_calendar_duedate_name'] = 'Due date: {$a}';
 $string['mumie_calendar_duedate_desc'] = 'Submissions after this deadline will not be used for grading';
 $string['mumie_calendar_duedate_extension'] = 'Extended due date: {$a}';
+
+// Privacy.
+$string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID of MUMIE Task the extension is for';
+$string['privacy:metadata:mod_mumie_duedate_extensions:duedate'] = 'Timestamp of due date extension';
+$string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID to whom the extension is granted';
+$string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Due data extensions';

@@ -2,6 +2,10 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.4.2] - TODO
+### Added
+- Implemented Privacy-API
+
 ## [v1.4.1] - 2021-02-26
 ### Changed
 - Added passing grade as tag to MUMIE Task in course view
