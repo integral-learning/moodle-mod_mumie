@@ -290,7 +290,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Populate task and language option list for a given course
      *
-     * @param stdClass $course single instance of MUMIE course containing a list of tasks
+     * @param \auth_mumie\mumie_course $course single instance of MUMIE course containing a list of tasks
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */

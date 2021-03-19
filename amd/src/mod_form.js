@@ -609,6 +609,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     courseController.init(isEdit);
                     taskController.init(isEdit);
                     langController.init();
+                    multiTaskEditController.init();
                     problemSelectorController.init();
                 }
                 multiTaskEditController.init();
