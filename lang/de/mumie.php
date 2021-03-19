@@ -108,6 +108,7 @@ $string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigensch
 $string['mumie_form_properties'] = 'Eigenschaften';
 $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
+$string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';

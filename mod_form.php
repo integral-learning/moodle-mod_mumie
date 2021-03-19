@@ -124,6 +124,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("launchcontainer", "mumie_form_activity_container", "mumie");
         $this->add_info_box(get_string('mumie_form_launchcontainer_info', 'mod_mumie'));
 
+        $mform->addElement("html", "<br><div><i>" . get_string('mumie_form_wiki_link', 'mod_mumie') . "</i></div><br>");
+
         $mform->addElement("hidden", "mumie_coursefile", "");
         $mform->setType("mumie_coursefile", PARAM_TEXT);
 

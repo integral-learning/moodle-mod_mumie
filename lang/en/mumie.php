@@ -95,6 +95,7 @@ $string['mumie_form_task_properties_selection_info'] = 'Select the properties of
 $string['mumie_form_properties'] = 'Properties';
 $string['mumie_form_topic'] = 'Topic: {$a}';
 $string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
+$string['mumie_form_wiki_link'] = 'For help and advanced features, please visit our <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a>!';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';

@@ -2,9 +2,16 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.4.2] - TODO
+## [v1.4.2] - 2021-03-19
 ### Added
 - Implemented Privacy-API
+
+### Changed
+- Streamlined ambiguous use of deadline and due date.
+- Added link to wiki in mod_form
+
+### Fixed
+- Properties can now be applied to other MUMIE Tasks, if MUMIE Server is missing
 
 ## [v1.4.1] - 2021-02-26
 ### Changed
