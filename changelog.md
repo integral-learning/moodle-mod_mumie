@@ -15,7 +15,8 @@ All important changes to this plugin will be documented in this file.
 
 ## [v1.4.1] - 2021-02-26
 
-<a href="https://www.youtube.com/watch?v=h9fr99qLHuc">Video summary</a> of changes
+### Video Summary
+<a href="https://www.youtube.com/watch?v=h9fr99qLHuc">New Features in Version 1.4</a>
 
 ### Changed
 - Added passing grade as tag to MUMIE Task in course view
