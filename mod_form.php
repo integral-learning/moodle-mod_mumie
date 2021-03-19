@@ -124,6 +124,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("launchcontainer", "mumie_form_activity_container", "mumie");
         $this->add_info_box(get_string('mumie_form_launchcontainer_info', 'mod_mumie'));
 
+        $mform->addElement("html", "<br><div><i>" . get_string('mumie_form_wiki_link', 'mod_mumie') . "</i></div><br>");
+
         $mform->addElement("hidden", "mumie_coursefile", "");
         $mform->setType("mumie_coursefile", PARAM_TEXT);
 
@@ -146,7 +148,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("points", "mumie_form_points", "mumie");
 
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"), array('optional' => true));
-        $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
+        $mform->addHelpButton("duedate", 'mumie_due_date', 'mumie');
 
         $radioarray = array();
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
@@ -288,7 +290,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Populate task and language option list for a given course
      *
-     * @param stdClass $course single instance of MUMIE course containing a list of tasks
+     * @param \auth_mumie\mumie_course $course single instance of MUMIE course containing a list of tasks
      * @param array $languageoptions pointer to the array containing all available languages
      * @return void
      */
@@ -347,7 +349,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
         $taskproperties = array(
-            array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
+            array(get_string('mumie_due_date', 'mod_mumie'), "duedate"),
             array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
             array(get_string('mumie_form_points', 'mod_mumie'), "points")
         );
@@ -507,37 +509,36 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
 
         // Check whether the task represents an entire course. If so, check the responding box in the form.
-        $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
-        $server->load_structure();
-        $course = $server->get_course_by_coursefile($data->mumie_coursefile);
         $mform = &$this->_form;
-        $completecourse = $data->taskurl == $course->get_link() . "?lang=" . $data->language;
-        if ($completecourse) {
-            $data->mumie_complete_course = 1;
-        }
-        $mform->addElement('hidden', 'isgraded', !$completecourse);
+        $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
+        if ($server->get_id()) {
+            $server->load_structure();
+            $course = $server->get_course_by_coursefile($data->mumie_coursefile);
+            $completecourse = $data->taskurl == $course->get_link() . "?lang=" . $data->language;
+            if ($completecourse) {
+                $data->mumie_complete_course = 1;
+            }
+            // Check, whether we need to add a custom problem to the server structure.
+            $task = $course->get_task_by_link($data->taskurl);
+            if (is_null($task) && !$completecourse) {
+                // Add a problem derived from the edited task's taskurl to the server structure.
+                $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
+                $filteredservers = array_filter($serverstructure, function ($s) use ($data) {
+                    return $s->get_urlprefix() == $data->server;
+                });
+                $filteredserver = array_values($filteredservers)[0];
 
+                $filteredserver->add_custom_problem_to_structure($data);
+
+                // Save the updated server structure in the hidden input field.
+                $mform->removeElement('mumie_server_structure');
+                $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
+                $mform->setType("mumie_server_structure", PARAM_RAW);
+            }
+        }
         // This option must not be changed to avoid messing with grades in the database.
-        $mform->getElement("mumie_complete_course");
+        $mform->addElement('hidden', 'isgraded', $data->isgraded);
         $mform->updateElementAttr("mumie_complete_course", array("disabled" => "disabled"));
-
-        // Check, whether we need to add a custom problem to the server structure.
-        $task = $course->get_task_by_link($data->taskurl);
-        if (is_null($task) && !$completecourse) {
-            // Add a problem derived from the edited task's taskurl to the server structure.
-            $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
-            $filteredservers = array_filter($serverstructure, function ($s) use ($data) {
-                return $s->get_urlprefix() == $data->server;
-            });
-            $filteredserver = array_values($filteredservers)[0];
-
-            $filteredserver->add_custom_problem_to_structure($data);
-
-            // Save the updated server structure in the hidden input field.
-            $mform->removeElement('mumie_server_structure');
-            $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
-            $mform->setType("mumie_server_structure", PARAM_RAW);
-        }
 
         parent::set_data($data);
     }

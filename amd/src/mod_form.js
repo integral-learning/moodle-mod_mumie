@@ -612,6 +612,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     multiTaskEditController.init();
                     problemSelectorController.init();
                 }
+                multiTaskEditController.init();
                 if (addServerButton) {
                     require(['auth_mumie/mumie_server_config'], function(MumieServer) {
                         MumieServer.init(addServerButton, contextid);

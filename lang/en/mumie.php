@@ -74,8 +74,7 @@ $string['completionpass_help'] = 'If enabled, this activity is considered comple
 Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
 $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
-$string['mumie_form_due_date'] = 'Due date';
-$string['mumie_form_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
+$string['mumie_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
 $string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with other MOODLE courses.
@@ -96,6 +95,7 @@ $string['mumie_form_task_properties_selection_info'] = 'Select the properties of
 $string['mumie_form_properties'] = 'Properties';
 $string['mumie_form_topic'] = 'Topic: {$a}';
 $string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
+$string['mumie_form_wiki_link'] = 'For help and advanced features, please visit our <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a>!';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';
@@ -151,7 +151,7 @@ $string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
 // Capabilities.
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:viewgrades'] = 'View all grades for a course\'s MUMIE Task';
-$string['mumie:grantduedateextension'] = 'Grand a due date extension to individual students';
+$string['mumie:grantduedateextension'] = 'Grant a due date extension to individual students';
 $string['mumie:revokeduedateextension'] = 'Revoke a previously granted due date extension for individual students';
 $string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting a submission from all answers they have submitted for this MUMIE Task';
 
@@ -159,3 +159,9 @@ $string['mumie:overridegrades'] = 'Overwrite Moodle grade of a user by selecting
 $string['mumie_calendar_duedate_name'] = 'Due date: {$a}';
 $string['mumie_calendar_duedate_desc'] = 'Submissions after this deadline will not be used for grading';
 $string['mumie_calendar_duedate_extension'] = 'Extended due date: {$a}';
+
+// Privacy.
+$string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID of MUMIE Task the extension is for';
+$string['privacy:metadata:mod_mumie_duedate_extensions:duedate'] = 'Timestamp of due date extension';
+$string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID to whom the extension is granted';
+$string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Due data extensions';

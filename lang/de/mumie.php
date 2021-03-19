@@ -87,8 +87,7 @@ Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook ang
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
-$string['mumie_form_due_date'] = 'Abgabefrist';
-$string['mumie_form_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
+$string['mumie_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
 $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit anderen Kursen geteilt werden.
@@ -109,6 +108,7 @@ $string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigensch
 $string['mumie_form_properties'] = 'Eigenschaften';
 $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
+$string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
@@ -158,3 +158,9 @@ $string['mumie:overridegrades'] = 'Überschreiben einer Moodle-Bewertung für ei
 $string['mumie_calendar_duedate_name'] = 'Abgabefirst: {$a}';
 $string['mumie_calendar_duedate_desc'] = 'Später Abgaben werden nicht in die Moodle-Bewertungen übernommen';
 $string['mumie_calendar_duedate_extension'] = 'Verlängerte Abgabefrist: {$a}';
+
+// Privacy.
+$string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID der MUMIE-Task, für die Abgabefrist verlängert wurde';
+$string['privacy:metadata:mod_mumie_duedate_extensions:duedate'] = 'Zeitpunkt der Fristverlängerung';
+$string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID des Nutzers, für den die Fristverlängerung gilt';
+$string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Abgabefristverlängerungen';
