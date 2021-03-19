@@ -172,7 +172,6 @@ class mumie_duedate_extension {
     }
 
     /**
-<<<<<<< HEAD
      * Construct array of class instances from object array
      *
      * @param  stdClass[] $objects
@@ -188,8 +187,6 @@ class mumie_duedate_extension {
     }
 
     /**
-=======
->>>>>>> master
      * Delete a mumie_duedate_extension by id.
      *
      * @param  int $id of the entry we want to delete.
