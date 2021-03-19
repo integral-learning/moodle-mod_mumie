@@ -146,7 +146,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("points", "mumie_form_points", "mumie");
 
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"), array('optional' => true));
-        $mform->addHelpButton("duedate", 'mumie_form_due_date', 'mumie');
+        $mform->addHelpButton("duedate", 'mumie_due_date', 'mumie');
 
         $radioarray = array();
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
@@ -347,7 +347,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
         $taskproperties = array(
-            array(get_string('mumie_form_due_date', 'mod_mumie'), "duedate"),
+            array(get_string('mumie_due_date', 'mod_mumie'), "duedate"),
             array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
             array(get_string('mumie_form_points', 'mod_mumie'), "points")
         );
