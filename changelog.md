@@ -14,6 +14,9 @@ All important changes to this plugin will be documented in this file.
 - Properties can now be applied to other MUMIE Tasks, if MUMIE Server is missing
 
 ## [v1.4.1] - 2021-02-26
+
+<a href="https://www.youtube.com/watch?v=h9fr99qLHuc">Video summary</a> of changes
+
 ### Changed
 - Added passing grade as tag to MUMIE Task in course view
 
