@@ -27,8 +27,8 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die;
 
-use core_user\table\participants_search;
 use core_table\local\filter\filterset;
+use core_user\table\participants_search;
 
 global $CFG;
 
@@ -256,5 +256,34 @@ class mumie_participants extends \table_sql {
      */
     public function guess_base_url(): void {
         $this->baseurl = new \moodle_url('/mod/mumie/view.php', array('action' => "grading", 'id' => $this->cmid));
+    }
+
+    /**
+     * Get a fragment that can be used in an ORDER BY clause in participants table.
+     *
+     * @return \SQL|string fragment that can be used in an ORDER BY clause.
+     */
+    public function get_sql_sort() {
+        $rawsort = parent::get_sql_sort();
+        $sortarray = str_getcsv($rawsort, ', ');
+        return implode(
+            ', ',
+            array_filter(
+                $sortarray,
+                function ($searchparam) {
+                    return !$this->is_unsortable_column_header($searchparam);
+                }
+            )
+        );
+    }
+
+    /**
+     * Check if a given string contains an property the participants list cannot be sorted by.
+     *
+     * @param string $searchparam the search term we are checking
+     * @return bool
+     */
+    private function is_unsortable_column_header($searchparam) {
+        return strpos($searchparam, 'duedate') !== false || strpos($searchparam, 'submissions') !== false;
     }
 }
