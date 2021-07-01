@@ -90,6 +90,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     try {
                         langController.setLanguage(importObj.language);
                         taskController.setSelection(importObj.link + '?lang=' + importObj.language);
+                        taskController.setIsGraded(importObj.isGraded);
                         sendSuccess();
                         window.focus();
                         displayProblemSelectedMessage();
@@ -130,6 +131,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + langController.getSelectedLanguage()
                                 + '&origin=' + encodeURIComponent(window.location.origin)
                                 + '&uiLang=' + systemLanguage
+                                + '&gradingType=' + taskController.getGradingType()
                             , '_blank'
                         );
                     };
@@ -307,6 +309,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             var nameElem = document.getElementById("id_name");
             var taskDisplayElement = document.getElementById("id_task_display_element");
             var useCompleteCourseElem = document.getElementById("id_mumie_complete_course");
+            var isGradedElem = document.getElementById('id_mumie_isgraded');
+
 
             /**
              * Update the activity's name in the input field
@@ -445,7 +449,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         if (useCompleteCourse()) {
                             var localizedLink = getLocalizedLink(courseController.getSelectedCourse().link);
                             taskController.setSelection(localizedLink);
+                            taskController.setIsGraded(null);
                         } else {
+                            taskController.setIsGraded(false);
                             taskController.setSelection(null);
                         }
                         // Circumvent moodle bug that ignores "disabled" if visibility has changed.
@@ -479,6 +485,21 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     var visible = courseController.getSelectedCourse().link;
                     useCompleteCourseElem.parentElement.parentElement.parentElement.style =
                      visible ? "display:block" : "display:none";
+                },
+                setIsGraded: function(isGraded) {
+                    if (isGraded === null) {
+                        isGradedElem.value = null;
+                    }
+                    isGradedElem.value = isGraded ? '1' : '0';
+                },
+                getGradingType: function () {
+                    const isGraded = isGradedElem.value;
+                    if (isGraded === '1') {
+                        return 'graded';
+                    } else if (isGraded === '0') {
+                        return 'ungraded';
+                    }
+                    return 'all';
                 }
             };
         })();

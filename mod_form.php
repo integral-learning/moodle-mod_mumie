@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_mumie\locallib;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
@@ -138,6 +140,10 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_org", get_config("auth_mumie", "mumie_org"));
         $mform->setType("mumie_org", PARAM_TEXT);
 
+        $mform->addElement('hidden', 'isgraded', null, array("id" => "id_mumie_isgraded"));
+        $mform->setType("isgraded", PARAM_TEXT);
+
+
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();
 
@@ -238,6 +244,14 @@ class mod_mumie_mod_form extends moodleform_mod {
         if ($data['duedate']) {
             if (time() - $data['duedate'] > 0) {
                 $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
+            }
+        }
+
+        if (array_key_exists('instance', $data)) {
+            global $CFG;
+            $mumie = locallib::get_mumie_task($data['instance']);
+            if ($mumie->isgraded !== $data['isgraded']) {
+                $errors['prb_selector_btn'] = 'TODO: isGraded cannot be changed';
             }
         }
 
@@ -537,7 +551,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
         // This option must not be changed to avoid messing with grades in the database.
-        $mform->addElement('hidden', 'isgraded', $data->isgraded);
         $mform->updateElementAttr("mumie_complete_course", array("disabled" => "disabled"));
 
         parent::set_data($data);
