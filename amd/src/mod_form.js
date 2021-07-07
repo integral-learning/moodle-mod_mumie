@@ -13,8 +13,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     serverStructure = structure;
                     serverDropDown.onchange = function() {
                         courseController.updateOptions();
-                        langController.updateOptions();
-                        taskController.updateCompleteCourseVisibility();
                     };
                 },
                 getSelectedServer: function() {
@@ -83,14 +81,15 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              */
             function addMessageListener() {
                 window.addEventListener('message', (event) => {
-                    if (event.origin != lmsSelectorUrl) {
+                    if (event.origin !== lmsSelectorUrl) {
                         return;
                     }
                     var importObj = JSON.parse(event.data);
+                    const isGraded = importObj.isGraded !== false;
                     try {
                         langController.setLanguage(importObj.language);
                         taskController.setSelection(importObj.link + '?lang=' + importObj.language);
-                        taskController.setIsGraded(importObj.isGraded);
+                        taskController.setIsGraded(isGraded);
                         sendSuccess();
                         window.focus();
                         displayProblemSelectedMessage();
@@ -119,6 +118,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             return {
                 init: function() {
+                    const gradingType = taskController.getGradingType();
                     problemSelectorButton.onclick = function() {
                         problemSelectorWindow = window.open(
                             lmsSelectorUrl
@@ -131,7 +131,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + langController.getSelectedLanguage()
                                 + '&origin=' + encodeURIComponent(window.location.origin)
                                 + '&uiLang=' + systemLanguage
-                                + '&gradingType=' + taskController.getGradingType()
+                                + '&gradingType=' + gradingType
                             , '_blank'
                         );
                     };
@@ -169,7 +169,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     name = course.name[0];
                 } else {
                     for (var i in course.name) {
-                        if (course.name[i].language == selectedLanguage) {
+                        if (course.name[i].language === selectedLanguage) {
                             name = course.name[i];
                         }
                     }
@@ -190,8 +190,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 init: function(isEdit) {
                     courseDropDown.onchange = function() {
                         updateCoursefilePath();
-                        langController.updateOptions();
-                        taskController.updateCompleteCourseVisibility();
                     };
                     courseController.updateOptions(isEdit ? coursefileElem.value : false);
                 },
@@ -201,7 +199,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     for (var i in courses) {
                         var course = courses[i];
                         for (var j in course.name) {
-                            if (course.name[j].value == selectedCourseName) {
+                            if (course.name[j].value === selectedCourseName) {
                                 return course;
                             }
                         }
@@ -220,7 +218,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     for (var i in courses) {
                         var course = courses[i];
                         addOptionForCourse(course);
-                        if (course.coursefile == selectedCourseFile) {
+                        if (course.coursefile === selectedCourseFile) {
                             courseDropDown.selectedIndex = courseDropDown.childElementCount - 1;
                         }
                     }
@@ -230,34 +228,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
         var langController = (function() {
-            var languageDropDown = document.getElementById("id_language_dropdown");
             var languageElem = document.getElementById("id_language");
-
-            /**
-             * Add a new option to the language drop down menu
-             * @param {string} lang the language to add
-             */
-            function addLanguageOption(lang) {
-                var optionLang = document.createElement("option");
-                optionLang.setAttribute("value", lang);
-                optionLang.text = lang;
-                languageDropDown.append(optionLang);
-            }
-
-            /**
-             * Update the selection of the drop down language with the given lang
-             * @param {string} lang
-             */
-            function setDropDownLanguage(lang) {
-                for (var i in languageDropDown.options) {
-                    var option = languageDropDown.options[i];
-                    if (option.value == lang) {
-                        languageDropDown.selectedIndex = i;
-                        courseController.updateOptions();
-                        return;
-                    }
-                }
-            }
 
             /**
              * Check if the given language exists in the currently selected course.
@@ -268,14 +239,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 return courseController.getSelectedCourse().languages.includes(lang);
             }
             return {
-                init: function() {
-                    languageDropDown.onchange = function() {
-                        languageElem.value = languageDropDown.options[languageDropDown.selectedIndex].text;
-                        courseController.updateOptions();
-                        taskController.setSelection();
-                    };
-                    langController.updateOptions(langController.getSelectedLanguage());
-                },
                 getSelectedLanguage: function() {
                     return languageElem.value;
                 },
@@ -284,22 +247,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         throw new Error("Selected language not available");
                     }
                     languageElem.value = lang;
-                    setDropDownLanguage(lang);
-                },
-                disable: function() {
-                    languageDropDown.disabled = true;
-                    removeChildElems(languageDropDown);
-                },
-                updateOptions: function() {
-                    var currentLang = langController.getSelectedLanguage();
-                    removeChildElems(languageDropDown);
-                    languageDropDown.selectedIndex = 0;
-                    var languages = courseController.getSelectedCourse().languages;
-                    for (var i in languages) {
-                        var lang = languages[i];
-                        addLanguageOption(lang);
-                    }
-                    setDropDownLanguage(currentLang);
                 }
             };
         })();
@@ -328,7 +275,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @return {boolean} True, if there is no headline with that name in all tasks
              */
             function isCustomName() {
-                if (nameElem.value.length == 0) {
+                if (nameElem.value.length === 0) {
                     return false;
                 }
                 return !getAllHeadlines().includes(nameElem.value);
@@ -345,7 +292,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 }
                 for (var i in task.headline) {
                     var localHeadline = task.headline[i];
-                    if (localHeadline.language == langController.getSelectedLanguage()) {
+                    if (localHeadline.language === langController.getSelectedLanguage()) {
                         return localHeadline.name;
                     }
                 }
@@ -441,22 +388,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 return useCompleteCourseElem.checked;
             }
 
+            function updateGradeEditability() {
+                const disabled = isGradedElem.value === '0';
+                document.getElementById('id_points').disabled = disabled;
+                document.getElementById('id_gradepass').disabled = disabled;
+                document.getElementById('id_duedate_enabled').disabled = disabled;
+                document.getElementById('id_gradecat').disabled = disabled;
+            }
+
             return {
                 init: function() {
-                    taskController.updateCompleteCourseVisibility();
                     updateName();
-                    useCompleteCourseElem.onchange = function() {
-                        if (useCompleteCourse()) {
-                            var localizedLink = getLocalizedLink(courseController.getSelectedCourse().link);
-                            taskController.setSelection(localizedLink);
-                            taskController.setIsGraded(null);
-                        } else {
-                            taskController.setIsGraded(false);
-                            taskController.setSelection(null);
-                        }
-                        // Circumvent moodle bug that ignores "disabled" if visibility has changed.
-                        taskDisplayElement.disabled = "1";
-                    };
                 },
                 getSelectedTask: function() {
                     var selectedLink = taskSelectionInput.value;
@@ -465,7 +407,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     tasks.push(getPseudoTaskFromCourse(course));
                     for (var i in tasks) {
                         var task = tasks[i];
-                        if (selectedLink == getLocalizedLinkFromTask(task)) {
+                        if (selectedLink === getLocalizedLinkFromTask(task)) {
                             return task;
                         }
                     }
@@ -478,21 +420,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     taskSelectionInput.value = newSelection;
                     updateName();
                 },
-                useCompleteCourse: function() {
-                    return useCompleteCourse();
-                },
-                updateCompleteCourseVisibility: function() {
-                    var visible = courseController.getSelectedCourse().link;
-                    useCompleteCourseElem.parentElement.parentElement.parentElement.style =
-                     visible ? "display:block" : "display:none";
-                },
                 setIsGraded: function(isGraded) {
                     if (isGraded === null) {
                         isGradedElem.value = null;
                     }
                     isGradedElem.value = isGraded ? '1' : '0';
+                    updateGradeEditability();
                 },
-                getGradingType: function () {
+                getGradingType: function() {
                     const isGraded = isGradedElem.value;
                     if (isGraded === '1') {
                         return 'graded';
@@ -533,7 +468,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 taskSelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
                         if (!checkbox.checked) {
-                            selectedTaskIds = selectedTaskIds.filter(elem => elem != checkbox.value);
+                            selectedTaskIds = selectedTaskIds.filter(elem => elem !== checkbox.value);
                         } else {
                             selectedTaskIds.push(checkbox.value);
                         }
@@ -549,7 +484,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 propertySelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
                         if (!checkbox.checked) {
-                            selectedTaskProp = selectedTaskProp.filter(elem => elem != checkbox.value);
+                            selectedTaskProp = selectedTaskProp.filter(elem => elem !== checkbox.value);
                         } else {
                             selectedTaskProp.push(checkbox.value);
                         }
@@ -568,7 +503,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             taskSelectionInputs.forEach(function(taskCheckbox) {
                                 if (taskCheckbox.getAttribute('section') === sectionCheckbox.value) {
                                     taskCheckbox.checked = false;
-                                    selectedTaskIds = selectedTaskIds.filter(elem => taskCheckbox.value != elem);
+                                    selectedTaskIds = selectedTaskIds.filter(elem => taskCheckbox.value !== elem);
                                 }
                             });
                         } else {
@@ -629,7 +564,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     serverController.init(serverStructure);
                     courseController.init(isEdit);
                     taskController.init(isEdit);
-                    langController.init();
                     multiTaskEditController.init();
                     problemSelectorController.init();
                 }
