@@ -44,7 +44,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
+        global $PAGE, $COURSE, $USER;
 
         $mform = &$this->_form;
 
@@ -127,7 +127,6 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement('hidden', 'isgraded', null, array("id" => "id_mumie_isgraded"));
         $mform->setType("isgraded", PARAM_TEXT);
-
 
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();
