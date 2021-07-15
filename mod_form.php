@@ -23,9 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_mumie\locallib;
-
 defined('MOODLE_INTERNAL') || die;
+
+use mod_mumie\locallib;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
