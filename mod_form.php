@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use mod_mumie\locallib;
+
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
@@ -42,7 +44,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function definition() {
-        global $PAGE, $OUTPUT, $COURSE, $CFG, $USER, $DB;
+        global $PAGE, $COURSE, $USER;
 
         $mform = &$this->_form;
 
@@ -82,18 +84,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
 
         $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
-        $mform->addElement("checkbox", "mumie_complete_course", get_string('mumie_form_complete_course', 'mod_mumie'));
-        $mform->addHelpButton("mumie_complete_course", 'mumie_form_complete_course', 'mumie');
-
-        $mform->addElement(
-            "select",
-            "language_dropdown",
-            get_string('mumie_form_activity_language', "mod_mumie"),
-            $languageoptions
-        );
-        $mform->addHelpButton("language_dropdown", 'mumie_form_activity_language', 'mumie');
-        $mform->setDefault("language_dropdown", optional_param("lang", $USER->lang, PARAM_ALPHA));
-        $mform->hideIf('language_dropdown', 'mumie_complete_course', 'notchecked');
 
         $mform->addElement("hidden", "language", $USER->lang, array("id" => "id_language"));
         $mform->setType("language", PARAM_TEXT);
@@ -109,11 +99,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         );
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
-        $mform->hideIf('task_display_element', 'mumie_complete_course', 'checked');
 
         $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
-        $mform->disabledIf('prb_selector_btn', 'mumie_complete_course', 'checked');
-        $mform->hideIf('prb_selector_btn', 'mumie_complete_course', 'checked');
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
@@ -137,6 +124,9 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement("hidden", "mumie_org", get_config("auth_mumie", "mumie_org"));
         $mform->setType("mumie_org", PARAM_TEXT);
+
+        $mform->addElement('hidden', 'isgraded', null, array("id" => "id_mumie_isgraded"));
+        $mform->setType("isgraded", PARAM_TEXT);
 
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();
@@ -241,6 +231,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
 
+        if (array_key_exists('instance', $data) && $data['instance']) {
+            $mumie = locallib::get_mumie_task($data['instance']);
+            if ($mumie && $mumie->isgraded !== $data['isgraded']) {
+                $errors['prb_selector_btn'] = get_string('mumie_form_cant_change_isgraded', 'mod_mumie');
+            }
+        }
+
         return $errors;
     }
 
@@ -335,10 +332,10 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function disable_grade_rules() {
         $mform = $this->_form;
-        $mform->disabledIf('gradepass', 'mumie_complete_course', 'checked');
-        $mform->disabledIf('duedate[enabled]', 'mumie_complete_course', 'checked');
-        $mform->disabledIf('points', 'mumie_complete_course', 'checked');
-        $mform->disabledIf('gradecat', 'mumie_complete_course', 'checked');
+        $mform->disabledIf('gradepass', 'isgraded', 'eq', '0');
+        $mform->disabledIf('duedate[enabled]', 'isgraded', 'eq', '0');
+        $mform->disabledIf('points', 'isgraded', 'eq', '0');
+        $mform->disabledIf('gradecat', 'isgraded', 'eq', '0');
     }
 
     /**
@@ -537,7 +534,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
         // This option must not be changed to avoid messing with grades in the database.
-        $mform->addElement('hidden', 'isgraded', $data->isgraded);
         $mform->updateElementAttr("mumie_complete_course", array("disabled" => "disabled"));
 
         parent::set_data($data);

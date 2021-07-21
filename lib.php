@@ -45,7 +45,6 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
     mod_mumie\locallib::update_pending_gradepool($mumie);
-    $mumie->isgraded = !($mumie->mumie_complete_course ?? 0);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
