@@ -491,7 +491,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             });
             serverController.disable();
             courseController.disable();
-            langController.disable();
             problemSelectorController.disable();
         }
 

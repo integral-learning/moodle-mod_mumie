@@ -9,6 +9,9 @@ All important changes to this plugin will be documented in this file.
 ### Changed
 - Removed "use entire course" button. You can create a MUMIE Task linking to the course overview page by selecting the respective problem in problem selector. It's listed under **Type -> Overview**.
 
+### Fixed
+- Added styling for warning and info badges (for deadline, passing grade etc) in course view for Moodle 3.11
+
 ## [v1.4.3] - 2021-06-25
 ### Fixed
 - Fixed an issue on the MUMIE grading page where sorting the student list by either *Due date extension* or *Submissions* caused an error
