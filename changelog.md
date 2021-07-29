@@ -2,9 +2,9 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.4.4] - [TODO]
+## [v1.4.4] - 2021-07-29
 ### Added
-- Select ungraded problems in problem selector
+- Added possibility to select *ungraded* articles, chapters and courses in problem selector.
 
 ### Changed
 - Removed "use entire course" button. You can create a MUMIE Task linking to the course overview page by selecting the respective problem in problem selector. It's listed under **Type -> Overview**.
