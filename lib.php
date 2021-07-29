@@ -45,7 +45,6 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
     mod_mumie\locallib::update_pending_gradepool($mumie);
-    $mumie->isgraded = !($mumie->mumie_complete_course ?? 0);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
@@ -156,14 +155,14 @@ function mumie_cm_info_view(cm_info $cm) {
             . ': '
             . strftime(get_string('strftimedaydatetime', 'langconfig'), $duedate);
 
-        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
+        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
     }
     if ($gradeitem&&$gradeitem->gradepass > 0) {
         $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
-        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag'));
+        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
     }
     if (!isset($mumie->privategradepool)) {
-        $info .= html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag mumie_tag'))
+        $info .= html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag mumie_tag badge badge-warning'))
             . html_writer::tag(
                 'span',
                 get_string('mumie_tag_disabled_help', 'mod_mumie')
