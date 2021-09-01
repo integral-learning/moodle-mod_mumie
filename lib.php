@@ -162,7 +162,11 @@ function mumie_cm_info_view(cm_info $cm) {
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
     }
     if (!isset($mumie->privategradepool)) {
-        $info .= html_writer::tag('p', get_string('mumie_tag_disabled', 'mod_mumie'), array('class' => 'tag-warning tag mumie_tag badge badge-warning'))
+        $info .= html_writer::tag(
+                'p',
+                get_string('mumie_tag_disabled', 'mod_mumie'),
+                array('class' => 'tag-warning tag mumie_tag badge badge-warning')
+            )
             . html_writer::tag(
                 'span',
                 get_string('mumie_tag_disabled_help', 'mod_mumie')
