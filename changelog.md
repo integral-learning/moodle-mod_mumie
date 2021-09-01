@@ -2,6 +2,10 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.4.5] - 2021-09-01
+### Fixed
+- Fixed an issue, where adding MUMIE Tasks via drag&drop did not create entries in the Moodle Gradebook.  
+
 ## [v1.4.4] - 2021-07-29
 ### Added
 - Added possibility to select *ungraded* articles, chapters and courses in problem selector.
