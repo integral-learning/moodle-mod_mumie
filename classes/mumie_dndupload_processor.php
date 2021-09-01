@@ -263,6 +263,7 @@ class mumie_dndupload_processor {
         $mumie->points = 100;
         $mumie->name = \mod_mumie\locallib::get_default_name($uploadinstance) ?? $uploadinstance->name;
         $mumie->privategradepool = $this->gradepoolsettings;
+        $mumie->isgraded = $uploadinstance->isGraded;
         return $mumie;
     }
 
