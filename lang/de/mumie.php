@@ -112,6 +112,7 @@ $string['mumie_form_properties'] = 'Eigenschaften';
 $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
+$string['mumie_form_no_course_on_server'] = 'MUMIE-Server <b>{$a}</b> konnte nicht erreicht werden! Dieser Server wurde daher vorrübergehend aus der Auswahl entfernt.';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
