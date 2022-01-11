@@ -612,7 +612,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             } else {
                 array_push($validservers, $server);
             }
-
         }
         return $validservers;
     }
