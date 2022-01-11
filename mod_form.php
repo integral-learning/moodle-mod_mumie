@@ -523,7 +523,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             $task = $course->get_task_by_link($data->taskurl);
             if (is_null($task) && !$completecourse) {
                 // Add a problem derived from the edited task's taskurl to the server structure.
-                $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
+                $serverstructure = $this->get_valid_servers_with_structure();
                 $filteredservers = array_filter($serverstructure, function ($s) use ($data) {
                     return $s->get_urlprefix() == $data->server;
                 });
