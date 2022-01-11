@@ -2,6 +2,11 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.4.6] - [TODO]
+
+### Fixed
+- Fixed an issue where an invalid MUMIE server crashes MUMIE Task form. Invalid servers are temporarily removed and a warning is displayed.
+
 ## [v1.4.5] - 2021-09-01
 ### Fixed
 - Fixed an issue, where adding MUMIE Tasks via drag&drop did not create entries in the Moodle Gradebook.  

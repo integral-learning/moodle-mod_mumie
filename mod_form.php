@@ -39,6 +39,12 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mumie_mod_form extends moodleform_mod {
+
+    /** All valid MUMIE servers (including course structure) available.
+     * @var array
+     */
+    private $servers;
+
     /**
      * Define fields and default values for the mumie server form
      * @return void
@@ -48,7 +54,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform = &$this->_form;
 
-        $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
+        $this->servers = $this->get_valid_servers_with_structure();
         $serveroptions = array();
         $courseoptions = array();
         $languageoptions = array();
@@ -119,7 +125,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_missing_config", null);
         $mform->setType("mumie_missing_config", PARAM_TEXT);
 
-        $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
+        $mform->addElement("hidden", "mumie_server_structure", json_encode($this->servers));
         $mform->setType("mumie_server_structure", PARAM_RAW);
 
         $mform->addElement("hidden", "mumie_org", get_config("auth_mumie", "mumie_org"));
@@ -251,9 +257,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     private function populate_options(&$serveroptions, &$courseoptions, &$languageoptions) {
-        $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
-
-        foreach ($servers as $server) {
+        foreach ($this->servers as $server) {
             $serveroptions[$server->get_urlprefix()] = $server->get_name();
             self::populate_course_options(
                 $server->get_courses(),
@@ -583,5 +587,34 @@ class mod_mumie_mod_form extends moodleform_mod {
             . $message
             . '</div></div>'
         );
+    }
+
+    /**
+     * Get all MUMIE servers that have courses.
+     *
+     * Display a warning message if a course is invalid.
+     *
+     * @return array
+     */
+    private function get_valid_servers_with_structure(): array
+    {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/classes/notification.php');
+
+        $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
+        $validservers = array();
+        foreach ($servers as $server) {
+            if (count($server->get_courses()) === 0) {
+                \core\notification::warning(get_string(
+                    'mumie_form_no_course_on_server',
+                    'mod_mumie',
+                    $server->get_name())
+                );
+            } else {
+                array_push($validservers, $server);
+            }
+
+        }
+        return $validservers;
     }
 }
