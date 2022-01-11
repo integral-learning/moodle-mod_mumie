@@ -596,8 +596,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @return array
      */
-    private function get_valid_servers_with_structure(): array
-    {
+    private function get_valid_servers_with_structure(): array {
         global $CFG;
         require_once($CFG->dirroot . '/lib/classes/notification.php');
 
