@@ -151,6 +151,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Update the hidden input field with the selected course's course file path
+             *
+             * @param {string} coursefile
              */
             function updateCoursefilePath(coursefile) {
                 coursefileElem.value = coursefile;
@@ -178,10 +180,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     const courses = serverController.getSelectedServer().courses;
                     return courses.find(course => course.coursefile === coursefileElem.value);
                 },
-                updateCourseName: function () {
+                updateCourseName: function() {
                     updateCourseName();
                 },
-                setCourse: function (courseFile) {
+                setCourse: function(courseFile) {
                     updateCoursefilePath(courseFile);
                 }
             };
