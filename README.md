@@ -45,4 +45,3 @@ This activity plugin requires Javascript to work!
 
 ## Wiki
 For further information, detailed step-by-step guides and FAQs please visit our [wiki](https://wiki.mumie.net/wiki/MUMIE-Moodle-integration)!
-
