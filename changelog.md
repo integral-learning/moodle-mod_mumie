@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.4.6] - [TODO]
+## [v1.4.6] - 2022-03-11
 
 ## Added
 - Added support for MUMIE servers with multiple courses
