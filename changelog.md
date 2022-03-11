@@ -4,6 +4,9 @@ All important changes to this plugin will be documented in this file.
 
 ## [v1.4.6] - [TODO]
 
+## Added
+- Added support for MUMIE servers with multiple courses
+
 ### Fixed
 - Fixed an issue where an invalid MUMIE server crashes MUMIE Task form. Invalid servers are temporarily removed and a warning is displayed.
 
