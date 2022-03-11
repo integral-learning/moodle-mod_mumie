@@ -11,9 +11,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function(structure) {
                     serverStructure = structure;
-                    serverDropDown.onchange = function() {
-                        courseController.updateOptions();
-                    };
                 },
                 getSelectedServer: function() {
                     const selectedServerName = serverDropDown.options[serverDropDown.selectedIndex].text;
@@ -80,6 +77,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     const importObj = JSON.parse(event.data);
                     const isGraded = importObj.isGraded !== false;
                     try {
+                        courseController.setCourse(importObj.path_to_coursefile);
                         langController.setLanguage(importObj.language);
                         taskController.setSelection(importObj.link + '?lang=' + importObj.language);
                         taskController.setIsGraded(isGraded);
@@ -125,6 +123,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + '&origin=' + encodeURIComponent(window.location.origin)
                                 + '&uiLang=' + systemLanguage
                                 + '&gradingType=' + gradingType
+                                + '&multiCourse=true'
                             , '_blank'
                         );
                     };
@@ -146,66 +145,46 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         })();
 
         const courseController = (function() {
-            const courseDropDown = document.getElementById("id_mumie_course");
+            const courseNameElem = document.getElementById("id_mumie_course");
             const coursefileElem = document.getElementsByName("mumie_coursefile")[0];
 
-            /**
-             * Add a new option the the 'MUMIE Course' drop down menu
-             * @param {Object} course
-             */
-            function addOptionForCourse(course) {
-                const optionCourse = document.createElement("option");
-                const selectedLanguage = langController.getSelectedLanguage();
-                let name;
-                // If the currently selected language is not available on the server, we need to select another one.
-                if (!course.languages.includes(selectedLanguage)) {
-                    name = course.name[0];
-                } else {
-                    name = course.name.find(n => n.language === selectedLanguage);
-                }
-                optionCourse.setAttribute("value", name.value);
-                optionCourse.text = name.value;
-                courseDropDown.append(optionCourse);
-            }
 
             /**
              * Update the hidden input field with the selected course's course file path
+             *
+             * @param {string} coursefile
              */
-            function updateCoursefilePath() {
-                coursefileElem.value = courseController.getSelectedCourse().coursefile;
+            function updateCoursefilePath(coursefile) {
+                coursefileElem.value = coursefile;
+                updateCourseName();
+            }
+
+            /**
+             * Update displayed course name.
+             */
+            function updateCourseName() {
+                const selectedCourse = courseController.getSelectedCourse();
+                const selectedLanguage = langController.getSelectedLanguage();
+                if (!selectedCourse || !selectedLanguage) {
+                    return;
+                }
+                courseNameElem.value = selectedCourse.name
+                    .find(translation => translation.language === selectedLanguage)?.value;
             }
 
             return {
-                init: function(isEdit) {
-                    courseDropDown.onchange = function() {
-                        updateCoursefilePath();
-                    };
-                    courseController.updateOptions(isEdit ? coursefileElem.value : false);
+                init: function() {
+                    updateCourseName();
                 },
                 getSelectedCourse: function() {
-                    const selectedCourseName = courseDropDown.options[courseDropDown.selectedIndex].text;
                     const courses = serverController.getSelectedServer().courses;
-
-                    return courses.find(course => {
-                        return course.name.some(name => name.value === selectedCourseName);
-                    });
+                    return courses.find(course => course.coursefile === coursefileElem.value);
                 },
-                disable: function() {
-                    courseDropDown.disabled = true;
-                    removeChildElems(courseDropDown);
+                updateCourseName: function() {
+                    updateCourseName();
                 },
-                updateOptions: function() {
-                    const selectedCourseFile = coursefileElem.value;
-                    removeChildElems(courseDropDown);
-                    courseDropDown.selectedIndex = 0;
-                    serverController.getSelectedServer().courses
-                        .forEach(course => {
-                            addOptionForCourse(course);
-                            if (course.coursefile === selectedCourseFile) {
-                                courseDropDown.selectedIndex = courseDropDown.childElementCount - 1;
-                            }
-                        });
-                    updateCoursefilePath();
+                setCourse: function(courseFile) {
+                    updateCoursefilePath(courseFile);
                 }
             };
         })();
@@ -230,6 +209,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         throw new Error("Selected language not available");
                     }
                     languageElem.value = lang;
+                    courseController.updateCourseName();
                 }
             };
         })();
@@ -354,10 +334,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 getSelectedTask: function() {
                     const selectedLink = taskSelectionInput.value;
-                    const tasks = courseController.getSelectedCourse()
+                    const selectedCourse = courseController.getSelectedCourse();
+                    if (!selectedCourse) {
+                        return null;
+                    }
+                    const tasks = selectedCourse
                         .tasks
                         .slice();
-                    tasks.push(getPseudoTaskFromCourse(courseController.getSelectedCourse()));
+                    tasks.push(getPseudoTaskFromCourse(selectedCourse));
                     return tasks
                         .find(task => getLocalizedLinkFromTask(task) === selectedLink);
                 },
@@ -490,7 +474,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 }).fail(notification.exception);
             });
             serverController.disable();
-            courseController.disable();
             problemSelectorController.disable();
         }
 
@@ -506,7 +489,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     disableDropDownMenus('mumie_form_no_server_conf');
                 } else {
                     serverController.init(serverStructure);
-                    courseController.init(isEdit);
+                    courseController.init();
                     taskController.init(isEdit);
                     multiTaskEditController.init();
                     problemSelectorController.init();

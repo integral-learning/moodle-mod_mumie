@@ -39,6 +39,12 @@ require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mumie_mod_form extends moodleform_mod {
+
+    /** All valid MUMIE servers (including course structure) available.
+     * @var array
+     */
+    private $servers;
+
     /**
      * Define fields and default values for the mumie server form
      * @return void
@@ -48,12 +54,8 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform = &$this->_form;
 
-        $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
-        $serveroptions = array();
-        $courseoptions = array();
-        $languageoptions = array();
-
-        self::populate_options($serveroptions, $courseoptions, $languageoptions);
+        $this->servers = $this->get_valid_servers_with_structure();
+        $serveroptions = $this->get_server_options();
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'mumie_multi_edit', get_string('mumie_form_activity_header', 'mod_mumie'));
@@ -83,7 +85,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             );
         }
 
-        $mform->addElement("select", "mumie_course", get_string('mumie_form_activity_course', "mod_mumie"), $courseoptions);
+        $mform->addElement(
+            "text",
+            "mumie_course",
+            get_string('mumie_form_activity_course', "mod_mumie"),
+            array("disabled" => true, "class" => "mumie_text_input")
+        );
+        $mform->setType("mumie_course", PARAM_TEXT);
 
         $mform->addElement("hidden", "language", $USER->lang, array("id" => "id_language"));
         $mform->setType("language", PARAM_TEXT);
@@ -119,7 +127,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_missing_config", null);
         $mform->setType("mumie_missing_config", PARAM_TEXT);
 
-        $mform->addElement("hidden", "mumie_server_structure", json_encode($serverstructure));
+        $mform->addElement("hidden", "mumie_server_structure", json_encode($this->servers));
         $mform->setType("mumie_server_structure", PARAM_RAW);
 
         $mform->addElement("hidden", "mumie_org", get_config("auth_mumie", "mumie_org"));
@@ -242,64 +250,16 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * For the form to work, we need to populate all option fields before javascript can modify them.
-     * If a option is not defined before js is started, it won't be saved by moodle.
+     * Get all options for server drop-down menu
      *
-     * @param stdClass $serveroptions pointer to the array containing all available servers
-     * @param stdClass $courseoptions pointer to the array containing all available courses
-     * @param stdClass $languageoptions pointer to the array containing all available languages
-     * @return void
+     * @return array
      */
-    private function populate_options(&$serveroptions, &$courseoptions, &$languageoptions) {
-        $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
-
-        foreach ($servers as $server) {
+    private function get_server_options() {
+        $serveroptions = array();
+        foreach ($this->servers as $server) {
             $serveroptions[$server->get_urlprefix()] = $server->get_name();
-            self::populate_course_options(
-                $server->get_courses(),
-                $courseoptions,
-                $languageoptions
-            );
         }
-    }
-
-    /**
-     * Populate course option list and then populate task options for all given courses of a MUMIE server.
-     *
-     * @param array $courses array containing a list of courses
-     * @param array $courseoptions pointer to the array containing all available courses
-     * @param array $languageoptions pointer to the array containing all available languages
-     * @return void
-     */
-    private function populate_course_options($courses, &$courseoptions, &$languageoptions) {
-        foreach ($courses as $course) {
-            foreach ($course->get_name() as $name) {
-                $courseoptions[$name->value] = $name->value;
-
-                // If a user wants to use an entire course instead of a single problem, we need to define a pseudo problem to use.
-                $languagelink = $course->get_link() . '?lang=' . $name->language;
-                $languageoptions[$name->language] = $name->language;
-            }
-            self::populate_problem_options($course, $languageoptions);
-        }
-    }
-
-    /**
-     * Populate task and language option list for a given course
-     *
-     * @param \auth_mumie\mumie_course $course single instance of MUMIE course containing a list of tasks
-     * @param array $languageoptions pointer to the array containing all available languages
-     * @return void
-     */
-    private function populate_problem_options($course, &$languageoptions) {
-        foreach ($course->get_tasks() as $problem) {
-            $link = $problem->get_link();
-
-            foreach ($problem->get_headline() as $headline) {
-                $languagelink = $link . '?lang=' . $headline->language;
-                $languageoptions[$headline->language] = $headline->language;
-            }
-        }
+        return $serveroptions;
     }
 
     /**
@@ -519,7 +479,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             $task = $course->get_task_by_link($data->taskurl);
             if (is_null($task) && !$completecourse) {
                 // Add a problem derived from the edited task's taskurl to the server structure.
-                $serverstructure = auth_mumie\mumie_server::get_all_servers_with_structure();
+                $serverstructure = $this->get_valid_servers_with_structure();
                 $filteredservers = array_filter($serverstructure, function ($s) use ($data) {
                     return $s->get_urlprefix() == $data->server;
                 });
@@ -583,5 +543,32 @@ class mod_mumie_mod_form extends moodleform_mod {
             . $message
             . '</div></div>'
         );
+    }
+
+    /**
+     * Get all MUMIE servers that have courses.
+     *
+     * Display a warning message if a course is invalid.
+     *
+     * @return array
+     */
+    private function get_valid_servers_with_structure(): array {
+        global $CFG;
+        require_once($CFG->dirroot . '/lib/classes/notification.php');
+
+        $servers = auth_mumie\mumie_server::get_all_servers_with_structure();
+        $validservers = array();
+        foreach ($servers as $server) {
+            if (count($server->get_courses()) === 0) {
+                \core\notification::warning(get_string(
+                    'mumie_form_no_course_on_server',
+                    'mod_mumie',
+                    $server->get_name())
+                );
+            } else {
+                array_push($validservers, $server);
+            }
+        }
+        return $validservers;
     }
 }
