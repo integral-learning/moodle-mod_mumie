@@ -85,9 +85,11 @@ class mumie_grader {
         global $PAGE, $CFG;
         $output = "";
 
+        $gradedroles = array_map('intval', explode(',', $CFG->gradebookroles));
+
         $filterset = new participants_filterset();
         $filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$this->course->id]));
-        $filterset->add_filter(new integer_filter('roles', filter::JOINTYPE_DEFAULT, [5]));
+        $filterset->add_filter(new integer_filter('roles', filter::JOINTYPE_DEFAULT, $gradedroles));
 
         require_once($CFG->dirroot . "/mod/mumie/classes/mumie_participants.php");
 
