@@ -23,7 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core\check\performance\debugging;
 use mod_mumie\locallib;
 
 defined('MOODLE_INTERNAL') || die;
