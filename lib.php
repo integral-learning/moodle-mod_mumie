@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\check\performance\debugging;
 use mod_mumie\locallib;
 
 defined('MOODLE_INTERNAL') || die;
@@ -107,6 +108,9 @@ function mumie_delete_instance($id) {
  *
  * @param stdClass $coursemodule
  */
+
+
+
 function mumie_get_coursemodule_info($coursemodule) {
     global $DB, $USER, $CFG;
 
@@ -122,9 +126,12 @@ function mumie_get_coursemodule_info($coursemodule) {
         $info->content = format_module_intro('mumie', $mumie, $coursemodule->id, false);
     }
 
+    
+    $context = context_module::instance($coursemodule->id);     
+    $openinnewtab = $mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW && !has_capability("mod/mumie:viewgrades", $context, $USER);
     // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
-    if ($mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
-        $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";
+    if ($openinnewtab) {
+        $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";            
     }
 
     return $info;
