@@ -2,14 +2,19 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.4.8] - 2022-07-08
+
+### Fixed
+- MUMIE Task's grading page is no longer opened in new tab.
+  
 ## [v1.4.7] - 2022-03-23
 
-## Fixed
+### Fixed
 - Fixed an issue where only participants with default student role were listed on the individual grading settings page. Now every participant with a graded role will be listed.
 
 ## [v1.4.6] - 2022-03-11
 
-## Added
+### Added
 - Added support for MUMIE servers with multiple courses
 
 ### Fixed
