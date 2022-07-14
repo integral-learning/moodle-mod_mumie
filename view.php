@@ -78,7 +78,7 @@ if ($action == "grading") {
     $redirecturl = new moodle_url('/mod/mumie/view.php', array('id' => $id, 'action' => 'open'));
     echo $OUTPUT->header();
     echo $grader->view_grading_table();
-    $buttonattributes =  array(
+    $buttonattributes = array(
             "class" => "btn btn-primary",
             "href" => $redirecturl,
             "style" => "margin:10px auto; display: table;"
@@ -92,7 +92,7 @@ if ($action == "grading") {
         "Open MUMIE Task",
         $buttonattributes
     );
-    
+
     echo $OUTPUT->footer();
 } else if ($action == "open") {
 
