@@ -1,6 +1,9 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+## [vxxx] 
+### Fixed
+- Embedded MUMIE Tasks are no longer opened in new tab for teachers.
 
 ## [v1.4.8] - 2022-07-08
 
