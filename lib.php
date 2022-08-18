@@ -108,7 +108,7 @@ function mumie_delete_instance($id) {
  * @param stdClass $coursemodule
  */
 function mumie_get_coursemodule_info($coursemodule) {
-    global $DB, $USER, $CFG;
+    global $DB;
 
     if (!$mumie = $DB->get_record("mumie", array("id" => $coursemodule->instance))) {
         return null;
@@ -121,15 +121,29 @@ function mumie_get_coursemodule_info($coursemodule) {
         // Convert intro to html. Do not filter cached version, filters run at display time.
         $info->content = format_module_intro('mumie', $mumie, $coursemodule->id, false);
     }
+    return $info;
+}
 
-    $context = context_module::instance($coursemodule->id);
+/**
+ * Set onclick listener that makes sure the activity is opened in a new tab, if needed.
+ *
+ * @param cm_info $cm
+ * @return void|null
+ * @throws coding_exception
+ * @throws dml_exception
+ */
+function mumie_cm_info_dynamic(cm_info $cm) {
+    global $DB, $USER, $CFG;
+    if (!$mumie = $DB->get_record("mumie", array("id" => $cm->instance))) {
+        return null;
+    }
+    $context = context_module::instance($cm->id);
+
     $openinnewtab = $mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW && !has_capability("mod/mumie:viewgrades", $context, $USER);
     // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
     if ($openinnewtab) {
-        $info->onclick = "window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$coursemodule->id}'); return false;";
+        $cm->set_on_click("window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$cm->id}'); return false;");
     }
-
-    return $info;
 }
 
 /**
