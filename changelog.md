@@ -1,7 +1,8 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
-## [vxxx] 
+## [v1.4.9]  - 2023-01-11
+
 ### Fixed
 - Fixed a caching issue that caused inconsistent behaviour whenever the MUMIE Task was clicked on in course view
 
