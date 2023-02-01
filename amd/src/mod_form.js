@@ -76,11 +76,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     }
                     const importObj = JSON.parse(event.data);
                     const isGraded = importObj.isGraded !== false;
+                    const worksheetConfiguration = importObj.worksheetConfiguration ?? null;
                     try {
                         courseController.setCourse(importObj.path_to_coursefile);
                         langController.setLanguage(importObj.language);
                         taskController.setSelection(importObj.link + '?lang=' + importObj.language);
                         taskController.setIsGraded(isGraded);
+                        worksheetController.setWorksheetConfiguration(worksheetConfiguration);
                         sendSuccess();
                         window.focus();
                         displayProblemSelectedMessage();
@@ -455,6 +457,18 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     setPropertySelectionListeners();
                     setSectionSelectionListeners();
                 },
+            };
+        })();
+
+        const worksheetController = (function () {
+            const worksheetConfigurationElement = document.getElementById("id_mumie_worksheetconfiguration");
+            return {
+                setWorksheetConfiguration: function (worksheetConfiguration) {
+                    if (worksheetConfiguration) {
+                        worksheetConfigurationElement.setAttribute("value", JSON.stringify(worksheetConfiguration));
+                    }
+                    worksheetConfigurationElement.removeAttribute("value");
+                }
             };
         })();
 
