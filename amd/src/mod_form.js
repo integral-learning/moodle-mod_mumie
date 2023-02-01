@@ -124,6 +124,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + '&uiLang=' + systemLanguage
                                 + '&gradingType=' + gradingType
                                 + '&multiCourse=true'
+                                + '&worksheet=true'
                             , '_blank'
                         );
                     };
