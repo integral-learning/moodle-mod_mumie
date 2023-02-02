@@ -26,7 +26,7 @@
         <FIELD NAME="duedate" TYPE="int" LENGTH="10" SEQUENCE="false" DEFAULT="0"/>
         <FIELD NAME ="privategradepool" TYPE="int" LENGTH="1"/>
         <FIELD NAME ="isgraded" TYPE="int" LENGTH="1" DEFAULT="1"/>
-        <FILED NAME ="worksheetconfiguration" TYPE="text" NOTNULL="false" COMMENT="Serialized worksheet configuration"/>
+        <FILED NAME ="worksheetdata" TYPE="text" NOTNULL="false" COMMENT="Serialized worksheet configuration"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

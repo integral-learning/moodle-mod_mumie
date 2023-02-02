@@ -93,7 +93,7 @@ function xmldb_mumie_upgrade($oldversion) {
     }
     if ($oldversion < 2023020100) {
         $table = new xmldb_table('mumie');
-        $field = new xmldb_field('worksheetconfiguration', XMLDB_TYPE_TEXT, null, null, false, null, null);
+        $field = new xmldb_field('worksheetdata', XMLDB_TYPE_TEXT, null, null, false, null, null);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
