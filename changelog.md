@@ -1,6 +1,12 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+
+## [v1.4.10] - TODO
+
+### Changed
+- Button to open a MUMIE Task in grading view is moved on top of participant list
+
 ## [v1.4.9]  - 2023-01-11
 
 ### Fixed
