@@ -28,6 +28,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         const problemSelectorController = (function() {
             const problemSelectorButton = document.getElementById('id_prb_selector_btn');
+            const multiProblemSelectorButton = document.getElementById('id_multi_problem_selector_btn');
             let problemSelectorWindow;
             const mumieOrg = document.getElementsByName('mumie_org')[0].value;
 
@@ -137,6 +138,18 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                      }, false);
 
                     addMessageListener();
+
+                    multiProblemSelectorButton.onclick = function(e) {
+                        e.preventDefault();
+                        problemSelectorWindow = window.open(
+                          lmsSelectorUrl
+                          + '/lms-problem-selector?'
+                          + "serverUrl="
+                          + encodeURIComponent(serverController.getSelectedServer().urlprefix),
+                          "_blank",
+                          'toolbar=0,location=0,menubar=0'
+                        );
+                    };
                 },
                 disable: function() {
                     problemSelectorButton.disabled = true;
