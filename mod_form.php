@@ -136,8 +136,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'isgraded', null, array("id" => "id_mumie_isgraded"));
         $mform->setType("isgraded", PARAM_TEXT);
 
-        $mform->addElement('hidden', 'worksheetdata', null, array("id" => "id_mumie_worksheetdata"));
-        $mform->setType("worksheetdata", PARAM_TEXT);
+        $mform->addElement('hidden', 'worksheet', null, array("id" => "id_mumie_worksheet"));
+        $mform->setType("worksheet", PARAM_TEXT);
 
         // Add standard course module grading elements.
         $this->standard_grading_coursemodule_elements();

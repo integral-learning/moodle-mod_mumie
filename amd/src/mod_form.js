@@ -76,13 +76,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     }
                     const importObj = JSON.parse(event.data);
                     const isGraded = importObj.isGraded !== false;
-                    const worksheetData = importObj.worksheetData ?? null;
+                    const worksheet = importObj.worksheet ?? null;
                     try {
                         courseController.setCourse(importObj.path_to_coursefile);
                         langController.setLanguage(importObj.language);
                         taskController.setSelection(importObj.link + '?lang=' + importObj.language);
                         taskController.setIsGraded(isGraded);
-                        worksheetController.setWorksheetData(worksheetData);
+                        worksheetController.setWorksheet(worksheet);
                         sendSuccess();
                         window.focus();
                         displayProblemSelectedMessage();
@@ -460,14 +460,15 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             };
         })();
 
-        const worksheetController = (function () {
-            const worksheetDataElement = document.getElementById("id_mumie_worksheetdata");
+        const worksheetController = (function() {
+            const worksheetElement = document.getElementById("id_mumie_worksheet");
             return {
-                setWorksheetData: function (worksheetData) {
-                    if (worksheetData) {
-                        worksheetDataElement.setAttribute("value", JSON.stringify(worksheetData));
+                setWorksheet: function(worksheet) {
+                    if (worksheet) {
+                        worksheetElement.setAttribute("value", JSON.stringify(worksheet));
+                    } else {
+                        worksheetElement.removeAttribute("value");
                     }
-                    worksheetDataElement.removeAttribute("value");
                 }
             };
         })();
