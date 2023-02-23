@@ -201,6 +201,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         const taskController = (function() {
             const taskSelectionInput = document.getElementsByName("taskurl")[0];
             const nameElem = document.getElementById("id_name");
+            const taskDisplayElement = document.getElementById("id_task_display_element");
             const isGradedElem = document.getElementById('id_mumie_isgraded');
 
 
@@ -210,6 +211,24 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              */
             function updateName(name) {
                 nameElem.value = name;
+            }
+
+            /**
+             * @param {string} localizedLink
+             */
+            function updateTaskDisplayElemement(localizedLink) {
+                taskDisplayElement.value = localizedLink;
+            }
+
+            /**
+             * Update task uri
+             * @param {string} link
+             * @param {string} language
+             */
+            function updateTaskUri(link, language) {
+                const localizedLink = link + "?lang=" + language;
+                taskSelectionInput.value = localizedLink;
+                updateTaskDisplayElemement(localizedLink);
             }
 
             /**
@@ -224,8 +243,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             return {
+                init: function() {
+                    updateTaskDisplayElemement(taskSelectionInput.value);
+                },
                 setSelection: function(link, language, name) {
-                    taskSelectionInput.value = link + "?lang=" + language;
+                    updateTaskUri(link, language);
                     updateName(name);
                 },
                 setIsGraded: function(isGraded) {
@@ -382,6 +404,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 } else {
                     serverController.init(serverStructure);
                     courseController.init();
+                    taskController.init();
                     multiTaskEditController.init();
                     problemSelectorController.init();
                 }
