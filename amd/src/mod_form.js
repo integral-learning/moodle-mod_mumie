@@ -19,9 +19,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 disable: function() {
                     serverDropDown.disabled = true;
                     removeChildElems(serverDropDown);
-                },
-                getAllServers: function() {
-                    return serverStructure;
                 }
             };
         })();
@@ -80,7 +77,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     try {
                         courseController.setCourse(importObj.path_to_coursefile);
                         langController.setLanguage(importObj.language);
-                        taskController.setSelection(importObj.link + '?lang=' + importObj.language);
+                        taskController.setSelection(importObj.link, importObj.language, importObj.name);
                         taskController.setIsGraded(isGraded);
                         worksheetController.setWorksheet(worksheet);
                         sendSuccess();
@@ -183,9 +180,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     const courses = serverController.getSelectedServer().courses;
                     return courses.find(course => course.coursefile === coursefileElem.value);
                 },
-                updateCourseName: function() {
-                    updateCourseName();
-                },
                 setCourse: function(courseFile) {
                     updateCoursefilePath(courseFile);
                 }
@@ -194,25 +188,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         const langController = (function() {
             const languageElem = document.getElementById("id_language");
-
-            /**
-             * Check if the given language exists in the currently selected course.
-             * @param {string} lang
-             * @returns {boolean} Whether the language exists
-             */
-            function languageExists(lang) {
-                return courseController.getSelectedCourse().languages.includes(lang);
-            }
             return {
                 getSelectedLanguage: function() {
                     return languageElem.value;
                 },
                 setLanguage: function(lang) {
-                    if (!languageExists(lang)) {
-                        throw new Error("Selected language not available");
-                    }
                     languageElem.value = lang;
-                    courseController.updateCourseName();
                 }
             };
         })();
@@ -226,78 +207,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Update the activity's name in the input field
+             * @param {string} name
              */
-            function updateName() {
-                const newHeadline = getHeadline(taskController.getSelectedTask());
-                if (!isCustomName()) {
-                    nameElem.value = newHeadline;
-                }
-                taskDisplayElement.value = newHeadline;
-            }
-
-            /**
-             * Check whether the activity has a custom name
-             *
-             * @return {boolean} True, if there is no headline with that name in all tasks
-             */
-            function isCustomName() {
-                if (nameElem.value.length === 0) {
-                    return false;
-                }
-                return !getAllHeadlines().includes(nameElem.value);
-            }
-
-            /**
-             * Get the task's headline for the currently selected language
-             * @param {Object} task
-             * @returns  {string|null} the headline
-             */
-            function getHeadline(task) {
-                if (!task) {
-                    return null;
-                }
-                const selectedLanguage = langController.getSelectedLanguage();
-                const headlineWrapper = task.headline.find(localHeadline => localHeadline.language === selectedLanguage);
-                return headlineWrapper ? headlineWrapper.name : null;
-            }
-
-            /**
-             * Get all tasks that are available on all servers
-             *
-             * @return {Object} Array containing all available tasks
-             */
-            function getAllTasks() {
-                return serverController.getAllServers()
-                    .flatMap(server => server.courses)
-                    .flatMap(course => course.tasks);
-            }
-
-            /**
-             * Get all possible headlines in all languages
-             * @returns {Object} Array containing all headlines
-             */
-            function getAllHeadlines() {
-                return getAllTasks().flatMap(task => task.headline)
-                    .map(headline => headline.name)
-                    .concat(courseController.getSelectedCourse().name.map(n => n.value));
-            }
-
-            /**
-             * Add language parameter to the task's link to display content in the selected language
-             * @param {Object} task
-             * @returns {string}
-             */
-            function getLocalizedLinkFromTask(task) {
-                return getLocalizedLink(task.link);
-            }
-
-            /**
-             * Add language parameter to link
-             * @param {string} link
-             * @returns {string}
-             */
-            function getLocalizedLink(link) {
-                return link + "?lang=" + langController.getSelectedLanguage();
+            function updateName(name) {
+                taskDisplayElement.value = name;
+                nameElem.value = name;
             }
 
             /**
@@ -311,46 +225,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 document.getElementById('id_gradecat').disabled = disabled;
             }
 
-            /**
-             * Get a task that links to a course's overview page
-             * @param {Object} course
-             * @returns {Object} task
-             */
-            function getPseudoTaskFromCourse(course) {
-                var headline = [];
-                for (var i in course.name) {
-                    var name = course.name[i];
-                    headline.push({
-                        "name": name.value,
-                        "language": name.language
-                    });
-                }
-                return {
-                    "link": course.link,
-                    "headline": headline
-                };
-            }
-
             return {
-                init: function() {
-                    updateName();
-                },
-                getSelectedTask: function() {
-                    const selectedLink = taskSelectionInput.value;
-                    const selectedCourse = courseController.getSelectedCourse();
-                    if (!selectedCourse) {
-                        return null;
-                    }
-                    const tasks = selectedCourse
-                        .tasks
-                        .slice();
-                    tasks.push(getPseudoTaskFromCourse(selectedCourse));
-                    return tasks
-                        .find(task => getLocalizedLinkFromTask(task) === selectedLink);
-                },
-                setSelection: function(newSelection) {
-                    taskSelectionInput.value = newSelection;
-                    updateName();
+                setSelection: function(link, language, name) {
+                    taskSelectionInput.value = link + "?lang=" + language;
+                    updateName(name);
                 },
                 setIsGraded: function(isGraded) {
                     if (isGraded === null) {
