@@ -5,10 +5,10 @@ All important changes to this plugin will be documented in this file.
 ## [v1.4.10] - TODO
 
 ### Changed
-- Button to open a MUMIE Task in grading view is moved on top of participant list
+- Button to open a MUMIE Task in grading view is moved on top of the participant list
 
 ### Added
-- Multiple Problem Selector can now be opened directly from mod_mumie form
+- The Multiple Problem Selector can now be opened directly from mod_mumie form
 
 ## [v1.4.9]  - 2023-01-11
 
