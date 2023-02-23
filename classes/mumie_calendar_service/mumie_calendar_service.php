@@ -98,7 +98,7 @@ class mumie_calendar_service {
                 $this->mumie->duedate
             );
         } else if ($this->event && $hasduedate) {
-            $update  = new \stdClass();
+            $update = new \stdClass();
             $update->name = $this->title;
             $update->timestart = $this->mumie->duedate;
             $this->event->update($update, false);
