@@ -91,13 +91,13 @@ function xmldb_mumie_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
     }
-    if ($oldversion < 2023020100) {
+    if ($oldversion < 2023022301) {
         $table = new xmldb_table('mumie');
         $field = new xmldb_field('worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        upgrade_plugin_savepoint(true, 2023020100, 'mod', 'mumie');
+        upgrade_plugin_savepoint(true, 2023022301, 'mod', 'mumie');
     }
     return true;
 }

@@ -31,7 +31,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             /**
              * Send a message to the problem selector window.
              *
-             * Don't do anything, if there is no problem selector window.
+             * Don't do anything if there is no problem selector window.
              * @param {Object} response
              */
             function sendResponse(response) {
@@ -201,7 +201,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         const taskController = (function() {
             const taskSelectionInput = document.getElementsByName("taskurl")[0];
             const nameElem = document.getElementById("id_name");
-            const taskDisplayElement = document.getElementById("id_task_display_element");
             const isGradedElem = document.getElementById('id_mumie_isgraded');
 
 
@@ -210,7 +209,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {string} name
              */
             function updateName(name) {
-                taskDisplayElement.value = name;
                 nameElem.value = name;
             }
 
@@ -384,7 +382,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 } else {
                     serverController.init(serverStructure);
                     courseController.init();
-                    taskController.init(isEdit);
                     multiTaskEditController.init();
                     problemSelectorController.init();
                 }

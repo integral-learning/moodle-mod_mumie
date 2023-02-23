@@ -96,16 +96,10 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "language", $USER->lang, array("id" => "id_language"));
         $mform->setType("language", PARAM_TEXT);
 
-        $mform->addElement("hidden", "taskurl", null);
+        $mform->addElement("text", "taskurl", get_string('mumie_form_activity_problem', "mod_mumie"), array("disabled" => true, "class" => "mumie_text_input"));
         $mform->setType("taskurl", PARAM_TEXT);
 
-        $mform->addElement(
-            "text",
-            "task_display_element",
-            get_string('mumie_form_activity_problem', "mod_mumie"),
-            array("disabled" => true, "class" => "mumie_text_input")
-        );
-        $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
+        $mform->addHelpButton("taskurl", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
 
         $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
