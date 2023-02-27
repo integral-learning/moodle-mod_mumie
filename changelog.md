@@ -1,6 +1,15 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+
+## [v1.4.10] - 2023-02-27
+
+### Changed
+- Button to open a MUMIE Task in grading view is moved on top of the participant list
+
+### Added
+- The Multiple Problem Selector can now be opened directly from mod_mumie form
+
 ## [v1.4.9]  - 2023-01-11
 
 ### Fixed
