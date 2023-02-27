@@ -102,7 +102,8 @@ $string['mumie_form_filter'] = 'MUMIE-Tasks filtern';
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 $string['mumie_form_launchcontainer_info'] = 'Eingebettete MUMIE-Task führen auf manchen Browsern und Betriebssystemen zu technischen Problemen. Daher empfehlen wir MUMIE-Tasks in einem neuen Fenster zu öffnen.';
-$string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl öffnen';
+$string['mumie_form_prb_selector_btn'] = 'Aufgabenauswahl';
+$string['mumie_form_multi_prb_selector_btn'] = 'Mehrfach-Aufgabenauswahl';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 $string['mumie_form_tasks_edit'] = 'In anderen MUMIE-Tasks übernehmen';
 $string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
@@ -113,6 +114,7 @@ $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
 $string['mumie_form_no_course_on_server'] = 'MUMIE-Server <b>{$a}</b> konnte nicht erreicht werden! Dieser Server wurde daher vorrübergehend aus der Auswahl entfernt.';
+$string['mumie_multi_problem_selector'] = 'Alternativ können Sie auch mehrere MUMIE Tasks gleichzeitig mit der Mehrfach-Aufgabenauswahl erstellen. Ziehen Sie dazu einfach die gewünschten Aufgaben in ihren Kurs.<br><br>Für eine Kurzanleitung und weitere Informationen besuchen Sie unser <a target="_blank" href="{$a}">Wiki</a>';
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';

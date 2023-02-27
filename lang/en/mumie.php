@@ -86,7 +86,8 @@ $string['mumie_form_filter'] = 'Filter MUMIE problems';
 $string['mumie_form_complete_course'] = 'Link the entire course';
 $string['mumie_form_complete_course_help'] = 'The user will only be logged in and redirected to the course overview page. Grades will <b>not</b> be synchronized for this MUMIE Task.';
 $string['mumie_form_launchcontainer_info'] = 'Embedded MUMIE Tasks tend to cause issues on some browsers and operation systems so we recommend using New-Window-mode.';
-$string['mumie_form_prb_selector_btn'] = 'Open problem selector';
+$string['mumie_form_prb_selector_btn'] = 'Problem selector';
+$string['mumie_form_multi_prb_selector_btn'] = 'Multi Problem Selector';
 $string['mumie_form_updated_selection'] = 'Successfully selected problem';
 $string['mumie_form_tasks_edit'] = 'Apply to other MUMIE Tasks';
 $string['mumie_form_tasks_edit_info'] = 'You can apply some of the settings selected above also automatically to other MUMIE Tasks of this course.';
@@ -97,6 +98,7 @@ $string['mumie_form_topic'] = 'Topic: {$a}';
 $string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
 $string['mumie_form_wiki_link'] = 'For help and advanced features, please visit our <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a>!';
 $string['mumie_form_no_course_on_server'] = 'MUMIE server <b>{$a}</b> is not available! Temporarily removed this server from selection.';
+$string['mumie_multi_problem_selector'] = 'Alternatively, you can also create multiple MUMIE Tasks at once simply via Multi Problem Selector by dragging them into your course. <br><br>For information on how to use this, have a look at our <a target="_blank" href="{$a}">wiki</a>';
 
 // Used in mumieserver form.
 $string['mumie_form_required'] = 'required';

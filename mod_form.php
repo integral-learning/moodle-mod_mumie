@@ -109,6 +109,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("task_display_element", PARAM_TEXT);
 
         $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
+        $wiki = 'https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers#how-to-create-mumie-tasks-with-drag-and-drop';
+        $this->add_info_box(
+            get_string(
+                "mumie_multi_problem_selector",
+                "mod_mumie",
+                $wiki));
+        $mform->addElement('button', 'multi_problem_selector_btn', get_string('mumie_form_multi_prb_selector_btn', 'mod_mumie'));
 
         $launchoptions = array();
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");

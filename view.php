@@ -77,21 +77,20 @@ if ($action == "grading") {
 
     $redirecturl = new moodle_url('/mod/mumie/view.php', array('id' => $id, 'action' => 'open'));
     echo $OUTPUT->header();
-    echo $grader->view_grading_table();
     $buttonattributes = array(
-            "class" => "btn btn-primary",
-            "href" => $redirecturl,
-            "style" => "margin:10px auto; display: table;"
-        );
+        "class" => "btn btn-primary",
+        "href" => $redirecturl,
+        "style" => "margin:10px auto; display: table;"
+    );
     if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
         $buttonattributes["target"] = "_blank";
     }
-
     echo html_writer::tag(
         "a",
-        "Open MUMIE Task",
+        get_string('mumie_open_task', 'mod_mumie'),
         $buttonattributes
     );
+    echo $grader->view_grading_table();
 
     echo $OUTPUT->footer();
 } else if ($action == "open") {

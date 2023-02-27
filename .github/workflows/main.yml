@@ -16,9 +16,6 @@ jobs:
       matrix:
         include:
           - php: '7.4'
-            moodle-branch: 'master'
-            database: 'pgsql'
-          - php: '7.4'
             moodle-branch: 'MOODLE_401_STABLE'
             database: 'mariadb'
           - php: '7.4'
