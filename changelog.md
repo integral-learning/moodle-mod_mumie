@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## [v1.4.10] - TODO
+## [v1.4.10] - 2023-02-27
 
 ### Changed
 - Button to open a MUMIE Task in grading view is moved on top of the participant list
