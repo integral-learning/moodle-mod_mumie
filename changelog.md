@@ -1,6 +1,9 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+## [v1.5.0] - 2023-05-09
+### Added
+- Teachers can now select worksheets in the problem selector. Worksheets are a collection of problems with a custom correction workflow
 
 ## [v1.4.10] - 2023-02-27
 
