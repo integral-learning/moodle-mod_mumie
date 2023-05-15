@@ -145,7 +145,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                           lmsSelectorUrl
                           + '/lms-problem-selector?'
                           + "serverUrl="
-                          + encodeURIComponent(serverController.getSelectedServer().urlprefix),
+                          + encodeURIComponent(serverController.getSelectedServer().urlprefix)
+                          + '&gradingType=all',
                           "_blank",
                           'toolbar=0,location=0,menubar=0'
                         );
