@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This validator is used to check mod_form for MUMIE Tasks
  *
@@ -55,7 +70,9 @@ class mumie_task_validator {
             }
         }
 
-        if (self::is_worksheet($data) && self::is_correction_trigger_after_deadline($data['worksheet']) && !self::has_duedate($data)) {
+        if (self::is_worksheet($data)
+            && self::is_correction_trigger_after_deadline($data['worksheet'])
+            && !self::has_duedate($data)) {
             $errors['duedate'] = get_string('mumie_form_deadline_required_for_trigger_after_deadline', 'mod_mumie');
         }
         return $errors;

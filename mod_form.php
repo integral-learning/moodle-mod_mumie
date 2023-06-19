@@ -29,7 +29,7 @@ use mod_mumie\locallib;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
-require_once ($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
+require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
 
 
 /**
