@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This validator is used to check mod_form for MUMIE Tasks
+ * This file contains a validator used to check mod_form for MUMIE Tasks
  *
  * @package mod_mumie
  * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
@@ -27,8 +27,23 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * This class is a validator used to check mod_form for MUMIE Tasks
+ *
+ * @package mod_mumie
+ * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mumie_task_validator {
-    public static function get_errors(array $data, $current) : array {
+    /**
+     * Get validation errors for POST Data. Will return an empty array, if no errors were found.
+     * @param array     $data
+     * @param \stdClass $current
+     * @return array
+     * @throws \coding_exception
+     */
+    public static function get_errors(array $data, \stdClass $current) : array {
         $errors = array();
 
         if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
@@ -78,14 +93,31 @@ class mumie_task_validator {
         return $errors;
     }
 
-    private static function has_duedate($data) : bool {
+    /**
+     * Check whether a deadline was selected
+     * @param array $data POST data
+     * @return bool
+     */
+    private static function has_duedate(array $data) : bool {
         return $data['duedate'];
     }
 
+    /**
+     * Check whether the resulting MUMIE Task is a worksheet
+     *
+     * @param array $data POST data
+     * @return bool
+     */
     private static function is_worksheet(array $data) : bool {
         return array_key_exists('worksheet', $data);
     }
 
+    /**
+     * Check whether the worksheet is configured to be corrected after a given deadline is reached
+     *
+     * @param string $worksheet The json string representing the worksheet configuration
+     * @return bool
+     */
     private static function is_correction_trigger_after_deadline(string $worksheet) : bool {
         return json_decode($worksheet, true)['configuration']['correction']['correctorType'] == "AFTER_DEADLINE";
     }
