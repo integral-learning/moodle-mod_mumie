@@ -109,7 +109,7 @@ class mumie_task_validator {
      * @return bool
      */
     private static function is_worksheet(array $data) : bool {
-        return array_key_exists('worksheet', $data);
+        return array_key_exists('worksheet', $data) && !empty($data['worksheet']);
     }
 
     /**
