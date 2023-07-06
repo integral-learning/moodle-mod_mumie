@@ -114,6 +114,7 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumie_form_cant_change_isgraded'] = 'You cannot switch from graded to ungraded problems. Please create a new MUMIE Task instead.';
+$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a deadline";
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Grant a due date extension';

@@ -29,6 +29,8 @@ use mod_mumie\locallib;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
+
 
 /**
  * This moodle form is used to insert or update MumieServer in the database
@@ -49,7 +51,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * Define fields and default values for the mumie server form
      * @return void
      */
-    public function definition() {
+    public function definition() : void {
         global $PAGE, $COURSE, $USER;
 
         $mform = &$this->_form;
@@ -214,49 +216,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $files files uploaded
      * @return array associative array of errors
      */
-    public function validation($data, $files) {
-        $errors = array();
-
-        if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
-            $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
-        }
-
-        if (!isset($data["mumie_course"]) && !isset($data["mumie_missing_config"])) {
-            $errors["mumie_course"] = get_string('mumie_form_required', 'mod_mumie');
-        }
-
-        $taskurlvalid = isset($data["taskurl"]) && $data["taskurl"] !== "";
-        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
-            $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
-        }
-
-        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
-            $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
-
-            // Show an error if require passing grade was selected and the grade to pass was set to 0.
-            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
-                if (isset($data['completionpass'])) {
-                    $errors['completionpassgroup'] = get_string('gradetopassnotset', 'mumie');
-                } else {
-                    $errors['gradepass'] = get_string('gradetopassmustbeset', 'mumie');
-                }
-            }
-        }
-
-        if ($data['duedate']) {
-            if (time() - $data['duedate'] > 0) {
-                $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
-            }
-        }
-
-        if (array_key_exists('instance', $data) && $data['instance']) {
-            $mumie = locallib::get_mumie_task($data['instance']);
-            if ($mumie && $mumie->isgraded !== $data['isgraded']) {
-                $errors['prb_selector_btn'] = get_string('mumie_form_cant_change_isgraded', 'mod_mumie');
-            }
-        }
-
-        return $errors;
+    public function validation($data, $files) : array {
+        return \mod_mumie\mumie_task_validator::get_errors($data, $this->current);
     }
 
     /**
@@ -264,7 +225,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @return array
      */
-    private function get_server_options() {
+    private function get_server_options() : array {
         $serveroptions = array();
         foreach ($this->servers as $server) {
             $serveroptions[$server->get_urlprefix()] = $server->get_name();
@@ -278,7 +239,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * This function is copied from mod_quiz version 2018051400
      * @return array containing the name of the mform group that has been added to the form
      */
-    public function add_completion_rules() {
+    public function add_completion_rules() : array {
         $mform = $this->_form;
         $items = array();
 
@@ -300,7 +261,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Disable all options for grades if the user has chosen to link a course instead of a problem.
      */
-    private function disable_grade_rules() {
+    private function disable_grade_rules() : void {
         $mform = $this->_form;
         $mform->disabledIf('gradepass', 'isgraded', 'eq', '0');
         $mform->disabledIf('duedate[enabled]', 'isgraded', 'eq', '0');
@@ -311,7 +272,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Adds the property selection, which is needed for the multi editing, to the form.
      */
-    private function add_property_selection() {
+    private function add_property_selection() : void {
         $mform = $this->_form;
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
@@ -347,7 +308,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Adds the task selection, which is needed for the multi editing, to the form.
      */
-    private function add_task_selection() {
+    private function add_task_selection() : void {
         global $COURSE;
         $cm = &$this->_cm;
         $mform = $this->_form;
@@ -440,7 +401,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param stdClass $data instance of MUMIE task, that is being edited
      * @return void
      */
-    public function set_data($data) {
+    public function set_data($data) : void {
         global $COURSE, $DB, $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 
@@ -515,7 +476,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $data Input data (not yet validated)
      * @return bool True if one or more rules is enabled, false if none are.
      */
-    public function completion_rule_enabled($data) {
+    public function completion_rule_enabled($data) : bool {
         return !empty($data['completionpass']);
     }
 
@@ -526,7 +487,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param int $courseid id of the current course
      * @return bool whether to disable gradepool selection
      */
-    private function disable_gradepool_selection($courseid) {
+    private function disable_gradepool_selection($courseid) : bool {
         global $DB;
         $records = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
         if (get_config('auth_mumie', 'defaultgradepool') != -1) {
@@ -543,7 +504,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param String $message The message to display
      */
-    private function add_info_box($message) {
+    private function add_info_box($message) : void {
         $mform = &$this->_form;
         $mform->addElement(
             'html',
