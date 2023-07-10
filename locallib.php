@@ -26,10 +26,8 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot . '/mod/mumie/lib.php');
-
 global $CFG;
-global $DB;
+require_once($CFG->dirroot . '/mod/mumie/lib.php');
 
 define("MUMIE_LAUNCH_CONTAINER_WINDOW", 0);
 define("MUMIE_LAUNCH_CONTAINER_EMBEDDED", 1);
@@ -47,7 +45,7 @@ class locallib {
     /**
      * Get instance of mumie task with its id
      * @param int $id id of the mumie task
-     * @return stdClass instance of mumie task
+     * @return \stdClass instance of mumie task
      */
     public static function get_mumie_task($id) {
         global $DB;

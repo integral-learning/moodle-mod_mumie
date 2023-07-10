@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use mod_mumie\locallib;
+use mod_mumie\mumie_duedate_extension;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -165,7 +165,7 @@ function mumie_cm_info_view(cm_info $cm) {
         ));
     $info = '';
 
-    $duedate = locallib::get_effective_duedate($USER->id, $mumie);
+    $duedate = mumie_get_effective_duedate($USER->id, $mumie);
     if (isset($duedate) && $duedate > 0) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
@@ -485,4 +485,24 @@ function mumie_update_multiple_tasks($mumie) {
             }
         }
     }
+}
+
+/**
+ * Get the effective duedate for a student.
+ *
+ * Individual due date extensions always overrule general due date settings.
+ *
+ * @param int      $userid
+ * @param stdClass $mumie
+ * @return int|null
+ */
+function mumie_get_effective_duedate($userid, $mumie) : ?int {
+    global $CFG;
+    require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
+    $extension = new mumie_duedate_extension($userid, $mumie->id);
+    $extension->load();
+    if ($extension->get_duedate()) {
+        return $extension->get_duedate();
+    }
+    return $mumie->duedate;
 }
