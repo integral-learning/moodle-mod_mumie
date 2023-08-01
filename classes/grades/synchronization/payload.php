@@ -2,14 +2,16 @@
 
 namespace mod_mumie\synchronization;
 
-class payload
+use mod_mumie\synchronization\context\context;
+
+class payload implements \JsonSerializable
 {
-    public array $users;
-    public string $course;
-    public array $objectIds;
-    public int $lastSync;
-    public bool $includeAll;
-    public context $context;
+    private array $users;
+    private string $course;
+    private array $objectIds;
+    private int $lastSync;
+    private bool $includeAll;
+    private context $context;
 
     /**
      * @param array  $users
@@ -32,8 +34,8 @@ class payload
         return $this;
     }
 
-    public function get_encoded(): string {
-        return json_encode($this);
+    public function jsonSerialize(): array
+    {
+        return get_object_vars($this);
     }
-
 }

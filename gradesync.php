@@ -227,7 +227,7 @@ class gradesync {
         $mumieserver = new \auth_mumie\mumie_server();
         $mumieserver->set_urlprefix($mumie->server);
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
-        $ch = self::create_post_curl_request($mumieserver->get_grade_sync_url(), $payload->get_encoded());
+        $ch = self::create_post_curl_request($mumieserver->get_grade_sync_url(), json_encode($payload));
         $result = curl_exec($ch);
 
         curl_close($ch);
