@@ -47,6 +47,16 @@ class payload implements \JsonSerializable {
     }
 
     public function jsonSerialize(): array {
-        return get_object_vars($this);
+        $json = array(
+            "users" => $this->users,
+            "course" => $this->course,
+            "objectIds" => $this->objectids,
+            "lastSync" => $this->lastsync,
+            "includeAll" => $this->includeall
+        );
+        if (isset($this->context)) {
+            $json["context"] = $this->context;
+        }
+        return $json;
     }
 }
