@@ -117,26 +117,15 @@ class gradesync {
      * @return array grades for the given MUMIE task
      */
     public static function get_mumie_grades(stdClass $mumie, int $userid) : ?array {
-        global $COURSE;
-        $mumieusers = array();
-
-        // TODO: extract this into new function
-        if ($userid == 0) {
-            foreach (get_enrolled_users(context_course::instance($COURSE->id)) as $user) {
-                array_push($mumieusers, mumie_user_service::get_user($user->id, $mumie));
-            }
-        } else {
-            $mumieusers = array(mumie_user_service::get_user($userid, $mumie));
-        }
-
+        $mumieusers = self::get_mumie_users($mumie, $userid);
         $mumieids = array(self::get_mumie_id($mumie));
-        $grades = array();
         $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
 
         if (is_null($xapigrades)) {
             return null;
         }
 
+        $grades = array();
         foreach ($xapigrades as $xapigrade) {
             $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
             if (self::include_grade($mumie, $grades, $grade)) {
@@ -144,6 +133,19 @@ class gradesync {
             }
         }
         return $grades;
+    }
+
+    private static function get_mumie_users(stdClass $mumie, int $userid): array {
+        global $COURSE;
+        if ($userid == 0) {
+            $mumieusers = array();
+            foreach (get_enrolled_users(context_course::instance($COURSE->id)) as $user) {
+                $mumieusers[] = mumie_user_service::get_user($user->id, $mumie);
+            }
+            return $mumieusers;
+        } else {
+            return array(mumie_user_service::get_user($userid, $mumie));
+        }
     }
 
     /**
