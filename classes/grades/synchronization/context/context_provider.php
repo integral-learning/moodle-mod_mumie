@@ -42,7 +42,8 @@ class context_provider
     }
 
     public static function has_context($mumie): bool {
-        return true;
+        return str_starts_with($mumie->taskurl, "worksheet_")
+            && $mumie->duedate > 0;
     }
 
     private static function get_object_context($mumie, array $users): object_context {
