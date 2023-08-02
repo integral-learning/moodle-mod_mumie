@@ -33,8 +33,7 @@ class payload implements \JsonSerializable {
      * @param int    $lastsync
      * @param bool   $includeall
      */
-    public function __construct(array $users, string $course, array $objectids, int $lastsync, bool $includeall)
-    {
+    public function __construct(array $users, string $course, array $objectids, int $lastsync, bool $includeall) {
         $this->users = $users;
         $this->course = $course;
         $this->objectids = $objectids;
@@ -47,8 +46,7 @@ class payload implements \JsonSerializable {
         return $this;
     }
 
-    public function jsonSerialize(): array
-    {
+    public function jsonSerialize(): array {
         return get_object_vars($this);
     }
 }

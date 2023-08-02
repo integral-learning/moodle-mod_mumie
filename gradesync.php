@@ -24,7 +24,6 @@
  */
 namespace mod_mumie;
 
-global $CFG;
 
 use mod_mumie\synchronization\payload;
 use mod_mumie\synchronization\xapi_request;
@@ -35,6 +34,8 @@ use context_course;
 use auth_mumie\mumie_server;
 
 defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
 
 require_once($CFG->dirroot . '/mod/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/lib.php');
@@ -119,7 +120,7 @@ class gradesync {
         global $COURSE;
         $mumieusers = array();
 
-        //TODO: extract this into new function
+        // TODO: extract this into new function
         if ($userid == 0) {
             foreach (get_enrolled_users(context_course::instance($COURSE->id)) as $user) {
                 array_push($mumieusers, mumie_user_service::get_user($user->id, $mumie));
@@ -236,9 +237,14 @@ class gradesync {
         require_once($CFG->dirroot . "/auth/mumie/classes/sso/user/mumie_user.php");
         $mumieserver = new mumie_server();
         $mumieserver->set_urlprefix($mumie->server);
-        $syncids = array_map(function ($user) {return $user->get_sync_id();}, $mumieusers);
+        $syncids = array_map(
+            function ($user) {
+                return $user->get_sync_id();
+            },
+            $mumieusers
+        );
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
-        if(context_provider::has_context($mumie)) {
+        if (context_provider::has_context($mumie)) {
             $context = context_provider::get_context(array($mumie), $mumieusers);
             $payload->with_context($context);
         }
@@ -248,14 +254,14 @@ class gradesync {
     }
 
 
-    //TODO: replace this with a call to mumie_user_server::get_user
+    // TODO: replace this with a call to mumie_user_server::get_user.
     /**
      * Get moodleUserID from syncid
      * @param string $syncid
      * @param int $hashid indicates whether the id was hashed
      * @return string of moodle user
      */
-    public static function get_moodle_user_id($syncid, $hashid) : ?string  {
+    public static function get_moodle_user_id($syncid, $hashid) : ?string {
         $userid = substr(strrchr($syncid, "_"), 1);
         $hashidtable = 'auth_mumie_id_hashes';
         if ($hashid == 1) {

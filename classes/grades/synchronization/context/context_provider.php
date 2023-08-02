@@ -25,7 +25,7 @@ class context_provider {
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context.php");
         $context = new context();
         foreach ($mumies as $mumie) {
-            if(self::has_context($mumie)) {
+            if (self::has_context($mumie)) {
                 $context->add_object_context(
                     self::get_mumie_id($mumie),
                     self::get_object_context($mumie, $users)
@@ -36,8 +36,8 @@ class context_provider {
     }
 
 
-    //TODO: This is copied from gradesync.php
-    //Refactor so that we don't have duplicate code
+    // TODO: This is copied from gradesync.php
+    // Refactor so that we don't have duplicate code
     /**
      * Get the unique identifier for a MUMIE task
      *

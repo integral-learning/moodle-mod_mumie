@@ -22,8 +22,7 @@ class xapi_request {
     private mumie_server $server;
     private payload $payload;
 
-    public function __construct(mumie_server $server, payload $payload)
-    {
+    public function __construct(mumie_server $server, payload $payload) {
         $this->server = $server;
         $this->payload = $payload;
     }
