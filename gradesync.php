@@ -25,6 +25,7 @@
 namespace mod_mumie;
 
 use mod_mumie\synchronization\payload;
+use mod_mumie\synchronization\xapi_request;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -224,14 +225,12 @@ class gradesync {
     public static function get_xapi_grades($mumie, $syncids, $mumieids) {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/payload.php");
+        require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/xapi_request.php");
         $mumieserver = new \auth_mumie\mumie_server();
         $mumieserver->set_urlprefix($mumie->server);
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
-        $ch = self::create_post_curl_request($mumieserver->get_grade_sync_url(), json_encode($payload));
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-        return json_decode($result);
+        $request = new xapi_request($mumieserver, $payload);
+        return $request->send();
     }
 
     /**
@@ -287,31 +286,5 @@ class gradesync {
         }
         $id = substr($id, 0, strpos($id, '?lang='));
         return $id;
-    }
-
-    /**
-     * Creates a curl post request for a given url and json payload
-     *
-     * @param string $url
-     * @param string $payload as json
-     * @return cURL curl handle for json payload
-     */
-    public static function create_post_curl_request($url, $payload) {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_USERAGENT, "My User Agent Name");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt(
-            $ch,
-            CURLOPT_HTTPHEADER,
-            array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($payload),
-            "X-API-Key: " . get_config('auth_mumie', 'mumie_api_key'),
-        )
-        );
-
-        return $ch;
     }
 }
