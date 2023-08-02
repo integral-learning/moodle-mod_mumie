@@ -1,8 +1,21 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_mumie\synchronization;
 
-use CurlHandle;
 use auth_mumie\mumie_server;
 
 class xapi_request {
@@ -26,9 +39,9 @@ class xapi_request {
     /**
      * Creates a curl post request for a given url and json payload
      *
-     * @return CurlHandle curl handle for json payload
+     * @return mixed curl handle for json payload
      */
-    public function create_post_curl_request(): CurlHandle {
+    public function create_post_curl_request() {
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_USERAGENT, "My User Agent Name");
