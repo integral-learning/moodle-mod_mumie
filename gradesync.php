@@ -32,6 +32,7 @@ use auth_mumie\user\mumie_user_service;
 use stdClass;
 use context_course;
 use auth_mumie\mumie_server;
+use auth_mumie\user\mumie_user;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -78,7 +79,6 @@ class gradesync {
                 }
             }
         }
-        return;
     }
 
     /**
@@ -86,7 +86,7 @@ class gradesync {
      * @param int $courseid
      * @return array All MUMIE tasks that are used in the given course
      */
-    public static function get_mumie_tasks_from_course($courseid) : array {
+    public static function get_mumie_tasks_from_course(int $courseid) : array {
         global $DB;
         return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid, "isgraded" => 1));
     }
@@ -97,7 +97,7 @@ class gradesync {
      * @param int $userid
      * @return array All MUMIE tasks that are in courses, the user is enrolled in
      */
-    public static function get_all_mumie_tasks_for_user($userid) : array {
+    public static function get_all_mumie_tasks_for_user(int $userid) : array {
         $allmumietasks = array();
         foreach (enrol_get_all_users_courses($userid) as $course) {
             $mumietasks = self::get_mumie_tasks_from_course($course->id);
@@ -127,7 +127,7 @@ class gradesync {
 
         $grades = array();
         foreach ($xapigrades as $xapigrade) {
-            $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
+            $grade = self::xapi_to_moodle_grade($xapigrade);
             if (self::include_grade($mumie, $grades, $grade)) {
                 $grades[$grade->userid] = $grade;
             }
@@ -167,7 +167,7 @@ class gradesync {
         }
 
         foreach ($xapigrades as $xapigrade) {
-            $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
+            $grade = self::xapi_to_moodle_grade($xapigrade);
             $grades[] = $grade;
         }
         return $grades;
@@ -177,15 +177,20 @@ class gradesync {
      * Transform Xapi grade to moodle grade objects.
      *
      * @param  stdClass $xapigrade
-     * @param  stdClass $mumie
      * @return stdClass
      */
-    private static function xapi_to_moodle_grade($xapigrade, stdClass $mumie) : stdClass {
+    private static function xapi_to_moodle_grade($xapigrade) : stdClass {
         $grade = new stdClass();
-        $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
+        $grade->userid = self::get_user_from_sync_id($xapigrade->actor->account->name)->get_moodle_id();
         $grade->rawgrade = 100 * $xapigrade->result->score->raw;
         $grade->timecreated = strtotime($xapigrade->timestamp);
         return $grade;
+    }
+
+
+    private static function get_user_from_sync_id(string $syncid): ?mumie_user {
+        $mumieid = substr(strrchr($syncid, "_"), 1);
+        return mumie_user_service::get_user_from_mumie_id($mumieid);
     }
 
     /**
@@ -229,9 +234,9 @@ class gradesync {
      * @param stdClass $mumie instance of MUMIE task we want to get grades for
      * @param array $mumieusers all users we want grades for
      * @param array $mumieids mumieid of mumie instance as an array
-     * @return stdClass all requested grades for the given MUMIE task
+     * @return stdClass | null all requested grades for the given MUMIE task or null
      */
-    public static function get_xapi_grades(stdClass $mumie, array $mumieusers, array $mumieids) {
+    public static function get_xapi_grades(stdClass $mumie, array $mumieusers, array $mumieids) : ?stdClass {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/payload.php");
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/xapi_request.php");
@@ -252,25 +257,11 @@ class gradesync {
         }
         debugging(json_encode($payload));
         $request = new xapi_request($mumieserver, $payload);
-        return $request->send();
-    }
-
-
-    // TODO: replace this with a call to mumie_user_server::get_user.
-    /**
-     * Get moodleUserID from syncid
-     * @param string $syncid
-     * @param int $hashid indicates whether the id was hashed
-     * @return string of moodle user
-     */
-    public static function get_moodle_user_id($syncid, $hashid) : ?string {
-        $userid = substr(strrchr($syncid, "_"), 1);
-        $hashidtable = 'auth_mumie_id_hashes';
-        if ($hashid == 1) {
-            global $DB;
-            $userid = $DB->get_record($hashidtable, array("hash" => $userid))->the_user;
+        $result = $request->send();
+        if ($result->status == 200) {
+            return $result;
         }
-        return $userid;
+        return null;
     }
 
     /**
