@@ -5,8 +5,7 @@ namespace mod_mumie\synchronization\context;
 use mod_mumie\locallib;
 use auth_mumie\user\mumie_user;
 
-class context_provider
-{
+class context_provider {
     public static function get_context(array $mumies, array $users): context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context.php");

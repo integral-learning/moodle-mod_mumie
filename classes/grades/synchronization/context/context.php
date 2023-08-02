@@ -2,12 +2,10 @@
 
 namespace mod_mumie\synchronization\context;
 
-class context implements \JsonSerializable
-{
+class context implements \JsonSerializable {
     private array $objectcontexts;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->objectcontexts = array();
     }
 
@@ -15,8 +13,7 @@ class context implements \JsonSerializable
         $this->objectcontexts[$objectid] = $objectcontext;
     }
 
-    public function jsonSerialize() : array
-    {
+    public function jsonSerialize() : array {
         return $this->objectcontexts;
     }
 }
