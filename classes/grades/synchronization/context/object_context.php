@@ -23,8 +23,8 @@ class object_context implements \JsonSerializable {
         $this->usercontexts = array();
     }
 
-    public function add_user_context(string $userId,  user_context $usercontext): void {
-        $this->usercontexts[$userId] = $usercontext;
+    public function add_user_context(string $userid,  user_context $usercontext): void {
+        $this->usercontexts[$userid] = $usercontext;
     }
 
     public function jsonSerialize() {
