@@ -24,11 +24,15 @@
  */
 namespace mod_mumie;
 
+global $CFG;
+
 use mod_mumie\synchronization\payload;
 use mod_mumie\synchronization\xapi_request;
 use mod_mumie\synchronization\context\context_provider;
-use auth_mumie\user\mumie_user;
 use auth_mumie\user\mumie_user_service;
+use stdClass;
+use context_course;
+use auth_mumie\mumie_server;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -59,7 +63,7 @@ class gradesync {
 
         if ($isreportpage) {
             $userid = $USER->id;
-            if (has_capability("mod/mumie:viewgrades", \context_course::instance($COURSE->id), $USER)) {
+            if (has_capability("mod/mumie:viewgrades", context_course::instance($COURSE->id), $USER)) {
                 // User id = 0 => update grades for all users!
                 $userid = 0;
             }
@@ -81,7 +85,7 @@ class gradesync {
      * @param int $courseid
      * @return array All MUMIE tasks that are used in the given course
      */
-    public static function get_mumie_tasks_from_course($courseid) {
+    public static function get_mumie_tasks_from_course($courseid) : array {
         global $DB;
         return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid, "isgraded" => 1));
     }
@@ -92,7 +96,7 @@ class gradesync {
      * @param int $userid
      * @return array All MUMIE tasks that are in courses, the user is enrolled in
      */
-    public static function get_all_mumie_tasks_for_user($userid) {
+    public static function get_all_mumie_tasks_for_user($userid) : array {
         $allmumietasks = array();
         foreach (enrol_get_all_users_courses($userid) as $course) {
             $mumietasks = self::get_mumie_tasks_from_course($course->id);
@@ -111,12 +115,13 @@ class gradesync {
      * @param int $userid If userid = 0, update all users
      * @return array grades for the given MUMIE task
      */
-    public static function get_mumie_grades($mumie, $userid) {
+    public static function get_mumie_grades(stdClass $mumie, int $userid) : ?array {
         global $COURSE;
         $mumieusers = array();
 
+        //TODO: extract this into new function
         if ($userid == 0) {
-            foreach (get_enrolled_users(\context_course::instance($COURSE->id)) as $user) {
+            foreach (get_enrolled_users(context_course::instance($COURSE->id)) as $user) {
                 array_push($mumieusers, mumie_user_service::get_user($user->id, $mumie));
             }
         } else {
@@ -143,15 +148,13 @@ class gradesync {
     /**
      * Get all grades a user has archived for a given MUMIE Task
      *
-     * @param  \stdClass $mumie
+     * @param  stdClass $mumie
      * @param  int $userid
      * @return array
      */
-    public static function get_all_grades_for_user($mumie, $userid) {
-        $mumieusers = array();
+    public static function get_all_grades_for_user(stdClass $mumie, int $userid) : ?array {
 
-        array_push($mumieusers, mumie_user_service::get_user($userid, $mumie));
-
+        $mumieusers = [mumie_user_service::get_user($userid, $mumie)];
         $mumieids = array(self::get_mumie_id($mumie));
         $grades = array();
         $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
@@ -162,7 +165,7 @@ class gradesync {
 
         foreach ($xapigrades as $xapigrade) {
             $grade = self::xapi_to_moodle_grade($xapigrade, $mumie);
-            array_push($grades, $grade);
+            $grades[] = $grade;
         }
         return $grades;
     }
@@ -170,12 +173,12 @@ class gradesync {
     /**
      * Transform Xapi grade to moodle grade objects.
      *
-     * @param  \stdClass $xapigrade
-     * @param  \stdClass $mumie
-     * @return \stdClass
+     * @param  stdClass $xapigrade
+     * @param  stdClass $mumie
+     * @return stdClass
      */
-    private static function xapi_to_moodle_grade($xapigrade, $mumie) {
-        $grade = new \stdClass();
+    private static function xapi_to_moodle_grade($xapigrade, stdClass $mumie) : stdClass {
+        $grade = new stdClass();
         $grade->userid = self::get_moodle_user_id($xapigrade->actor->account->name, $mumie->use_hashed_id);
         $grade->rawgrade = 100 * $xapigrade->result->score->raw;
         $grade->timecreated = strtotime($xapigrade->timestamp);
@@ -190,7 +193,7 @@ class gradesync {
      * @param stdClass $potentialgrade the grade in question
      * @return boolean Whether the grade should be added to $grades
      */
-    public static function include_grade($mumie, $grades, $potentialgrade) {
+    public static function include_grade(stdClass $mumie, array $grades, stdClass $potentialgrade) : bool {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/locallib.php");
         $duedate = locallib::get_effective_duedate($potentialgrade->userid, $mumie);
@@ -209,10 +212,10 @@ class gradesync {
      * True, if the given grade is currently the latest available one.
      *
      * @param  array $grades List of the latest grades so far by user.
-     * @param  \stdClass $potentialgrade The grade we are testing
+     * @param  stdClass $potentialgrade The grade we are testing
      * @return boolean
      */
-    private static function is_latest_grade($grades, $potentialgrade) {
+    private static function is_latest_grade(array $grades, stdClass $potentialgrade) : bool {
         return !isset($grades[$potentialgrade->userid])
         || $grades[$potentialgrade->userid]->timecreated < $potentialgrade->timecreated;
     }
@@ -225,13 +228,13 @@ class gradesync {
      * @param array $mumieids mumieid of mumie instance as an array
      * @return stdClass all requested grades for the given MUMIE task
      */
-    public static function get_xapi_grades($mumie, $mumieusers, $mumieids) {
+    public static function get_xapi_grades(stdClass $mumie, array $mumieusers, array $mumieids) {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/payload.php");
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/xapi_request.php");
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context_provider.php");
         require_once($CFG->dirroot . "/auth/mumie/classes/sso/user/mumie_user.php");
-        $mumieserver = new \auth_mumie\mumie_server();
+        $mumieserver = new mumie_server();
         $mumieserver->set_urlprefix($mumie->server);
         $syncids = array_map(function ($user) {return $user->get_sync_id();}, $mumieusers);
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
@@ -244,13 +247,15 @@ class gradesync {
         return $request->send();
     }
 
+
+    //TODO: replace this with a call to mumie_user_server::get_user
     /**
      * Get moodleUserID from syncid
      * @param string $syncid
      * @param int $hashid indicates whether the id was hashed
      * @return string of moodle user
      */
-    public static function get_moodle_user_id($syncid, $hashid) {
+    public static function get_moodle_user_id($syncid, $hashid) : ?string  {
         $userid = substr(strrchr($syncid, "_"), 1);
         $hashidtable = 'auth_mumie_id_hashes';
         if ($hashid == 1) {
@@ -266,13 +271,12 @@ class gradesync {
      * @param stdClass $mumietask
      * @return string id for MUMIE task on MUMIE/LEMON server
      */
-    public static function get_mumie_id($mumietask) {
+    public static function get_mumie_id(stdClass $mumietask) : string {
         $id = $mumietask->taskurl;
         $prefix = "link/";
         if (strpos($id, $prefix) !== false) {
             $id = substr($mumietask->taskurl, strlen($prefix));
         }
-        $id = substr($id, 0, strpos($id, '?lang='));
-        return $id;
+        return substr($id, 0, strpos($id, '?lang='));
     }
 }
