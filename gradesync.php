@@ -26,6 +26,8 @@ namespace mod_mumie;
 
 use mod_mumie\synchronization\payload;
 use mod_mumie\synchronization\xapi_request;
+use mod_mumie\synchronization\context\context_provider;
+use auth_mumie\user\mumie_user;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -226,9 +228,16 @@ class gradesync {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/payload.php");
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/xapi_request.php");
+        require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context_provider.php");
+        require_once($CFG->dirroot . "/auth/mumie/classes/sso/user/mumie_user.php");
         $mumieserver = new \auth_mumie\mumie_server();
         $mumieserver->set_urlprefix($mumie->server);
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
+        if(context_provider::has_context($mumie)) {
+            $context = context_provider::get_context(array($mumie), array(new mumie_user("2", "2")));
+            $payload->with_context($context);
+        }
+        debugging(json_encode($payload));
         $request = new xapi_request($mumieserver, $payload);
         return $request->send();
     }
