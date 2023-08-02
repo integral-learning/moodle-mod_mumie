@@ -8,6 +8,8 @@ use auth_mumie\user\mumie_user;
 class context_provider
 {
     public static function get_context(array $mumies, array $users): context {
+        global $CFG;
+        require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context.php");
         $context = new context();
         foreach ($mumies as $mumie) {
             if(self::has_context($mumie)) {
@@ -40,7 +42,7 @@ class context_provider
     }
 
     public static function has_context($mumie): bool {
-        return false;
+        return true;
     }
 
     private static function get_object_context($mumie, array $users): object_context {

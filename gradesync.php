@@ -28,6 +28,7 @@ use mod_mumie\synchronization\payload;
 use mod_mumie\synchronization\xapi_request;
 use mod_mumie\synchronization\context\context_provider;
 use auth_mumie\user\mumie_user;
+use auth_mumie\user\mumie_user_service;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,6 +36,7 @@ require_once($CFG->dirroot . '/mod/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
+require_once($CFG->dirroot . '/auth/mumie/classes/sso/user/mumie_user_service.php');
 
 /**
  * This file defines the class gradesync
@@ -110,20 +112,20 @@ class gradesync {
      * @return array grades for the given MUMIE task
      */
     public static function get_mumie_grades($mumie, $userid) {
-        global $COURSE, $DB;
-        $syncids = array();
+        global $COURSE;
+        $mumieusers = array();
 
         if ($userid == 0) {
             foreach (get_enrolled_users(\context_course::instance($COURSE->id)) as $user) {
-                array_push($syncids, self::get_sync_id($user->id, $mumie));
+                array_push($mumieusers, mumie_user_service::get_user($user->id, $mumie));
             }
         } else {
-            $syncids = array(self::get_sync_id($userid, $mumie));
+            $mumieusers = array(mumie_user_service::get_user($userid, $mumie));
         }
 
         $mumieids = array(self::get_mumie_id($mumie));
         $grades = array();
-        $xapigrades = self::get_xapi_grades($mumie, $syncids, $mumieids);
+        $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
 
         if (is_null($xapigrades)) {
             return null;
@@ -146,14 +148,13 @@ class gradesync {
      * @return array
      */
     public static function get_all_grades_for_user($mumie, $userid) {
-        global $COURSE, $DB;
-        $syncids = array();
+        $mumieusers = array();
 
-        array_push($syncids, self::get_sync_id($userid, $mumie));
+        array_push($mumieusers, mumie_user_service::get_user($userid, $mumie));
 
         $mumieids = array(self::get_mumie_id($mumie));
         $grades = array();
-        $xapigrades = self::get_xapi_grades($mumie, $syncids, $mumieids);
+        $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
 
         if (is_null($xapigrades)) {
             return null;
@@ -220,11 +221,11 @@ class gradesync {
      * Get xapi grades for a MUMIE task instance
      *
      * @param stdClass $mumie instance of MUMIE task we want to get grades for
-     * @param array $syncids all users we want grades for
+     * @param array $mumieusers all users we want grades for
      * @param array $mumieids mumieid of mumie instance as an array
      * @return stdClass all requested grades for the given MUMIE task
      */
-    public static function get_xapi_grades($mumie, $syncids, $mumieids) {
+    public static function get_xapi_grades($mumie, $mumieusers, $mumieids) {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/payload.php");
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/xapi_request.php");
@@ -232,37 +233,15 @@ class gradesync {
         require_once($CFG->dirroot . "/auth/mumie/classes/sso/user/mumie_user.php");
         $mumieserver = new \auth_mumie\mumie_server();
         $mumieserver->set_urlprefix($mumie->server);
+        $syncids = array_map(function ($user) {return $user->get_sync_id();}, $mumieusers);
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
         if(context_provider::has_context($mumie)) {
-            $context = context_provider::get_context(array($mumie), array(new mumie_user("2", "2")));
+            $context = context_provider::get_context(array($mumie), $mumieusers);
             $payload->with_context($context);
         }
         debugging(json_encode($payload));
         $request = new xapi_request($mumieserver, $payload);
         return $request->send();
-    }
-
-    /**
-     * Get a unique syncid from a userid that can be used on the MUMIE server as username
-     * @param int $userid
-     * @param int $mumie
-     * @return string unique username for MUMIE servers derived from the moodle userid
-     */
-    public static function get_sync_id($userid, $mumie) {
-        global $DB;
-        $org = get_config('auth_mumie', 'mumie_org');
-        if ($mumie->use_hashed_id == 1) {
-            $hashidtable = 'auth_mumie_id_hashes';
-            $hash = auth_mumie_get_hashed_id($userid);
-            if ($mumie->privategradepool) {
-                $hash .= '@gradepool' . $mumie->course . '@';
-            }
-            if (!$DB->get_record($hashidtable, array("the_user" => $userid, 'hash' => $hash))) {
-                $DB->insert_record($hashidtable, array("the_user" => $userid, "hash" => $hash));
-            }
-            $userid = $hash;
-        }
-        return "GSSO_" . $org . "_" . $userid;
     }
 
     /**
