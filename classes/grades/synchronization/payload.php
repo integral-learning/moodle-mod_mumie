@@ -18,15 +18,42 @@ namespace mod_mumie\synchronization;
 
 use mod_mumie\synchronization\context\context;
 
+/**
+ * This class represents the payload used in XAPI requests for MUMIE Task grade synchronization
+ *
+ * @package mod_mumie
+ * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class payload implements \JsonSerializable {
+    /**
+     * @var array
+     */
     private array $users;
+    /**
+     * @var string
+     */
     private string $course;
+    /**
+     * @var array
+     */
     private array $objectids;
+    /**
+     * @var int
+     */
     private int $lastsync;
+    /**
+     * @var bool
+     */
     private bool $includeall;
+    /**
+     * @var context
+     */
     private context $context;
 
     /**
+     * Create a new instance.
      * @param array  $users
      * @param string $course
      * @param array  $objectids
@@ -41,11 +68,20 @@ class payload implements \JsonSerializable {
         $this->includeall = $includeall;
     }
 
-    public function with_context($context): payload {
+    /**
+     * Add context to the payload.
+     * @param context $context
+     * @return $this
+     */
+    public function with_context(context $context): payload {
         $this->context = $context;
         return $this;
     }
 
+    /**
+     * Custom JSON serializer.
+     * @return array
+     */
     public function jsonSerialize(): array {
         $json = array(
             "users" => $this->users,

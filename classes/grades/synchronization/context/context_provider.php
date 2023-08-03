@@ -18,39 +18,73 @@ namespace mod_mumie\synchronization\context;
 
 use mod_mumie\locallib;
 use auth_mumie\user\mumie_user;
+use stdClass;
 
+/**
+ * This service is used to create the context that is required for some XAPI requests.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class context_provider {
+    /**
+     * Get context for a given list of mumie tasks and users.
+     *
+     * @param array $mumies
+     * @param array $users
+     * @return context
+     */
     public static function get_context(array $mumies, array $users): context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context.php");
         $context = new context();
         foreach ($mumies as $mumie) {
-            if (self::has_context($mumie)) {
+            if (self::requires_context($mumie)) {
                 $context->add_object_context(
                     locallib::get_mumie_id($mumie),
-                    self::get_object_context($mumie, $users)
+                    self::create_object_context($mumie, $users)
                 );
             }
         }
         return $context;
     }
 
-    public static function has_context($mumie): bool {
+    /**
+     * Check whether a MUMIE Task requires context for XAPI requests.
+     * @param stdClass $mumie
+     * @return bool
+     */
+    public static function requires_context(stdClass $mumie): bool {
         return str_starts_with($mumie->taskurl, "worksheet_")
             && $mumie->duedate > 0;
     }
 
-    private static function get_object_context($mumie, array $users): object_context {
+    /**
+     * Create a new object_context instance for a given list of users.
+     *
+     * @param stdClass $mumie
+     * @param array    $users
+     * @return object_context
+     */
+    private static function create_object_context(stdClass $mumie, array $users): object_context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/object_context.php");
         $context = new object_context();
         foreach ($users as $user) {
-            $context->add_user_context($user->get_sync_id(), self::get_user_context($mumie, $user));
+            $context->add_user_context($user->get_sync_id(), self::create_user_context($mumie, $user));
         }
         return $context;
     }
 
-    private static function get_user_context($mumie, mumie_user $user): user_context {
+    /**
+     * Create a new user_context instance for a given user and MUMIE Task
+     * @param stdClass   $mumie
+     * @param mumie_user $user
+     * @return user_context
+     */
+    private static function create_user_context(stdClass $mumie, mumie_user $user): user_context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/user_context.php");
         return new user_context(locallib::get_effective_duedate($user->get_moodle_id(), $mumie));

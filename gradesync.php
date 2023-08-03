@@ -136,6 +136,14 @@ class gradesync {
         return $grades;
     }
 
+    /**
+     * Get an array of MUMIE users that have can submit answers to a given MUMIE Task.
+     *
+     * If $userid is 0, all possible students are returned. Otherwise, the array will only contain the user with the given $userid.
+     * @param stdClass $mumie
+     * @param int      $userid
+     * @return array
+     */
     private static function get_mumie_users(stdClass $mumie, int $userid): array {
         global $COURSE;
         if ($userid == 0) {
@@ -188,7 +196,12 @@ class gradesync {
         return $grade;
     }
 
-
+    /**
+     * Get a mumie_user from a syncid.
+     * @param string $syncid
+     * @return mumie_user|null
+     * @throws \dml_exception
+     */
     private static function get_user_from_sync_id(string $syncid): ?mumie_user {
         $mumieid = substr(strrchr($syncid, "_"), 1);
         return mumie_user_service::get_user_from_mumie_id($mumieid);
@@ -250,7 +263,7 @@ class gradesync {
             $mumieusers
         );
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
-        if (context_provider::has_context($mumie)) {
+        if (context_provider::requires_context($mumie)) {
             $context = context_provider::get_context(array($mumie), $mumieusers);
             $payload->with_context($context);
         }

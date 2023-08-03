@@ -16,17 +16,41 @@
 
 namespace mod_mumie\synchronization\context;
 
+/**
+ * This class holds context for multiple MUMIE Tasks required for some XAPI requests.
+ *
+ * @package mod_mumie
+ * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class context implements \JsonSerializable {
+    /**
+     * @var array
+     */
     private array $objectcontexts;
 
+    /**
+     * Create a new instance.
+     */
     public function __construct() {
         $this->objectcontexts = array();
     }
 
+    /**
+     * Add a new ObjectContext to this context.
+     * @param string         $objectid
+     * @param object_context $objectcontext
+     * @return void
+     */
     public function add_object_context(string $objectid, object_context $objectcontext): void {
         $this->objectcontexts[$objectid] = $objectcontext;
     }
 
+    /**
+     * Custom json serialization.
+     * @return array
+     */
     public function jsonSerialize() : array {
         return $this->objectcontexts;
     }
