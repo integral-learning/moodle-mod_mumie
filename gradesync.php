@@ -176,8 +176,7 @@ class gradesync {
         }
 
         foreach ($xapigrades as $xapigrade) {
-            $grade = self::xapi_to_moodle_grade($xapigrade);
-            $grades[] = $grade;
+            $grades[] = self::xapi_to_moodle_grade($xapigrade);
         }
         return $grades;
     }
