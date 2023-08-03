@@ -24,6 +24,7 @@
  */
 
 use mod_mumie\locallib;
+use mod_mumie\mumie_duedate_extension;
 
 defined('MOODLE_INTERNAL') || die;
 
