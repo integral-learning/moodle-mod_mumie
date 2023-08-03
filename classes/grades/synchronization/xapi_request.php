@@ -27,12 +27,18 @@ class xapi_request {
         $this->payload = $payload;
     }
 
-    public function send() {
+    public function send(): array {
         $ch = $this->create_post_curl_request();
-        $result = curl_exec($ch);
-
+        $result = (array) json_decode(curl_exec($ch));
         curl_close($ch);
-        return json_decode($result);
+        if ($this->has_error($result)) {
+            return array();
+        }
+        return $result;
+    }
+
+    private function has_error($response): bool {
+        return array_key_exists("status", $response) && $response["status"] !== 200;
     }
 
     /**

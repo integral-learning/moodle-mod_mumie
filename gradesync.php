@@ -121,7 +121,7 @@ class gradesync {
         $mumieids = array(self::get_mumie_id($mumie));
         $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
 
-        if (is_null($xapigrades)) {
+        if (empty($xapigrades)) {
             return null;
         }
 
@@ -234,9 +234,9 @@ class gradesync {
      * @param stdClass $mumie instance of MUMIE task we want to get grades for
      * @param array $mumieusers all users we want grades for
      * @param array $mumieids mumieid of mumie instance as an array
-     * @return stdClass | null all requested grades for the given MUMIE task or null
+     * @return array all requested grades for the given MUMIE task
      */
-    public static function get_xapi_grades(stdClass $mumie, array $mumieusers, array $mumieids) : ?stdClass {
+    public static function get_xapi_grades(stdClass $mumie, array $mumieusers, array $mumieids) : array {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/payload.php");
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/xapi_request.php");
@@ -255,13 +255,8 @@ class gradesync {
             $context = context_provider::get_context(array($mumie), $mumieusers);
             $payload->with_context($context);
         }
-        debugging(json_encode($payload));
         $request = new xapi_request($mumieserver, $payload);
-        $result = $request->send();
-        if ($result->status == 200) {
-            return $result;
-        }
-        return null;
+        return $request->send();
     }
 
     /**
