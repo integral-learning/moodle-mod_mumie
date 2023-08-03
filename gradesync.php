@@ -39,6 +39,7 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once($CFG->dirroot . '/mod/mumie/lib.php');
+require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 require_once($CFG->dirroot . '/auth/mumie/lib.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
@@ -118,7 +119,7 @@ class gradesync {
      */
     public static function get_mumie_grades(stdClass $mumie, int $userid) : ?array {
         $mumieusers = self::get_mumie_users($mumie, $userid);
-        $mumieids = array(self::get_mumie_id($mumie));
+        $mumieids = array(locallib::get_mumie_id($mumie));
         $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
 
         if (empty($xapigrades)) {
@@ -158,11 +159,11 @@ class gradesync {
     public static function get_all_grades_for_user(stdClass $mumie, int $userid) : ?array {
 
         $mumieusers = [mumie_user_service::get_user($userid, $mumie)];
-        $mumieids = array(self::get_mumie_id($mumie));
+        $mumieids = array(locallib::get_mumie_id($mumie));
         $grades = array();
         $xapigrades = self::get_xapi_grades($mumie, $mumieusers, $mumieids);
 
-        if (is_null($xapigrades)) {
+        if (empty($xapigrades)) {
             return null;
         }
 
@@ -202,8 +203,6 @@ class gradesync {
      * @return boolean Whether the grade should be added to $grades
      */
     public static function include_grade(stdClass $mumie, array $grades, stdClass $potentialgrade) : bool {
-        global $CFG;
-        require_once($CFG->dirroot . "/mod/mumie/locallib.php");
         $duedate = locallib::get_effective_duedate($potentialgrade->userid, $mumie);
         if (!isset($duedate) || $duedate == 0) {
             return true;
@@ -257,20 +256,5 @@ class gradesync {
         }
         $request = new xapi_request($mumieserver, $payload);
         return $request->send();
-    }
-
-    /**
-     * Get the unique identifier for a MUMIE task
-     *
-     * @param stdClass $mumietask
-     * @return string id for MUMIE task on MUMIE/LEMON server
-     */
-    public static function get_mumie_id(stdClass $mumietask) : string {
-        $id = $mumietask->taskurl;
-        $prefix = "link/";
-        if (strpos($id, $prefix) !== false) {
-            $id = substr($mumietask->taskurl, strlen($prefix));
-        }
-        return substr($id, 0, strpos($id, '?lang='));
     }
 }
