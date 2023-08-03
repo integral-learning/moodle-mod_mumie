@@ -486,3 +486,7 @@ function mumie_update_multiple_tasks($mumie) {
         }
     }
 }
+
+function mumie_get_effective_duedate($userid, $mumie) {
+    return locallib::get_effective_duedate($userid, $mumie);
+}
