@@ -488,6 +488,15 @@ function mumie_update_multiple_tasks($mumie) {
     }
 }
 
-function mumie_get_effective_duedate($userid, $mumie) {
+/**
+ * Get the effective duedate for a student.
+ *
+ * Individual due date extensions always overrule general due date settings.
+ *
+ * @param  int $userid
+ * @param  stdClass $mumie
+ * @return int
+ */
+function mumie_get_effective_duedate(int $userid, stdClass $mumie): int {
     return locallib::get_effective_duedate($userid, $mumie);
 }
