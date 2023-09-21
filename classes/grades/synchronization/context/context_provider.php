@@ -87,6 +87,7 @@ class context_provider {
     private static function create_user_context(stdClass $mumie, mumie_user $user): user_context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/user_context.php");
-        return new user_context(locallib::get_effective_duedate($user->get_moodle_id(), $mumie));
+        require_once($CFG->dirroot . '/mod/mumie/lib.php');
+        return new user_context(mumie_get_deadline_in_ms(locallib::get_effective_duedate($user->get_moodle_id(), $mumie)));
     }
 }

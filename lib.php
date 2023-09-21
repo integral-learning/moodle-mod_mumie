@@ -500,3 +500,12 @@ function mumie_update_multiple_tasks($mumie) {
 function mumie_get_effective_duedate(int $userid, stdClass $mumie): int {
     return locallib::get_effective_duedate($userid, $mumie);
 }
+
+/**
+ * Transforms the deadline(Unix Timestamp) from seconds to milliseconds.
+ * @param int $deadline timestamp in s
+ * @return int timestamp in ms
+ */
+function mumie_get_deadline_in_ms($deadline) {
+    return $deadline * 1000;
+}
