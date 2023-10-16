@@ -21,7 +21,7 @@ use auth_mumie\user\mumie_user;
 use stdClass;
 
 /**
- * This service is used to create the context that is required for some XAPI requests.
+ * This class is used to create the context that is required for some XAPI requests.
  *
  * @package mod_mumie
  * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
@@ -30,21 +30,21 @@ use stdClass;
  */
 class context_provider {
     /**
-     * Get context for a given list of mumie tasks and users.
+     * Get context for a given list of MUMIE Tasks and users.
      *
-     * @param array $mumies
+     * @param array $mumietasks
      * @param array $users
      * @return context
      */
-    public static function get_context(array $mumies, array $users): context {
+    public static function get_context(array $mumietasks, array $users): context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/context.php");
         $context = new context();
-        foreach ($mumies as $mumie) {
-            if (self::requires_context($mumie)) {
+        foreach ($mumietasks as $mumietask) {
+            if (self::requires_context($mumietask)) {
                 $context->add_object_context(
-                    locallib::get_mumie_id($mumie),
-                    self::create_object_context($mumie, $users)
+                    locallib::get_mumie_id($mumietask),
+                    self::create_object_context($mumietask, $users)
                 );
             }
         }

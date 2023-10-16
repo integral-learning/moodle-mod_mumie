@@ -19,7 +19,7 @@ namespace mod_mumie\synchronization;
 use auth_mumie\mumie_server;
 
 /**
- * This class represents an xapi request used to retrieve grades for MUMIE Tasks,
+ * This class represents an xapi request used to retrieve grades for MUMIE Tasks.
  *
  * @package mod_mumie
  * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
@@ -77,7 +77,7 @@ class xapi_request {
     public function create_post_curl_request() {
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_USERAGENT, "My User Agent Name");
+        curl_setopt($ch, CURLOPT_USERAGENT, "Default User Name");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($this->payload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(

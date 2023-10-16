@@ -137,7 +137,7 @@ class gradesync {
     }
 
     /**
-     * Get an array of MUMIE users that have can submit answers to a given MUMIE Task.
+     * Get an array of MUMIE users that can submit answers to a given MUMIE Task.
      *
      * If $userid is 0, all possible students are returned. Otherwise, the array will only contain the user with the given $userid.
      * @param stdClass $mumie
