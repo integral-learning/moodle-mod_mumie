@@ -77,7 +77,6 @@ class xapi_request {
     public function create_post_curl_request() {
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_USERAGENT, "Default User Name");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($this->payload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt(
