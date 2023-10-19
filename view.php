@@ -106,6 +106,9 @@ if ($action == "grading") {
     }
 
     $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
+    
+    $event = \mod_mumie\event\course_module_viewed::create(array('context' => $context,'objectid' => $mumietask->id));
+    $event->trigger();
 
     if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
         redirect($redirecturl);
