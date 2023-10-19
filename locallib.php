@@ -27,6 +27,10 @@ namespace mod_mumie;
 defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
+
+use stdClass;
+
+
 require_once($CFG->dirroot . '/mod/mumie/lib.php');
 
 define("MUMIE_LAUNCH_CONTAINER_WINDOW", 0);
@@ -45,7 +49,7 @@ class locallib {
     /**
      * Get instance of mumie task with its id
      * @param int $id id of the mumie task
-     * @return \stdClass instance of mumie task
+     * @return stdClass instance of mumie task
      */
     public static function get_mumie_task($id) {
         global $DB;
@@ -76,7 +80,7 @@ class locallib {
     /**
      * The function is called whenever a MUMIE task is updated or created.
      * If a pending decision regarding gradepools was made, we need to update all other MUMIE Tasks in this course as well.
-     * @param stcClass $mumietask The update we are processing
+     * @param stdClass $mumietask The update we are processing
      */
     public static function update_pending_gradepool($mumietask) {
         global $DB;
@@ -216,5 +220,21 @@ class locallib {
             return $extension->get_duedate();
         }
         return $mumie->duedate;
+    }
+
+    /**
+     * Get the unique identifier for a MUMIE task
+     *
+     * @param stdClass $mumietask
+     * @return string id for MUMIE task on MUMIE/LEMON server
+     */
+    public static function get_mumie_id($mumietask): string {
+        $id = $mumietask->taskurl;
+        $prefix = "link/";
+        if (strpos($id, $prefix) !== false) {
+            $id = substr($mumietask->taskurl, strlen($prefix));
+        }
+        $id = substr($id, 0, strpos($id, '?lang='));
+        return $id;
     }
 }
