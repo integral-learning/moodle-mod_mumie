@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_mumie\event;
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
 /**
- * This class represents the payload used in XAPI requests for MUMIE Task grade synchronization
+ * The mod_mumie course module viewed event.
  *
  * @package mod_mumie
  * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
