@@ -14,22 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace mod_mumie\synchronization\context;
+
 /**
- * This file defines the version of mod_mumie
+ * This class represents the context in which a user is working on a MUMIE Task.
  *
  * @package mod_mumie
- * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2023 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class user_context implements \JsonSerializable {
+    /**
+     * @var int
+     */
+    private int $deadline;
 
-defined('MOODLE_INTERNAL') || die;
+    /**
+     * Create new instance.
+     * @param int $deadline
+     */
+    public function __construct(int $deadline) {
+        $this->deadline = $deadline;
+    }
 
-$plugin->version = 2023102500; // The current module version (Date: YYYYMMDDXX).
-$plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
-$plugin->requires = 2022041900;
-$plugin->release = "v1.6.0";
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array(
-    'auth_mumie' => 2021031200,
-);
+    /**
+     * Custom JSON serializer.
+     * @return array|mixed
+     */
+    public function jsonSerialize() {
+        return get_object_vars($this);
+    }
+}

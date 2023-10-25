@@ -1,6 +1,15 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+## [v1.6.0] - 2023-10-23
+### Added
+- Teachers can incorporate worksheets with a deadline
+- The opening of a mummy activity is logged
+- Added button to open multi problem selector to mod_form
+
+### Changed
+- On grade overview page: Moved button to open MUMIE Task above participant list to improve UX
+
 ## [v1.5.0] - 2023-05-09
 ### Added
 - Teachers can now select worksheets in the problem selector. Worksheets are a collection of problems with a custom correction workflow
