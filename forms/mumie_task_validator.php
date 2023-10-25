@@ -88,6 +88,13 @@ class mumie_task_validator {
             && !self::has_duedate($data)) {
             $errors['duedate'] = get_string('mumie_form_deadline_required_for_trigger_after_deadline', 'mod_mumie');
         }
+
+        if (self::is_worksheet($data)
+            && !self::is_correction_trigger_after_deadline($data['worksheet'])
+            && self::has_duedate($data)) {
+            $errors['duedate'] = get_string('mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline', 'mod_mumie');
+        }
+
         return $errors;
     }
 
