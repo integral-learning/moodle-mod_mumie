@@ -59,6 +59,6 @@ class object_context implements \JsonSerializable {
      * @return array
      */
     public function jsonSerialize() {
-        return ['language' => $this->language, 'userDeadlines' => $this->usercontexts];
+        return ['language' => $this->language, 'userContexts' => $this->usercontexts];
     }
 }
