@@ -31,10 +31,16 @@ class object_context implements \JsonSerializable {
     private array $usercontexts;
 
     /**
+     * @var string
+     */
+    private string $language;
+
+    /**
      * Create a new instance.
      */
-    public function __construct() {
+    public function __construct($lang) {
         $this->usercontexts = array();
+        $this->language = $lang;
     }
 
     /**
@@ -52,6 +58,6 @@ class object_context implements \JsonSerializable {
      * @return array
      */
     public function jsonSerialize() {
-        return $this->usercontexts;
+        return ['language' => $this->language,'userDeadlines'=>$this->usercontexts];
     }
 }
