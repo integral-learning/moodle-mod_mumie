@@ -37,6 +37,7 @@ class object_context implements \JsonSerializable {
 
     /**
      * Create a new instance.
+     * @param string       $lang
      */
     public function __construct($lang) {
         $this->usercontexts = array();
