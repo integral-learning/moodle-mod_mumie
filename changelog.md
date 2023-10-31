@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 ## [v1.6.1] - 2023-10-31
-### Changeed
+### Added
 - The language is sent with the worksheet during the note synchronization request.
 
 ## [v1.6.0] - 2023-10-23
