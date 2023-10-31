@@ -71,7 +71,7 @@ class context_provider {
     private static function create_object_context(stdClass $mumie, array $users): object_context {
         global $CFG;
         require_once($CFG->dirroot . "/mod/mumie/classes/grades/synchronization/context/object_context.php");
-        $context = new object_context();
+        $context = new object_context($mumie->language);
         foreach ($users as $user) {
             $context->add_user_context($user->get_sync_id(), self::create_user_context($mumie, $user));
         }
