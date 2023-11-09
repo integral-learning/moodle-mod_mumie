@@ -78,10 +78,11 @@ class xapi_request {
      */
     public function create_post_curl_request() {
         $hallo_json= json_encode($this->payload, JSON_UNESCAPED_SLASHES);
+        error_log($this->server->get_grade_sync_url());
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $hallo_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         error_log(get_config('auth_mumie', 'mumie_api_key'));
         error_log($hallo_json);
