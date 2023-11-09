@@ -203,6 +203,7 @@ class gradesync {
      * @throws \dml_exception
      */
     private static function get_mumie_user_from_sync_id(string $syncid): ?mumie_user {
+        error_log($syncid);
         $mumieid = substr(strrchr($syncid, "_"), 1);
         return mumie_user_service::get_user_from_mumie_id($mumieid);
     }
