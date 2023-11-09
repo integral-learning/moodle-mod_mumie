@@ -89,7 +89,7 @@ class xapi_request {
             CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($hallo_json),
+                //'Content-Length: ' . strlen($hallo_json),
                 "X-API-Key: " . get_config('auth_mumie', 'mumie_api_key'),
             )
         );
