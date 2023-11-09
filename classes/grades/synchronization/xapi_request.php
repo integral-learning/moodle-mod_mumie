@@ -81,6 +81,8 @@ class xapi_request {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($this->payload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        error_log(json_encode($this->payload));
         curl_setopt(
             $ch,
             CURLOPT_HTTPHEADER,
