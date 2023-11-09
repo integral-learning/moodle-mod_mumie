@@ -80,7 +80,7 @@ class xapi_request {
         $escaped= stripslashes(json_encode($this->payload));
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, escaped);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $escaped);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         error_log(json_encode($this->payload));
@@ -89,7 +89,7 @@ class xapi_request {
             CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen(escaped),
+                'Content-Length: ' . strlen($escaped),
                 "X-API-Key: " . get_config('auth_mumie', 'mumie_api_key'),
             )
         );
