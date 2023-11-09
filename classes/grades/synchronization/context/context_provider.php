@@ -57,7 +57,7 @@ class context_provider {
      * @return bool
      */
     public static function requires_context(stdClass $mumie): bool {
-        return str_starts_with($mumie->taskurl, "worksheet_")
+        return (substr( $mumie->taskurl, 0, 10 ) === "worksheet_")
             && $mumie->duedate > 0;
     }
 
