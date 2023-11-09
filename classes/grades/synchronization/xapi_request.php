@@ -53,8 +53,8 @@ class xapi_request {
     public function send(): array {
         $ch = $this->create_post_curl_request();
         $result = (array) json_decode(curl_exec($ch));
-        error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        error_log(curl_exec($ch));
+        error_log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+        error_log($ch);
         curl_close($ch);
         if ($this->has_error($result)) {
             return array();
