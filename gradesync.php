@@ -189,7 +189,6 @@ class gradesync {
      */
     private static function xapi_to_moodle_grade($xapigrade) : stdClass {
         $grade = new stdClass();
-        error_log($xapigrade);
         $sync_id = self::get_mumie_user_from_sync_id($xapigrade->actor->account->name);
         $grade->userid = $sync_id->get_moodle_id();
         $grade->rawgrade = 100 * $xapigrade->result->score->raw;
@@ -204,7 +203,6 @@ class gradesync {
      * @throws \dml_exception
      */
     private static function get_mumie_user_from_sync_id(string $syncid): ?mumie_user {
-        error_log($syncid);
         $mumieid = substr(strrchr($syncid, "_"), 1);
         return mumie_user_service::get_user_from_mumie_id($mumieid);
     }
