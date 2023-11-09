@@ -263,12 +263,10 @@ class gradesync {
             $mumieusers
         );
         $payload = new payload($syncids, $mumie->mumie_coursefile, $mumieids, $mumie->lastsync, true);
-        $test = context_provider::requires_context($mumie);
         if (context_provider::requires_context($mumie)) {
             $context = context_provider::get_context(array($mumie), $mumieusers);
             $payload->with_context($context);
         }
-        error_log("TEST: " . print_r($test));
         $request = new xapi_request($mumieserver, $payload);
         return $request->send();
     }
