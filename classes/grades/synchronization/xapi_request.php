@@ -83,6 +83,7 @@ class xapi_request {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $hallo_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        error_log(get_config('auth_mumie', 'mumie_api_key'));
         error_log($hallo_json);
         curl_setopt(
             $ch,
