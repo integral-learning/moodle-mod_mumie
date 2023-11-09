@@ -1,6 +1,11 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+## [v1.6.2] - 2023-11-09
+### Fixed
+- Grade synchronisation bug fixed
+- Support php:7.4
+
 ## [v1.6.1] - 2023-10-31
 ### Added
 - The language is sent with the worksheet during the note synchronization request.
