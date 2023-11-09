@@ -82,6 +82,7 @@ class xapi_request {
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $hallo_json);
+        curl_setopt($ch, CURLOPT_USERAGENT, "");
         //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         error_log(get_config('auth_mumie', 'mumie_api_key'));
