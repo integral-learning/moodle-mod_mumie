@@ -77,19 +77,19 @@ class xapi_request {
      * @return mixed curl handle for json payload
      */
     public function create_post_curl_request() {
-        $payload= json_encode($this->payload, JSON_UNESCAPED_SLASHES);
+        $hallo_json= json_encode($this->payload, JSON_UNESCAPED_SLASHES);
         $ch = curl_init($this->server->get_grade_sync_url());
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $hallo_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         error_log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        error_log(json_encode($this->payload));
+        error_log($hallo_json);
         curl_setopt(
             $ch,
             CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($payload),
+                'Content-Length: ' . strlen($hallo_json),
                 "X-API-Key: " . get_config('auth_mumie', 'mumie_api_key'),
             )
         );
