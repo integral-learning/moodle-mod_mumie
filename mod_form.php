@@ -204,8 +204,7 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $jsparams = array(
             json_encode($context->id),
-            get_config('auth_mumie', 'mumie_problem_selector_url'),
-            $USER->lang
+            get_config('auth_mumie', 'mumie_problem_selector_url')
         );
         $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }

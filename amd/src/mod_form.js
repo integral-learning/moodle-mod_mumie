@@ -3,7 +3,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         const addServerButton = document.getElementById("id_add_server_button");
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
         let lmsSelectorUrl;
-        let systemLanguage;
         const serverController = (function() {
             let serverStructure;
             const serverDropDown = document.getElementById("id_server");
@@ -112,8 +111,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     const gradingType = taskController.getGradingType();
                     problemSelectorButton.onclick = function() {
                         problemSelectorWindow = window.open(
-                            lmsSelectorUrl
-                                + '/lms-problem-selector?'
+                            'http://moodledev.mumie.net:8050/auth/mumie/problem_selector.php?'
                                 + 'org='
                                 + mumieOrg
                                 + '&serverUrl='
@@ -121,10 +119,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 + '&problemLang='
                                 + langController.getSelectedLanguage()
                                 + '&origin=' + encodeURIComponent(window.location.origin)
-                                + '&uiLang=' + systemLanguage
                                 + '&gradingType=' + gradingType
-                                + '&multiCourse=true'
-                                + '&worksheet=true'
                             , '_blank'
                         );
                     };
@@ -406,9 +401,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextid, prbSelectorUrl, lang) {
+            init: function(contextid, prbSelectorUrl) {
                 lmsSelectorUrl = prbSelectorUrl;
-                systemLanguage = lang;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
