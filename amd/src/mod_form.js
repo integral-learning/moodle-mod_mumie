@@ -402,6 +402,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         return {
             init: function(contextid, prbSelectorUrl) {
+                /* eslint-disable no-console */
+                console.log("CONTEXT ID:", contextid);
                 lmsSelectorUrl = prbSelectorUrl;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
