@@ -117,7 +117,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const selectedServer = serverController.getSelectedServer().urlprefix;
                 const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
                 if (useSSO) {
-                    return 'http://moodledev.mumie.net:8050/auth/mumie/problem_selector.php?'
+                    return '/auth/mumie/problem_selector.php?'
                         + 'org='
                         + mumieOrg
                         + '&serverUrl='
