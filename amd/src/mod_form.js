@@ -114,14 +114,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function buildURL() {
                 const gradingType = taskController.getGradingType();
                 const selection = taskController.getDelocalizedTaskLink();
-                // TODO write function to determine whether SSO should be used
-                const useSSO = true;
+                const selectedServer = serverController.getSelectedServer().urlprefix;
+                const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
                 if (useSSO) {
                     return 'http://moodledev.mumie.net:8050/auth/mumie/problem_selector.php?'
                         + 'org='
                         + mumieOrg
                         + '&serverUrl='
-                        + encodeURIComponent(serverController.getSelectedServer().urlprefix)
+                        + encodeURIComponent(selectedServer)
                         + '&problemLang='
                         + langController.getSelectedLanguage()
                         + '&origin=' + encodeURIComponent(window.location.origin)
@@ -133,7 +133,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     + 'org='
                     + mumieOrg
                     + '&serverUrl='
-                    + encodeURIComponent(serverController.getSelectedServer().urlprefix)
+                    + encodeURIComponent(selectedServer)
                     + '&problemLang='
                     + langController.getSelectedLanguage()
                     + '&origin=' + encodeURIComponent(window.location.origin)
@@ -142,6 +142,19 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     + '&multiCourse=true'
                     + '&worksheet=true'
                     + (selection ? '&selection=' + selection : '');
+            }
+
+            /**
+             * Determines whether the Single Sign-On (SSO) should be used when opening the Problem Selector.
+             * SSO is only supposed to be used when the Problem Selector URL has the same origin as the
+             * URL of the selected MUMIE server.
+             *
+             * @param {string} problemSelectorUrl - The URL of the problem selector.
+             * @param {string} selectedServerUrl - The URL of the selected MUMIE server
+             * @returns {boolean} Whether SSO should be used for the Problem Selector or not
+             */
+            function shouldUseSSO(problemSelectorUrl, selectedServerUrl) {
+                return new URL(problemSelectorUrl).origin === new URL(selectedServerUrl).origin;
             }
 
             return {
