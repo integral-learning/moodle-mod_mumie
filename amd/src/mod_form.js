@@ -3,6 +3,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         const addServerButton = document.getElementById("id_add_server_button");
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
         let lmsSelectorUrl;
+        let systemLanguage;
         const serverController = (function() {
             let serverStructure;
             const serverDropDown = document.getElementById("id_server");
@@ -106,22 +107,47 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 });
             }
 
+            /**
+             * Builds the URL to the Problem Selector
+             * @returns {string} URL to the Problem Selector
+             */
+            function buildURL() {
+                const gradingType = taskController.getGradingType();
+                const selection = taskController.getDelocalizedTaskLink();
+                // TODO write function to determine whether SSO should be used
+                const useSSO = true;
+                if (useSSO) {
+                    return 'http://moodledev.mumie.net:8050/auth/mumie/problem_selector.php?'
+                        + 'org='
+                        + mumieOrg
+                        + '&serverUrl='
+                        + encodeURIComponent(serverController.getSelectedServer().urlprefix)
+                        + '&problemLang='
+                        + langController.getSelectedLanguage()
+                        + '&origin=' + encodeURIComponent(window.location.origin)
+                        + '&gradingType=' + gradingType
+                        + (selection ? '&selection=' + selection : '');
+                }
+                return lmsSelectorUrl
+                    + '/lms-problem-selector?'
+                    + 'org='
+                    + mumieOrg
+                    + '&serverUrl='
+                    + encodeURIComponent(serverController.getSelectedServer().urlprefix)
+                    + '&problemLang='
+                    + langController.getSelectedLanguage()
+                    + '&origin=' + encodeURIComponent(window.location.origin)
+                    + '&uiLang=' + systemLanguage
+                    + '&gradingType=' + gradingType
+                    + '&multiCourse=true'
+                    + '&worksheet=true'
+                    + (selection ? '&selection=' + selection : '');
+            }
+
             return {
                 init: function() {
-                    const gradingType = taskController.getGradingType();
                     problemSelectorButton.onclick = function() {
-                        problemSelectorWindow = window.open(
-                            'http://moodledev.mumie.net:8050/auth/mumie/problem_selector.php?'
-                                + 'org='
-                                + mumieOrg
-                                + '&serverUrl='
-                                + encodeURIComponent(serverController.getSelectedServer().urlprefix)
-                                + '&problemLang='
-                                + langController.getSelectedLanguage()
-                                + '&origin=' + encodeURIComponent(window.location.origin)
-                                + '&gradingType=' + gradingType
-                            , '_blank'
-                        );
+                        problemSelectorWindow = window.open(buildURL(), '_blank');
                     };
 
                     window.onclose = function() {
@@ -212,7 +238,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             const nameElem = document.getElementById("id_name");
             const taskDisplayElement = document.getElementById("id_task_display_element");
             const isGradedElem = document.getElementById('id_mumie_isgraded');
-
+            const LANG_REQUEST_PARAM_PREFIX = "?lang=";
 
             /**
              * Update the activity's name in the input field
@@ -235,9 +261,31 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {string} language
              */
             function updateTaskUri(link, language) {
-                const localizedLink = link + "?lang=" + language;
+                const localizedLink = localizeLink(link, language);
                 taskSelectionInput.value = localizedLink;
                 updateTaskDisplayElemement(localizedLink);
+            }
+
+            /**
+             * Add lang request param to link
+             * @param {string} link
+             * @param {string} language
+             * @returns {string} Link with lang request param
+             */
+            function localizeLink(link, language) {
+                return link + LANG_REQUEST_PARAM_PREFIX + language;
+            }
+
+            /**
+             * Remove lang request param from link
+             * @param {string} link Link that may have lang request param
+             * @returns {string} Link without lang request param
+             */
+            function delocalizeLink(link) {
+                if (link.includes(LANG_REQUEST_PARAM_PREFIX)) {
+                    return link.split(LANG_REQUEST_PARAM_PREFIX)[0];
+                }
+                return link;
             }
 
             /**
@@ -274,6 +322,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         return 'ungraded';
                     }
                     return 'all';
+                },
+                getDelocalizedTaskLink: function() {
+                    return delocalizeLink(taskSelectionInput.value);
                 }
             };
         })();
@@ -401,10 +452,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextid, prbSelectorUrl) {
-                /* eslint-disable no-console */
-                console.log("CONTEXT ID:", contextid);
+            init: function(contextid, prbSelectorUrl, lang) {
                 lmsSelectorUrl = prbSelectorUrl;
+                systemLanguage = lang;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
