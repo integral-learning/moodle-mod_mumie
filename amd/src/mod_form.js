@@ -4,6 +4,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
         let lmsSelectorUrl;
         let systemLanguage;
+        let courseId;
         const serverController = (function() {
             let serverStructure;
             const serverDropDown = document.getElementById("id_server");
@@ -126,6 +127,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         + langController.getSelectedLanguage()
                         + '&origin=' + encodeURIComponent(window.location.origin)
                         + '&grading_type=' + gradingType
+                        + '&course_id=' + courseId
                         + (selection ? '&selection=' + selection : '');
                 }
                 return lmsSelectorUrl
@@ -465,9 +467,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextid, prbSelectorUrl, lang) {
+            init: function(courseIdParam, prbSelectorUrl, lang) {
                 lmsSelectorUrl = prbSelectorUrl;
                 systemLanguage = lang;
+                courseId = courseIdParam;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
@@ -484,7 +487,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 multiTaskEditController.init();
                 if (addServerButton) {
                     require(['auth_mumie/mumie_server_config'], function(MumieServer) {
-                        MumieServer.init(addServerButton, contextid);
+                        MumieServer.init(addServerButton, courseId);
                     });
                 }
             }
