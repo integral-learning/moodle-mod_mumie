@@ -162,8 +162,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             return {
                 init: function() {
                     problemSelectorButton.onclick = function() {
-                        // eslint-disable-next-line no-console
-                        console.log("PROBLEM SELECTOR URL: ", buildURL());
                         problemSelectorWindow = window.open(buildURL(), '_blank');
                     };
 
