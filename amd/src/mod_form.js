@@ -120,12 +120,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     return '/auth/mumie/problem_selector.php?'
                         + 'org='
                         + mumieOrg
-                        + '&serverUrl='
+                        + '&server_url='
                         + encodeURIComponent(selectedServer)
-                        + '&problemLang='
+                        + '&problem_lang='
                         + langController.getSelectedLanguage()
                         + '&origin=' + encodeURIComponent(window.location.origin)
-                        + '&gradingType=' + gradingType
+                        + '&grading_type=' + gradingType
                         + (selection ? '&selection=' + selection : '');
                 }
                 return lmsSelectorUrl
