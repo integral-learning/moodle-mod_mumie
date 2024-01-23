@@ -4,6 +4,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
         let lmsSelectorUrl;
         let systemLanguage;
+        let contextId;
         const serverController = (function() {
             let serverStructure;
             const serverDropDown = document.getElementById("id_server");
@@ -114,12 +115,27 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function buildURL() {
                 const gradingType = taskController.getGradingType();
                 const selection = taskController.getDelocalizedTaskLink();
+                const selectedServer = serverController.getSelectedServer().urlprefix;
+                const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
+                if (useSSO) {
+                    return '/auth/mumie/problem_selector.php?'
+                        + 'org='
+                        + mumieOrg
+                        + '&serverurl='
+                        + encodeURIComponent(selectedServer)
+                        + '&problemlang='
+                        + langController.getSelectedLanguage()
+                        + '&origin=' + encodeURIComponent(window.location.origin)
+                        + '&gradingtype=' + gradingType
+                        + '&contextid=' + contextId
+                        + (selection ? '&selection=' + selection : '');
+                }
                 return lmsSelectorUrl
                     + '/lms-problem-selector?'
                     + 'org='
                     + mumieOrg
                     + '&serverUrl='
-                    + encodeURIComponent(serverController.getSelectedServer().urlprefix)
+                    + encodeURIComponent(selectedServer)
                     + '&problemLang='
                     + langController.getSelectedLanguage()
                     + '&origin=' + encodeURIComponent(window.location.origin)
@@ -128,6 +144,19 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     + '&multiCourse=true'
                     + '&worksheet=true'
                     + (selection ? '&selection=' + selection : '');
+            }
+
+            /**
+             * Determines whether the Single Sign-On (SSO) should be used when opening the Problem Selector.
+             * SSO is only supposed to be used when the Problem Selector URL has the same origin as the
+             * URL of the selected MUMIE server.
+             *
+             * @param {string} problemSelectorUrl - The URL of the problem selector.
+             * @param {string} selectedServerUrl - The URL of the selected MUMIE server
+             * @returns {boolean} Whether SSO should be used for the Problem Selector or not
+             */
+            function shouldUseSSO(problemSelectorUrl, selectedServerUrl) {
+                return new URL(problemSelectorUrl).origin === new URL(selectedServerUrl).origin;
             }
 
             return {
@@ -438,9 +467,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextid, prbSelectorUrl, lang) {
+            init: function(contextIdParam, prbSelectorUrl, lang) {
                 lmsSelectorUrl = prbSelectorUrl;
                 systemLanguage = lang;
+                contextId = contextIdParam;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
@@ -457,7 +487,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 multiTaskEditController.init();
                 if (addServerButton) {
                     require(['auth_mumie/mumie_server_config'], function(MumieServer) {
-                        MumieServer.init(addServerButton, contextid);
+                        MumieServer.init(addServerButton, contextId);
                     });
                 }
             }
