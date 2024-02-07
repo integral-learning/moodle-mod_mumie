@@ -278,12 +278,12 @@ class mumie_participants extends \table_sql {
     }
 
     /**
-     * Check if a given string contains an property the participants list cannot be sorted by.
+     * Check if a given string contains a property the participants list cannot be sorted by.
      *
      * @param string $searchparam the search term we are checking
      * @return bool
      */
     private function is_unsortable_column_header($searchparam) {
-        return strpos($searchparam, 'duedate') !== false || strpos($searchparam, 'submissions') !== false;
+        return $searchparam === null || strpos($searchparam, 'duedate') !== false || strpos($searchparam, 'submissions') !== false;
     }
 }
