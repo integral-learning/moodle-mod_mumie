@@ -1,6 +1,15 @@
 # MumieTask - Changelog
 
 All important changes to this plugin will be documented in this file.
+
+## [v1.7.0] - 2024-05-06
+### Added
+- Preselection of currently selected Problem when opening the Problem selector
+- SSO when opening the Problem selector for the Problem Pool
+
+### Fixed
+- Fixed deprecation warning on activity page
+
 ## [v1.6.2] - 2023-11-09
 ### Fixed
 - Grade synchronisation bug fixed
