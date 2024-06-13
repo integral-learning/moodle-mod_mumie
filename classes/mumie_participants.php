@@ -27,6 +27,7 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die;
 
+use core\context\course;
 use core_table\local\filter\filterset;
 use core_user\table\participants_search;
 
@@ -60,9 +61,37 @@ class mumie_participants extends \table_sql {
     private $cmid;
 
     /**
+     * The ID of the course.
+     *
+     * @var int
+     */
+    private $courseid;
+
+    /**
+     * The instance of the course the table is being created for.
+     *
+     * @var \stdClass
+     */
+    private $course;
+
+    /**
+     * The course context.
+     *
+     * @var course|false
+     */
+    private $context;
+
+    /**
+     * An array that holds the role assignments of users.
+     *
+     * @var array
+     */
+    private $allroleassignments;
+
+    /**
      * Constructor
      *
-     * @param  string $uniqueid a string identifying this table.Used as a key in session  vars.
+     * @param  string $uniqueid a string identifying this table. Used as a key in session vars.
      * @param  \stdClass $mumie
      * @param  int $cmid
      * @return void
