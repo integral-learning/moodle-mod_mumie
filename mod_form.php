@@ -244,18 +244,39 @@ class mod_mumie_mod_form extends moodleform_mod {
         $items = array();
 
         $group = array();
+        $completionpasselement = $this->get_completion_rule_element_name('completionpass');
         $group[] = $mform->createElement(
             'advcheckbox',
-            'completionpass',
+            $completionpasselement,
             null,
             get_string('completionpass', 'mumie'),
             array('group' => 'cpass')
         );
-        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
-        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'mumie'), ' &nbsp; ', false);
-        $mform->addHelpButton('completionpassgroup', 'completionpass', 'mumie');
-        $items[] = 'completionpassgroup';
+        $completionusegradeelement = $this->get_completion_rule_element_name('completionusegrade');
+        $mform->disabledIf($completionpasselement, $completionusegradeelement, 'notchecked');
+        $completionpassgroupelement = $this->get_completion_rule_element_name('completionpassgroup');
+        $mform->addGroup($group, $completionpassgroupelement, get_string('completionpass', 'mumie'), ' &nbsp; ', false);
+        $mform->addHelpButton($completionpassgroupelement, 'completionpass', 'mumie');
+        $items[] = $completionpassgroupelement;
         return $items;
+    }
+
+    /**
+     * Get the completion rule's element name.
+     *
+     * Conditionally add suffix for Moodle >= 4.3.
+     *
+     * @param string $rawname The raw name of the completion rule.
+     * @return string The properly suffixed element name.
+     */
+    private function get_completion_rule_element_name($rawname) : string {
+        global $CFG;
+        if ($CFG->branch < 403) {
+            $suffix = '';
+        } else {
+            $suffix = $this->get_suffix();
+        }
+        return $rawname . $suffix;
     }
 
     /**
@@ -477,7 +498,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return bool True if one or more rules is enabled, false if none are.
      */
     public function completion_rule_enabled($data) : bool {
-        return !empty($data['completionpass']);
+        $completionpasselement = $this->get_completion_rule_element_name('completionpass');
+        return !empty($data[$completionpasselement]);
     }
 
 
