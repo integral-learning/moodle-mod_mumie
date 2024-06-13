@@ -2,6 +2,11 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.7.1] - 2024-06-13
+### Fixed
+- Fixed Moodle >=4.3 compatibility bug, where `Require passing grade` was not being displayed in completion configuration.
+- Fixed PHP 8.2 deprecation warning for dynamically created properties.
+
 ## [v1.7.0] - 2024-05-06
 ### Added
 - Preselection of currently selected Problem when opening the Problem selector
