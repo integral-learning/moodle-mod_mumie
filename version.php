@@ -25,10 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024050600; // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2024061300; // The current module version (Date: YYYYMMDDXX).
 $plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
 $plugin->requires = 2022041900;
-$plugin->release = "v1.7.0";
+$plugin->release = "v1.7.1";
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = array(
     'auth_mumie' => 2024050600,
