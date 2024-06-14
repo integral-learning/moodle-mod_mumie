@@ -118,10 +118,7 @@ class mumie_grader {
         global $DB;
         $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
 
-        return $duedate ? strftime(
-            get_string('strftimedaydatetime', 'langconfig'),
-            $duedate->duedate
-        ) : "-";
+        return $duedate ? userdate($duedate->duedate) : "-";
     }
 
     /**
@@ -175,10 +172,7 @@ class mumie_grader {
 
                 $table->data[] = array(
                     $grade->rawgrade,
-                    strftime(
-                        get_string('strftimedaydatetime', 'langconfig'),
-                        $grade->timecreated
-                    ),
+                    userdate($grade->timecreated),
                     $overrideicon
                 );
             }
