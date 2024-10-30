@@ -1,5 +1,5 @@
 <?php
-namespace core\hook\output;
+namespace mod_mumie\hook\output;
 
 use core\hook\deprecated_callback_replacement;
 use core\hook\described_hook;
