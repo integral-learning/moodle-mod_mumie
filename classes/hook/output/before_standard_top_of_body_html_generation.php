@@ -1,7 +1,10 @@
 <?php
-namespace core\hook;
+namespace core\hook\output;
 
-final class before_standard_top_of_body_html implements described_hook, deprecated_callback_replacement {
+use core\hook\deprecated_callback_replacement;
+use core\hook\described_hook;
+
+final class before_standard_top_of_body_html_generation implements described_hook, deprecated_callback_replacement {
     public static function get_hook_description(): string {
         return 'Hook used to update grades for MUMIE tasks, whenever a gradebook is opened';
     }
