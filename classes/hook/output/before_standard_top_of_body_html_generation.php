@@ -16,4 +16,8 @@ final class before_standard_top_of_body_html_generation implements described_hoo
     public static function get_deprecated_plugin_callbacks(): array {
         return ['before_standard_top_of_body_html'];
     }
+
+    public static function callback(\core\hook\output\before_standard_top_of_body_html_generation $hook): void {
+        //TODO add implementation
+    }
 }
