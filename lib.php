@@ -264,7 +264,7 @@ function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
 }
 
 /**
- * Hook used to updated grades for MUMIE tasks, whenever a gradebook is opened
+ * Hook used to update grades for MUMIE tasks, whenever a gradebook is opened
  * @return void
  */
 function mumie_before_standard_top_of_body_html() {
