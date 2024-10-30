@@ -268,16 +268,7 @@ function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
  * @return void
  */
 function mumie_before_standard_top_of_body_html() {
-    global $PAGE, $CFG;
-
-    if (!strpos($PAGE->url, '/grade/report/')) {
-        return "";
-    }
-
-    require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
-    mod_mumie\gradesync::update();
-
-    return "";
+    return locallib::callbackimpl_before_standard_top_of_body_html();
 }
 
 /**

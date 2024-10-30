@@ -237,4 +237,17 @@ class locallib {
         $id = substr($id, 0, strpos($id, '?lang='));
         return $id;
     }
+
+    public static function callbackimpl_before_standard_top_of_body_html(): string {
+        global $PAGE, $CFG;
+
+        if (!strpos($PAGE->url, '/grade/report/')) {
+            return "";
+        }
+
+        require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
+        gradesync::update();
+
+        return "";
+    }
 }

@@ -3,6 +3,7 @@ namespace mod_mumie\hook\output;
 
 use core\hook\deprecated_callback_replacement;
 use core\hook\described_hook;
+use mod_mumie\locallib;
 
 final class before_standard_top_of_body_html_generation implements described_hook, deprecated_callback_replacement {
     public static function get_hook_description(): string {
@@ -17,7 +18,7 @@ final class before_standard_top_of_body_html_generation implements described_hoo
         return ['before_standard_top_of_body_html'];
     }
 
-    public static function callback(\core\hook\output\before_standard_top_of_body_html_generation $hook): void {
-        //TODO add implementation
+    public static function callback(\core\hook\output\before_standard_top_of_body_html_generation $hook): string {
+        return locallib::callbackimpl_before_standard_top_of_body_html();
     }
 }
