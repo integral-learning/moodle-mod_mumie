@@ -208,7 +208,9 @@ class mumie_participants extends \table_sql {
         list($twhere, $tparams) = $this->get_sql_where();
         $psearch = new participants_search($this->course, $this->context, $this->filterset);
 
-        $total = $psearch->get_total_participants_count($twhere, $tparams);
+        $piterator = $psearch->get_participants($twhere, $tparams);
+        $total = iterator_count($piterator);
+        $piterator->close();
 
         $this->pagesize($pagesize, $total);
 
