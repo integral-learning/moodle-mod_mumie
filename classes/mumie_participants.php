@@ -208,17 +208,15 @@ class mumie_participants extends \table_sql {
         list($twhere, $tparams) = $this->get_sql_where();
         $psearch = new participants_search($this->course, $this->context, $this->filterset);
 
-        $participants = $psearch->get_participants($twhere, $tparams);
-        $total = $participants->current()->fullcount ?? 0;
-
-        $this->pagesize($pagesize, $total);
-
         $sort = $this->get_sql_sort();
         if ($sort) {
             $sort = 'ORDER BY ' . $sort;
         }
 
+        $this->use_pages = true;
         $rawdata = $psearch->get_participants($twhere, $tparams, $sort, $this->get_page_start(), $this->get_page_size());
+        $total = $rawdata->current()->fullcount ?? 0;
+        $this->pagesize($pagesize, $total);
 
         $this->rawdata = [];
         foreach ($rawdata as $user) {
