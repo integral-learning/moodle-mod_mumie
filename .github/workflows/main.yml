@@ -40,8 +40,7 @@ jobs:
 
     services:
       postgres:
-        only: ${{ matrix.database == 'pgsql' }}
-        image: postgres:${{ matrix.db-version }}
+        image: ${{ (matrix.database == 'pgsql') && 'postgres:${{ matrix.db-version }}' || '' }}
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -54,8 +53,7 @@ jobs:
           - 5432:5432
 
       mysql:
-        only: ${{ matrix.database == 'mysql' }}
-        image: mysql:${{ matrix.db-version }}
+        image: ${{ (matrix.database == 'mysql') && 'mysql:${{ matrix.db-version }}' || '' }}
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
           MYSQL_DATABASE: 'mysql'
