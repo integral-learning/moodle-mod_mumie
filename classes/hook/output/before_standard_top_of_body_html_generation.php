@@ -28,19 +28,44 @@ use core\hook\deprecated_callback_replacement;
 use core\hook\described_hook;
 use mod_mumie\locallib;
 
+/**
+ * This file keeps track of upgrades to the mod_mumie module
+ *
+ * @package   mod_mumie
+ * @copyright 2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author    TYannic Lapawczyk (yannic.lapawczyk@integral-learning.de)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 final class before_standard_top_of_body_html_generation implements described_hook, deprecated_callback_replacement {
+
+    /**
+     * Hook description.
+     */
     public static function get_hook_description(): string {
         return 'Hook used to update grades for MUMIE tasks, whenever a gradebook is opened';
     }
 
+    /**
+     * List of tags that describe this hook.
+     *
+     * @return string[]
+     */
     public static function get_hook_tags(): array {
         return ['gradesync'];
     }
 
+    /**
+     * Deprecation info.
+     */
     public static function get_deprecated_plugin_callbacks(): array {
         return ['before_standard_top_of_body_html'];
     }
 
+    /**
+     * Callback function
+     *
+     * @param \core\hook\output\before_standard_top_of_body_html_generation $hook
+     */
     public static function callback(\core\hook\output\before_standard_top_of_body_html_generation $hook): string {
         return locallib::callbackimpl_before_standard_top_of_body_html();
     }

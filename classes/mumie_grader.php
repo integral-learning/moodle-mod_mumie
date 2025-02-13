@@ -39,8 +39,7 @@ use core_user\table\participants_filterset;
  * @author    Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mumie_grader
-{
+class mumie_grader {
     /**
      * MUMIE Task instance we want to show more information about.
      *
@@ -69,10 +68,9 @@ class mumie_grader
      * @param  int       $cmid  course module id.
      * @return void
      */
-    public function __construct($mumie, $cmid)
-    {
+    public function __construct($mumie, $cmid) {
         global $CFG, $DB;
-        include_once $CFG->dirroot . "/mod/mumie/locallib.php";
+        require_once($CFG->dirroot . "/mod/mumie/locallib.php");
         $this->mumie = $mumie;
         $this->course = $DB->get_record('course', array('id' => $this->mumie->course), '*', MUST_EXIST);
         $this->cmid = $cmid;
@@ -83,8 +81,7 @@ class mumie_grader
      *
      * @return string
      */
-    public function view_grading_table()
-    {
+    public function view_grading_table() {
         global $PAGE, $CFG;
         $output = "";
 
@@ -94,7 +91,7 @@ class mumie_grader
         $filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$this->course->id]));
         $filterset->add_filter(new integer_filter('roles', filter::JOINTYPE_DEFAULT, $gradedroles));
 
-        include_once $CFG->dirroot . "/mod/mumie/classes/mumie_participants.php";
+        require_once($CFG->dirroot . "/mod/mumie/classes/mumie_participants.php");
 
         $participanttable = new mumie_participants("user-index-participants-{$this->course->id}", $this->mumie, $this->cmid);
 
@@ -117,8 +114,7 @@ class mumie_grader
      * @param  int  $userid
      * @return string
      */
-    public static function get_duedate($mumie, $userid)
-    {
+    public static function get_duedate($mumie, $userid) {
         global $CFG, $DB;
         $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
 
@@ -135,10 +131,9 @@ class mumie_grader
      * @param  int $userid
      * @return string
      */
-    public function view_submissions($userid)
-    {
+    public function view_submissions($userid) {
         global $CFG;
-        include_once $CFG->dirroot . '/mod/mumie/gradesync.php';
+        require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
         $user = \core_user::get_user($userid);
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
@@ -183,10 +178,7 @@ class mumie_grader
 
                 $table->data[] = array(
                     $grade->rawgrade,
-                    strftime(
-                        get_string('strftimedaydatetime', 'langconfig'),
-                        $grade->timecreated
-                    ),
+                    date("d F Y, h:i A", $grade->timecreated),
                     $overrideicon
                 );
             }
@@ -206,8 +198,7 @@ class mumie_grader
      * @param  int   $timestamp
      * @return boolean
      */
-    public function is_grade_valid($rawgrade, $userid, $timestamp)
-    {
+    public function is_grade_valid($rawgrade, $userid, $timestamp) {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
