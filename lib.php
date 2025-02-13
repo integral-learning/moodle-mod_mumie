@@ -170,7 +170,7 @@ function mumie_cm_info_view(cm_info $cm) {
     if (isset($duedate) && $duedate > 0) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
-            . strftime(get_string('strftimedaydatetime', 'langconfig'), $duedate);
+            . date("d F Y, h:i A", $duedate);
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
     }
