@@ -238,6 +238,9 @@ class locallib {
         return $id;
     }
 
+    /**
+     * Update grades for MUMIE tasks, whenever a gradebook is opened
+     */
     public static function callbackimpl_before_standard_top_of_body_html(): string {
         global $PAGE, $CFG;
 
