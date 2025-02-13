@@ -122,17 +122,7 @@ class mumie_grader {
             return "-";
         }
 
-        if (version_compare(PHP_VERSION, '8.1', '<') OR version_compare($CFG->release, '4.1', '<')) {
-           return strftime(
-                      get_string('strftimedaydatetime', 'langconfig'),
-                      $duedate->duedate
-                      );
-        } else {
-            return \core_date::strftime(
-                       get_string('strftimedaydatetime', 'langconfig'),
-                       $duedate->duedate
-                    );
-        }
+        return date("d F Y, h:i A", $duedate->duedate);
     }
 
     /**
