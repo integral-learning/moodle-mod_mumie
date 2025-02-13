@@ -68,6 +68,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          ini-values: max_input_vars=10000
           extensions: mbstring, pgsql, mysqli
 
       - name: Deploy moodle-plugin-ci
