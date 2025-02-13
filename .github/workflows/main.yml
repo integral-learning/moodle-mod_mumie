@@ -40,6 +40,7 @@ jobs:
 
     services:
       postgres:
+        if: ${{ matrix.database == 'pgsql' }}
         image: postgres:${{ matrix.db-version }}
         env:
           POSTGRES_USER: 'postgres'
@@ -53,6 +54,7 @@ jobs:
           - 5432:5432
 
       mysql:
+        if: ${{ matrix.database == 'mysql' }}
         image: mysql:${{ matrix.db-version }}
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
