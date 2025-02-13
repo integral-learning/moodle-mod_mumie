@@ -21,7 +21,7 @@ jobs:
             db-version: '12'
           - php: '7.4'
             moodle-branch: 'MOODLE_401_STABLE'
-            database: 'mysql'
+            database: 'mysqli'
             db-version: '5.7'
           - php: '8.1'
             moodle-branch: 'MOODLE_404_STABLE'
@@ -52,8 +52,8 @@ jobs:
         ports:
           - 5432:5432
 
-      mysql:
-        image: ${{ matrix.database == 'mysql' && format('mysql:{0}', matrix.db-version) || '' }}
+      mysqli:
+        image: ${{ matrix.database == 'mysqli' && format('mysql:{0}', matrix.db-version) || '' }}
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
           MYSQL_DATABASE: 'mysql'
