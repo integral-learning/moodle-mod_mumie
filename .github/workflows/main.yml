@@ -59,6 +59,9 @@ jobs:
           MYSQL_DATABASE: 'xxx'
           MYSQL_USER: 's1'
           MYSQL_PASSWORD: 's1pw'
+          DB_DATABASE: test_db
+          DB_USER: 'root2'
+          DB_PASSWORD: 'root2'
         ports:
           - 3306:3306
 
