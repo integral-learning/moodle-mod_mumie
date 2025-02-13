@@ -17,10 +17,10 @@
 /**
  * This file describes a class used to dispay information about a MUMIE Tasks due date extensions and submissions.
  *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_mumie
+ * @copyright 2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author    Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mumie;
@@ -34,12 +34,13 @@ use core_user\table\participants_filterset;
 /**
  * mumie_grader is used to display information about due date extensions and submissions.
  *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_mumie
+ * @copyright 2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author    Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mumie_grader {
+class mumie_grader
+{
     /**
      * MUMIE Task instance we want to show more information about.
      *
@@ -65,12 +66,13 @@ class mumie_grader {
      * __construct
      *
      * @param  \stdClass $mumie
-     * @param  int $cmid course module id.
+     * @param  int       $cmid  course module id.
      * @return void
      */
-    public function __construct($mumie, $cmid) {
+    public function __construct($mumie, $cmid)
+    {
         global $CFG, $DB;
-        require_once($CFG->dirroot . "/mod/mumie/locallib.php");
+        include_once $CFG->dirroot . "/mod/mumie/locallib.php";
         $this->mumie = $mumie;
         $this->course = $DB->get_record('course', array('id' => $this->mumie->course), '*', MUST_EXIST);
         $this->cmid = $cmid;
@@ -81,7 +83,8 @@ class mumie_grader {
      *
      * @return string
      */
-    public function view_grading_table() {
+    public function view_grading_table()
+    {
         global $PAGE, $CFG;
         $output = "";
 
@@ -91,7 +94,7 @@ class mumie_grader {
         $filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$this->course->id]));
         $filterset->add_filter(new integer_filter('roles', filter::JOINTYPE_DEFAULT, $gradedroles));
 
-        require_once($CFG->dirroot . "/mod/mumie/classes/mumie_participants.php");
+        include_once $CFG->dirroot . "/mod/mumie/classes/mumie_participants.php";
 
         $participanttable = new mumie_participants("user-index-participants-{$this->course->id}", $this->mumie, $this->cmid);
 
@@ -110,12 +113,13 @@ class mumie_grader {
     /**
      * Get formatted duedate or placeholder for a student.
      *
-     * @param  \stdClass $mumie
-     * @param  int $userid
+     * @param       \stdClass $mumie
+     * @param  int  $userid
      * @return string
      */
-    public static function get_duedate($mumie, $userid) {
-        global $CFG,$DB;
+    public static function get_duedate($mumie, $userid)
+    {
+        global $CFG, $DB;
         $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
 
         if (!$duedate) {
@@ -131,9 +135,10 @@ class mumie_grader {
      * @param  int $userid
      * @return string
      */
-    public function view_submissions($userid) {
+    public function view_submissions($userid)
+    {
         global $CFG;
-        require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
+        include_once $CFG->dirroot . '/mod/mumie/gradesync.php';
 
         $user = \core_user::get_user($userid);
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
@@ -154,9 +159,11 @@ class mumie_grader {
         );
 
         if ($grades) {
-            usort($grades, function($a, $b) {
-                return $b->timecreated <=> $a->timecreated;
-            });
+            usort(
+                $grades, function ($a, $b) {
+                    return $b->timecreated <=> $a->timecreated;
+                }
+            );
 
             foreach ($grades as $grade) {
                 $overrideurl = new \moodle_url(
@@ -195,11 +202,12 @@ class mumie_grader {
      * Verify that the given parameters really belong to a MUMIE grade.
      *
      * @param  float $rawgrade
-     * @param  int $userid
-     * @param  int $timestamp
+     * @param  int   $userid
+     * @param  int   $timestamp
      * @return boolean
      */
-    public function is_grade_valid($rawgrade, $userid, $timestamp) {
+    public function is_grade_valid($rawgrade, $userid, $timestamp)
+    {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
 
