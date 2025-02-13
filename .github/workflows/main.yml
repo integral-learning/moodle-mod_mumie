@@ -54,14 +54,15 @@ jobs:
 
       mysqli:
         image: ${{ matrix.database == 'mysqli' && format('mysql:{0}', matrix.db-version) || '' }}
+        command: >
+          --character-set-server=utf8mb4
+          --collation-server=utf8mb4_bin
+          --skip-log-bin
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
           MYSQL_DATABASE: 'xxx'
           MYSQL_USER: 's1'
           MYSQL_PASSWORD: 's1pw'
-          DB_DATABASE: test_db
-          DB_USER: 'root2'
-          DB_PASSWORD: 'root2'
         ports:
           - 3306:3306
 
