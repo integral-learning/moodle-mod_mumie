@@ -56,7 +56,7 @@ jobs:
         image: ${{ matrix.database == 'mysqli' && format('mysql:{0}', matrix.db-version) || '' }}
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
-          MYSQL_DATABASE: 'mysql'
+          MYSQL_DATABASE: 'xxx'
           MYSQL_USER: 's1'
           MYSQL_PASSWORD: 's1pw'
         ports:
