@@ -182,6 +182,17 @@ class provider implements
         }
     }
 
+/*
+ $sql = "id IN (SELECT id
+                    FROM {mumie_duedate} duedate
+                    JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                    WHERE cm.id = :instanceid
+                    AND duedate.userid = :userid
+                    ) AS subquery
+                ";
+*/
+
+
     /**
      * Delete all use data which matches the specified context.
      *
