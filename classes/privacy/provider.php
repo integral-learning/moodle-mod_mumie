@@ -165,14 +165,23 @@ class provider implements
 
         foreach ($contextlist->get_contexts() as $context) {
             if ($context->contextlevel == CONTEXT_MODULE) {
-                $sql = "id IN (SELECT duedate.id
+                /*$sql = "id IN (SELECT duedate.id
                     FROM {mumie_duedate} duedate
                     JOIN {course_modules} cm ON cm.instance = duedate.mumie
                     WHERE cm.id = :instanceid
                     AND duedate.userid = :userid
                     )
+                ";*/
+                $sql = "id IN (
+                    SELECT id FROM (
+                        SELECT duedate.id
+                        FROM {mumie_duedate} duedate
+                        JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                        WHERE cm.id = :instanceid
+                        AND duedate.userid = :userid
+                        ) AS subquery
+                    )
                 ";
-
                 $DB->delete_records_select(
                     'mumie_duedate',
                     $sql,
@@ -223,13 +232,21 @@ class provider implements
         if ($context instanceof \context_module && count($userids) > 0) {
             list($insql, $inparams) = $DB->get_in_or_equal($userids);
 
-            $sql = "id IN (
+            /*$sql = "id IN (
                 SELECT duedate.id FROM {mumie_duedate} duedate
                     JOIN {course_modules} cm ON cm.instance = duedate.mumie
                     WHERE cm.id = ?
                     AND duedate.userid $insql
+            )";*/
+            $sql = "id IN (
+                SELECT id FROM (
+                    SELECT duedate.id
+                    FROM {mumie_duedate} duedate
+                    JOIN {course_modules} cm ON cm.instance = duedate.mumie
+                    WHERE cm.id = ?
+                    AND duedate.userid $insql
+                    ) AS subquery
             )";
-
             $params = array_merge(array($context->__get("instanceid")), $inparams);
 
             $DB->delete_records_select('mumie_duedate', $sql, $params);
