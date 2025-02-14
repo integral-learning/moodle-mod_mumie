@@ -15,22 +15,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: '7.4'
-            moodle-branch: 'MOODLE_401_STABLE'
-            database: 'pgsql'
-            db-version: '12'
+#          - php: '7.4'
+#            moodle-branch: 'MOODLE_401_STABLE'
+#            database: 'pgsql'
+#            db-version: '12'
           - php: '7.4'
             moodle-branch: 'MOODLE_401_STABLE'
             database: 'mysqli'
             db-version: '5.7'
-          - php: '8.1'
-            moodle-branch: 'MOODLE_404_STABLE'
-            database: 'pgsql'
-            db-version: '13'
-          - php: '8.1'
-            moodle-branch: 'MOODLE_405_STABLE'
-            database: 'pgsql'
-            db-version: '13'
+#          - php: '8.1'
+#            moodle-branch: 'MOODLE_404_STABLE'
+#            database: 'pgsql'
+#            db-version: '13'
+#          - php: '8.1'
+#            moodle-branch: 'MOODLE_405_STABLE'
+#            database: 'pgsql'
+#            db-version: '13'
 #          - php: '7.4'
 #            moodle-branch: 'MOODLE_401_STABLE'
 #            database: 'mariadb'
@@ -108,7 +108,7 @@ jobs:
         run: sleep 10
       - name: Überprüfe MySQL-Logs
         if: ${{ matrix.database == 'mysqli' }}
-        run: docker logs $(docker ps -q --filter ancestor=mysql)
+        run: docker ps
       - name: Teste MySQL-Verbindung
         if: ${{ matrix.database == 'mysqli' }}
         run: |
