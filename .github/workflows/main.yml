@@ -112,7 +112,7 @@ jobs:
       - name: Teste MySQL-Verbindung
         if: ${{ matrix.database == 'mysqli' }}
         run: |
-          mysql -h localhost -u root -proot -e "SHOW DATABASES;"
+          mysql -h localhost -u root -palfred -e "SHOW DATABASES;"
       - name: Install Moodle
         run: |
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
