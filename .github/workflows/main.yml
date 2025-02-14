@@ -59,6 +59,7 @@ jobs:
           - ./.github/workflows/mysql.cnf:/etc/mysql/conf.d/my.cnf
         env:
 #          MYSQL_ROOT_PASSWORD: 'alfred'
+          MYSQL_RANDOM_ROOT_PASSWORD: 'true'
           MYSQL_DATABASE: 'xxx'
           MYSQL_USER: 'admin'
           MYSQL_PASSWORD: 'adminpw'
