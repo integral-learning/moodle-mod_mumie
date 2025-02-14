@@ -64,8 +64,9 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
           MYSQL_DATABASE: 'xxx'
-          MYSQL_USER: 's1'
-          MYSQL_PASSWORD: 's1pw'
+          MYSQL_USER: 'admin'
+          MYSQL_PASSWORD: 'adminpw'
+          MYSQL_ROOT_HOST='172.18.0.1':
         ports:
           - 3306:3306
 
