@@ -103,12 +103,12 @@ jobs:
           echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
           # PHPUnit depends on en_AU.UTF-8 locale
           sudo locale-gen en_AU.UTF-8
-      - name: Warte auf MySQL
-        if: ${{ matrix.database == 'mysqli' }}
-        run: sleep 10
+#      - name: Warte auf MySQL
+#        if: ${{ matrix.database == 'mysqli' }}
+#        run: sleep 10
       - name: Überprüfe MySQL-Logs
         if: ${{ matrix.database == 'mysqli' }}
-        run: docker logs c1ee8e3f1dfa4ac3aaf508c0ec459582_mysql57_637f69
+        run: docker ps -q | xargs -I {} docker logs {}
       - name: Teste MySQL-Verbindung
         if: ${{ matrix.database == 'mysqli' }}
         run: |
