@@ -54,7 +54,13 @@ jobs:
 
       mysqli:
         image: ${{ matrix.database == 'mysqli' && format('mysql:{0}', matrix.db-version) || '' }}
-        entrypoint: docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        volumes:
+          - ./.github/workflows/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
         env:
           MYSQL_ROOT_PASSWORD: 'rootpw'
           MYSQL_DATABASE: 'xxx'
