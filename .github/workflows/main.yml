@@ -61,10 +61,6 @@ jobs:
           - ./.github/workflows/mysql.cnf:/etc/mysql/conf.d/my.cnf
         env:
           MYSQL_ROOT_PASSWORD: 'alfred'
-#          MYSQL_DATABASE: 'xxx'
-#          MYSQL_USER: 'admin'
-#          MYSQL_PASSWORD: 'adminpw'
-#          MYSQL_ROOT_HOST: '%'
         ports:
           - 3306:3306
 
