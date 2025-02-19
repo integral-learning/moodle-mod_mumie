@@ -65,7 +65,7 @@ class mumie_grader {
      * __construct
      *
      * @param  \stdClass $mumie
-     * @param  int       $cmid  course module id.
+     * @param  int $cmid course module id.
      * @return void
      */
     public function __construct($mumie, $cmid) {
@@ -110,12 +110,12 @@ class mumie_grader {
     /**
      * Get formatted duedate or placeholder for a student.
      *
-     * @param       \stdClass $mumie
-     * @param  int  $userid
+     * @param  \stdClass $mumie
+     * @param  int $userid
      * @return string
      */
     public static function get_duedate($mumie, $userid) {
-        global $CFG, $DB;
+        global $DB;
         $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
 
         if (!$duedate) {

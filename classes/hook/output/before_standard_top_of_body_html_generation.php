@@ -33,7 +33,7 @@ use mod_mumie\locallib;
  *
  * @package   mod_mumie
  * @copyright 2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
- * @author    TYannic Lapawczyk (yannic.lapawczyk@integral-learning.de)
+ * @author    Yannic Lapawczyk (yannic.lapawczyk@integral-learning.de)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class before_standard_top_of_body_html_generation implements described_hook, deprecated_callback_replacement {
