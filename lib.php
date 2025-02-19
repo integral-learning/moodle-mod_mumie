@@ -170,7 +170,7 @@ function mumie_cm_info_view(cm_info $cm) {
     if (isset($duedate) && $duedate > 0) {
         $content = get_string('mumie_due_date', 'mod_mumie')
             . ': '
-            . strftime(get_string('strftimedaydatetime', 'langconfig'), $duedate);
+            . date("d F Y, h:i A", $duedate);
 
         $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
     }
@@ -264,20 +264,11 @@ function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
 }
 
 /**
- * Hook used to updated grades for MUMIE tasks, whenever a gradebook is opened
+ * Hook used to update grades for MUMIE tasks, whenever a gradebook is opened
  * @return void
  */
 function mumie_before_standard_top_of_body_html() {
-    global $PAGE, $CFG;
-
-    if (!strpos($PAGE->url, '/grade/report/')) {
-        return "";
-    }
-
-    require_once($CFG->dirroot . '/mod/mumie/gradesync.php');
-    mod_mumie\gradesync::update();
-
-    return "";
+    return locallib::callbackimpl_before_standard_top_of_body_html();
 }
 
 /**

@@ -64,10 +64,7 @@ if ($action == "grading") {
         $duedateinfo .= html_writer::tag("h3", get_string("mumie_general_duedate", "mod_mumie"));
         $duedateinfo .= html_writer::tag(
             'p',
-            strftime(
-                get_string('strftimedaydatetime', 'langconfig'),
-                $mumietask->duedate
-            ),
+            date("d F Y, h:i A", $mumietask->duedate),
             array('style' => 'font-weight: bold; margin-top:10px;')
         );
     } else {

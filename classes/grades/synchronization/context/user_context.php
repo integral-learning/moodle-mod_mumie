@@ -40,9 +40,9 @@ class user_context implements \JsonSerializable {
 
     /**
      * Custom JSON serializer.
-     * @return array|mixed
+     * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize(): array {
         return get_object_vars($this);
     }
 }

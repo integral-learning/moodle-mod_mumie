@@ -2,6 +2,11 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.7.2] - 2025-02-19
+### Changed
+- Plugin now requires Moodle 4.1 LTS
+- Support Moodle 4.5
+
 ## [v1.7.1] - 2024-06-13
 ### Fixed
 - Fixed Moodle >=4.3 compatibility bug, where `Require passing grade` was not being displayed in completion configuration.
