@@ -18,18 +18,18 @@
  * This file defines the version of mod_mumie
  *
  * @package mod_mumie
- * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024061308; // The current module version (Date: YYYYMMDDXX).
+$plugin->version = 2025021900; // The current module version (Date: YYYYMMDDXX).
 $plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
-$plugin->requires = 2022041900;
-$plugin->release = "v1.7.1";
+$plugin->requires = 2022112800; // 4.1 LTS
+$plugin->release = "v1.7.2";
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = array(
-    'auth_mumie' => 2024050600,
+    'auth_mumie' => 2025021900,
 );
