@@ -15,21 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file defines the version of mod_mumie
+ * This file keeps track of upgrades to the mod_mumie module
  *
- * @package mod_mumie
- * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_mumie
+ * @copyright   2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author      Yannic Lapawczyk (yannic.lapawczyk@integral-learning.de)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->version = 2025021900; // The current module version (Date: YYYYMMDDXX).
-$plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
-$plugin->requires = 2022112800; // 4.1 LTS
-$plugin->release = "v1.7.2";
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array(
-    'auth_mumie' => 2025021900,
-);
+$callbacks = [
+    [
+        'hook' => core\hook\output\before_standard_top_of_body_html_generation::class,
+        'callback' => 'mod_mumie\hook\output\before_standard_top_of_body_html_generation::callback',
+        'priority' => 0,
+    ],
+];

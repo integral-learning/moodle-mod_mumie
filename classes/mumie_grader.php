@@ -17,10 +17,10 @@
 /**
  * This file describes a class used to dispay information about a MUMIE Tasks due date extensions and submissions.
  *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_mumie
+ * @copyright 2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author    Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mumie;
@@ -34,10 +34,10 @@ use core_user\table\participants_filterset;
 /**
  * mumie_grader is used to display information about due date extensions and submissions.
  *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_mumie
+ * @copyright 2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @author    Tobias Goltz (tobias.goltz@integral-learning.de)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mumie_grader {
     /**
@@ -118,10 +118,11 @@ class mumie_grader {
         global $DB;
         $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
 
-        return $duedate ? strftime(
-            get_string('strftimedaydatetime', 'langconfig'),
-            $duedate->duedate
-        ) : "-";
+        if (!$duedate) {
+            return "-";
+        }
+
+        return date("d F Y, h:i A", $duedate->duedate);
     }
 
     /**
@@ -153,9 +154,11 @@ class mumie_grader {
         );
 
         if ($grades) {
-            usort($grades, function($a, $b) {
-                return $b->timecreated <=> $a->timecreated;
-            });
+            usort(
+                $grades, function ($a, $b) {
+                    return $b->timecreated <=> $a->timecreated;
+                }
+            );
 
             foreach ($grades as $grade) {
                 $overrideurl = new \moodle_url(
@@ -175,10 +178,7 @@ class mumie_grader {
 
                 $table->data[] = array(
                     $grade->rawgrade,
-                    strftime(
-                        get_string('strftimedaydatetime', 'langconfig'),
-                        $grade->timecreated
-                    ),
+                    date("d F Y, h:i A", $grade->timecreated),
                     $overrideicon
                 );
             }
@@ -194,8 +194,8 @@ class mumie_grader {
      * Verify that the given parameters really belong to a MUMIE grade.
      *
      * @param  float $rawgrade
-     * @param  int $userid
-     * @param  int $timestamp
+     * @param  int   $userid
+     * @param  int   $timestamp
      * @return boolean
      */
     public function is_grade_valid($rawgrade, $userid, $timestamp) {
