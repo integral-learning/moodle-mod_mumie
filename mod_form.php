@@ -179,7 +179,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->hideIf('timelimit_info', 'duration_selector', 'neq', 'timelimit');
         $mform->hideIf('timelimit', 'duration_selector', 'neq', 'timelimit');
 
-
         $radioarray = array();
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
         $gradepoolmsg = '';

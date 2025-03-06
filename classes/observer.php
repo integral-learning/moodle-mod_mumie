@@ -61,12 +61,12 @@ class observer {
         $instance = $DB->get_record('mumie', ['id' => $module->instance]);
 
         if ($instance && isset($instance->timelimit)) {
-            $mumie_duedate_extension = new mumie_duedate_extension($event->userid, $module->instance);
-            $mumie_duedate_extension->load();
-            if (!$mumie_duedate_extension->get_duedate()) {
+            $extension = new mumie_duedate_extension($event->userid, $module->instance);
+            $extension->load();
+            if (!$extension->get_duedate()) {
                 $duedate = $event->timecreated + $instance->timelimit;
-                $mumie_duedate_extension->set_duedate($duedate);
-                $mumie_duedate_extension->upsert();
+                $extension->set_duedate($duedate);
+                $extension->upsert();
             }
         }
     }
