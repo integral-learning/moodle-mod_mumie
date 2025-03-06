@@ -92,6 +92,7 @@ $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
 $string['mumie_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
+$string['mumie_timelimit_help'] = 'Falls aktiviert, dann ...';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
 $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit anderen Kursen geteilt werden.
 <br>Falls diese Option aktiviert ist, werden Punkte, die für das Bearbeiten von MUMIE-Aufgaben in anderen MOODLE-Kursen vergeben wurden, auch in diesen Kurs übernommen.
@@ -143,6 +144,7 @@ $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Abgabefrist';
+$string['mumie_timelimit'] = 'Zeitlimit';
 $string['mumie_tag_disabled'] = 'Deaktiviert';
 $string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, da die Konfiguration noch nicht vollständig ist. Bitte öffnen Sie die Einstellungen dieser MUMIE-Task.';
 $string['mumie_task_updated'] = 'Es wurde eine weitere MUMIE-Task aktualisiert';

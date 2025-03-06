@@ -76,6 +76,7 @@ $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
 $string['mumie_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
+$string['mumie_timelimit_help'] = 'If enabled, ...';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
 $string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with other MOODLE courses.
 <br>If sharing is enabled, points that were earned for MUMIE problems in other courses will be automatically synchronized with this course\'s gradebook.
@@ -143,6 +144,7 @@ $string['mumie_no_submissions'] = 'No answers submitted';
 
 // Used in course view.
 $string['mumie_due_date'] = 'Deadline';
+$string['mumie_timelimit'] = 'Timelimit';
 $string['mumie_tag_disabled'] = 'Disabled';
 $string['mumie_tag_disabled_help'] = 'This activity is disabled because the configuration is not completed. Please open the settings of this MUMIE Task.';
 $string['mumie_task_updated'] = 'One additional MUMIE Task has been updated';

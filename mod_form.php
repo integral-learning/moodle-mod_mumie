@@ -157,8 +157,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("points", PARAM_INT);
         $mform->addHelpButton("points", "mumie_form_points", "mumie");
 
+        #TODO: layout
         $mform->addElement('date_time_selector', 'duedate', get_string("mumie_due_date", "mod_mumie"), array('optional' => true));
         $mform->addHelpButton("duedate", 'mumie_due_date', 'mumie');
+
+        $mform->addElement('duration', 'timelimit', get_string('mumie_timelimit', 'mod_mumie'),
+            ['optional' => true]);
+        $mform->addHelpButton('timelimit', 'mumie_timelimit', 'mod_mumie');
 
         $radioarray = array();
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);

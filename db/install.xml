@@ -24,6 +24,7 @@
         <FIELD NAME="completionpass" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="use_hashed_id" TYPE="int" LENGTH="1" DEFAULT="0"/>
         <FIELD NAME="duedate" TYPE="int" LENGTH="10" SEQUENCE="false" DEFAULT="0"/>
+        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" SEQUENCE="false" NOTNULL="false"/>
         <FIELD NAME ="privategradepool" TYPE="int" LENGTH="1"/>
         <FIELD NAME ="isgraded" TYPE="int" LENGTH="1" DEFAULT="1"/>
         <FILED NAME ="worksheet" TYPE="text" NOTNULL="false" COMMENT="Serialized worksheet configuration"/>
