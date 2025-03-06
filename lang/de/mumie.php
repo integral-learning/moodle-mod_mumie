@@ -86,13 +86,15 @@ $string['completionpass'] = ' Bewertung für Bestehen notwendig';
 $string['completionpass_help'] = 'Wenn diese Option aktiviert ist, wird die Aktivität als abgeschlossen betrachtet, sobald eine Bewertung vorliegt. Icons für die erfolgreiche oder erfolglose Bearbeitung können angezeigt werden,
 wenn dafür eine Bewertungsgrenze festgelegt wurde.
 <br><br><b>Bitte beachten Sie:</b><br>
-Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierneden sehen möchten,
+Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierenden sehen möchten,
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
-$string['mumie_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
+$string['mumie_duration_selector_help'] = 'Bei einem begrenzten Bearbeitungszeitraum werden die Noten erst nach Ablauf der Fristen mit Moodle synchronisiert.';
+$string['mumie_unlimited_help'] = 'Die Noten können zu jeder Zeit mit Moodle synchronisiert werden';
+$string['mumie_due_date_help'] = 'Es werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
+$string['mumie_timelimit_help'] = 'Die Noten werden erst mit Moodle synchronisiert, nachdem eine individuelle Frist abgelaufen ist';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
-$string['mumie_timelimit_help'] = 'Falls aktiviert, dann ...';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
 $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit anderen Kursen geteilt werden.
 <br>Falls diese Option aktiviert ist, werden Punkte, die für das Bearbeiten von MUMIE-Aufgaben in anderen MOODLE-Kursen vergeben wurden, auch in diesen Kurs übernommen.
@@ -143,6 +145,8 @@ Diese Bewertung wird auch durch zukünftige Abgaben des Studierenden nicht erset
 $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 
 // Used in course view.
+$string['mumie_duration_selector'] = 'Bearbeitungszeitraum';
+$string['mumie_unlimited'] = 'Uneingeschränkt';
 $string['mumie_due_date'] = 'Abgabefrist';
 $string['mumie_timelimit'] = 'Zeitlimit';
 $string['mumie_tag_disabled'] = 'Deaktiviert';

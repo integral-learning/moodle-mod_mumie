@@ -74,9 +74,11 @@ $string['completionpass_help'] = 'If enabled, this activity is considered comple
 Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
 $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
-$string['mumie_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
+$string['mumie_duration_selector_help'] = 'If the working period is limited, grades are only synchronized with Moodle after the period ends.';
+$string['mumie_unlimited_help'] = 'Grades can be synchronized with Moodle at any time';
+$string['mumie_due_date_help'] = 'Grades that were earned after the selected date will not be synchronized with Moodle';
+$string['mumie_timelimit_help'] = 'Each student\'s grade is only synchronized with Moodle after their individual deadline has passed';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
-$string['mumie_timelimit_help'] = 'If enabled, ...';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
 $string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with other MOODLE courses.
 <br>If sharing is enabled, points that were earned for MUMIE problems in other courses will be automatically synchronized with this course\'s gradebook.
@@ -143,6 +145,8 @@ This grade will not be replaced by new submissions and it will <b>not</b> be aut
 $string['mumie_no_submissions'] = 'No answers submitted';
 
 // Used in course view.
+$string['mumie_duration_selector'] = 'Working period';
+$string['mumie_unlimited'] = 'Unlimited';
 $string['mumie_due_date'] = 'Deadline';
 $string['mumie_timelimit'] = 'Timelimit';
 $string['mumie_tag_disabled'] = 'Disabled';
