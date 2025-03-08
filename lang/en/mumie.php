@@ -75,9 +75,9 @@ Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you wa
 $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
 $string['mumie_duration_selector_help'] = 'If the working period is limited, grades are only synchronized with Moodle after the period ends.';
-$string['mumie_unlimited_help'] = 'Grades can be synchronized with Moodle at any time';
-$string['mumie_due_date_help'] = 'Grades that were earned after the selected date will not be synchronized with Moodle';
-$string['mumie_timelimit_help'] = 'Each student\'s grade is only synchronized with Moodle after their individual deadline has passed';
+$string['mumie_unlimited_help'] = 'Grades can be synchronized with Moodle at any time.';
+$string['mumie_due_date_help'] = 'Grades that were earned after the selected date will not be synchronized with Moodle.';
+$string['mumie_timelimit_help'] = 'Each student\'s grade is only synchronized with Moodle after their individual deadline has passed. The timelimit will start the moment a student first opens a MUMIE task.';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
 $string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with other MOODLE courses.
@@ -117,8 +117,8 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumie_form_cant_change_isgraded'] = 'You cannot switch from graded to ungraded problems. Please create a new MUMIE Task instead.';
-$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a deadline";
-$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "The selected worksheet cannot have a deadline.<br><br>If you want to set a deadline, please select a worksheet with an appropriate configuration.";
+$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a limited working period.";
+$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "The selected worksheet cannot have a limited working period.<br><br>If you want to limit the working period, please select a worksheet with an appropriate configuration.";
 
 
 // Used in duedate form.

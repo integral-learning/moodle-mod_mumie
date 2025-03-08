@@ -162,15 +162,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             'duedate' => get_string('mumie_due_date', 'mod_mumie'),
             'timelimit' => get_string('mumie_timelimit', 'mod_mumie'),
         ];
-
         $mform->addElement('select', 'duration_selector', get_string('mumie_duration_selector', 'mod_mumie'), $duration);
         $mform->addHelpButton('duration_selector', 'mumie_duration_selector', 'mod_mumie');
-        $mform->setDefault('duration_selector', 'mumie_unlimited');
 
         $mform->addElement('static', 'unlimited_info', '', get_string('mumie_unlimited_help', 'mod_mumie'));
         $mform->addElement('static', 'duedate_info', '', get_string('mumie_due_date_help', 'mod_mumie'));
-        $mform->addElement('date_time_selector', 'duedate', '');
         $mform->addElement('static', 'timelimit_info', '', get_string('mumie_timelimit_help', 'mod_mumie'));
+        $mform->addElement('date_time_selector', 'duedate', '', array('optional' => true));
         $mform->addElement('duration', 'timelimit', '');
 
         $mform->hideIf('unlimited_info', 'duration_selector', 'neq', 'unlimited');
@@ -437,6 +435,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * Remove pre-selection for gradepools, if the decision about it is still pending.
      *
+     * Preselect the working period.
+     *
      * This function is called, when a MUMIE task is edited.
      * @param stdClass $data instance of MUMIE task, that is being edited
      * @return void
@@ -506,6 +506,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", array("disabled" => "disabled"));
+
+        // Preselect the correct duration option
+        if($data->duedate > 0) {
+            $mform->setDefault('duration_selector', 'duedate');
+        } else if ($data->timelimit > 0) {
+            $mform->setDefault('duration_selector', 'timelimit');
+        } else {
+            $mform->setDefault('duration_selector', 'unlimited');
+        }
 
         parent::set_data($data);
     }

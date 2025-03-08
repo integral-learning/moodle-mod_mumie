@@ -75,8 +75,14 @@ function mumie_update_instance($mumie, $mform) {
     $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
-    $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
-    $calendarservice->update();
+    if ($mumie->duration_selector === 'duedate') {
+        $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
+        $calendarservice->update();
+    } else if ($mumie->duration_selector === 'timelimit') {
+        mod_mumie\mumie_calendar_service::delete_all_calendar_events($mumie);
+//        $mumie->duedate = 0;
+        //TODO: delete individual due dates
+    }
 
     mumie_update_multiple_tasks($mumie);
     return $DB->update_record("mumie", $mumie);

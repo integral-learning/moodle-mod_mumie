@@ -91,9 +91,9 @@ sollten zu daher zuvor die Bewerterübersicht öffnen.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
 $string['mumie_duration_selector_help'] = 'Bei einem begrenzten Bearbeitungszeitraum werden die Noten erst nach Ablauf der Fristen mit Moodle synchronisiert.';
-$string['mumie_unlimited_help'] = 'Die Noten können zu jeder Zeit mit Moodle synchronisiert werden';
-$string['mumie_due_date_help'] = 'Es werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
-$string['mumie_timelimit_help'] = 'Die Noten werden erst mit Moodle synchronisiert, nachdem eine individuelle Frist abgelaufen ist';
+$string['mumie_unlimited_help'] = 'Die Noten können zu jeder Zeit mit Moodle synchronisiert werden.';
+$string['mumie_due_date_help'] = 'Die Noten werden erst nach Ablauf der Frist mit Moodle synchronisiert.';
+$string['mumie_timelimit_help'] = 'Die Note eines Studierenden wird erst mit Moodle synchronisiert, nachdem seine individuelle Frist abgelaufen ist. Das Zeitlimit beginnt in dem Moment, in dem ein Studierender eine MUMIE-Aufgabe zum ersten Mal öffnet.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
 $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit anderen Kursen geteilt werden.
@@ -118,8 +118,8 @@ $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunde
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
 $string['mumie_form_no_course_on_server'] = 'MUMIE-Server <b>{$a}</b> konnte nicht erreicht werden! Dieser Server wurde daher vorrübergehend aus der Auswahl entfernt.';
 $string['mumie_multi_problem_selector'] = 'Alternativ können Sie auch mehrere MUMIE Tasks gleichzeitig mit der Mehrfach-Aufgabenauswahl erstellen. Ziehen Sie dazu einfach die gewünschten Aufgaben in ihren Kurs.<br><br>Für eine Kurzanleitung und weitere Informationen besuchen Sie unser <a target="_blank" href="{$a}">Wiki</a>';
-$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt eine Deadline voraus";
-$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet kann keine Deadline haben.<br><br>Wenn Sie eine Deadline setzen möchten, wählen Sie ein Worksheet mit entsprechender Konfiguration aus.";
+$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt einen festgelegten Bearbeitungszeitraum voraus";
+$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet darf keinen begrenzten Bearbeitungszeitraum haben.<br><br>Wenn Sie eine Frist setzen möchten, wählen Sie ein Worksheet mit entsprechender Konfiguration aus.";
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
