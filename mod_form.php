@@ -508,7 +508,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->updateElementAttr("mumie_complete_course", array("disabled" => "disabled"));
 
         // Preselect the correct duration option
-        if($data->duedate > 0) {
+        if ($data->duedate > 0) {
             $mform->setDefault('duration_selector', 'duedate');
         } else if ($data->timelimit > 0) {
             $mform->setDefault('duration_selector', 'timelimit');

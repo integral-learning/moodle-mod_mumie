@@ -79,9 +79,8 @@ function mumie_update_instance($mumie, $mform) {
         $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
         $calendarservice->update();
     } else if ($mumie->duration_selector === 'timelimit') {
+        // TODO: delete/update individual timelimit due dates
         mod_mumie\mumie_calendar_service::delete_all_calendar_events($mumie);
-//        $mumie->duedate = 0;
-        //TODO: delete individual due dates
     }
 
     mumie_update_multiple_tasks($mumie);
