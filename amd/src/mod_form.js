@@ -310,7 +310,29 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const disabled = isGradedElem.value === '0';
                 document.getElementById('id_points').disabled = disabled;
                 document.getElementById('id_gradepass').disabled = disabled;
-                document.getElementById('id_duedate_enabled').disabled = disabled;
+
+                const durationSelector = document.getElementById('id_duration_selector');
+                durationSelector.disabled = disabled;
+                if (disabled) {
+                    const displayStyle = 'none';
+                    durationSelector.value = 'unlimited';
+                    document.getElementById('fitem_id_unlimited_info').hidden = !disabled;
+                    document.getElementById('fitem_id_unlimited_info').style.display = '';
+
+                    document.getElementById('fitem_id_duedate_info').hidden = disabled;
+                    document.getElementById('fitem_id_duedate_info').style.display = displayStyle;
+
+                    document.getElementById('fitem_id_duedate').hidden = disabled;
+                    document.getElementById('fitem_id_duedate').style.display = displayStyle;
+                    document.getElementById('fitem_id_duedate').disabled = disabled;
+
+                    document.getElementById('fitem_id_timelimit_info').hidden = disabled;
+                    document.getElementById('fitem_id_timelimit_info').style.display = displayStyle;
+
+                    document.getElementById('fitem_id_timelimit').hidden = disabled;
+                    document.getElementById('fitem_id_timelimit').style.display = displayStyle;
+                    document.getElementById('fitem_id_timelimit').disabled = disabled;
+                }
                 document.getElementById('id_gradecat').disabled = disabled;
             }
 

@@ -72,7 +72,15 @@ class mumie_task_validator {
             }
         }
 
-        if ($data['duration_selector'] === 'duedate' && self::has_duedate($data) && time() - $data['duedate'] > 0) {
+        $duration = $data['duration_selector'];
+        if ($duration != 'duedate') {
+            $data['duedate'] = 0;
+        }
+        if ($duration != 'timelimit') {
+            $data['timelimit'] = 0;
+        }
+
+        if ($duration === 'duedate' && self::has_duedate($data) && time() - $data['duedate'] > 0) {
             $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
         }
 

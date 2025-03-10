@@ -164,11 +164,12 @@ class mod_mumie_mod_form extends moodleform_mod {
         ];
         $mform->addElement('select', 'duration_selector', get_string('mumie_duration_selector', 'mod_mumie'), $duration);
         $mform->addHelpButton('duration_selector', 'mumie_duration_selector', 'mod_mumie');
+        $mform->setDefault('duration_selector', 'unlimited');
 
         $mform->addElement('static', 'unlimited_info', '', get_string('mumie_unlimited_help', 'mod_mumie'));
         $mform->addElement('static', 'duedate_info', '', get_string('mumie_due_date_help', 'mod_mumie'));
         $mform->addElement('static', 'timelimit_info', '', get_string('mumie_timelimit_help', 'mod_mumie'));
-        $mform->addElement('date_time_selector', 'duedate', '', array('optional' => true));
+        $mform->addElement('date_time_selector', 'duedate', '');
         $mform->addElement('duration', 'timelimit', '');
 
         $mform->hideIf('unlimited_info', 'duration_selector', 'neq', 'unlimited');
@@ -302,7 +303,13 @@ class mod_mumie_mod_form extends moodleform_mod {
     private function disable_grade_rules() : void {
         $mform = $this->_form;
         $mform->disabledIf('gradepass', 'isgraded', 'eq', '0');
-        $mform->disabledIf('duedate[enabled]', 'isgraded', 'eq', '0');
+
+        $mform->disabledIf('duration_selector', 'isgraded', 'eq', '0');
+        $mform->disabledIf('duedate_info', 'isgraded', 'eq', '0');
+        $mform->disabledIf('duedate', 'isgraded', 'eq', '0');
+        $mform->disabledIf('timelimit_info', 'isgraded', 'eq', '0');
+        $mform->disabledIf('timelimit', 'isgraded', 'eq', '0');
+
         $mform->disabledIf('points', 'isgraded', 'eq', '0');
         $mform->disabledIf('gradecat', 'isgraded', 'eq', '0');
     }
