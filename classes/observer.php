@@ -29,6 +29,8 @@ use mod_mumie\event\course_module_viewed;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_individual_calendar_service.php');
+
 /**
  * Handle the course_module_viewed event.
  *
@@ -67,6 +69,8 @@ class observer {
                 $duedate = $event->timecreated + $instance->timelimit;
                 $extension->set_duedate($duedate);
                 $extension->upsert();
+                $calenderservice = new mumie_individual_calendar_service($instance, $event->userid);
+                $calenderservice->update();
             }
         }
     }
