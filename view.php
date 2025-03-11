@@ -69,8 +69,7 @@ if ($action == "grading") {
         );
     } else if ($mumietask->timelimit > 0) {
         $duedateinfo = get_string("mumie_general_timelimit", "mod_mumie") . format_time($mumietask->timelimit);
-    }
-    else {
+    } else {
         $duedateinfo = get_string("mumie_duedate_not_set", "mod_mumie");
     }
     \core\notification::info($duedateinfo);
