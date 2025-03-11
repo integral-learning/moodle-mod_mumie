@@ -62,7 +62,6 @@ class duedate_form extends moodleform {
      * @return array associative array of errors
      */
     public function validation($data, $files) {
-        // TODO: check if we need to add timelimit check
         $errors = array();
         if ($data['duedate']) {
             if (time() - $data['duedate'] > 0) {

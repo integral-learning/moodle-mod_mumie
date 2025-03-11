@@ -111,8 +111,7 @@ class locallib {
      * @param stdClass $mumietask the submitted MUMIE task that is supposed to be created or updated
      * @return stdClass the MUMIE task with cleaned duration values
      */
-    public static function clean_up_duration_values(stdClass $mumietask): stdClass
-    {
+    public static function clean_up_duration_values(stdClass $mumietask): stdClass {
         $duration = $mumietask->duration_selector;
         if (isset($duration)) {
             if ($duration != 'duedate') {
