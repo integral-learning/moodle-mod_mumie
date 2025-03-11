@@ -24,6 +24,8 @@
  */
 
 use mod_mumie\locallib;
+use mod_mumie\mumie_calendar_service;
+use mod_mumie\mumie_dndupload_processor;
 use mod_mumie\mumie_duedate_extension;
 
 defined('MOODLE_INTERNAL') || die;
@@ -45,10 +47,11 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
-    mod_mumie\locallib::update_pending_gradepool($mumie);
+    locallib::update_pending_gradepool($mumie);
+    $mumie = locallib::clean_up_duration_values($mumie);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
-    $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
+    $calendarservice = new mumie_calendar_service($mumie);
     $calendarservice->update();
     mumie_update_multiple_tasks($mumie);
     return $mumie->id;
@@ -70,18 +73,14 @@ function mumie_update_instance($mumie, $mform) {
         $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
         \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
     };
-    mod_mumie\locallib::update_pending_gradepool($mumie);
+    locallib::update_pending_gradepool($mumie);
 
-    $grades = mod_mumie\locallib::has_problem_changed($mumie) ? "reset" : null;
+    $grades = locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
-    if ($mumie->duration_selector === 'duedate') {
-        $calendarservice = new mod_mumie\mumie_calendar_service($mumie);
-        $calendarservice->update();
-    } else if ($mumie->duration_selector === 'timelimit') {
-        // TODO: delete/update individual timelimit due dates
-        mod_mumie\mumie_calendar_service::delete_all_calendar_events($mumie);
-    }
+    $mumie = locallib::clean_up_duration_values($mumie);
+    $calendarservice = new mumie_calendar_service($mumie);
+    $calendarservice->update();
 
     mumie_update_multiple_tasks($mumie);
     return $DB->update_record("mumie", $mumie);
@@ -102,8 +101,8 @@ function mumie_delete_instance($id) {
 
     $cm = get_coursemodule_from_instance('mumie', $id);
     \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
-    mod_mumie\mumie_calendar_service::delete_all_calendar_events($mumie);
-    mod_mumie\mumie_duedate_extension::delete_all_for_mumie($id);
+    mumie_calendar_service::delete_all_calendar_events($mumie);
+    mumie_duedate_extension::delete_all_for_mumie($id);
     return $DB->delete_records("mumie", array("id" => $mumie->id));
 }
 
@@ -352,7 +351,7 @@ function mumie_dndupload_handle($uploadinfo) {
     $context = context_module::instance($uploadinfo->coursemodule);
     $upload = json_decode(clean_param($uploadinfo->content, PARAM_RAW));
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_dndupload_processor.php');
-    $processor = new mod_mumie\mumie_dndupload_processor($courseid, $section, $type, $upload);
+    $processor = new mumie_dndupload_processor($courseid, $section, $type, $upload);
     $result = $processor->process();
     return $result;
 }
@@ -451,7 +450,7 @@ function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
     global $CFG, $USER;
 
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
-    return mod_mumie\mumie_calendar_service::is_event_visible($event, $USER->id);
+    return mumie_calendar_service::is_event_visible($event, $USER->id);
 }
 
 /**

@@ -106,6 +106,26 @@ class locallib {
     }
 
     /**
+     * The function is called whenever a MUMIE task is created or updated.
+     * Cleans up the submitted duedate and timelimit if not selected in the duration selector.
+     * @param stdClass $mumietask the submitted MUMIE task that is supposed to be created or updated
+     * @return stdClass the MUMIE task with cleaned duration values
+     */
+    public static function clean_up_duration_values(stdClass $mumietask): stdClass
+    {
+        $duration = $mumietask->duration_selector;
+        if (isset($duration)) {
+            if ($duration != 'duedate') {
+                $mumietask->duedate = 0;
+            }
+            if ($duration != 'timelimit') {
+                $mumietask->timelimit = 0;
+            }
+        }
+        return $mumietask;
+    }
+
+    /**
      * Get a default name for the uploaded MumieTask, if available.
      *
      * The dropped MUMIE Task's name is automatically generated and does not look pretty.
