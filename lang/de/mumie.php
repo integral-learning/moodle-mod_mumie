@@ -128,6 +128,7 @@ $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 $string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist:';
+$string['mumie_general_timelimit'] = 'Zeitlimit: ';
 $string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
 $string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
 $string['mumie_grade_invalid'] = 'Bewertung ungültig!';

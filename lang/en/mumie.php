@@ -128,6 +128,7 @@ $string['mumie_duedate_form'] = 'Grant a due date extension';
 $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
 $string['mumie_general_duedate'] = 'General due date:';
+$string['mumie_general_timelimit'] = 'Timelimit: ';
 $string['mumie_grading_settings'] = "Individual grading settings";
 $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_invalid'] = 'Grade is invalid!';
