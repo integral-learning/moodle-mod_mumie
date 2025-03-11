@@ -322,7 +322,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
         $taskproperties = array(
-            array(get_string('mumie_due_date', 'mod_mumie'), "duedate"),
             array(get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"),
             array(get_string('mumie_form_points', 'mod_mumie'), "points")
         );
