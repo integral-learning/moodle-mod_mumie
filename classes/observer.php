@@ -55,18 +55,21 @@ class observer {
 
         $cmid = $event->contextinstanceid;
         $module = $DB->get_record('course_modules', ['id' => $cmid]);
-
         if (!$module) {
             return;
         }
 
         $instance = $DB->get_record('mumie', ['id' => $module->instance]);
+        if (!$instance) {
+            return;
+        }
 
-        if ($instance && isset($instance->timelimit)) {
+        $timelimit = $instance->timelimit;
+        if (isset($timelimit) && $timelimit > 0) {
             $extension = new mumie_duedate_extension($event->userid, $module->instance);
             $extension->load();
             if (!$extension->get_duedate()) {
-                $duedate = $event->timecreated + $instance->timelimit;
+                $duedate = $event->timecreated + $timelimit;
                 $extension->set_duedate($duedate);
                 $extension->upsert();
                 $calenderservice = new mumie_individual_calendar_service($instance, $event->userid);

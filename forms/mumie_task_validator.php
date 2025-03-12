@@ -93,7 +93,7 @@ class mumie_task_validator {
 
         if (self::is_worksheet($data)
             && self::is_correction_trigger_after_deadline($data['worksheet'])
-            && (!self::has_duedate($data) && !self::has_timelimit($data))) {
+            && !(self::has_duedate($data) || self::has_timelimit($data))) {
             $errors['duration_selector'] = get_string('mumie_form_deadline_required_for_trigger_after_deadline', 'mod_mumie');
         }
 
@@ -107,7 +107,7 @@ class mumie_task_validator {
     }
 
     /**
-     * Check whether a deadline was selected
+     * Check whether a duedate was set
      * @param array $data POST data
      * @return bool
      */
@@ -116,7 +116,7 @@ class mumie_task_validator {
     }
 
     /**
-     * Check whether a deadline was selected
+     * Check whether a timelimit was set
      * @param array $data POST data
      * @return bool
      */

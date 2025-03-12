@@ -99,14 +99,13 @@ function xmldb_mumie_upgrade($oldversion) {
         }
         upgrade_plugin_savepoint(true, 2023050900, 'mod', 'mumie');
     }
-    // TODO: use mod version of release of this feature.
-    if ($oldversion < 2025030504) {
+    if ($oldversion < 2025031200) {
         $table = new xmldb_table('mumie');
         $field = new xmldb_field('timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        upgrade_plugin_savepoint(true, 2025030504, 'mod', 'mumie');
+        upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     }
     return true;
 }
