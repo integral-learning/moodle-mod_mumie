@@ -2,6 +2,17 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.8.0] - 2025-03-13
+### Added
+- Teachers can now set a time limited working period for a MUMIE Task
+
+### Changed
+- Worksheets with deadline require either a deadline or a timelimit
+
+### Fixed
+- Removing a deadline from a worksheet with a deadline is not possible anymore.
+- Adding a deadline for a worksheet without a deadline is not possible anymore.
+
 ## [v1.7.2] - 2025-02-19
 ### Changed
 - Plugin now requires Moodle 4.1 LTS
