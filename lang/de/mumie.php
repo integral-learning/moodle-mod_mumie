@@ -38,7 +38,7 @@ MUMIE-Kurse und deren hochwertige Kursmaterialien können ganz nach Ihren Wünsc
 Sie bietet Lern- und Trainingsumgebungen und Wiki-artige soziale Netzwerke für virtuelle Tutorien und selbstorganisiertes Lernen und zur Verbesserung von kognitiven und metakognitiven Fähigkeiten.
 Leistungsstarke Autorenwerkzeuge ermöglichen die Erstellung von neuen Inhalten. Dies öffnet die Tür für neue, herausfordernde und effizientere pädagogische Szenarien.
 
-<br /><br /> Besuchen Sie unsere <a href="https://www.mumie.net/platform/" target="_blank" rel="nofollow noreferrer noopener">Website</a> für weitere Informationen.</p>
+<br /><br /> Besuchen Sie unsere <a href="https://www.integral-learning.de" target="_blank" rel="nofollow noreferrer noopener">Website</a> für weitere Informationen.</p>
 <p><strong>Key-Features der MUMIE Task</strong></p>
 <ul>
 <li><strong>Benutzen Sie MUMIE Tasks in Moodle</strong><br /> Fügen Sie Ihrem Kurs beliebig viele MUMIE Taks mit einem leicht zu bedienenden Menü hinzu.</li>
