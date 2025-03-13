@@ -28,7 +28,7 @@ $string['pluginname'] = 'MUMIE Task';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>This activity module enables the usage of content from the MUMIE e-learning platform and automatic grade synchronization. A MUMIE tasks represents an individual graded problem from a MUMIE course.</p>
 <p><strong>What is MUMIE?</strong></p>
-<p>MUMIE is an e-learning platform for learning and teaching mathematics and computer science. It grew out of the needs of practical teaching at the interface between high-school and university. MUMIE is highly flexible and can be integrated with other learning and content management systems. Its courses and high quality course material is easily adjusted to any kind of pedagogical scenario. It has built in learning and training environments with wiki-like dedicated social networks for virtual tutorials and self-organized learning enhancing cognitive and meta-cognitive skills. Powerful authoring tools support the production of new content. This opens the door to new, challenging and more efficient pedagogical scenarios.<br /><br /> For more information, please visit our <a href="https://www.mumie.net/platform/" target="_blank" rel="nofollow noreferrer noopener">website</a>.</p>
+<p>MUMIE is an e-learning platform for learning and teaching mathematics and computer science. It grew out of the needs of practical teaching at the interface between high-school and university. MUMIE is highly flexible and can be integrated with other learning and content management systems. Its courses and high quality course material is easily adjusted to any kind of pedagogical scenario. It has built in learning and training environments with wiki-like dedicated social networks for virtual tutorials and self-organized learning enhancing cognitive and meta-cognitive skills. Powerful authoring tools support the production of new content. This opens the door to new, challenging and more efficient pedagogical scenarios.<br /><br /> For more information, please visit our <a href="https://www.integral-learning.de" target="_blank" rel="nofollow noreferrer noopener">website</a>.</p>
 <p><strong>Key features of MUMIE Task</strong></p>
 <ul>
 <li><strong>Use MUMIE Tasks in moodle</strong><br /> Add any number of MUMIE Tasks to your moodle course with an easy to use form.</li>
@@ -74,7 +74,10 @@ $string['completionpass_help'] = 'If enabled, this activity is considered comple
 Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
 $string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
-$string['mumie_due_date_help'] = 'If enabled, grades that were earned after the selected date will not be synchronized with Moodle';
+$string['mumie_duration_selector_help'] = 'If the working period is limited, grades are only synchronized with Moodle after the period ends.';
+$string['mumie_unlimited_help'] = 'Grades can be synchronized with Moodle at any time.';
+$string['mumie_due_date_help'] = 'Grades that were earned after the selected date will not be synchronized with Moodle.';
+$string['mumie_timelimit_help'] = 'Each student\'s grade is only synchronized with Moodle after their individual deadline has passed. The timelimit will start the moment a student first opens a MUMIE task.';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
 $string['mumie_form_grade_pool_help'] = 'Choose whether to share grades with other MOODLE courses.
@@ -114,8 +117,8 @@ $string['mumie_form_server_btn_cancel'] = 'Cancel';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumie_form_cant_change_isgraded'] = 'You cannot switch from graded to ungraded problems. Please create a new MUMIE Task instead.';
-$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a deadline";
-$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "The selected worksheet cannot have a deadline.<br><br>If you want to set a deadline, please select a worksheet with an appropriate configuration.";
+$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a limited working period.";
+$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "The selected worksheet cannot have a limited working period.<br><br>If you want to limit the working period, please select a worksheet with an appropriate configuration.";
 
 
 // Used in duedate form.
@@ -125,6 +128,7 @@ $string['mumie_duedate_form'] = 'Grant a due date extension';
 $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
 $string['mumie_general_duedate'] = 'General due date:';
+$string['mumie_general_timelimit'] = 'Timelimit: ';
 $string['mumie_grading_settings'] = "Individual grading settings";
 $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_invalid'] = 'Grade is invalid!';
@@ -142,7 +146,10 @@ This grade will not be replaced by new submissions and it will <b>not</b> be aut
 $string['mumie_no_submissions'] = 'No answers submitted';
 
 // Used in course view.
+$string['mumie_duration_selector'] = 'Working period';
+$string['mumie_unlimited'] = 'Unlimited';
 $string['mumie_due_date'] = 'Deadline';
+$string['mumie_timelimit'] = 'Timelimit';
 $string['mumie_tag_disabled'] = 'Disabled';
 $string['mumie_tag_disabled_help'] = 'This activity is disabled because the configuration is not completed. Please open the settings of this MUMIE Task.';
 $string['mumie_task_updated'] = 'One additional MUMIE Task has been updated';
