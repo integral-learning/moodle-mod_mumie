@@ -59,20 +59,21 @@ class observer {
             return;
         }
 
-        $instance = $DB->get_record('mumie', ['id' => $module->instance]);
-        if (!$instance) {
+        $mumietaskid = $module->instance;
+        $mumietask = $DB->get_record('mumie', ['id' => $mumietaskid]);
+        if (!$mumietask) {
             return;
         }
 
-        $timelimit = $instance->timelimit;
+        $timelimit = $mumietask->timelimit;
         if (isset($timelimit) && $timelimit > 0) {
-            $extension = new mumie_duedate_extension($event->userid, $module->instance);
+            $extension = new mumie_duedate_extension($event->userid, $mumietaskid);
             $extension->load();
             if (!$extension->get_duedate()) {
                 $duedate = $event->timecreated + $timelimit;
                 $extension->set_duedate($duedate);
                 $extension->upsert();
-                $calenderservice = new mumie_individual_calendar_service($instance, $event->userid);
+                $calenderservice = new mumie_individual_calendar_service($mumietask, $event->userid);
                 $calenderservice->update();
             }
         }

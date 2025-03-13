@@ -112,12 +112,12 @@ class locallib {
      * @return stdClass the MUMIE task with cleaned duration values
      */
     public static function clean_up_duration_values(stdClass $mumietask): stdClass {
-        $duration = $mumietask->duration_selector;
-        if (isset($duration)) {
-            if ($duration != 'duedate') {
+        $workingperiod = $mumietask->duration_selector;
+        if (isset($workingperiod)) {
+            if ($workingperiod != 'duedate') {
                 $mumietask->duedate = 0;
             }
-            if ($duration != 'timelimit') {
+            if ($workingperiod != 'timelimit') {
                 $mumietask->timelimit = 0;
             }
         }
