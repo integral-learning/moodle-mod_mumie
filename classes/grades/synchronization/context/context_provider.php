@@ -58,7 +58,7 @@ class context_provider {
      */
     public static function requires_context(stdClass $mumie): bool {
         return (substr( $mumie->taskurl, 0, 10 ) === "worksheet_")
-            && $mumie->duedate > 0;
+            && ($mumie->duedate > 0 || $mumie->timelimit > 0);
     }
 
     /**

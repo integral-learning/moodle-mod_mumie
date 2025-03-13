@@ -59,7 +59,9 @@ class mod_mumie_generator extends testing_module_generator {
             'use_hashed_id' => 1,
             'duedate' => 0,
             'privategradepool' => 1,
-            'isgraded' => 1
+            'isgraded' => 1,
+            'timelimit' => 0,
+            'duration_selector' => 'unlimited'
         );
 
         foreach ($defaultmumiesettings as $property => $value) {

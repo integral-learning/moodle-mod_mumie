@@ -38,7 +38,7 @@ MUMIE-Kurse und deren hochwertige Kursmaterialien können ganz nach Ihren Wünsc
 Sie bietet Lern- und Trainingsumgebungen und Wiki-artige soziale Netzwerke für virtuelle Tutorien und selbstorganisiertes Lernen und zur Verbesserung von kognitiven und metakognitiven Fähigkeiten.
 Leistungsstarke Autorenwerkzeuge ermöglichen die Erstellung von neuen Inhalten. Dies öffnet die Tür für neue, herausfordernde und effizientere pädagogische Szenarien.
 
-<br /><br /> Besuchen Sie unsere <a href="https://www.mumie.net/platform/" target="_blank" rel="nofollow noreferrer noopener">Website</a> für weitere Informationen.</p>
+<br /><br /> Besuchen Sie unsere <a href="https://www.integral-learning.de" target="_blank" rel="nofollow noreferrer noopener">Website</a> für weitere Informationen.</p>
 <p><strong>Key-Features der MUMIE Task</strong></p>
 <ul>
 <li><strong>Benutzen Sie MUMIE Tasks in Moodle</strong><br /> Fügen Sie Ihrem Kurs beliebig viele MUMIE Taks mit einem leicht zu bedienenden Menü hinzu.</li>
@@ -86,11 +86,14 @@ $string['completionpass'] = ' Bewertung für Bestehen notwendig';
 $string['completionpass_help'] = 'Wenn diese Option aktiviert ist, wird die Aktivität als abgeschlossen betrachtet, sobald eine Bewertung vorliegt. Icons für die erfolgreiche oder erfolglose Bearbeitung können angezeigt werden,
 wenn dafür eine Bewertungsgrenze festgelegt wurde.
 <br><br><b>Bitte beachten Sie:</b><br>
-Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierneden sehen möchten,
+Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierenden sehen möchten,
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
-$string['mumie_due_date_help'] = 'Falls diese Option aktiviert ist, werden keine Noten, die nach dem gewählten Datum erzielt wurden, mit Moodle synchronisiert.';
+$string['mumie_duration_selector_help'] = 'Bei einem begrenzten Bearbeitungszeitraum werden die Noten erst nach Ablauf der Fristen mit Moodle synchronisiert.';
+$string['mumie_unlimited_help'] = 'Die Noten können zu jeder Zeit mit Moodle synchronisiert werden.';
+$string['mumie_due_date_help'] = 'Die Noten werden erst nach Ablauf der Frist mit Moodle synchronisiert.';
+$string['mumie_timelimit_help'] = 'Die Note eines Studierenden wird erst mit Moodle synchronisiert, nachdem seine individuelle Frist abgelaufen ist. Das Zeitlimit beginnt in dem Moment, in dem ein Studierender eine MUMIE-Aufgabe zum ersten Mal öffnet.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
 $string['mumie_form_grade_pool_help'] = 'Bestimmen Sie, ob MUMIE-Punktzahlen mit anderen Kursen geteilt werden.
@@ -115,8 +118,8 @@ $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunde
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
 $string['mumie_form_no_course_on_server'] = 'MUMIE-Server <b>{$a}</b> konnte nicht erreicht werden! Dieser Server wurde daher vorrübergehend aus der Auswahl entfernt.';
 $string['mumie_multi_problem_selector'] = 'Alternativ können Sie auch mehrere MUMIE Tasks gleichzeitig mit der Mehrfach-Aufgabenauswahl erstellen. Ziehen Sie dazu einfach die gewünschten Aufgaben in ihren Kurs.<br><br>Für eine Kurzanleitung und weitere Informationen besuchen Sie unser <a target="_blank" href="{$a}">Wiki</a>';
-$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt eine Deadline voraus";
-$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet kann keine Deadline haben.<br><br>Wenn Sie eine Deadline setzen möchten, wählen Sie ein Worksheet mit entsprechender Konfiguration aus.";
+$string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt einen festgelegten Bearbeitungszeitraum voraus";
+$string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet darf keinen begrenzten Bearbeitungszeitraum haben.<br><br>Wählen Sie ein Worksheet mit entsprechender Konfiguration aus, wenn Sie eine Frist setzen möchten.";
 
 // Used in duedate form.
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
@@ -125,6 +128,7 @@ $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 $string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist:';
+$string['mumie_general_timelimit'] = 'Zeitlimit: ';
 $string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
 $string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
 $string['mumie_grade_invalid'] = 'Bewertung ungültig!';
@@ -142,7 +146,10 @@ Diese Bewertung wird auch durch zukünftige Abgaben des Studierenden nicht erset
 $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 
 // Used in course view.
+$string['mumie_duration_selector'] = 'Bearbeitungszeitraum';
+$string['mumie_unlimited'] = 'Uneingeschränkt';
 $string['mumie_due_date'] = 'Abgabefrist';
+$string['mumie_timelimit'] = 'Zeitlimit';
 $string['mumie_tag_disabled'] = 'Deaktiviert';
 $string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, da die Konfiguration noch nicht vollständig ist. Bitte öffnen Sie die Einstellungen dieser MUMIE-Task.';
 $string['mumie_task_updated'] = 'Es wurde eine weitere MUMIE-Task aktualisiert';
