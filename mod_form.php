@@ -302,16 +302,13 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function disable_grade_rules() : void {
         $mform = $this->_form;
-        $mform->disabledIf('gradepass', 'isgraded', 'eq', '0');
-
-        $mform->disabledIf('duration_selector', 'isgraded', 'eq', '0');
-        $mform->disabledIf('duedate_info', 'isgraded', 'eq', '0');
-        $mform->disabledIf('duedate', 'isgraded', 'eq', '0');
-        $mform->disabledIf('timelimit_info', 'isgraded', 'eq', '0');
-        $mform->disabledIf('timelimit', 'isgraded', 'eq', '0');
-
-        $mform->disabledIf('points', 'isgraded', 'eq', '0');
-        $mform->disabledIf('gradecat', 'isgraded', 'eq', '0');
+        $gradeelements = [
+            'gradepass', 'duration_selector', 'duedate_info', 'duedate',
+            'timelimit_info', 'timelimit', 'points', 'gradecat'
+        ];
+        foreach ($gradeelements as $element) {
+            $mform->disabledIf($element, 'isgraded', 'eq', '0');
+        }
     }
 
     /**
