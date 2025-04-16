@@ -28,6 +28,8 @@ use core\hook\deprecated_callback_replacement;
 use core\hook\described_hook;
 use mod_mumie\locallib;
 
+require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+
 /**
  * This file keeps track of upgrades to the mod_mumie module
  *
