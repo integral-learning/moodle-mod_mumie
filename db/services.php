@@ -25,13 +25,13 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$functions = array(
-    'mod_mumie_submit_mumieduedate_form' => array(
+$functions = [
+    'mod_mumie_submit_mumieduedate_form' => [
         'classname' => 'mod_mumie_external',
         'methodname' => 'submit_mumieduedate_form',
         'classpath' => 'mod/mumie/externallib.php',
         'description' => 'Saves a duedate extension for a MUMIE Task from submitted form data',
         'ajax' => true,
-        'type' => 'write'
-    )
-);
+        'type' => 'write',
+    ],
+];

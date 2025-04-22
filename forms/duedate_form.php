@@ -62,7 +62,7 @@ class duedate_form extends moodleform {
      * @return array associative array of errors
      */
     public function validation($data, $files) {
-        $errors = array();
+        $errors = [];
         if ($data['duedate']) {
             if (time() - $data['duedate'] > 0) {
                 $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');

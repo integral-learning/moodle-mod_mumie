@@ -30,6 +30,6 @@ $plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnosti
 $plugin->requires = 2022112800; // 4.1 LTS
 $plugin->release = "v1.7.2";
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array(
+$plugin->dependencies = [
     'auth_mumie' => 2025021900,
-);
+];

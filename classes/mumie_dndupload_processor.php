@@ -140,7 +140,7 @@ class mumie_dndupload_processor {
      */
     private function handle_multi_upload() {
         // This array holds unique server objects.
-        $servers = array();
+        $servers = [];
         $this->upload = (array) $this->upload;
         foreach ($this->upload as $uploadinstance) {
             $uploadinstance = json_decode($uploadinstance);
@@ -221,7 +221,7 @@ class mumie_dndupload_processor {
     private function get_course_gradepool_setting() {
         global $DB, $COURSE;
         $exitingtasks = array_values(
-            $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
+            $DB->get_records(MUMIE_TASK_TABLE, ["course" => $COURSE->id])
         );
         $adminsetting = get_config('auth_mumie', 'defaultgradepool');
         if (count($exitingtasks) > 0) {
@@ -309,13 +309,13 @@ class mumie_dndupload_processor {
         // Note the section visibility.
         $visible = get_fast_modinfo($this->course)->get_section_info($this->section)->visible;
 
-        $DB->set_field('course_modules', 'instance', $instanceid, array('id' => $cm->id));
+        $DB->set_field('course_modules', 'instance', $instanceid, ['id' => $cm->id]);
 
         $sectionid = course_add_cm_to_section($this->course, $cm->id, $this->section);
 
         set_coursemodule_visible($cm->id, $visible);
         if (!$visible) {
-            $DB->set_field('course_modules', 'visibleold', 1, array('id' => $cm->id));
+            $DB->set_field('course_modules', 'visibleold', 1, ['id' => $cm->id]);
         }
 
         // Retrieve the final info about this module.

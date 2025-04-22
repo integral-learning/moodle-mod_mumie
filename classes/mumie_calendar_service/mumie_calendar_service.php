@@ -148,11 +148,11 @@ class mumie_calendar_service {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/calendar/lib.php');
 
-        $params = array(
+        $params = [
             "modulename" => "mumie",
             "instance" => $this->mumie->id,
-            "eventtype" => $type
-        );
+            "eventtype" => $type,
+        ];
 
         if ($userid) {
             $params["userid"] = $userid;
@@ -180,10 +180,10 @@ class mumie_calendar_service {
         require_once($CFG->dirroot.'/calendar/lib.php');
         $records = $DB->get_records(
             "event",
-            array(
+            [
                 "modulename" => "mumie",
-                "instance" => $mumie->id
-            )
+                "instance" => $mumie->id,
+            ]
         );
 
         foreach ($records as $record) {

@@ -40,7 +40,7 @@ class object_context implements \JsonSerializable {
      * @param string       $lang
      */
     public function __construct($lang) {
-        $this->usercontexts = array();
+        $this->usercontexts = [];
         $this->language = $lang;
     }
 

@@ -30,7 +30,7 @@ require_login(null, false);
 $duedateid = required_param('duedateid', PARAM_INT);
 $cmid = required_param('cmid', PARAM_INT);
 
-$returnurl = new \moodle_url('/mod/mumie/view.php', array("id" => $cmid, "action" => "grading"));
+$returnurl = new \moodle_url('/mod/mumie/view.php', ["id" => $cmid, "action" => "grading"]);
 require_capability('mod/mumie:revokeduedateextension', context_system::instance());
 $extension = mod_mumie\mumie_duedate_extension::load_by_id($duedateid);
 $extension->delete();

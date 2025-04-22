@@ -43,8 +43,8 @@ class mumie_task_validator {
      * @return array
      * @throws \coding_exception
      */
-    public static function get_errors(array $data, \stdClass $current) : array {
-        $errors = array();
+    public static function get_errors(array $data, \stdClass $current): array {
+        $errors = [];
 
         if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
             $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
@@ -111,7 +111,7 @@ class mumie_task_validator {
      * @param array $data POST data
      * @return bool
      */
-    private static function has_duedate(array $data) : bool {
+    private static function has_duedate(array $data): bool {
         return $data['duedate'] > 0;
     }
 
@@ -120,7 +120,7 @@ class mumie_task_validator {
      * @param array $data POST data
      * @return bool
      */
-    private static function has_timelimit(array $data) : bool {
+    private static function has_timelimit(array $data): bool {
         return $data['timelimit'] > 0;
     }
 
@@ -130,7 +130,7 @@ class mumie_task_validator {
      * @param array $data POST data
      * @return bool
      */
-    private static function is_worksheet(array $data) : bool {
+    private static function is_worksheet(array $data): bool {
         return array_key_exists('worksheet', $data) && !empty($data['worksheet']);
     }
 
@@ -140,7 +140,7 @@ class mumie_task_validator {
      * @param string $worksheet The json string representing the worksheet configuration
      * @return bool
      */
-    private static function is_correction_trigger_after_deadline(string $worksheet) : bool {
+    private static function is_correction_trigger_after_deadline(string $worksheet): bool {
         return json_decode($worksheet, true)['configuration']['correction']['correctorType'] == "AFTER_DEADLINE";
     }
 }

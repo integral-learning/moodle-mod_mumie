@@ -24,7 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['pluginname'] = 'MUMIE Task';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>This activity module enables the usage of content from the MUMIE e-learning platform and automatic grade synchronization. A MUMIE tasks represents an individual graded problem from a MUMIE course.</p>
 <p><strong>What is MUMIE?</strong></p>
@@ -38,8 +37,9 @@ $string['modulename_help'] = '<p>This activity module enables the usage of conte
 <li><strong>Single sign on and automatic sign out</strong><br /> Students don\'t need to create a new account or login to MUMIE servers. It\'s done for them automatically as soon as they start a MUMIE task. To secure their data, they are also automatically logged out of all MUMIE servers, when they log out of moodle.</li>
 </ul>';
 $string['modulenameplural'] = 'MUMIE tasks';
-$string['pluginadministration'] = 'MUMIE administration';
 $string['mumieintro'] = 'Activity description';
+$string['pluginadministration'] = 'MUMIE administration';
+$string['pluginname'] = 'MUMIE Task';
 
 // Used in index.php.
 $string['nomumieinstance'] = 'There are no MUMIE instances in this course';

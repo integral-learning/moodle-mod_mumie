@@ -34,7 +34,7 @@ class context implements \JsonSerializable {
      * Create a new instance.
      */
     public function __construct() {
-        $this->objectcontexts = array();
+        $this->objectcontexts = [];
     }
 
     /**
@@ -51,7 +51,7 @@ class context implements \JsonSerializable {
      * Custom json serialization.
      * @return array
      */
-    public function jsonSerialize() : array {
+    public function jsonSerialize(): array {
         return $this->objectcontexts;
     }
 }

@@ -36,15 +36,15 @@ defined('MOODLE_INTERNAL') || die();
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
-    public function test_get_contexts_for_userid_no_data() {
+final class privacy_provider_test extends \core_privacy\tests\provider_testcase {
+    public function test_get_contexts_for_userid_no_data(): void {
         $this->resetAfterTest(true);
         $user = $this->getDataGenerator()->create_user();
         $contextlist = provider::get_contexts_for_userid($user->id);
         $this->assertCount(0, $contextlist);
     }
 
-    public function test_get_contexts_for_userid_with_data() {
+    public function test_get_contexts_for_userid_with_data(): void {
         $this->resetAfterTest(true);
 
         $course = $this->getDataGenerator()->create_course();
@@ -63,7 +63,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->assertCount(0, $contextlist);
     }
 
-    public function test_get_users_in_context() {
+    public function test_get_users_in_context(): void {
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();
@@ -104,7 +104,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->assertEquals([], $userlist3->get_userids());
     }
 
-    public function test_delete_data_for_users() {
+    public function test_delete_data_for_users(): void {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -144,7 +144,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         );
     }
 
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -167,14 +167,14 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         provider::delete_data_for_all_users_in_context($context1);
 
         // There should be no data for m1 left.
-        $this->assertEmpty($DB->get_records('mumie_duedate', array('mumie' => $m1->id)));
+        $this->assertEmpty($DB->get_records('mumie_duedate', ['mumie' => $m1->id]));
 
         // The data for m2 should still exist.
-        $this->assertCount(1, $DB->get_records('mumie_duedate', array('mumie' => $m2->id)));
+        $this->assertCount(1, $DB->get_records('mumie_duedate', ['mumie' => $m2->id]));
 
     }
 
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user(): void {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -213,7 +213,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
 
     }
 
-    public function test_export_user_data_no_data() {
+    public function test_export_user_data_no_data(): void {
         $this->resetAfterTest(true);
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -228,7 +228,7 @@ class mod_mumie_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->assertFalse($writer->has_any_data_in_any_context());
     }
 
-    public function test_export_user_data() {
+    public function test_export_user_data(): void {
         $this->resetAfterTest(true);
 
         $course1 = $this->getDataGenerator()->create_course();

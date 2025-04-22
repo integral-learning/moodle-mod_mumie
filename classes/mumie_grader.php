@@ -72,7 +72,7 @@ class mumie_grader {
         global $CFG, $DB;
         require_once($CFG->dirroot . "/mod/mumie/locallib.php");
         $this->mumie = $mumie;
-        $this->course = $DB->get_record('course', array('id' => $this->mumie->course), '*', MUST_EXIST);
+        $this->course = $DB->get_record('course', ['id' => $this->mumie->course], '*', MUST_EXIST);
         $this->cmid = $cmid;
     }
 
@@ -116,7 +116,7 @@ class mumie_grader {
      */
     public static function get_duedate($mumie, $userid) {
         global $DB;
-        $duedate = $DB->get_record("mumie_duedate", array('userid' => $userid, 'mumie' => $mumie->id));
+        $duedate = $DB->get_record("mumie_duedate", ['userid' => $userid, 'mumie' => $mumie->id]);
 
         if (!$duedate) {
             return "-";
@@ -139,18 +139,18 @@ class mumie_grader {
         $grades = gradesync::get_all_grades_for_user($this->mumie, $userid);
 
         $table = new \html_table();
-        $table->head = array(
+        $table->head = [
             get_string("mumie_grade_percentage", "mod_mumie"),
             get_string("mumie_submission_date", "mod_mumie"),
-            get_string("mumie_override_gradebook", "mod_mumie")
-        );
+            get_string("mumie_override_gradebook", "mod_mumie"),
+        ];
 
         $output = "";
         $output .= \html_writer::tag("h2", get_string("mumie_submissions_by", "mod_mumie", fullname($user)));
         $output .= \html_writer::tag(
             "p",
             get_string("mumie_submissions_info", "mod_mumie"),
-            array("style" => "margin-top: 1.5em;")
+            ["style" => "margin-top: 1.5em;"]
         );
 
         if ($grades) {
@@ -163,27 +163,27 @@ class mumie_grader {
             foreach ($grades as $grade) {
                 $overrideurl = new \moodle_url(
                     "/mod/mumie/view.php",
-                    array(
+                    [
                         "id" => $this->cmid,
                         "action" => "overridegrade",
                         "userid" => $userid,
                         "rawgrade" => $grade->rawgrade,
-                        "gradetimestamp" => $grade->timecreated
-                    )
+                        "gradetimestamp" => $grade->timecreated,
+                    ]
                 );
 
-                $overrideicon = \html_writer::start_tag("a", array("class" => "mumie_icon_button", "href" => $overrideurl))
-                . \html_writer::tag("span", "", array("class" => "icon fa fa-exchange fa-fw"))
+                $overrideicon = \html_writer::start_tag("a", ["class" => "mumie_icon_button", "href" => $overrideurl])
+                . \html_writer::tag("span", "", ["class" => "icon fa fa-exchange fa-fw"])
                 . \html_writer::end_tag("a");
 
-                $table->data[] = array(
+                $table->data[] = [
                     $grade->rawgrade,
                     date("d F Y, h:i A", $grade->timecreated),
-                    $overrideicon
-                );
+                    $overrideicon,
+                ];
             }
         } else {
-            $table->data[] = array(\html_writer::tag("i", get_string("mumie_no_submissions", "mod_mumie")), "", "");
+            $table->data[] = [\html_writer::tag("i", get_string("mumie_no_submissions", "mod_mumie")), "", ""];
         }
 
         $output .= \html_writer::table($table);

@@ -53,7 +53,7 @@ class locallib {
      */
     public static function get_mumie_task($id) {
         global $DB;
-        return $DB->get_record(MUMIE_TASK_TABLE, array('id' => $id));
+        return $DB->get_record(MUMIE_TASK_TABLE, ['id' => $id]);
     }
 
     /**
@@ -74,7 +74,7 @@ class locallib {
      */
     public static function get_mumie_tasks_by_course($courseid) {
         global $DB;
-        return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
+        return $DB->get_records(MUMIE_TASK_TABLE, ["course" => $courseid]);
     }
 
     /**
@@ -88,14 +88,14 @@ class locallib {
         if (!isset($mumie->id)) {
             $update = true;
         } else {
-            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietask->id));
+            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietask->id]);
             if ($oldrecord->privategradepool != $mumietask->privategradepool) {
                 $update = true;
             }
         }
 
         if ($update) {
-            $tasks = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $mumietask->course));
+            $tasks = $DB->get_records(MUMIE_TASK_TABLE, ["course" => $mumietask->course]);
             foreach ($tasks as $task) {
                 if (!isset($task->privategradepool)) {
                     $task->privategradepool = $mumietask->privategradepool;
@@ -215,7 +215,7 @@ class locallib {
      */
     public static function has_problem_changed($mumietaskupdate) {
         global $DB;
-        $oldtask = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietaskupdate->id));
+        $oldtask = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietaskupdate->id]);
         $oldurl = self::remove_params_from_url($oldtask->taskurl);
         $newurl = self::remove_params_from_url($mumietaskupdate->taskurl);
         return $oldurl != $newurl;

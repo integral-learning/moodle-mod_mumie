@@ -91,7 +91,7 @@ class mumie_duedate_extension {
      */
     public function load() {
         global $DB;
-        if ($record = $DB->get_record("mumie_duedate", array("userid" => $this->userid, "mumie" => $this->mumie))) {
+        if ($record = $DB->get_record("mumie_duedate", ["userid" => $this->userid, "mumie" => $this->mumie])) {
             $this->duedate = $record->duedate;
             $this->id = $record->id;
         }
@@ -120,12 +120,12 @@ class mumie_duedate_extension {
         global $DB;
         $DB->update_record(
             self::MUMIE_DUEDATE_TABLE,
-            array(
+            [
                 "id" => $this->id,
                 "userid" => $this->userid,
                 "mumie" => $this->mumie,
-                "duedate" => $this->duedate
-            )
+                "duedate" => $this->duedate,
+            ]
         );
     }
 
@@ -138,11 +138,11 @@ class mumie_duedate_extension {
         global $DB;
         $DB->insert_record(
             self::MUMIE_DUEDATE_TABLE,
-            array(
+            [
                 "userid" => $this->userid,
                 "mumie" => $this->mumie,
-                "duedate" => $this->duedate
-            )
+                "duedate" => $this->duedate,
+            ]
         );
     }
 
@@ -153,7 +153,7 @@ class mumie_duedate_extension {
      */
     public function delete() {
         global $DB;
-        $DB->delete_records(self::MUMIE_DUEDATE_TABLE, array("id" => $this->id));
+        $DB->delete_records(self::MUMIE_DUEDATE_TABLE, ["id" => $this->id]);
     }
 
     /**
@@ -206,7 +206,7 @@ class mumie_duedate_extension {
      */
     public static function load_by_id($id) {
         global $DB;
-        return self::from_object($DB->get_record("mumie_duedate", array("id" => $id)));
+        return self::from_object($DB->get_record("mumie_duedate", ["id" => $id]));
     }
 
     /**
@@ -217,7 +217,7 @@ class mumie_duedate_extension {
      */
     public static function delete_all_for_mumie($mumie) {
         global $DB;
-        $DB->delete_records("mumie_duedate", array("mumie" => $mumie));
+        $DB->delete_records("mumie_duedate", ["mumie" => $mumie]);
     }
 
     /**
@@ -313,7 +313,7 @@ class mumie_duedate_extension {
      */
     public static function get_all_for_user($userid) {
         global $DB;
-        $records = $DB->get_records('mumie_duedate', array('userid' => $userid));
+        $records = $DB->get_records('mumie_duedate', ['userid' => $userid]);
         return self::from_objects($records);
     }
 }

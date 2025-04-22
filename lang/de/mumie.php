@@ -24,7 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['pluginname'] = 'MUMIE Task';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>Dieses Aktivität-Modul ermöglicht die Nutzung von Inhalten der MUMIE-Plattform auf Moodle und eine automatische Synchronisierung der dort erzielten Noten.
 Ein MUMIE Task steht hierbei für eine einzelne benote Aufgabe eines MUMIE-Kurses.</p>
@@ -49,8 +48,9 @@ Leistungsstarke Autorenwerkzeuge ermöglichen die Erstellung von neuen Inhalten.
 Aus Sicherheitsgründen werden sie zudem auch auf MUMIE-Servern ausgeloggt, wenn sie sich in Moodle ausloggen.</li>
 </ul>';
 $string['modulenameplural'] = 'MUMIE Tasks';
-$string['pluginadministration'] = 'MUMIE-Administration';
 $string['mumieintro'] = 'Aktivitätsbeschreibung';
+$string['pluginadministration'] = 'MUMIE-Administration';
+$string['pluginname'] = 'MUMIE Task';
 
 // Used in index.php.
 $string['nomumieinstance'] = 'In diesem Kurs gibt es keine MUMIE-Instanzen';

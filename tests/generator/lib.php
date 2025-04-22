@@ -46,7 +46,7 @@ class mod_mumie_generator extends testing_module_generator {
 
         $record = (object)(array)$record;
 
-        $defaultmumiesettings = array(
+        $defaultmumiesettings = [
             'grade' => 100,
             'timecreated' => time(),
             'timemodified' => time(),
@@ -61,8 +61,8 @@ class mod_mumie_generator extends testing_module_generator {
             'privategradepool' => 1,
             'isgraded' => 1,
             'timelimit' => 0,
-            'duration_selector' => 'unlimited'
-        );
+            'duration_selector' => 'unlimited',
+        ];
 
         foreach ($defaultmumiesettings as $property => $value) {
             if (!isset($record->{$property})) {

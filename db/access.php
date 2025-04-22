@@ -24,48 +24,48 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'mod/mumie:addinstance' => array(
+    'mod/mumie:addinstance' => [
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
-        ),
+        ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities',
-    ),
-    'mod/mumie:viewgrades' => array(
+    ],
+    'mod/mumie:viewgrades' => [
         'captype' => 'read',
         'riskbitmask' => RISK_PERSONAL,
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
-        ),
-    ),
-    'mod/mumie:grantduedateextension' => array(
+        ],
+    ],
+    'mod/mumie:grantduedateextension' => [
         'captype' => 'write',
         'riskbitmask' => RISK_PERSONAL,
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
-        ),
-    ),
-    'mod/mumie:revokeduedateextension' => array(
+        ],
+    ],
+    'mod/mumie:revokeduedateextension' => [
         'captype' => 'write',
         'riskbitmask' => RISK_PERSONAL,
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
-        ),
-    ),
+        ],
+    ],
     'mod/mumie:overridegrades' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
@@ -75,4 +75,4 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         ],
     ],
-);
+];

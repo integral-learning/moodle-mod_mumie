@@ -38,13 +38,13 @@ class backup_mumie_structure_step extends backup_activity_structure_step {
      * Defines structure of MUMIE tasks in the backup file
      */
     protected function define_structure() {
-        $mumie = new backup_nested_element('mumie', array('id'), array(
+        $mumie = new backup_nested_element('mumie', ['id'], [
             'name', 'intro', 'introformat', 'timecreated',
             'timemodified', 'taskurl', 'launchcontainer',
             'mumie_course', 'language', 'server', 'mumie_coursefile',
-            'lastsync', 'points', 'completionpass', 'privategradepool', 'duedate', 'isgraded'));
+            'lastsync', 'points', 'completionpass', 'privategradepool', 'duedate', 'isgraded']);
 
-        $serverconfig = new backup_nested_element("serverconfig", array('id'), array('name', 'url_prefix'));
+        $serverconfig = new backup_nested_element("serverconfig", ['id'], ['name', 'url_prefix']);
         $mumie->add_child($serverconfig);
         $serverconfig->set_source_sql('
             SELECT *
@@ -53,9 +53,9 @@ class backup_mumie_structure_step extends backup_activity_structure_step {
                 (SELECT server
                     FROM {mumie}
                 WHERE id = ?
-                )', array(backup::VAR_ACTIVITYID));
+                )', [backup::VAR_ACTIVITYID]);
 
-        $mumie->set_source_table('mumie', array('id' => backup::VAR_ACTIVITYID));
+        $mumie->set_source_table('mumie', ['id' => backup::VAR_ACTIVITYID]);
 
         return $this->prepare_activity_structure($mumie);
     }

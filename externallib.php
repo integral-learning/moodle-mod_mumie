@@ -42,10 +42,10 @@ class mod_mumie_external extends external_api {
      */
     public static function submit_mumieduedate_form_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'contextid' => new external_value(PARAM_INT, 'The context id for action'),
                 'jsonformdata' => new external_value(PARAM_RAW, 'The data from the mumie duedate form, encoded as a json array'),
-            )
+            ]
         );
     }
 
@@ -78,7 +78,7 @@ class mod_mumie_external extends external_api {
 
         $serialiseddata = json_decode($params['jsonformdata']);
 
-        $data = array();
+        $data = [];
         parse_str($serialiseddata, $data);
 
         $editoroptions = [
@@ -100,7 +100,7 @@ class mod_mumie_external extends external_api {
         );
 
         // The last param is the ajax submitted data.
-        $mform = new duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $data);
+        $mform = new duedate_form(null, ['editoroptions' => $editoroptions], 'post', '', null, true, $data);
 
         $validateddata = $mform->get_data();
         if ($validateddata) {

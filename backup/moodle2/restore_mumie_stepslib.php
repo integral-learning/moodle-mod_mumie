@@ -37,7 +37,7 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
      * define the structure for restoration process
      */
     protected function define_structure() {
-        $paths = array();
+        $paths = [];
         $userinfo = $this->get_setting_value('userinfo');
 
         // We need to concat this path or moodle code checker will display a false error.
@@ -60,7 +60,7 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         $data->course = $this->get_courseid();
         $data->use_hashed_id = 1;
 
-        if ($existingtask = array_values($DB->get_records('mumie', array('course' => $data->course)))[0]) {
+        if ($existingtask = array_values($DB->get_records('mumie', ['course' => $data->course]))[0]) {
             $data->privategradepool = $existingtask->privategradepool;
         } else {
             $data->privategradepool = $data->privategradepool ?? null;
@@ -85,8 +85,8 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         This means that a missing server is not always automatically restored
         and needs to be added manually before the task can be edited
          */
-        $recordnameexists = $DB->record_exists("auth_mumie_servers", array("name" => $data->name));
-        $recordurlexists = $DB->record_exists("auth_mumie_servers", array("url_prefix" => $data->url_prefix));
+        $recordnameexists = $DB->record_exists("auth_mumie_servers", ["name" => $data->name]);
+        $recordurlexists = $DB->record_exists("auth_mumie_servers", ["url_prefix" => $data->url_prefix]);
 
         if (!$recordnameexists && !$recordurlexists) {
             $DB->insert_record('auth_mumie_servers', $data);

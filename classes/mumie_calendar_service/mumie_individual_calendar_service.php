@@ -125,7 +125,7 @@ class mumie_individual_calendar_service extends mumie_calendar_service {
     public static function is_event_visible($event, $userid) {
         global $DB;
         // We cannot use $event->userid as it is bugged and not the value saved in db.
-        $eventuser = $DB->get_record("event", array("id" => $event->id))->userid;
+        $eventuser = $DB->get_record("event", ["id" => $event->id])->userid;
         return $event->userid == $eventuser;
     }
 }

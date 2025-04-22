@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function mumie_set_privategradepool_default() {
     global $DB;
-    $tasks = $DB->get_records('mumie', array());
+    $tasks = $DB->get_records('mumie', []);
 
     foreach ($tasks as $task) {
         if (!isset($task->privategradepool)) {

@@ -123,10 +123,6 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci phplint
 
-      - name: phpcpd
-        if: ${{ always() }}
-        run: moodle-plugin-ci phpcpd || true
-
       - name: phpmd
         if: ${{ always() }}
         run: moodle-plugin-ci phpmd
