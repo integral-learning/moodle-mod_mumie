@@ -263,7 +263,6 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
      * @return stdClass
      */
     protected function create_test_mumie_cm($course) {
-        global $DB;
         return $this->getDataGenerator()->create_module('mumie', ['course' => $course->id]);
     }
 

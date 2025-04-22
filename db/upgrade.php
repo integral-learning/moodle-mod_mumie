@@ -24,6 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
 
 /**
  * xmldb_mumie_upgrade is the function that upgrades
@@ -37,75 +38,40 @@ defined('MOODLE_INTERNAL') || die;
  * @return boolean
  */
 function xmldb_mumie_upgrade($oldversion) {
-    // Currently there is no need for an upgrade.php, but this file is necessary.
-
-    global $DB, $CFG;
+    global $DB;
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2019110100) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
+    $addtableifmissing = function($tablename, xmldb_key $primary) use ($dbman) {
+        if (!$dbman->table_exists($tablename)) {
+            $dbman->create_table($tablename);
+            $dbman->add_key($tablename, $primary);
+        }
+    };
+
+    $addfieldifmissing = function($tablename, $fieldname, $type, $precision = null, $notnull = null, $sequence = null, $default = null) use ($dbman) {
+        $table = new xmldb_table($tablename);
+        $field = new xmldb_field($fieldname, $type, $precision, null, $notnull, $sequence, $default);
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        upgrade_plugin_savepoint(true, 2019110100, 'mod', 'mumie');
-    }
+    };
 
-    if ($oldversion < 2020011702) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('duedate', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
-        mumie_set_privategradepool_default();
-        upgrade_plugin_savepoint(true, 2020011702, 'mod', 'mumie');
-    }
+    $addfieldifmissing('mumie', 'use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, '0');
+    $addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null, '0');
+    $addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1');
+    mumie_set_privategradepool_default();
+    $addfieldifmissing('mumie', 'isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, '0');
 
-    if ($oldversion < 2020040700) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, null, '0');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        upgrade_plugin_savepoint(true, 2020040700, 'mod', 'mumie');
-    }
+    $addtableifmissing('mumie_duedate', 'id');
+    $addfieldifmissing('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+    $addfieldifmissing('mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+    $addfieldifmissing('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+    $addfieldifmissing('duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
 
-    if ($oldversion < 2021011303) {
-        $table = new xmldb_table('mumie_duedate');
+    $addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT);
+    $addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10');
 
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-        upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
-    }
-    if ($oldversion < 2023050900) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        upgrade_plugin_savepoint(true, 2023050900, 'mod', 'mumie');
-    }
-    if ($oldversion < 2025031200) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
-    }
+    upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     return true;
 }
+

@@ -43,7 +43,7 @@ define("MUMIE_TASK_TABLE", "mumie");
  * @return int $id id of newly added grade item
  */
 function mumie_add_instance($mumie, $mform) {
-    global $DB, $CFG;
+    global $DB;
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
@@ -64,14 +64,14 @@ function mumie_add_instance($mumie, $mform) {
  * @return int $id id of updated grade item
  */
 function mumie_update_instance($mumie, $mform) {
-    global $DB, $CFG;
+    global $DB;
     $mumie->timemodified = time();
     if (property_exists($mumie, 'instance')) {
         $mumie->id = $mumie->instance;
     };
     if (property_exists($mumie, 'completionexpected')) {
-        $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
-        \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+        $completionexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
+        \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completionexpected);
     };
     locallib::update_pending_gradepool($mumie);
 
@@ -160,7 +160,6 @@ function mumie_cm_info_view(cm_info $cm) {
     global $CFG, $DB, $USER;
     require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 
-    $date = new DateTime("now", core_date::get_user_timezone_object());
     $mumie = $DB->get_record('mumie', ['id' => $cm->instance]);
     $gradeitem = $DB->get_record(
         'grade_items',
@@ -256,7 +255,7 @@ function mumie_grade_item_update($mumie, $grades = null) {
  * @param int      $userid Specific user only, 0 means all.
  * @param bool     $nullifnone Not used
  */
-function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
+function mumie_update_grades($mumie, $userid) {
     if (!isset($mumie->privategradepool)) {
         return;
     }
@@ -266,6 +265,18 @@ function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
 
     mumie_grade_item_update($mumie, mod_mumie\gradesync::get_mumie_grades($mumie, $userid));
 }
+
+/**
+ * Update all activity grades
+ *
+ * @param stdClass $mumie The mumie instance
+ * @param bool     $nullifnone Not used
+ */
+function mumie_update_grades_all_user($mumie) {
+    mumie_update_grades($mumie, 0);
+}
+
+
 
 /**
  * Hook used to update grades for MUMIE tasks, whenever a gradebook is opened

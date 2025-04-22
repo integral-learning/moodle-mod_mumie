@@ -232,10 +232,7 @@ class mumie_participants extends \table_sql {
             $this->allroleassignments = [];
         }
 
-        // Set initial bars.
-        if ($useinitialsbar) {
-            $this->initialbars(true);
-        }
+        $this->initialbars($useinitialsbar);
     }
 
     /**

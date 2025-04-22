@@ -42,10 +42,7 @@ class mod_mumie_generator extends testing_module_generator {
      * @return stdClass mumie instance
      */
     public function create_instance($record = null, array $options = null) {
-        global $CFG;
-
         $record = (object)(array)$record;
-
         $defaultmumiesettings = [
             'grade' => 100,
             'timecreated' => time(),

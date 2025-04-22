@@ -38,7 +38,6 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
      */
     protected function define_structure() {
         $paths = [];
-        $userinfo = $this->get_setting_value('userinfo');
 
         // We need to concat this path or moodle code checker will display a false error.
         $path = '/activity' . '/mumie';
@@ -56,7 +55,6 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         global $DB;
 
         $data = (object) $data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
         $data->use_hashed_id = 1;
 

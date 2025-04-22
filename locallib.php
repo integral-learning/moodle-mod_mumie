@@ -85,13 +85,10 @@ class locallib {
     public static function update_pending_gradepool($mumietask) {
         global $DB;
         $update = false;
-        if (!isset($mumie->id)) {
+
+        $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietask->id]);
+        if ($oldrecord->privategradepool != $mumietask->privategradepool) {
             $update = true;
-        } else {
-            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietask->id]);
-            if ($oldrecord->privategradepool != $mumietask->privategradepool) {
-                $update = true;
-            }
         }
 
         if ($update) {
@@ -179,31 +176,37 @@ class locallib {
      */
     private static function get_browser_name() {
         $useragent = $_SERVER['HTTP_USER_AGENT'];
+        $googlechrome = 'Google Chrome';
+        $applesafari = 'Apple Safari';
+        $internetexplorer = 'Internet Explorer';
+        $edgereg = '/Edge/i';
 
-        if (preg_match('/MSIE/i', $useragent) && !preg_match('/Opera/i', $useragent)) {
-            return 'Internet Explorer';
+        $browsers = [
+            $googlechrome => '/Chrome/i',
+            $applesafari => '/Safari/i',
+            $internetexplorer => '/MSIE|Trident/i',
+            'Edge' => $edgereg,
+            'Opera' => '/OPR/i',
+            'Mozilla Firefox' => '/Firefox/i',
+            'Netscape' => '/Netscape/i',
+        ];
+
+        foreach ($browsers as $name => $pattern) {
+            if (preg_match($pattern, $useragent)) {
+                // Spezialfall: Chrome wird auch von Edge/Safari erkannt.
+                if ($name === $googlechrome && preg_match($edgereg, $useragent)) {
+                    continue;
+                }
+                if ($name === $applesafari && preg_match($edgereg, $useragent)) {
+                    continue;
+                }
+                if ($name === $internetexplorer && preg_match('/Opera/i', $useragent)) {
+                    continue;
+                }
+                return $name;
+            }
         }
-        if (preg_match('/Firefox/i', $useragent)) {
-            return 'Mozilla Firefox';
-        }
-        if (preg_match('/OPR/i', $useragent)) {
-            return 'Opera';
-        }
-        if (preg_match('/Chrome/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
-            return 'Google Chrome';
-        }
-        if (preg_match('/Safari/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
-            return 'Apple Safari';
-        }
-        if (preg_match('/Netscape/i', $useragent)) {
-            return 'Netscape';
-        }
-        if (preg_match('/Edge/i', $useragent)) {
-            return 'Edge';
-        }
-        if (preg_match('/Trident/i', $useragent)) {
-            return 'Internet Explorer';
-        }
+
         return '';
     }
 

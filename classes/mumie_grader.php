@@ -82,7 +82,7 @@ class mumie_grader {
      * @return string
      */
     public function view_grading_table() {
-        global $PAGE, $CFG;
+        global $CFG;
         $output = "";
 
         $gradedroles = array_map('intval', explode(',', $CFG->gradebookroles));

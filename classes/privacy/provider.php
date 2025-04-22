@@ -69,7 +69,7 @@ class provider implements
      * @return  contextlist   $contextlist  The contextlist containing the list of contexts used in this plugin.
      */
     public static function get_contexts_for_userid(int $userid): contextlist {
-        global $DB, $CFG;
+        global $CFG;
         $contextlist = new contextlist();
         $contextlist->set_component('mod_mumie');
 

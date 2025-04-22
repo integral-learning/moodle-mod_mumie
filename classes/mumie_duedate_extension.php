@@ -103,7 +103,6 @@ class mumie_duedate_extension {
      * @return void
      */
     public function upsert() {
-        global $DB;
         if (isset($this->id) && $this->id > 0) {
             $this->update();
         } else {

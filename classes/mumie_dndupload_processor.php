@@ -154,7 +154,8 @@ class mumie_dndupload_processor {
         $this->create_missing_servers(array_values($servers));
 
         $result;
-        for ($i = 0; $i < count($this->upload); $i++) {
+        $uploadlength = count($this->upload);
+        for ($i = 0; $i < $uploadlength; $i++) {
             $uploadinstance = json_decode($this->upload[$i]);
             $mumie = $this->create_mumie_from_uploadinstance($uploadinstance, $servers[$uploadinstance->server]);
             $mumie->server = $servers[$uploadinstance->server]->get_urlprefix();
@@ -273,8 +274,6 @@ class mumie_dndupload_processor {
      * @param \stdClass $mumie The mumie object we want to add to the course.
      */
     private function create_mumie_course_module($mumie) {
-        global $CFG, $DB, $COURSE;
-
         $mumieinstance = mumie_add_instance($mumie, null);
         $cm = $this->create_course_module();
         $this->finish_setup_course_module($mumieinstance, $cm);
@@ -284,7 +283,7 @@ class mumie_dndupload_processor {
      * Create a new course module in the database.
      */
     private function create_course_module() {
-        global $CFG, $DB;
+        global $CFG;
         require_once($CFG->dirroot.'/course/modlib.php');
         list($module, $context, $cw, $cm, $data) = prepare_new_moduleinfo_data($this->course, 'mumie', $this->section);
         $data->coursemodule = $data->id = add_course_module($data);
@@ -298,7 +297,7 @@ class mumie_dndupload_processor {
      * @param \stdClass $cm Newly created coursemodule instance
      */
     protected function finish_setup_course_module($instanceid, $cm) {
-        global $DB, $USER;
+        global $DB;
 
         if (!$instanceid) {
             // Something has gone wrong - undo everything we can.
@@ -311,7 +310,7 @@ class mumie_dndupload_processor {
 
         $DB->set_field('course_modules', 'instance', $instanceid, ['id' => $cm->id]);
 
-        $sectionid = course_add_cm_to_section($this->course, $cm->id, $this->section);
+        course_add_cm_to_section($this->course, $cm->id, $this->section);
 
         set_coursemodule_visible($cm->id, $visible);
         if (!$visible) {

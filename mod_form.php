@@ -59,7 +59,30 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->servers = $this->get_valid_servers_with_structure();
         $serveroptions = $this->get_server_options();
 
-        // Adding the "general" fieldset, where all the common settings are shown.
+        $this->add_general_fields($mform, $serveroptions);
+        $this->standard_grading_coursemodule_elements();
+        $this->set_grade_fields($mform);
+        $this->set_applyto_fields($mform);
+
+        // Add standard elements, common to all modules.
+        $this->standard_coursemodule_elements();
+        $mform->setAdvanced('cmidnumber');
+
+        // Add standard buttons, common to all modules.
+        $this->add_action_buttons();
+        $context = context_course::instance($COURSE->id);
+        $this->disable_grade_rules();
+
+        $jsparams = [
+            json_encode($context->id),
+            get_config('auth_mumie', 'mumie_problem_selector_url'),
+            $USER->lang,
+        ];
+        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
+    }
+
+    private function add_general_fields(\MoodleQuickForm $mform, $serveroptions): void {
+        global $COURSE, $USER;
         $mform->addElement('header', 'mumie_multi_edit', get_string('mumie_form_activity_header', 'mod_mumie'));
 
         $mform->addElement(
@@ -79,7 +102,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("server", 'mumie_form_activity_server', 'mumie');
 
         if (has_capability("auth/mumie:addserver", \context_course::instance($COURSE->id), $USER)) {
-            $contentbutton = $mform->addElement(
+            $mform->addElement(
                 'button',
                 'add_server_button',
                 get_string("mumie_form_add_server_button", "mod_mumie"),
@@ -110,7 +133,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addHelpButton("task_display_element", 'mumie_form_activity_problem', 'mumie');
         $mform->setType("task_display_element", PARAM_TEXT);
 
-        $contentbutton = $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
+        $mform->addElement('button', 'prb_selector_btn', get_string('mumie_form_prb_selector_btn', 'mod_mumie'));
         $wiki = 'https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers#how-to-create-mumie-tasks-with-drag-and-drop';
         $this->add_info_box(
             get_string(
@@ -147,10 +170,10 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $mform->addElement('hidden', 'worksheet', null, ["id" => "id_mumie_worksheet"]);
         $mform->setType("worksheet", PARAM_TEXT);
+    }
 
-        // Add standard course module grading elements.
-        $this->standard_grading_coursemodule_elements();
-
+    private function set_grade_fields(\MoodleQuickForm $mform): void {
+        global $COURSE;
         $mform->removeElement('grade');
         $mform->addElement("text", "points", get_string("mumie_form_points", "mod_mumie"));
         $mform->setDefault("points", 100);
@@ -197,9 +220,10 @@ class mod_mumie_mod_form extends moodleform_mod {
         if (!$disablegradepool) {
             $mform->addRule('privategradepool', get_string('mumie_form_required', 'mod_mumie'), 'required', null, 'client');
         }
+    }
 
+    private function set_applyto_fields(\MoodleQuickForm $mform): void {
         $mform->addElement('header', 'general', get_string('mumie_form_tasks_edit', 'mod_mumie'));
-
         $mform->addElement(
             'html',
             '<div>'
@@ -210,22 +234,6 @@ class mod_mumie_mod_form extends moodleform_mod {
 
         $this->add_property_selection();
         $this->add_task_selection();
-
-        // Add standard elements, common to all modules.
-        $this->standard_coursemodule_elements();
-        $mform->setAdvanced('cmidnumber');
-
-        // Add standard buttons, common to all modules.
-        $this->add_action_buttons();
-        $context = context_course::instance($COURSE->id);
-        $this->disable_grade_rules();
-
-        $jsparams = [
-            json_encode($context->id),
-            get_config('auth_mumie', 'mumie_problem_selector_url'),
-            $USER->lang,
-        ];
-        $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
 
     /**
@@ -445,19 +453,28 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     public function set_data($data): void {
-        global $COURSE, $DB, $CFG;
+        global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+        $mform = &$this->_form;
+        $this->set_data_general($data, $mform);
+        // This option must not be changed to avoid messing with grades in the database.
+        $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
+        $this->set_data_grade($data, $mform);
+        parent::set_data($data);
+    }
 
-        // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
-        if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
-            $data->privategradepool = get_config('auth_mumie', 'defaultgradepool');
+    private function set_data_grade($data, $mform): void {
+        // Preselect the correct duration option.
+        if ($data->duedate > 0) {
+            $mform->setDefault('duration_selector', 'duedate');
+        } else if ($data->timelimit > 0) {
+            $mform->setDefault('duration_selector', 'timelimit');
         } else {
-            if (!isset($data->privategradepool)) {
-                $data->privategradepool = array_values(
-                    $DB->get_records(MUMIE_TASK_TABLE, ["course" => $COURSE->id])
-                )[0]->privategradepool ?? -1;
-            }
+            $mform->setDefault('duration_selector', 'unlimited');
         }
+        $mform->disabledIf('duration_selector', null);
+    }
+    private function set_data_general_server($data, $mform): void {
         // The following changes only apply to edits, so skip them if not necessary.
         if (!isset($data->server)) {
             parent::set_data($data);
@@ -480,7 +497,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
 
         // Check whether the task represents an entire course. If so, check the responding box in the form.
-        $mform = &$this->_form;
         $server = \auth_mumie\mumie_server::get_by_urlprefix($data->server);
         if ($server->get_id()) {
             $server->load_structure();
@@ -507,20 +523,22 @@ class mod_mumie_mod_form extends moodleform_mod {
                 $mform->setType("mumie_server_structure", PARAM_RAW);
             }
         }
-        // This option must not be changed to avoid messing with grades in the database.
-        $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
-
-        // Preselect the correct duration option.
-        if ($data->duedate > 0) {
-            $mform->setDefault('duration_selector', 'duedate');
-        } else if ($data->timelimit > 0) {
-            $mform->setDefault('duration_selector', 'timelimit');
+    }
+    private function set_data_general($data, $mform): void {
+        global $COURSE, $DB;
+        // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
+        if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
+            $data->privategradepool = get_config('auth_mumie', 'defaultgradepool');
         } else {
-            $mform->setDefault('duration_selector', 'unlimited');
+            if (!isset($data->privategradepool)) {
+                $data->privategradepool = array_values(
+                    $DB->get_records(MUMIE_TASK_TABLE, ["course" => $COURSE->id])
+                )[0]->privategradepool ?? -1;
+            }
         }
-        $mform->disabledIf('duration_selector', null);
 
-        parent::set_data($data);
+        $this->set_data_general_server($data, $mform);
+
     }
 
     /**
