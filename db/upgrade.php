@@ -38,40 +38,58 @@ require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
  * @return boolean
  */
 function xmldb_mumie_upgrade($oldversion) {
-    global $DB;
-    $dbman = $DB->get_manager();
 
-    $addtableifmissing = function($tablename, xmldb_key $primary) use ($dbman) {
-        if (!$dbman->table_exists($tablename)) {
-            $dbman->create_table($tablename);
-            $dbman->add_key($tablename, $primary);
-        }
-    };
-
-    $addfieldifmissing = function($tablename, $fieldname, $type, $precision = null, $notnull = null, $sequence = null, $default = null) use ($dbman) {
-        $table = new xmldb_table($tablename);
-        $field = new xmldb_field($fieldname, $type, $precision, null, $notnull, $sequence, $default);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-    };
-
-    $addfieldifmissing('mumie', 'use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, '0');
-    $addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null, '0');
-    $addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1');
+    addfieldifmissing('mumie', 'use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, '0');
+    addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null, '0');
+    addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1');
     mumie_set_privategradepool_default();
-    $addfieldifmissing('mumie', 'isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, '0');
+    addfieldifmissing('mumie', 'isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, '0');
 
-    $addtableifmissing('mumie_duedate', 'id');
-    $addfieldifmissing('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-    $addfieldifmissing('mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
-    $addfieldifmissing('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
-    $addfieldifmissing('duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+    addtableifmissing('mumie_duedate', 'id');
+    addfieldifmissing('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+    addfieldifmissing('mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+    addfieldifmissing('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+    addfieldifmissing('duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
 
-    $addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT);
-    $addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10');
+    addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT);
+    addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10');
 
     upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     return true;
+};
+
+/**
+ * Creates table if doesn't exist, with given primary
+ * @param xmldb_table $tablename
+ * @param xmldb_key $primary
+ */
+function addtableifmissing(xmldb_table $tablename, xmldb_key $primary) {
+    global $DB;
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists($tablename)) {
+        $dbman->create_table($tablename);
+        $dbman->add_key($tablename, $primary);
+    }
 }
 
+/**
+ * Creates field if doesn't exist
+ * @param xmldb_table $tablename
+ * @param string $fieldname
+ * @param int $type
+ * @param string $precision
+ * @param mixed $notnull
+ * @param mixed $sequence
+ * @param mixed $default
+ * @param xmldb_key $primary
+ */
+function addfieldifmissing($tablename, $fieldname, $type, $precision = null, $notnull =
+    null, $sequence = null, $default = null) {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table($tablename);
+    $field = new xmldb_field($fieldname, $type, $precision, null, $notnull, $sequence, $default);
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
+};

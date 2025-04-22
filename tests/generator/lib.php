@@ -15,17 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * MUMIE Task module test data generator
- *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
  * MUMIE Task module test data generator class
  *
  * @package mod_mumie
@@ -41,7 +30,7 @@ class mod_mumie_generator extends testing_module_generator {
      * @param  array $options
      * @return stdClass mumie instance
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance(?array $record, ?array $options) {
         $record = (object)(array)$record;
         $defaultmumiesettings = [
             'grade' => 100,

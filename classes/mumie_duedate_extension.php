@@ -25,9 +25,6 @@
 
 namespace mod_mumie;
 
-defined('MOODLE_INTERNAL') || die;
-
-
 /**
  * A MUMIE due date extensions is an due date extension for a single student. These objects must be saved in the database.
  *

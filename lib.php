@@ -144,7 +144,8 @@ function mumie_cm_info_dynamic(cm_info $cm) {
     }
     $context = context_module::instance($cm->id);
 
-    $openinnewtab = $mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW && !has_capability("mod/mumie:viewgrades", $context, $USER);
+    $openinnewtab = $mumie->launchcontainer ==
+        MUMIE_LAUNCH_CONTAINER_WINDOW && !has_capability("mod/mumie:viewgrades", $context, $USER);
     // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
     if ($openinnewtab) {
         $cm->set_on_click("window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$cm->id}'); return false;");

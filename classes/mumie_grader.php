@@ -25,8 +25,6 @@
 
 namespace mod_mumie;
 
-defined('MOODLE_INTERNAL') || die;
-
 use core_table\local\filter\filter;
 use core_table\local\filter\integer_filter;
 use core_user\table\participants_filterset;

@@ -81,6 +81,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
 
+    /**
+     * Define general fields and default values
+     *
+     * @param MoodleQuickForm $mform
+     * @param array $serveroptions
+     * @return void
+     */
     private function add_general_fields(\MoodleQuickForm $mform, $serveroptions): void {
         global $COURSE, $USER;
         $mform->addElement('header', 'mumie_multi_edit', get_string('mumie_form_activity_header', 'mod_mumie'));
@@ -172,6 +179,12 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->setType("worksheet", PARAM_TEXT);
     }
 
+    /**
+     * Define grade fields and default values
+     *
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
     private function set_grade_fields(\MoodleQuickForm $mform): void {
         global $COURSE;
         $mform->removeElement('grade');
@@ -222,6 +235,12 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
     }
 
+    /**
+     * Define apply to fields and default values
+     *
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
     private function set_applyto_fields(\MoodleQuickForm $mform): void {
         $mform->addElement('header', 'general', get_string('mumie_form_tasks_edit', 'mod_mumie'));
         $mform->addElement(
@@ -463,6 +482,13 @@ class mod_mumie_mod_form extends moodleform_mod {
         parent::set_data($data);
     }
 
+    /**
+     * Sets data to grade elements
+     *
+     * @param $data
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
     private function set_data_grade($data, $mform): void {
         // Preselect the correct duration option.
         if ($data->duedate > 0) {
@@ -474,6 +500,14 @@ class mod_mumie_mod_form extends moodleform_mod {
         }
         $mform->disabledIf('duration_selector', null);
     }
+
+    /**
+     * Sets data to general server elements
+     *
+     * @param $data
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
     private function set_data_general_server($data, $mform): void {
         // The following changes only apply to edits, so skip them if not necessary.
         if (!isset($data->server)) {
@@ -524,6 +558,14 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
     }
+
+    /**
+     * Sets data to general elements, includes set_data_general_server.
+     *
+     * @param $data
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
     private function set_data_general($data, $mform): void {
         global $COURSE, $DB;
         // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!

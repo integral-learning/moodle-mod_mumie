@@ -15,16 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines all restore steps that will be used by the restore_mumie_activity_task
- *
- * @package mod_mumie
- * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-defined('MOODLE_INTERNAL') || die;
-
-/**
  * Structure step to restore one mumie activity
  * @package mod_mumie
  * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)

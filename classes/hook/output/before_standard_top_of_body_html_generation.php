@@ -24,6 +24,8 @@
  */
 namespace mod_mumie\hook\output;
 
+defined('MOODLE_INTERNAL') || die();
+
 use core\hook\deprecated_callback_replacement;
 use core\hook\described_hook;
 use mod_mumie\locallib;

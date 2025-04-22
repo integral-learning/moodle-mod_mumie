@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace mod_mumie\event;
-defined('MOODLE_INTERNAL') || die;
 
 /**
  * The mod_mumie course module viewed event.

@@ -14,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * privacy provider tests.
- *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace mod_mumie;
+
 use mod_mumie\privacy\provider;
 use core_privacy\local\request\writer;
 use core_privacy\local\request\approved_contextlist;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Privacy provider test class.
@@ -35,8 +27,14 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \mod_mumie\privacy\provider
  */
 final class privacy_provider_test extends \core_privacy\tests\provider_testcase {
+    /**
+     * Test: get_contexts_for_userid returns no data for user without logins.
+     *
+     * @covers ::get_contexts_for_userid
+     */
     public function test_get_contexts_for_userid_no_data(): void {
         $this->resetAfterTest(true);
         $user = $this->getDataGenerator()->create_user();
@@ -44,6 +42,14 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertCount(0, $contextlist);
     }
 
+    /**
+     * Test: get_contexts_for_userid returns the correct context list based on user data.
+     *
+     * Verifies that the function returns a context when relevant user data exists
+     * and no context when there is none.
+     *
+     * @covers ::get_contexts_for_userid
+     */
     public function test_get_contexts_for_userid_with_data(): void {
         $this->resetAfterTest(true);
 
@@ -63,6 +69,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertCount(0, $contextlist);
     }
 
+    /**
+     * Test: get_users_in_context returns correct user lists.
+     *
+     * @covers ::get_users_in_context
+     */
     public function test_get_users_in_context(): void {
         $this->resetAfterTest(true);
 
@@ -104,6 +115,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertEquals([], $userlist3->get_userids());
     }
 
+    /**
+     * Test: delete_data_for_users deletes correct users' data.
+     *
+     * @covers ::delete_data_for_users
+     */
     public function test_delete_data_for_users(): void {
         global $DB;
         $this->resetAfterTest(true);
@@ -144,6 +160,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         );
     }
 
+    /**
+     * Test: delete_data_for_all_users_in_context deletes all user data for given context.
+     *
+     * @covers ::delete_data_for_all_users_in_context
+     */
     public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
         $this->resetAfterTest(true);
@@ -174,6 +195,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
 
     }
 
+    /**
+     * Test: delete_data_for_user deletes correct records.
+     *
+     * @covers ::delete_data_for_user
+     */
     public function test_delete_data_for_user(): void {
         global $DB;
         $this->resetAfterTest(true);
@@ -213,6 +239,11 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
 
     }
 
+    /**
+     * Test: export_user_data returns nothing if no data exists.
+     *
+     * @covers ::export_user_data
+     */
     public function test_export_user_data_no_data(): void {
         $this->resetAfterTest(true);
 
@@ -228,6 +259,12 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertFalse($writer->has_any_data_in_any_context());
     }
 
+
+    /**
+     * Test: export_user_data returns existing user data.
+     *
+     * @covers ::export_user_data
+     */
     public function test_export_user_data(): void {
         $this->resetAfterTest(true);
 
