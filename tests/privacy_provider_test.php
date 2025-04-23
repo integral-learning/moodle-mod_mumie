@@ -91,9 +91,9 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->add_duedate($m2, $user2);
         $this->add_duedate($m2, $user1);
 
-        $context1 = context_module::instance($m1->cmid);
-        $context2 = context_module::instance($m2->cmid);
-        $context3 = context_module::instance($m3->cmid);
+        $context1 = \context_module::instance($m1->cmid);
+        $context2 = \context_module::instance($m2->cmid);
+        $context3 = \context_module::instance($m3->cmid);
 
         // Test with one user.
         $userlist1 = new \core_privacy\local\request\userlist($context1, 'mod_mumie');
@@ -218,13 +218,13 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->add_duedate($m1, $user2);
         $this->add_duedate($m1, $user3);
 
-        $context1 = context_module::instance($m1->cmid);
-        $context2 = context_module::instance($m2->cmid);
+        $context1 = \context_module::instance($m1->cmid);
+        $context2 = \context_module::instance($m2->cmid);
 
         $contextlist = new approved_contextlist(
             $user1,
             'mumie',
-            [context_system::instance()->id, $context1->id, $context2->id]
+            [\context_system::instance()->id, $context1->id, $context2->id]
         );
         provider::delete_data_for_user($contextlist);
 
@@ -280,8 +280,8 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->add_duedate($m2, $user1);
         $this->add_duedate($m1, $user2);
 
-        $context1 = context_module::instance($m1->cmid);
-        $context2 = context_module::instance($m2->cmid);
+        $context1 = \context_module::instance($m1->cmid);
+        $context2 = \context_module::instance($m2->cmid);
 
         $this->export_context_data_for_user($user1->id, $context1, 'mod_mumie');
         $writer1 = writer::with_context($context1);
@@ -314,7 +314,7 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
-        $duedate = new mod_mumie\mumie_duedate_extension($user->id, $mumie->id);
+        $duedate = new mumie_duedate_extension($user->id, $mumie->id);
         $duedate->set_duedate(1000);
         $duedate->upsert();
     }
