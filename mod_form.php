@@ -485,7 +485,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Sets data to grade elements
      *
-     * @param $data
+     * @param stdClass $data instance of MUMIE task, that is being edited
      * @param MoodleQuickForm $mform
      * @return void
      */
@@ -504,7 +504,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Sets data to general server elements
      *
-     * @param $data
+     * @param stdClass $data instance of MUMIE task, that is being edited
      * @param MoodleQuickForm $mform
      * @return void
      */
@@ -562,7 +562,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     /**
      * Sets data to general elements, includes set_data_general_server.
      *
-     * @param $data
+     * @param stdClass $data instance of MUMIE task, that is being edited
      * @param MoodleQuickForm $mform
      * @return void
      */

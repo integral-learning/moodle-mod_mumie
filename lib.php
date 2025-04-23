@@ -253,8 +253,7 @@ function mumie_grade_item_update($mumie, $grades = null) {
  * Update activity grades
  *
  * @param stdClass $mumie The mumie instance
- * @param int      $userid Specific user only, 0 means all.
- * @param bool     $nullifnone Not used
+ * @param int $userid Specific user only, 0 means all.
  */
 function mumie_update_grades($mumie, $userid) {
     if (!isset($mumie->privategradepool)) {
@@ -271,7 +270,6 @@ function mumie_update_grades($mumie, $userid) {
  * Update all activity grades
  *
  * @param stdClass $mumie The mumie instance
- * @param bool     $nullifnone Not used
  */
 function mumie_update_grades_all_user($mumie) {
     mumie_update_grades($mumie, 0);
