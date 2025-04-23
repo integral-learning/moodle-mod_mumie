@@ -138,7 +138,7 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->add_duedate($m1, $user2);
         $this->add_duedate($m1, $user3);
 
-        $context1 = context_module::instance($m1->cmid);
+        $context1 = \context_module::instance($m1->cmid);
 
         $approveduserlist = new \core_privacy\local\request\approved_userlist(
             $context1,
@@ -183,7 +183,7 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->add_duedate($m1, $user2);
         $this->add_duedate($m1, $user3);
 
-        $context1 = context_module::instance($m1->cmid);
+        $context1 = \context_module::instance($m1->cmid);
 
         provider::delete_data_for_all_users_in_context($context1);
 
