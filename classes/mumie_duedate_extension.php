@@ -18,7 +18,7 @@
  * This file describes a class used to execute CRUD operations for individual due dates for students.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +29,7 @@ namespace mod_mumie;
  * A MUMIE due date extensions is an due date extension for a single student. These objects must be saved in the database.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
