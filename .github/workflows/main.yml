@@ -8,6 +8,7 @@ on:
     branches:
       - dev
       - master
+
 jobs:
   test:
     runs-on: 'ubuntu-latest'
@@ -150,7 +151,7 @@ jobs:
       - name: phpunit
         if: ${{ always() }}
         run: moodle-plugin-ci phpunit
-      
+
       - name: PHPdoc
         if: ${{ always() }}
         run: moodle-plugin-ci phpdoc
