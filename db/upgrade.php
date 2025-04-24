@@ -58,7 +58,8 @@ function xmldb_mumie_upgrade($oldversion) {
         addtableifmissing('mumie_duedate', 'id');
         addfieldifmissing('mumie_duedate', 'id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
         XMLDB_SEQUENCE, null);
-        addfieldifmissing('mumie_duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        addfieldifmissing('mumie_duedate', 'mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
+        null, null);
         addfieldifmissing('mumie_duedate', 'userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         addfieldifmissing('mumie_duedate', 'duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
