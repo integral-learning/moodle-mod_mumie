@@ -74,14 +74,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: plugin
 
       - name: Install node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '14.15.0'
+          node-version: 'v22.x'
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
