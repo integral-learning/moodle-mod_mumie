@@ -196,7 +196,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         const courseController = (function() {
             const courseNameElem = document.getElementById("id_mumie_course");
-            const coursefileElem = document.getElementsByName("mumie_coursefile")[0];
+            const courseFileElem = document.getElementsByName("mumie_coursefile")[0];
 
 
             /**
@@ -205,7 +205,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * @param {string} coursefile
              */
             function updateCourseFilePath(coursefile) {
-                coursefileElem.value = coursefile;
+                courseFileElem.value = coursefile;
                 updateCourseName();
             }
 
@@ -228,7 +228,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 getSelectedCourse: function() {
                     const courses = serverController.getSelectedServer().courses;
-                    return courses.find(course => course.coursefile === coursefileElem.value);
+                    return courses.find(course => course.coursefile === courseFileElem.value);
                 },
                 setCourse: function(courseFile) {
                     updateCourseFilePath(courseFile);
