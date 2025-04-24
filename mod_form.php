@@ -475,10 +475,18 @@ class mod_mumie_mod_form extends moodleform_mod {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
         $mform = &$this->_form;
-        $this->set_data_general($data, $mform);
+        $this->set_general_data($data, $mform);
+
+        // The following changes only apply to edits, so skip them if not necessary.
+        if (!isset($data->server)) {
+            parent::set_data($data);
+            return;
+        }
+
+        $this->set_general_server_data($data, $mform);
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
-        $this->set_data_grade($data, $mform);
+        $this->set_grade_data($data, $mform);
         parent::set_data($data);
     }
 
@@ -489,11 +497,11 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param MoodleQuickForm $mform
      * @return void
      */
-    private function set_data_grade($data, $mform): void {
+    private function set_grade_data($data, $mform): void {
         // Preselect the correct duration option. An empty task as no duedate or timelimit property.
-        if (isset($data->duedate) && $data->duedate > 0) {
+        if ($data->duedate > 0) {
             $mform->setDefault('duration_selector', 'duedate');
-        } else if (isset($data->duedate) && $data->timelimit > 0) {
+        } else if ($data->timelimit > 0) {
             $mform->setDefault('duration_selector', 'timelimit');
         } else {
             $mform->setDefault('duration_selector', 'unlimited');
@@ -508,13 +516,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param MoodleQuickForm $mform
      * @return void
      */
-    private function set_data_general_server($data, $mform): void {
-        // The following changes only apply to edits, so skip them if not necessary.
-        if (!isset($data->server)) {
-            parent::set_data($data);
-            return;
-        }
-
+    private function set_general_server_data($data, $mform): void {
         // Set a flag, if the server configuration is missing!
         $filter = array_filter(
             auth_mumie\mumie_server::get_all_servers(),
@@ -560,13 +562,13 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
-     * Sets data to general elements, includes set_data_general_server.
+     * Sets data to general elements
      *
      * @param stdClass $data instance of MUMIE task, that is being edited
      * @param MoodleQuickForm $mform
      * @return void
      */
-    private function set_data_general($data, $mform): void {
+    private function set_general_data($data, $mform): void {
         global $COURSE, $DB;
         // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
         if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
@@ -578,9 +580,6 @@ class mod_mumie_mod_form extends moodleform_mod {
                 )[0]->privategradepool ?? -1;
             }
         }
-
-        $this->set_data_general_server($data, $mform);
-
     }
 
     /**
