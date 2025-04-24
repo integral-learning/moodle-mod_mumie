@@ -44,7 +44,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Send a success message to problem selector window
+             * Send a success message to a problem selector window
              * @param {string} message
              */
             function sendSuccess(message = '') {
@@ -55,7 +55,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Send a failure message to problem selector window
+             * Send a failure message to a problem selector window
              * @param {string} message
              */
             function sendFailure(message = '') {
@@ -204,7 +204,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              *
              * @param {string} coursefile
              */
-            function updateCoursefilePath(coursefile) {
+            function updateCourseFilePath(coursefile) {
                 coursefileElem.value = coursefile;
                 updateCourseName();
             }
@@ -231,7 +231,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     return courses.find(course => course.coursefile === coursefileElem.value);
                 },
                 setCourse: function(courseFile) {
-                    updateCoursefilePath(courseFile);
+                    updateCourseFilePath(courseFile);
                 }
             };
         })();
