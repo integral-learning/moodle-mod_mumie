@@ -4,6 +4,7 @@ on:
     branches:
       - dev
       - master
+      - branches
   pull_request:
     branches:
       - dev
@@ -81,7 +82,7 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v4
         with:
-          node-version: 'v22.x'
+          node-version: '22.x'
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
