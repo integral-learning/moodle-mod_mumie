@@ -146,7 +146,7 @@ jobs:
 
       - name: grunt
         if: ${{ always() }}
-        run: echo grunt --version && moodle-plugin-ci grunt -vvv
+        run: grunt --version && moodle-plugin-ci grunt -vvv
 
       - name: phpunit
         if: ${{ always() }}
