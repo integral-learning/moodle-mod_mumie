@@ -61,17 +61,19 @@ class mumie_task_validator {
      */
     private static function check_required(array $data): array {
         $errors = [];
-        if (empty($data["mumie_missing_config"])) {
+        if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
             $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
         }
-        if (empty($data["taskurl"])) {
+
+        if (!isset($data["mumie_course"]) && !isset($data["mumie_missing_config"])) {
+            $errors["mumie_course"] = get_string('mumie_form_required', 'mod_mumie');
+        }
+
+        $taskurlvalid = isset($data["taskurl"]) && $data["taskurl"] !== "";
+        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
             $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
-        foreach (['server', 'mumie_course'] as $field) {
-            if (empty($data[$field])) {
-                $errors[$field] = get_string('mumie_form_required', 'mod_mumie');
-            }
-        }
+
         return $errors;
     }
 

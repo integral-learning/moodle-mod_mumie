@@ -101,7 +101,8 @@ function addtableifmissing(string $tablename, string $primaryname) {
  * @param mixed $default — meaningful default o null (or false)
  * @param string $previous
  */
-function addfieldifmissing($tablename, $fieldname, $type = null, $precision = null, $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = null) {
+function addfieldifmissing($tablename, $fieldname, $type = null, $precision = null,
+    $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = null) {
     global $DB;
     $dbman = $DB->get_manager();
     $table = new xmldb_table($tablename);

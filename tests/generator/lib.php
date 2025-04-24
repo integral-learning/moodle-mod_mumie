@@ -26,8 +26,10 @@ class mod_mumie_generator extends testing_module_generator {
     /**
      * Create a mumie instance.
      *
-     * @param array|stdClass $record data for module being generated. Requires 'course' key (an id or the full object). Also can have any fields from add module form.
-     * @param null|array $options general options for course module. Since 2.6 it is possible to omit this argument by merging options into $record
+     * @param array|stdClass $record data for module being generated. Requires 'course' key
+     * (an id or the full object). Also can have any fields from add module form.
+     * @param null|array $options general options for course module. Since 2.6 it is possible to
+     * omit this argument by merging options into $record
      * @return stdClass mumie instance
      */
     public function create_instance($record = null, ?array $options = null) {
