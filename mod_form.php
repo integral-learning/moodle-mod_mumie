@@ -565,7 +565,6 @@ class mod_mumie_mod_form extends moodleform_mod {
      * Sets data to general elements
      *
      * @param stdClass $data instance of MUMIE task, that is being edited
-     * @param MoodleQuickForm $mform
      * @return void
      */
     private function set_general_data($data): void {
