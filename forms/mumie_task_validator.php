@@ -178,7 +178,7 @@ class mumie_task_validator {
      * @return bool
      */
     private static function has_duedate(array $data): bool {
-        return $data['duedate'] > 0;
+        return $data['duedate'] > 0 && $data['duration_selector'] === 'duedate';
     }
 
     /**
@@ -187,7 +187,7 @@ class mumie_task_validator {
      * @return bool
      */
     private static function has_timelimit(array $data): bool {
-        return $data['timelimit'] > 0;
+        return $data['timelimit'] > 0 && $data['duration_selector'] === 'timelimit';
     }
 
     /**
@@ -207,6 +207,6 @@ class mumie_task_validator {
      * @return bool
      */
     private static function is_correction_trigger_after_deadline(string $worksheet): bool {
-        return json_decode($worksheet, true)['configuration']['correction']['correctorType'] == "AFTER_DEADLINE";
+        return json_decode($worksheet, true)['configuration']['correction']['correctorType'] === "AFTER_DEADLINE";
     }
 }
