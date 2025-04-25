@@ -474,8 +474,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     public function set_data($data): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
-        $mform = &$this->_form;
-        $this->set_general_data($data, $mform);
+        $this->set_general_data($data);
 
         // The following changes only apply to edits, so skip them if not necessary.
         if (!isset($data->server)) {
@@ -483,6 +482,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             return;
         }
 
+        $mform = &$this->_form;
         $this->set_general_server_data($data, $mform);
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
@@ -568,7 +568,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param MoodleQuickForm $mform
      * @return void
      */
-    private function set_general_data($data, $mform): void {
+    private function set_general_data($data): void {
         global $COURSE, $DB;
         // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
         if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
