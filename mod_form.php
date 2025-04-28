@@ -88,7 +88,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param array $serveroptions
      * @return void
      */
-    private function add_general_fields(\MoodleQuickForm $mform, $serveroptions): void {
+    private function add_general_fields(MoodleQuickForm $mform, $serveroptions): void {
         global $COURSE, $USER;
         $mform->addElement('header', 'mumie_multi_edit', get_string('mumie_form_activity_header', 'mod_mumie'));
 
@@ -185,7 +185,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param MoodleQuickForm $mform
      * @return void
      */
-    private function set_grade_fields(\MoodleQuickForm $mform): void {
+    private function set_grade_fields(MoodleQuickForm $mform): void {
         global $COURSE;
         $mform->removeElement('grade');
         $mform->addElement("text", "points", get_string("mumie_form_points", "mod_mumie"));
@@ -241,7 +241,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @param MoodleQuickForm $mform
      * @return void
      */
-    private function set_applyto_fields(\MoodleQuickForm $mform): void {
+    private function set_applyto_fields(MoodleQuickForm $mform): void {
         $mform->addElement('header', 'general', get_string('mumie_form_tasks_edit', 'mod_mumie'));
         $mform->addElement(
             'html',
