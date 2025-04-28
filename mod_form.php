@@ -498,7 +498,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function set_grade_data($data, $mform): void {
         // Preselect the correct duration option. An empty task has no duedate or timelimit
-        property.
+        // property.
         if ($data->duedate > 0) {
             $mform->setDefault('duration_selector', 'duedate');
         } else if ($data->timelimit > 0) {
@@ -570,7 +570,7 @@ class mod_mumie_mod_form extends moodleform_mod {
     private function set_general_data($data): void {
         global $COURSE, $DB;
         // Decisions about gradepools are final. Don't preselect an option if the decision is
-        still pending!
+        // still pending!
         if (!locallib::course_contains_mumie_tasks($COURSE->id)) {
             $data->privategradepool = get_config('auth_mumie', 'defaultgradepool');
         } else {

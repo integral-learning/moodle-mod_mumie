@@ -65,10 +65,14 @@ class gradesync {
         $isoverviewpage = (strpos($PAGE->url, 'overview/index.php') !== false);
 
         if ($isreportpage) {
-            $userid = $USER->id;
+            $mumietasks = self::get_mumie_tasks_from_course($COURSE->id);
             if (has_capability("mod/mumie:viewgrades", context_course::instance($COURSE->id), $USER)) {
-                foreach (self::get_mumie_tasks_from_course($COURSE->id) as $mumie) {
-                    mumie_update_grades_all_user($mumie);
+                foreach ($mumietasks as $task) {
+                    mumie_update_grades_all_user($task);
+                }
+            } else {
+                foreach ($mumietasks as $task) {
+                    mumie_update_grades($task, $USER->id);
                 }
             }
         } else {
