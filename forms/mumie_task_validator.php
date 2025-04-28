@@ -25,6 +25,8 @@
 
 namespace mod_mumie;
 
+use coding_exception;
+
 /**
  * This class is a validator used to check mod_form for MUMIE Tasks
  *
@@ -39,7 +41,7 @@ class mumie_task_validator {
      * @param array     $data
      * @param \stdClass $current
      * @return array
-     * @throws \coding_exception
+     * @throws coding_exception
      */
     public static function get_errors(array $data, \stdClass $current): array {
         $errors = [];
@@ -58,6 +60,7 @@ class mumie_task_validator {
      *
      * @param array $data Associative array containing form data.
      * @return array Associative array of errors, with field names as keys.
+     * @throws coding_exception
      */
     private static function check_required(array $data): array {
         $errors = [];
@@ -94,8 +97,9 @@ class mumie_task_validator {
             $gradepass = grade_floatval($data['gradepass'] ?? 0);
 
             if ($completionpass && $gradepass == 0) {
-                $key = isset($data['completionpass']) ? 'completionpassgroup' : 'gradepass';
-                $stringkey = isset($data['completionpass']) ? 'gradetopassnotset' : 'gradetopassmustbeset';
+                $completionpassisset = isset($data['completionpass']);
+                $key = $completionpassisset ? 'completionpassgroup' : 'gradepass';
+                $stringkey = $completionpassisset ? 'gradetopassnotset' : 'gradetopassmustbeset';
                 $errors[$key] = get_string($stringkey, 'mumie');
             }
         }
@@ -158,14 +162,19 @@ class mumie_task_validator {
      * @return array Associative array of validation errors.
      */
     private static function check_worksheet(array $data): array {
-        $errors = [];
+    
         $isworksheet = self::is_worksheet($data);
-        $triggerafterdeadline = $isworksheet && self::is_correction_trigger_after_deadline($data['worksheet']);
+        if(!$isworksheet) {
+            return [];
+        }
+
+        $errors = [];
+        $triggerafterdeadline = self::is_correction_trigger_after_deadline($data['worksheet']);
         $hasdeadline = self::has_duedate($data) || self::has_timelimit($data);
 
         if ($triggerafterdeadline && !$hasdeadline) {
             $errors['duration_selector'] = get_string('mumie_form_deadline_required_for_trigger_after_deadline', 'mod_mumie');
-        } else if ($isworksheet && !$triggerafterdeadline && $hasdeadline) {
+        } else if (!$triggerafterdeadline && $hasdeadline) {
             $errors['duration_selector'] =
                 get_string('mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline', 'mod_mumie');
         }
