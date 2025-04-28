@@ -195,7 +195,6 @@ class locallib {
 
         foreach ($browsers as $name => $pattern) {
             if (preg_match($pattern, $useragent)) {
-                // Spezialfall: Chrome wird auch von Edge/Safari erkannt.
                 if ($name === $googlechrome && preg_match($edgereg, $useragent)) {
                     continue;
                 }
