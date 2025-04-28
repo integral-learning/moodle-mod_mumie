@@ -497,7 +497,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     private function set_grade_data($data, $mform): void {
-        // Preselect the correct duration option. An empty task as no duedate or timelimit property.
+        // Preselect the correct duration option. An empty task has no duedate or timelimit
+        property.
         if ($data->duedate > 0) {
             $mform->setDefault('duration_selector', 'duedate');
         } else if ($data->timelimit > 0) {
