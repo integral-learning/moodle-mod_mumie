@@ -570,7 +570,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         global $COURSE, $DB;
         // Decisions about gradepools are final. Don't preselect an option if the decision is
         still pending!
-        if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
+        if (!locallib::course_contains_mumie_tasks($COURSE->id)) {
             $data->privategradepool = get_config('auth_mumie', 'defaultgradepool');
         } else {
             if (!isset($data->privategradepool)) {
