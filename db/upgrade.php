@@ -72,7 +72,9 @@ function xmldb_mumie_upgrade($oldversion) {
     if ($oldversion < 2025031200) {
         addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null);
         upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
-    }   return true;
+    }
+
+    return true;
 };
 
 /**
