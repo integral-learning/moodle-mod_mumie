@@ -162,7 +162,7 @@ class mumie_task_validator {
      * @return array Associative array of validation errors.
      */
     private static function check_worksheet(array $data): array {
-    
+
         $isworksheet = self::is_worksheet($data);
         if(!$isworksheet) {
             return [];
