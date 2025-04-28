@@ -106,9 +106,8 @@ function addtableifmissing(string $tablename, string $primaryname): void {
  * @param string $previous
  * @return void
  */
-function addfieldifmissing(string $tablename, string $fieldname, int $type = null,
-    string $precision = null, bool $unsigned = null, bool $notnull = null, bool $sequence = null,
-    $default = null, string $previous = null): void {
+function addfieldifmissing(string $tablename, string $fieldname, ?int $type, ?string $precision,
+    ?bool $unsigned, ?bool $notnull, ?bool $sequence, $default = null, ?string $previous): void {
     global $DB;
     $dbman = $DB->get_manager();
     $table = new xmldb_table($tablename);
