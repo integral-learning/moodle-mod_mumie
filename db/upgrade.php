@@ -75,14 +75,15 @@ function xmldb_mumie_upgrade($oldversion) {
     }
 
     return true;
-};
+}
 
 /**
  * Creates table if doesn't exist, with given primary
  * @param string $tablename
  * @param string $primaryname
+ * @return void
  */
-function addtableifmissing(string $tablename, string $primaryname) {
+function addtableifmissing(string $tablename, string $primaryname): void {
     global $DB;
     $dbman = $DB->get_manager();
     if (!$dbman->table_exists($tablename)) {
@@ -94,7 +95,7 @@ function addtableifmissing(string $tablename, string $primaryname) {
 
 /**
  * Creates field if doesn't exist
- * @param xmldb_table $tablename
+ * @param string $tablename
  * @param string $fieldname — of field
  * @param int $type XMLDB_TYPE_INTEGER, XMLDB_TYPE_NUMBER, XMLDB_TYPE_CHAR, XMLDB_TYPE_TEXT, XMLDB_TYPE_BINARY
  * @param string $precision length for integers and chars, two-comma separated numbers for numbers
@@ -103,9 +104,11 @@ function addtableifmissing(string $tablename, string $primaryname) {
  * @param bool $sequence — XMLDB_SEQUENCE or null (or false)
  * @param mixed $default — meaningful default o null (or false)
  * @param string $previous
+ * @return void
  */
-function addfieldifmissing($tablename, $fieldname, $type = null, $precision = null,
-    $unsigned = null, $notnull = null, $sequence = null, $default = null, $previous = null) {
+function addfieldifmissing(string $tablename, string $fieldname, int $type = null,
+    string $precision = null, bool $unsigned = null, bool $notnull = null, bool $sequence = null,
+    $default = null, string $previous = null): void {
     global $DB;
     $dbman = $DB->get_manager();
     $table = new xmldb_table($tablename);
@@ -113,4 +116,4 @@ function addfieldifmissing($tablename, $fieldname, $type = null, $precision = nu
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
-};
+}
