@@ -18,7 +18,7 @@
  * This file describes a class used to manage calendar entries for MUMIE Tasks.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ namespace mod_mumie;
  * A general calendar entry represents a MUMIE Task's due date in the moodle calendar.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -148,11 +148,11 @@ class mumie_calendar_service {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/calendar/lib.php');
 
-        $params = array(
+        $params = [
             "modulename" => "mumie",
             "instance" => $this->mumie->id,
-            "eventtype" => $type
-        );
+            "eventtype" => $type,
+        ];
 
         if ($userid) {
             $params["userid"] = $userid;
@@ -180,10 +180,10 @@ class mumie_calendar_service {
         require_once($CFG->dirroot.'/calendar/lib.php');
         $records = $DB->get_records(
             "event",
-            array(
+            [
                 "modulename" => "mumie",
-                "instance" => $mumie->id
-            )
+                "instance" => $mumie->id,
+            ]
         );
 
         foreach ($records as $record) {

@@ -18,7 +18,7 @@
  * This file describes a class used to create MUMIE Tasks via drag & drop.
  *
  * @package mod_mumie
- * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -140,7 +140,7 @@ class mumie_dndupload_processor {
      */
     private function handle_multi_upload() {
         // This array holds unique server objects.
-        $servers = array();
+        $servers = [];
         $this->upload = (array) $this->upload;
         foreach ($this->upload as $uploadinstance) {
             $uploadinstance = json_decode($uploadinstance);
@@ -154,7 +154,8 @@ class mumie_dndupload_processor {
         $this->create_missing_servers(array_values($servers));
 
         $result;
-        for ($i = 0; $i < count($this->upload); $i++) {
+        $uploadlength = count($this->upload);
+        for ($i = 0; $i < $uploadlength; $i++) {
             $uploadinstance = json_decode($this->upload[$i]);
             $mumie = $this->create_mumie_from_uploadinstance($uploadinstance, $servers[$uploadinstance->server]);
             $mumie->server = $servers[$uploadinstance->server]->get_urlprefix();
@@ -221,7 +222,7 @@ class mumie_dndupload_processor {
     private function get_course_gradepool_setting() {
         global $DB, $COURSE;
         $exitingtasks = array_values(
-            $DB->get_records(MUMIE_TASK_TABLE, array("course" => $COURSE->id))
+            $DB->get_records(MUMIE_TASK_TABLE, ["course" => $COURSE->id])
         );
         $adminsetting = get_config('auth_mumie', 'defaultgradepool');
         if (count($exitingtasks) > 0) {
@@ -273,8 +274,6 @@ class mumie_dndupload_processor {
      * @param \stdClass $mumie The mumie object we want to add to the course.
      */
     private function create_mumie_course_module($mumie) {
-        global $CFG, $DB, $COURSE;
-
         $mumieinstance = mumie_add_instance($mumie, null);
         $cm = $this->create_course_module();
         $this->finish_setup_course_module($mumieinstance, $cm);
@@ -284,7 +283,7 @@ class mumie_dndupload_processor {
      * Create a new course module in the database.
      */
     private function create_course_module() {
-        global $CFG, $DB;
+        global $CFG;
         require_once($CFG->dirroot.'/course/modlib.php');
         list($module, $context, $cw, $cm, $data) = prepare_new_moduleinfo_data($this->course, 'mumie', $this->section);
         $data->coursemodule = $data->id = add_course_module($data);
@@ -298,7 +297,7 @@ class mumie_dndupload_processor {
      * @param \stdClass $cm Newly created coursemodule instance
      */
     protected function finish_setup_course_module($instanceid, $cm) {
-        global $DB, $USER;
+        global $DB;
 
         if (!$instanceid) {
             // Something has gone wrong - undo everything we can.
@@ -309,13 +308,13 @@ class mumie_dndupload_processor {
         // Note the section visibility.
         $visible = get_fast_modinfo($this->course)->get_section_info($this->section)->visible;
 
-        $DB->set_field('course_modules', 'instance', $instanceid, array('id' => $cm->id));
+        $DB->set_field('course_modules', 'instance', $instanceid, ['id' => $cm->id]);
 
-        $sectionid = course_add_cm_to_section($this->course, $cm->id, $this->section);
+        course_add_cm_to_section($this->course, $cm->id, $this->section);
 
         set_coursemodule_visible($cm->id, $visible);
         if (!$visible) {
-            $DB->set_field('course_modules', 'visibleold', 1, array('id' => $cm->id));
+            $DB->set_field('course_modules', 'visibleold', 1, ['id' => $cm->id]);
         }
 
         // Retrieve the final info about this module.

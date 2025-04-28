@@ -18,10 +18,12 @@
  * Script to delete a mumie due date extension from the database.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright 2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace mod_mumie;
+
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_individual_calendar_service.php');
@@ -30,7 +32,7 @@ require_login(null, false);
 $duedateid = required_param('duedateid', PARAM_INT);
 $cmid = required_param('cmid', PARAM_INT);
 
-$returnurl = new \moodle_url('/mod/mumie/view.php', array("id" => $cmid, "action" => "grading"));
+$returnurl = new \moodle_url('/mod/mumie/view.php', ["id" => $cmid, "action" => "grading"]);
 require_capability('mod/mumie:revokeduedateextension', context_system::instance());
 $extension = mod_mumie\mumie_duedate_extension::load_by_id($duedateid);
 $extension->delete();

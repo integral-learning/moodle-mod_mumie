@@ -15,16 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines all restore steps that will be used by the restore_mumie_activity_task
- *
- * @package mod_mumie
- * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-defined('MOODLE_INTERNAL') || die;
-
-/**
  * Structure step to restore one mumie activity
  * @package mod_mumie
  * @copyright  2017-2020 integral-learning GmbH (https://www.integral-learning.de/)
@@ -37,8 +27,7 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
      * define the structure for restoration process
      */
     protected function define_structure() {
-        $paths = array();
-        $userinfo = $this->get_setting_value('userinfo');
+        $paths = [];
 
         // We need to concat this path or moodle code checker will display a false error.
         $path = '/activity' . '/mumie';
@@ -56,11 +45,10 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         global $DB;
 
         $data = (object) $data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
         $data->use_hashed_id = 1;
 
-        if ($existingtask = array_values($DB->get_records('mumie', array('course' => $data->course)))[0]) {
+        if ($existingtask = array_values($DB->get_records('mumie', ['course' => $data->course]))[0]) {
             $data->privategradepool = $existingtask->privategradepool;
         } else {
             $data->privategradepool = $data->privategradepool ?? null;
@@ -85,8 +73,8 @@ class restore_mumie_activity_structure_step extends restore_activity_structure_s
         This means that a missing server is not always automatically restored
         and needs to be added manually before the task can be edited
          */
-        $recordnameexists = $DB->record_exists("auth_mumie_servers", array("name" => $data->name));
-        $recordurlexists = $DB->record_exists("auth_mumie_servers", array("url_prefix" => $data->url_prefix));
+        $recordnameexists = $DB->record_exists("auth_mumie_servers", ["name" => $data->name]);
+        $recordurlexists = $DB->record_exists("auth_mumie_servers", ["url_prefix" => $data->url_prefix]);
 
         if (!$recordnameexists && !$recordurlexists) {
             $DB->insert_record('auth_mumie_servers', $data);

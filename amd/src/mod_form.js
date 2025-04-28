@@ -44,7 +44,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Send a success message to problem selector window
+             * Send a success message to a problem selector window
              * @param {string} message
              */
             function sendSuccess(message = '') {
@@ -55,7 +55,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Send a failure message to problem selector window
+             * Send a failure message to a problem selector window
              * @param {string} message
              */
             function sendFailure(message = '') {
@@ -88,7 +88,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     } catch (error) {
                         sendFailure(error.message);
                     }
-                  }, false);
+                }, false);
             }
 
             /**
@@ -118,32 +118,32 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const selectedServer = serverController.getSelectedServer().urlprefix;
                 const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
                 if (useSSO) {
-                    return '/auth/mumie/problem_selector.php?'
-                        + 'org='
-                        + mumieOrg
-                        + '&serverurl='
-                        + encodeURIComponent(selectedServer)
-                        + '&problemlang='
-                        + langController.getSelectedLanguage()
-                        + '&origin=' + encodeURIComponent(window.location.origin)
-                        + '&gradingtype=' + gradingType
-                        + '&contextid=' + contextId
-                        + (selection ? '&selection=' + selection : '');
+                    return '/auth/mumie/problem_selector.php?' +
+                        'org=' +
+                        mumieOrg +
+                        '&serverurl=' +
+                        encodeURIComponent(selectedServer) +
+                        '&problemlang=' +
+                        langController.getSelectedLanguage() +
+                        '&origin=' + encodeURIComponent(window.location.origin) +
+                        '&gradingtype=' + gradingType +
+                        '&contextid=' + contextId +
+                        (selection ? '&selection=' + selection : '');
                 }
-                return lmsSelectorUrl
-                    + '/lms-problem-selector?'
-                    + 'org='
-                    + mumieOrg
-                    + '&serverUrl='
-                    + encodeURIComponent(selectedServer)
-                    + '&problemLang='
-                    + langController.getSelectedLanguage()
-                    + '&origin=' + encodeURIComponent(window.location.origin)
-                    + '&uiLang=' + systemLanguage
-                    + '&gradingType=' + gradingType
-                    + '&multiCourse=true'
-                    + '&worksheet=true'
-                    + (selection ? '&selection=' + selection : '');
+                return lmsSelectorUrl +
+                    '/lms-problem-selector?' +
+                    'org=' +
+                    mumieOrg +
+                    '&serverUrl=' +
+                    encodeURIComponent(selectedServer) +
+                    '&problemLang=' +
+                    langController.getSelectedLanguage() +
+                    '&origin=' + encodeURIComponent(window.location.origin) +
+                    '&uiLang=' + systemLanguage +
+                    '&gradingType=' + gradingType +
+                    '&multiCourse=true' +
+                    '&worksheet=true' +
+                    (selection ? '&selection=' + selection : '');
             }
 
             /**
@@ -171,20 +171,20 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     window.addEventListener("beforeunload", function() {
                         sendSuccess();
-                     }, false);
+                    }, false);
 
                     addMessageListener();
 
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
                         problemSelectorWindow = window.open(
-                          lmsSelectorUrl
-                          + '/lms-problem-selector?'
-                          + "serverUrl="
-                          + encodeURIComponent(serverController.getSelectedServer().urlprefix)
-                          + '&gradingType=all',
-                          "_blank",
-                          'toolbar=0,location=0,menubar=0'
+                            lmsSelectorUrl +
+                            '/lms-problem-selector?' +
+                            "serverUrl=" +
+                            encodeURIComponent(serverController.getSelectedServer().urlprefix) +
+                            '&gradingType=all',
+                            "_blank",
+                            'toolbar=0,location=0,menubar=0'
                         );
                     };
                 },
@@ -196,7 +196,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         const courseController = (function() {
             const courseNameElem = document.getElementById("id_mumie_course");
-            const coursefileElem = document.getElementsByName("mumie_coursefile")[0];
+            const courseFileElem = document.getElementsByName("mumie_coursefile")[0];
 
 
             /**
@@ -204,8 +204,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              *
              * @param {string} coursefile
              */
-            function updateCoursefilePath(coursefile) {
-                coursefileElem.value = coursefile;
+            function updateCourseFilePath(coursefile) {
+                courseFileElem.value = coursefile;
                 updateCourseName();
             }
 
@@ -228,10 +228,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 getSelectedCourse: function() {
                     const courses = serverController.getSelectedServer().courses;
-                    return courses.find(course => course.coursefile === coursefileElem.value);
+                    return courses.find(course => course.coursefile === courseFileElem.value);
                 },
                 setCourse: function(courseFile) {
-                    updateCoursefilePath(courseFile);
+                    updateCourseFilePath(courseFile);
                 }
             };
         })();
@@ -475,7 +475,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         function disableDropDownMenus(errorKey) {
             require(['core/str', "core/notification"], function(str, notification) {
                 str.get_strings([{
-                    'key':  errorKey,
+                    'key': errorKey,
                     component: 'mod_mumie'
                 }]).done(function(s) {
                     notification.addNotification({

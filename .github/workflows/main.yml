@@ -8,6 +8,7 @@ on:
     branches:
       - dev
       - master
+
 jobs:
   test:
     runs-on: 'ubuntu-latest'
@@ -39,6 +40,14 @@ jobs:
             moodle-branch: 'MOODLE_405_STABLE'
             database: 'mysqli'
             db-version: '8.0'
+          - php: '8.2'
+            moodle-branch: 'MOODLE_500_STABLE'
+            database: 'pgsql'
+            db-version: '14'
+          - php: '8.2'
+            moodle-branch: 'MOODLE_500_STABLE'
+            database: 'mysqli'
+            db-version: '8.4'
 
     services:
       postgres:
@@ -66,14 +75,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: plugin
 
       - name: Install node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '14.15.0'
+          node-version: '22.x'
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -84,7 +93,7 @@ jobs:
 
       - name: Deploy moodle-plugin-ci
         run: |
-          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
           # Add dirs to $PATH
           echo $(cd ci/bin; pwd) >> $GITHUB_PATH
           echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
@@ -115,10 +124,6 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci phplint
 
-      - name: phpcpd
-        if: ${{ always() }}
-        run: moodle-plugin-ci phpcpd || true
-
       - name: phpmd
         if: ${{ always() }}
         run: moodle-plugin-ci phpmd
@@ -146,7 +151,7 @@ jobs:
       - name: phpunit
         if: ${{ always() }}
         run: moodle-plugin-ci phpunit
-      
+
       - name: PHPdoc
         if: ${{ always() }}
         run: moodle-plugin-ci phpdoc

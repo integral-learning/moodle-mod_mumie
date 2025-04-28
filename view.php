@@ -38,9 +38,9 @@ $action = optional_param(
     PARAM_ALPHANUM
 );
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
-$mumietask = $DB->get_record('mumie', array('id' => $cm->instance));
+$mumietask = $DB->get_record('mumie', ['id' => $cm->instance]);
 $PAGE->set_cm($cm, $course);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('incourse');
@@ -53,11 +53,11 @@ if ($action == "grading") {
 
     $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
     $PAGE->set_heading(get_string("mumie_grading_settings", "mod_mumie") . ': ' . $mumietask->name);
-    $url = new moodle_url('/mod/mumie/view.php', array("id" => $id, "action" => "grading"));
+    $url = new moodle_url('/mod/mumie/view.php', ["id" => $id, "action" => "grading"]);
 
     $PAGE->set_url($url);
     $PAGE->navbar->add(get_string("mumie_grading_settings", "mod_mumie"));
-    $PAGE->requires->js_call_amd('mod_mumie/view', 'init', array(json_encode($context->id)));
+    $PAGE->requires->js_call_amd('mod_mumie/view', 'init', [json_encode($context->id)]);
 
     $duedateinfo = "";
     if ($mumietask->duedate > 0) {
@@ -65,7 +65,7 @@ if ($action == "grading") {
         $duedateinfo .= html_writer::tag(
             'p',
             date("d F Y, h:i A", $mumietask->duedate),
-            array('style' => 'font-weight: bold; margin-top:10px;')
+            ['style' => 'font-weight: bold; margin-top:10px;']
         );
     } else if ($mumietask->timelimit > 0) {
         $duedateinfo = get_string("mumie_general_timelimit", "mod_mumie") . format_time($mumietask->timelimit);
@@ -74,13 +74,13 @@ if ($action == "grading") {
     }
     \core\notification::info($duedateinfo);
 
-    $redirecturl = new moodle_url('/mod/mumie/view.php', array('id' => $id, 'action' => 'open'));
+    $redirecturl = new moodle_url('/mod/mumie/view.php', ['id' => $id, 'action' => 'open']);
     echo $OUTPUT->header();
-    $buttonattributes = array(
+    $buttonattributes = [
         "class" => "btn btn-primary",
         "href" => $redirecturl,
-        "style" => "margin:10px auto; display: table;"
-    );
+        "style" => "margin:10px auto; display: table;",
+    ];
     if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW) {
         $buttonattributes["target"] = "_blank";
     }
@@ -104,9 +104,9 @@ if ($action == "grading") {
         );
     }
 
-    $redirecturl = new moodle_url('/auth/mumie/launch.php', array('id' => $mumietask->id));
+    $redirecturl = new moodle_url('/auth/mumie/launch.php', ['id' => $mumietask->id]);
 
-    $event = \mod_mumie\event\course_module_viewed::create(array('context' => $context, 'objectid' => $mumietask->id));
+    $event = \mod_mumie\event\course_module_viewed::create(['context' => $context, 'objectid' => $mumietask->id]);
     $event->trigger();
 
     if ($mumietask->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW || mod_mumie\locallib::is_safari_browser()) {
@@ -117,7 +117,7 @@ if ($action == "grading") {
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
         $PAGE->set_heading($course->fullname);
-        $PAGE->set_url(new moodle_url('/mod/mumie/view.php', array('id' => $id)));
+        $PAGE->set_url(new moodle_url('/mod/mumie/view.php', ['id' => $id]));
 
         echo $OUTPUT->header();
         echo "<iframe
@@ -143,12 +143,12 @@ if ($action == "grading") {
     $PAGE->set_heading(get_string("mumie_grading_settings", "mod_mumie") . ': ' . $mumietask->name);
     $PAGE->set_url(new \moodle_url(
         '/mod/mumie/view.php',
-        array("action" => "submissions", "id" => $id, "userid" => $userid)
+        ["action" => "submissions", "id" => $id, "userid" => $userid]
     ));
     $PAGE->navbar->add(
         get_string("mumie_grading_settings", "mod_mumie"),
         new moodle_url("/mod/mumie/view.php",
-        array("action" => "grading", "id" => $id))
+        ["action" => "grading", "id" => $id])
     );
     $PAGE->navbar->add(get_string("mumie_submissions", "mod_mumie"));
 
@@ -163,7 +163,7 @@ if ($action == "grading") {
     $rawgrade = required_param("rawgrade", PARAM_RAW);
     $gradetimestamp = required_param("gradetimestamp", PARAM_INT);
 
-    $redirecturl = new moodle_url("/mod/mumie/view.php", array("id" => $id, "action" => "grading"));
+    $redirecturl = new moodle_url("/mod/mumie/view.php", ["id" => $id, "action" => "grading"]);
 
     $grader = new mod_mumie\mumie_grader($mumietask, $cm->id);
     if (!$grader->is_grade_valid($rawgrade, $userid, $gradetimestamp)) {

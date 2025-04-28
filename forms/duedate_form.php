@@ -18,7 +18,7 @@
  * This file describes a class used to display a form to create and edit due date extensions.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/lib/formslib.php');
  * This file describes a class used to display a form to create and edit due date extensions.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -62,7 +62,7 @@ class duedate_form extends moodleform {
      * @return array associative array of errors
      */
     public function validation($data, $files) {
-        $errors = array();
+        $errors = [];
         if ($data['duedate']) {
             if (time() - $data['duedate'] > 0) {
                 $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');

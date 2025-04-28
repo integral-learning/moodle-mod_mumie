@@ -2,6 +2,12 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.8.1] - 2025-04-24
+### Changed
+- **Code style revised:** Refactored code to comply with moodle-plugin-ci ^4 formatting standards
+  and updated for compatibility with PHP 8.2.
+- Support Moodle 5.0
+
 ## [v1.8.0] - 2025-03-13
 ### Added
 - Teachers can now set a time limited working period for a MUMIE Task

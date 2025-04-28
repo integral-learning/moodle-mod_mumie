@@ -18,7 +18,7 @@
  * This class provides an interface to export and delete user data.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ use core_privacy\local\request\writer;
  * This class provides an interface to export and delete user data.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -49,13 +49,13 @@ class provider implements
      * @param   collection $collection The initialised item collection to add items to.
      * @return  collection A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
             'mumie_duedate',
             [
                 'mumie' => 'privacy:metadata:mod_mumie_duedate_extensions:mumie',
                 'duedate' => 'privacy:metadata:mod_mumie_duedate_extensions:duedate',
-                'userid' => 'privacy:metadata:mod_mumie_duedate_extensions:userid'
+                'userid' => 'privacy:metadata:mod_mumie_duedate_extensions:userid',
             ],
             'privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'
         );
@@ -68,8 +68,8 @@ class provider implements
      * @param   int $userid The user to search.
      * @return  contextlist   $contextlist  The contextlist containing the list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
-        global $DB, $CFG;
+    public static function get_contexts_for_userid(int $userid): contextlist {
+        global $CFG;
         $contextlist = new contextlist();
         $contextlist->set_component('mod_mumie');
 
@@ -83,7 +83,7 @@ class provider implements
 
         $contextlist->add_from_sql(
             $sql,
-            array("contextlevel" => CONTEXT_MODULE, "userid" => $userid)
+            ["contextlevel" => CONTEXT_MODULE, "userid" => $userid]
         );
         return $contextlist;
     }
@@ -106,7 +106,7 @@ class provider implements
                 JOIN {context} ctx ON ctx.instanceid = cm.id
                 WHERE ctx.instanceid = :instanceid
                 ";
-        $userlist->add_from_sql('userid', $sql, array('instanceid' => $context->__get("instanceid")));
+        $userlist->add_from_sql('userid', $sql, ['instanceid' => $context->__get("instanceid")]);
     }
 
     /**
@@ -134,18 +134,18 @@ class provider implements
                     ";
             $record = $DB->get_record_sql(
                 $sql,
-                array(
+                [
                     'instanceid' => $context->__get("instanceid"),
                     'userid' => $userid,
                     'mumie' => 'mumie',
-                    'ctxlvl' => CONTEXT_MODULE
-                )
+                    'ctxlvl' => CONTEXT_MODULE,
+                ]
             );
 
             if ($record) {
                 writer::with_context($context)->export_data(
                     [
-                        get_string('mumie_duedate_extension', 'mod_mumie')
+                        get_string('mumie_duedate_extension', 'mod_mumie'),
                     ],
                     $record
                 );
@@ -178,7 +178,7 @@ class provider implements
                 $DB->delete_records_select(
                     'mumie_duedate',
                     $sql,
-                    array('instanceid' => $context->__get("instanceid"), 'userid' => $userid)
+                    ['instanceid' => $context->__get("instanceid"), 'userid' => $userid]
                 );
             }
         }
@@ -196,9 +196,9 @@ class provider implements
             return;
         }
 
-        $cm = $DB->get_record('course_modules', array('id' => $context->__get("instanceid")));
+        $cm = $DB->get_record('course_modules', ['id' => $context->__get("instanceid")]);
 
-        $DB->delete_records('mumie_duedate', array('mumie' => $cm->instance));
+        $DB->delete_records('mumie_duedate', ['mumie' => $cm->instance]);
     }
 
     /**
@@ -223,7 +223,7 @@ class provider implements
                     AND duedate.userid $insql
                     ) AS subquery
             )";
-            $params = array_merge(array($context->__get("instanceid")), $inparams);
+            $params = array_merge([$context->__get("instanceid")], $inparams);
 
             $DB->delete_records_select('mumie_duedate', $sql, $params);
         }

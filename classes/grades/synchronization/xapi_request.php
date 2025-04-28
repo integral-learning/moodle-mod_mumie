@@ -55,7 +55,7 @@ class xapi_request {
         $result = (array) json_decode(curl_exec($ch));
         curl_close($ch);
         if ($this->has_error($result)) {
-            return array();
+            return [];
         }
         return $result;
     }
@@ -84,11 +84,11 @@ class xapi_request {
         curl_setopt(
             $ch,
             CURLOPT_HTTPHEADER,
-            array(
+            [
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($postfields),
                 "X-API-Key: " . get_config('auth_mumie', 'mumie_api_key'),
-            )
+            ]
         );
         return $ch;
     }

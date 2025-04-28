@@ -43,7 +43,7 @@ define("MUMIE_TASK_TABLE", "mumie");
  * @return int $id id of newly added grade item
  */
 function mumie_add_instance($mumie, $mform) {
-    global $DB, $CFG;
+    global $DB;
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
@@ -64,14 +64,14 @@ function mumie_add_instance($mumie, $mform) {
  * @return int $id id of updated grade item
  */
 function mumie_update_instance($mumie, $mform) {
-    global $DB, $CFG;
+    global $DB;
     $mumie->timemodified = time();
     if (property_exists($mumie, 'instance')) {
         $mumie->id = $mumie->instance;
     };
     if (property_exists($mumie, 'completionexpected')) {
-        $completiontimeexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
-        \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completiontimeexpected);
+        $completionexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
+        \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completionexpected);
     };
     locallib::update_pending_gradepool($mumie);
 
@@ -95,7 +95,7 @@ function mumie_delete_instance($id) {
     global $DB, $CFG;
 
     require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
-    if (!$mumie = $DB->get_record("mumie", array("id" => $id))) {
+    if (!$mumie = $DB->get_record("mumie", ["id" => $id])) {
         return false;
     }
 
@@ -103,7 +103,7 @@ function mumie_delete_instance($id) {
     \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
     mumie_calendar_service::delete_all_calendar_events($mumie);
     mumie_duedate_extension::delete_all_for_mumie($id);
-    return $DB->delete_records("mumie", array("id" => $mumie->id));
+    return $DB->delete_records("mumie", ["id" => $mumie->id]);
 }
 
 /**
@@ -115,7 +115,7 @@ function mumie_delete_instance($id) {
 function mumie_get_coursemodule_info($coursemodule) {
     global $DB;
 
-    if (!$mumie = $DB->get_record("mumie", array("id" => $coursemodule->instance))) {
+    if (!$mumie = $DB->get_record("mumie", ["id" => $coursemodule->instance])) {
         return null;
     }
 
@@ -139,12 +139,13 @@ function mumie_get_coursemodule_info($coursemodule) {
  */
 function mumie_cm_info_dynamic(cm_info $cm) {
     global $DB, $USER, $CFG;
-    if (!$mumie = $DB->get_record("mumie", array("id" => $cm->instance))) {
+    if (!$mumie = $DB->get_record("mumie", ["id" => $cm->instance])) {
         return null;
     }
     $context = context_module::instance($cm->id);
 
-    $openinnewtab = $mumie->launchcontainer == MUMIE_LAUNCH_CONTAINER_WINDOW && !has_capability("mod/mumie:viewgrades", $context, $USER);
+    $openinnewtab = $mumie->launchcontainer ==
+        MUMIE_LAUNCH_CONTAINER_WINDOW && !has_capability("mod/mumie:viewgrades", $context, $USER);
     // If the activity is supposed to open in a new tab, we need to do this right here or moodle won't let us.
     if ($openinnewtab) {
         $cm->set_on_click("window.open('{$CFG->wwwroot}/mod/mumie/view.php?id={$cm->id}'); return false;");
@@ -160,14 +161,13 @@ function mumie_cm_info_view(cm_info $cm) {
     global $CFG, $DB, $USER;
     require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 
-    $date = new DateTime("now", core_date::get_user_timezone_object());
-    $mumie = $DB->get_record('mumie', array('id' => $cm->instance));
+    $mumie = $DB->get_record('mumie', ['id' => $cm->instance]);
     $gradeitem = $DB->get_record(
         'grade_items',
-        array(
+        [
             'courseid' => $mumie->course,
-            'iteminstance' => $mumie->id, 'itemmodule' => 'mumie'
-        ));
+            'iteminstance' => $mumie->id, 'itemmodule' => 'mumie',
+        ]);
     $info = '';
 
     $duedate = locallib::get_effective_duedate($USER->id, $mumie);
@@ -176,17 +176,17 @@ function mumie_cm_info_view(cm_info $cm) {
             . ': '
             . date("d F Y, h:i A", $duedate);
 
-        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
+        $info .= html_writer::tag('p', $content, ['class' => 'tag-info tag mumie_tag badge badge-info ']);
     }
     if ($gradeitem&&$gradeitem->gradepass > 0) {
         $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
-        $info .= html_writer::tag('p', $content, array('class' => 'tag-info tag mumie_tag badge badge-info '));
+        $info .= html_writer::tag('p', $content, ['class' => 'tag-info tag mumie_tag badge badge-info ']);
     }
     if (!isset($mumie->privategradepool)) {
         $info .= html_writer::tag(
                 'p',
                 get_string('mumie_tag_disabled', 'mod_mumie'),
-                array('class' => 'tag-warning tag mumie_tag badge badge-warning')
+                ['class' => 'tag-warning tag mumie_tag badge badge-warning']
             )
             . html_writer::tag(
                 'span',
@@ -230,9 +230,9 @@ function mumie_grade_item_update($mumie, $grades = null) {
     }
     require_once($CFG->libdir . '/gradelib.php');
     if (isset($mumie->cmidnumber)) {
-        $params = array('itemname' => $mumie->name, 'idnumber' => $mumie->cmidnumber);
+        $params = ['itemname' => $mumie->name, 'idnumber' => $mumie->cmidnumber];
     } else {
-        $params = array('itemname' => $mumie->name);
+        $params = ['itemname' => $mumie->name];
     }
     if (isset($mumie->points) && $mumie->points > 0) {
         $params['grademax'] = $mumie->points;
@@ -253,10 +253,9 @@ function mumie_grade_item_update($mumie, $grades = null) {
  * Update activity grades
  *
  * @param stdClass $mumie The mumie instance
- * @param int      $userid Specific user only, 0 means all.
- * @param bool     $nullifnone Not used
+ * @param int $userid Specific user only, 0 means all.
  */
-function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
+function mumie_update_grades($mumie, $userid) {
     if (!isset($mumie->privategradepool)) {
         return;
     }
@@ -266,6 +265,17 @@ function mumie_update_grades($mumie, $userid = 0, $nullifnone = true) {
 
     mumie_grade_item_update($mumie, mod_mumie\gradesync::get_mumie_grades($mumie, $userid));
 }
+
+/**
+ * Update all activity grades
+ *
+ * @param stdClass $mumie The mumie instance
+ */
+function mumie_update_grades_all_user($mumie) {
+    mumie_update_grades($mumie, 0);
+}
+
+
 
 /**
  * Hook used to update grades for MUMIE tasks, whenever a gradebook is opened
@@ -288,15 +298,15 @@ function mumie_before_standard_top_of_body_html() {
  */
 function mumie_get_completion_state($course, $cm, $userid, $type) {
     global $DB, $CFG;
-    $mumie = $DB->get_record('mumie', array('id' => $cm->instance), '*', MUST_EXIST);
+    $mumie = $DB->get_record('mumie', ['id' => $cm->instance], '*', MUST_EXIST);
 
     if ($mumie->completionpass) {
         require_once($CFG->libdir . '/gradelib.php');
-        $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'mumie', 'iteminstance' => $cm->instance, 'outcomeid' => null));
+        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod',
+            'itemmodule' => 'mumie', 'iteminstance' => $cm->instance, 'outcomeid' => null]);
 
         if ($item) {
-            $grades = grade_grade::fetch_users_grades($item, array($userid), false);
+            $grades = grade_grade::fetch_users_grades($item, [$userid], false);
             if (!empty($grades[$userid])) {
                 return $grades[$userid]->is_passed($item);
             }
@@ -310,30 +320,30 @@ function mumie_get_completion_state($course, $cm, $userid, $type) {
  * @return array containing details of the files / types the mod can handle
  */
 function mumie_dndupload_register() {
-    return array(
-        'addtypes' => array(
-            array(
-                'identifier' => 'mumie/json', 'datatransfertypes' => array('mumie/json', 'mumie/json'),
+    return [
+        'addtypes' => [
+            [
+                'identifier' => 'mumie/json', 'datatransfertypes' => ['mumie/json', 'mumie/json'],
                 'addmessage' => get_string('dnd_addmessage', 'mod_mumie'),
                 'namemessage' => '',
-                'priority' => 1),
-            array(
-                'identifier' => 'mumie/jsonArray', 'datatransfertypes' => array('mumie/jsonArray', 'mumie/jsonArray'),
+                'priority' => 1],
+            [
+                'identifier' => 'mumie/jsonArray', 'datatransfertypes' => ['mumie/jsonArray', 'mumie/jsonArray'],
                 'addmessage' => get_string('dnd_addmessage_multiple', 'mod_mumie'),
                 'namemessage' => '',
-                'priority' => 1)
-            ),
-        'types' => array(
-            array(
+                'priority' => 1],
+            ],
+        'types' => [
+            [
                 'identifier' => 'mumie/json',
                 'message' => get_string('dndupload_message', 'mod_mumie'),
-                'noname' => true),
-            array(
+                'noname' => true],
+            [
                 'identifier' => 'mumie/jsonArray',
                 'message' => get_string('dndupload_message', 'mod_mumie'),
-                'noname' => true),
-            ),
-    );
+                'noname' => true],
+            ],
+    ];
 }
 
 /**
@@ -397,7 +407,7 @@ function mod_mumie_output_fragment_new_duedate_form($args) {
         null
     );
 
-    $mform = new duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
+    $mform = new duedate_form(null, ['editoroptions' => $editoroptions], 'post', '', null, true, $formdata);
 
     $mform->set_data($extension);
 
@@ -425,7 +435,7 @@ function mumie_override_grade($mumie, $grade) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
 
-    $item = new \grade_item(array("itemmodule" => "mumie", "iteminstance" => $mumie->id), true);
+    $item = new \grade_item(["itemmodule" => "mumie", "iteminstance" => $mumie->id], true);
     return $item->update_final_grade(
         $grade->userid,
         $grade->rawgrade,
@@ -467,7 +477,7 @@ function mumie_update_multiple_tasks($mumie) {
         $selectedtasks = json_decode($mumie->mumie_selected_tasks);
         if (!empty($selectedproperties)&&!empty($selectedtasks)) {
             foreach ($selectedtasks as $taskid) {
-                $record = $DB->get_record("mumie", array("id" => $taskid));
+                $record = $DB->get_record("mumie", ["id" => $taskid]);
                 foreach ($selectedproperties as $property) {
                     $record->$property = $mumie->$property;
                 }

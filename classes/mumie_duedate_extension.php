@@ -18,21 +18,18 @@
  * This file describes a class used to execute CRUD operations for individual due dates for students.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_mumie;
 
-defined('MOODLE_INTERNAL') || die;
-
-
 /**
  * A MUMIE due date extensions is an due date extension for a single student. These objects must be saved in the database.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -91,7 +88,7 @@ class mumie_duedate_extension {
      */
     public function load() {
         global $DB;
-        if ($record = $DB->get_record("mumie_duedate", array("userid" => $this->userid, "mumie" => $this->mumie))) {
+        if ($record = $DB->get_record("mumie_duedate", ["userid" => $this->userid, "mumie" => $this->mumie])) {
             $this->duedate = $record->duedate;
             $this->id = $record->id;
         }
@@ -103,7 +100,6 @@ class mumie_duedate_extension {
      * @return void
      */
     public function upsert() {
-        global $DB;
         if (isset($this->id) && $this->id > 0) {
             $this->update();
         } else {
@@ -120,12 +116,12 @@ class mumie_duedate_extension {
         global $DB;
         $DB->update_record(
             self::MUMIE_DUEDATE_TABLE,
-            array(
+            [
                 "id" => $this->id,
                 "userid" => $this->userid,
                 "mumie" => $this->mumie,
-                "duedate" => $this->duedate
-            )
+                "duedate" => $this->duedate,
+            ]
         );
     }
 
@@ -138,11 +134,11 @@ class mumie_duedate_extension {
         global $DB;
         $DB->insert_record(
             self::MUMIE_DUEDATE_TABLE,
-            array(
+            [
                 "userid" => $this->userid,
                 "mumie" => $this->mumie,
-                "duedate" => $this->duedate
-            )
+                "duedate" => $this->duedate,
+            ]
         );
     }
 
@@ -153,7 +149,7 @@ class mumie_duedate_extension {
      */
     public function delete() {
         global $DB;
-        $DB->delete_records(self::MUMIE_DUEDATE_TABLE, array("id" => $this->id));
+        $DB->delete_records(self::MUMIE_DUEDATE_TABLE, ["id" => $this->id]);
     }
 
     /**
@@ -206,7 +202,7 @@ class mumie_duedate_extension {
      */
     public static function load_by_id($id) {
         global $DB;
-        return self::from_object($DB->get_record("mumie_duedate", array("id" => $id)));
+        return self::from_object($DB->get_record("mumie_duedate", ["id" => $id]));
     }
 
     /**
@@ -217,7 +213,7 @@ class mumie_duedate_extension {
      */
     public static function delete_all_for_mumie($mumie) {
         global $DB;
-        $DB->delete_records("mumie_duedate", array("mumie" => $mumie));
+        $DB->delete_records("mumie_duedate", ["mumie" => $mumie]);
     }
 
     /**
@@ -313,7 +309,7 @@ class mumie_duedate_extension {
      */
     public static function get_all_for_user($userid) {
         global $DB;
-        $records = $DB->get_records('mumie_duedate', array('userid' => $userid));
+        $records = $DB->get_records('mumie_duedate', ['userid' => $userid]);
         return self::from_objects($records);
     }
 }
