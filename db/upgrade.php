@@ -40,37 +40,37 @@ require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
 function xmldb_mumie_upgrade($oldversion) {
 
     if ($oldversion < 2019110100) {
-        addfieldifmissing('mumie', 'use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
+        addfieldifmissing('mumie', 'use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0', null);
         upgrade_plugin_savepoint(true, 2019110100, 'mod', 'mumie');
     }
     if ($oldversion < 2020011702) {
-        addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null,  null, '0');
-        addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
+        addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null,  null, '0', null);
+        addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null, null);
         mumie_set_privategradepool_default();
         upgrade_plugin_savepoint(true, 2020011702, 'mod', 'mumie');
     }
     if ($oldversion < 2020040700) {
-        addfieldifmissing('mumie', 'isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, null, '0');
+        addfieldifmissing('mumie', 'isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, null, '0', null);
         upgrade_plugin_savepoint(true, 2020040700, 'mod', 'mumie');
     }
 
     if ($oldversion < 2021011303) {
         addtableifmissing('mumie_duedate', 'id');
         addfieldifmissing('mumie_duedate', 'id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
-        XMLDB_SEQUENCE, null);
+        XMLDB_SEQUENCE, null, null);
         addfieldifmissing('mumie_duedate', 'mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
-        null, null);
-        addfieldifmissing('mumie_duedate', 'userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        addfieldifmissing('mumie_duedate', 'duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        null, null, null);
+        addfieldifmissing('mumie_duedate', 'userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
+        addfieldifmissing('mumie_duedate', 'duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
         upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
     }
 
     if ($oldversion < 2023050900) {
-        addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null);
+        addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null, null);
         upgrade_plugin_savepoint(true, 2023050900, 'mod', 'mumie');
     }
     if ($oldversion < 2025031200) {
-        addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null);
+        addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null, null);
         upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     }
 
@@ -97,13 +97,13 @@ function addtableifmissing(string $tablename, string $primaryname): void {
  * Creates field if doesn't exist
  * @param string $tablename
  * @param string $fieldname — of field
- * @param int $type XMLDB_TYPE_INTEGER, XMLDB_TYPE_NUMBER, XMLDB_TYPE_CHAR, XMLDB_TYPE_TEXT, XMLDB_TYPE_BINARY
- * @param string $precision length for integers and chars, two-comma separated numbers for numbers
- * @param bool $unsigned — XMLDB_UNSIGNED or null (or false)
- * @param bool $notnull — XMLDB_NOTNULL or null (or false)
- * @param bool $sequence — XMLDB_SEQUENCE or null (or false)
+ * @param null|int $type XMLDB_TYPE_INTEGER, XMLDB_TYPE_NUMBER, XMLDB_TYPE_CHAR, XMLDB_TYPE_TEXT, XMLDB_TYPE_BINARY
+ * @param null|string $precision length for integers and chars, two-comma separated numbers for numbers
+ * @param null|bool $unsigned — XMLDB_UNSIGNED or null (or false)
+ * @param null|bool $notnull — XMLDB_NOTNULL or null (or false)
+ * @param null|bool $sequence — XMLDB_SEQUENCE or null (or false)
  * @param $default — meaningful default o null (or false)
- * @param string $previous
+ * @param null|string $previous
  * @return void
  */
 function addfieldifmissing(string $tablename, string $fieldname, ?int $type, ?string $precision,
