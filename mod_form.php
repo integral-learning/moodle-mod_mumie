@@ -473,7 +473,6 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function set_data($data): void {
         global $CFG;
-        require_once($CFG->dirroot . '/mod/mumie/locallib.php');
         $this->set_general_data($data);
 
         // The following changes only apply to edits, so skip them if not necessary.
@@ -569,7 +568,8 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function set_general_data($data): void {
         global $COURSE, $DB;
-        // Decisions about gradepools are final. Don't preselect an option is the decision is still pending!
+        // Decisions about gradepools are final. Don't preselect an option if the decision is
+        still pending!
         if (!mod_mumie\locallib::course_contains_mumie_tasks($COURSE->id)) {
             $data->privategradepool = get_config('auth_mumie', 'defaultgradepool');
         } else {
