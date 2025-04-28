@@ -102,7 +102,7 @@ function addtableifmissing(string $tablename, string $primaryname): void {
  * @param bool $unsigned — XMLDB_UNSIGNED or null (or false)
  * @param bool $notnull — XMLDB_NOTNULL or null (or false)
  * @param bool $sequence — XMLDB_SEQUENCE or null (or false)
- * @param mixed $default — meaningful default o null (or false)
+ * @param $default — meaningful default o null (or false)
  * @param string $previous
  * @return void
  */
