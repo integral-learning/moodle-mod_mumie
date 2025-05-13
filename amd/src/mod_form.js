@@ -23,17 +23,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * Updates the visibility of elements around duration selector.
              */
             function updateDurationElements() {
-                // const disabled = isUngraded();
-                // if (disabled) {
-                //     durationSelector.setAttribute('disabled', 'disabled');
-                // } else {
-                //     durationSelector.removeAttribute('disabled');
-                //     durationSelector.setAttribute('pumukel', 'AAA');
-                //     durationSelector.removeAttribute('pumukel');
-                // }
-                // if (disabled) {
-                //     durationSelector.value = 'unlimited';
-                // }
+                const disabled = isUngraded();
+                if (disabled) {
+                    durationSelector.setAttribute('disabled', 'disabled');
+                    durationSelector.value = 'unlimited';
+                } else {
+                    durationSelector.removeAttribute('disabled');
+                }
+
                 const displayNone = 'none';
 
                 if (durationSelector.value === 'unlimited') {
