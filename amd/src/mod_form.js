@@ -70,11 +70,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 setDurationElements: updateDurationElements,
                 isUngraded: isUngraded,
                 setGradedElemValue: function(isGraded) {
-                    if (isGraded === null) {
-                        gradedElem.value = null;
-                    } else {
-                        gradedElem.value = isGraded ? '1' : '0';
-                    }
+                    gradedElem.value = isGraded ? '1' : '0';
                 },
                 getGradedElemValue: function() {
                     return gradedElem.value;
