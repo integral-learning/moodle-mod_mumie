@@ -34,7 +34,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const displayNone = 'none';
 
                 if (durationSelector.value === 'unlimited') {
-                    document.getElementById('fitem_id_unlimited_info').hidden = false;
                     document.getElementById('fitem_id_unlimited_info').style.display = '';
 
                     document.getElementById('fitem_id_timelimit').style.display = displayNone;
