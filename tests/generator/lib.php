@@ -15,21 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * MUMIE Task module test data generator
- *
- * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
- * @author Tobias Goltz (tobias.goltz@integral-learning.de)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
  * MUMIE Task module test data generator class
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,16 +26,15 @@ class mod_mumie_generator extends testing_module_generator {
     /**
      * Create a mumie instance.
      *
-     * @param  mixed $record
-     * @param  array $options
+     * @param array|stdClass $record data for module being generated. Requires 'course' key
+     * (an id or the full object). Also can have any fields from add module form.
+     * @param null|array $options general options for course module. Since 2.6 it is possible to
+     * omit this argument by merging options into $record
      * @return stdClass mumie instance
      */
-    public function create_instance($record = null, array $options = null) {
-        global $CFG;
-
+    public function create_instance($record = null, ?array $options = null) {
         $record = (object)(array)$record;
-
-        $defaultmumiesettings = array(
+        $defaultmumiesettings = [
             'grade' => 100,
             'timecreated' => time(),
             'timemodified' => time(),
@@ -61,8 +49,8 @@ class mod_mumie_generator extends testing_module_generator {
             'privategradepool' => 1,
             'isgraded' => 1,
             'timelimit' => 0,
-            'duration_selector' => 'unlimited'
-        );
+            'duration_selector' => 'unlimited',
+        ];
 
         foreach ($defaultmumiesettings as $property => $value) {
             if (!isset($record->{$property})) {

@@ -18,7 +18,7 @@
  * Table of students with information about due dates and submissions.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -41,7 +41,7 @@ require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
  * Table of students with information about due dates and submissions.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -111,7 +111,7 @@ class mumie_participants extends \table_sql {
     public function col_fullname($data) {
         global $OUTPUT;
 
-        return $OUTPUT->user_picture($data, array('size' => 35, 'courseid' => $this->course->id, 'includefullname' => true));
+        return $OUTPUT->user_picture($data, ['size' => 35, 'courseid' => $this->course->id, 'includefullname' => true]);
     }
 
     /**
@@ -139,10 +139,10 @@ class mumie_participants extends \table_sql {
     public function col_submissions($data) {
         $submissionurl = new \moodle_url(
             '/mod/mumie/view.php',
-            array("action" => "submissions", "id" => $this->cmid, "userid" => $data->id)
+            ["action" => "submissions", "id" => $this->cmid, "userid" => $data->id]
         );
-        return \html_writer::start_tag("a", array("class" => "mumie_icon_btn", "href" => $submissionurl))
-        . \html_writer::tag("span", "", array("class" => "icon fa fa-list fa-fw"))
+        return \html_writer::start_tag("a", ["class" => "mumie_icon_btn", "href" => $submissionurl])
+        . \html_writer::tag("span", "", ["class" => "icon fa fa-list fa-fw"])
         . \html_writer::end_tag("a");
     }
 
@@ -153,15 +153,15 @@ class mumie_participants extends \table_sql {
      * @return string
      */
     private function edit_duedate_button($extension) {
-        $formdata = array(
+        $formdata = [
             "mumie" => $extension->get_mumie(),
             "userid" => $extension->get_userid(),
             "id" => $extension->get_id(),
-            "duedate" => $extension->get_duedate()
-        );
-        return \html_writer::start_tag("span", array("class" => "mumie_duedate_edit_btn mumie_icon_btn"))
-        . \html_writer::tag("span", "", array("class" => "icon fa fa-cog fa-fw"))
-        . \html_writer::tag("span", json_encode($formdata), array("style" => "display: none;"))
+            "duedate" => $extension->get_duedate(),
+        ];
+        return \html_writer::start_tag("span", ["class" => "mumie_duedate_edit_btn mumie_icon_btn"])
+        . \html_writer::tag("span", "", ["class" => "icon fa fa-cog fa-fw"])
+        . \html_writer::tag("span", json_encode($formdata), ["style" => "display: none;"])
         . \html_writer::end_tag("span");
     }
 
@@ -174,10 +174,10 @@ class mumie_participants extends \table_sql {
     private function delete_duedate_button($extension) {
         $url = new \moodle_url(
             '/mod/mumie/delete_duedate_extension.php',
-            array("cmid" => $this->cmid, "duedateid" => $extension->get_id())
+            ["cmid" => $this->cmid, "duedateid" => $extension->get_id()]
         );
-        return \html_writer::start_tag("a", array("href" => $url, "class" => "mumie_icon_btn"))
-        . \html_writer::tag("span", "", array("class" => "icon fa fa-trash fa-fw"))
+        return \html_writer::start_tag("a", ["href" => $url, "class" => "mumie_icon_btn"])
+        . \html_writer::tag("span", "", ["class" => "icon fa fa-trash fa-fw"])
         . \html_writer::end_tag("a");
     }
 
@@ -188,13 +188,13 @@ class mumie_participants extends \table_sql {
      * @return string
      */
     private function add_duedate_button($extension) {
-        $formdata = array(
+        $formdata = [
             "mumie" => $extension->get_mumie(),
-            "userid" => $extension->get_userid()
-        );
-        return \html_writer::start_tag("span", array("class" => "mumie_duedate_add_btn mumie_icon_btn"))
-        . \html_writer::tag("span", "", array("class" => "icon fa fa-plus fa-fw"))
-        . \html_writer::tag("span", json_encode($formdata), array("style" => "display: none;"))
+            "userid" => $extension->get_userid(),
+        ];
+        return \html_writer::start_tag("span", ["class" => "mumie_duedate_add_btn mumie_icon_btn"])
+        . \html_writer::tag("span", "", ["class" => "icon fa fa-plus fa-fw"])
+        . \html_writer::tag("span", json_encode($formdata), ["style" => "display: none;"])
         . \html_writer::end_tag("span");
     }
 
@@ -232,10 +232,7 @@ class mumie_participants extends \table_sql {
             $this->allroleassignments = [];
         }
 
-        // Set initial bars.
-        if ($useinitialsbar) {
-            $this->initialbars(true);
-        }
+        $this->initialbars($useinitialsbar);
     }
 
     /**
@@ -283,7 +280,7 @@ class mumie_participants extends \table_sql {
      * Guess the base url for the participants table.
      */
     public function guess_base_url(): void {
-        $this->baseurl = new \moodle_url('/mod/mumie/view.php', array('action' => "grading", 'id' => $this->cmid));
+        $this->baseurl = new \moodle_url('/mod/mumie/view.php', ['action' => "grading", 'id' => $this->cmid]);
     }
 
     /**

@@ -24,6 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
 
 /**
  * xmldb_mumie_upgrade is the function that upgrades
@@ -37,75 +38,81 @@ defined('MOODLE_INTERNAL') || die;
  * @return boolean
  */
 function xmldb_mumie_upgrade($oldversion) {
-    // Currently there is no need for an upgrade.php, but this file is necessary.
-
-    global $DB, $CFG;
-    $dbman = $DB->get_manager();
 
     if ($oldversion < 2019110100) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        addfieldifmissing('mumie', 'use_hashed_id', XMLDB_TYPE_INTEGER, '1', null, null, null, '0', null);
         upgrade_plugin_savepoint(true, 2019110100, 'mod', 'mumie');
     }
-
     if ($oldversion < 2020011702) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('duedate', XMLDB_TYPE_INTEGER, '10', null, null, null, '0');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-        require_once($CFG->dirroot . '/mod/mumie/db/upgradelib.php');
+        addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null,  null, '0', null);
+        addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null, null);
         mumie_set_privategradepool_default();
         upgrade_plugin_savepoint(true, 2020011702, 'mod', 'mumie');
     }
-
     if ($oldversion < 2020040700) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, null, '0');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        addfieldifmissing('mumie', 'isgraded', XMLDB_TYPE_INTEGER, '1', 1, null, null, '0', null);
         upgrade_plugin_savepoint(true, 2020040700, 'mod', 'mumie');
     }
 
     if ($oldversion < 2021011303) {
-        $table = new xmldb_table('mumie_duedate');
-
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
+        addtableifmissing('mumie_duedate', 'id');
+        addfieldifmissing('mumie_duedate', 'id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
+        XMLDB_SEQUENCE, null, null);
+        addfieldifmissing('mumie_duedate', 'mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
+        null, null, null);
+        addfieldifmissing('mumie_duedate', 'userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
+        addfieldifmissing('mumie_duedate', 'duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
         upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
     }
+
     if ($oldversion < 2023050900) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null, null);
         upgrade_plugin_savepoint(true, 2023050900, 'mod', 'mumie');
     }
     if ($oldversion < 2025031200) {
-        $table = new xmldb_table('mumie');
-        $field = new xmldb_field('timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null, null);
         upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     }
+
     return true;
+}
+
+/**
+ * Creates table if doesn't exist, with given primary
+ * @param string $tablename
+ * @param string $primaryname
+ * @return void
+ */
+function addtableifmissing(string $tablename, string $primaryname): void {
+    global $DB;
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists($tablename)) {
+        $table = new xmldb_table ($tablename);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, [$primaryname]);
+        $dbman->create_table($table);
+    }
+}
+
+/**
+ * Creates field if doesn't exist
+ * @param string $tablename
+ * @param string $fieldname — of field
+ * @param null|int $type XMLDB_TYPE_INTEGER, XMLDB_TYPE_NUMBER, XMLDB_TYPE_CHAR, XMLDB_TYPE_TEXT, XMLDB_TYPE_BINARY
+ * @param null|string $precision length for integers and chars, two-comma separated numbers for numbers
+ * @param null|bool $unsigned — XMLDB_UNSIGNED or null (or false)
+ * @param null|bool $notnull — XMLDB_NOTNULL or null (or false)
+ * @param null|bool $sequence — XMLDB_SEQUENCE or null (or false)
+ * @param mixed $default — meaningful default or null (or false)
+ * @param null|string $previous
+ * @return void
+ */
+function addfieldifmissing(string $tablename, string $fieldname, ?int $type, ?string $precision,
+    ?bool $unsigned, ?bool $notnull, ?bool $sequence, mixed $default, ?string $previous): void {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table($tablename);
+    $field = new xmldb_field($fieldname, $type, $precision, $unsigned, $notnull, $sequence, $default, $previous);
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
 }

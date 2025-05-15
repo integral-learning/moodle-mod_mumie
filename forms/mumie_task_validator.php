@@ -25,7 +25,7 @@
 
 namespace mod_mumie;
 
-defined('MOODLE_INTERNAL') || die;
+use coding_exception;
 
 /**
  * This class is a validator used to check mod_form for MUMIE Tasks
@@ -41,11 +41,29 @@ class mumie_task_validator {
      * @param array     $data
      * @param \stdClass $current
      * @return array
-     * @throws \coding_exception
+     * @throws coding_exception
      */
-    public static function get_errors(array $data, \stdClass $current) : array {
-        $errors = array();
+    public static function get_errors(array $data, \stdClass $current): array {
+        $errors = [];
+        $errors = array_merge($errors, self::check_required($data));
+        $errors = array_merge($errors, self::check_completion($data, $current));
+        $errors = array_merge($errors, self::check_isgraded($data));
+        $errors = array_merge($errors, self::check_duration($data));
+        $errors = array_merge($errors, self::check_worksheet($data));
+        return $errors;
+    }
 
+    /**
+     * Checks whether all required fields are present in the given data array.
+     *
+     * Returns an array of error messages for any missing required fields.
+     *
+     * @param array $data Associative array containing form data.
+     * @return array Associative array of errors, with field names as keys.
+     * @throws coding_exception
+     */
+    private static function check_required(array $data): array {
+        $errors = [];
         if (!isset($data["server"]) && !isset($data["mumie_missing_config"])) {
             $errors["server"] = get_string('mumie_form_required', 'mod_mumie');
         }
@@ -59,50 +77,107 @@ class mumie_task_validator {
             $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
-        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
-            $completionpass = $data['completionpass'] ?? $current->completionpass;
+        return $errors;
+    }
 
-            // Show an error if require passing grade was selected and the grade to pass was set to 0.
-            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
-                if (isset($data['completionpass'])) {
-                    $errors['completionpassgroup'] = get_string('gradetopassnotset', 'mumie');
-                } else {
-                    $errors['gradepass'] = get_string('gradetopassmustbeset', 'mumie');
-                }
+    /**
+     * Validates the completion settings of a MUMIE activity.
+     *
+     * Ensures that if automatic completion tracking is enabled and completion requires passing,
+     * then a valid passing grade must be set. Adds appropriate errors if this condition is not met.
+     *
+     * @param array $data Form data submitted by the user.
+     * @param \stdClass $current The current MUMIE activity instance for fallback values.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_completion(array $data, \stdClass $current): array {
+        $errors = [];
+        if (($data['completion'] ?? null) == COMPLETION_TRACKING_AUTOMATIC) {
+            $completionpass = $data['completionpass'] ?? $current->completionpass;
+            $gradepass = grade_floatval($data['gradepass'] ?? 0);
+
+            if ($completionpass && $gradepass == 0) {
+                $completionpassisset = isset($data['completionpass']);
+                $key = $completionpassisset ? 'completionpassgroup' : 'gradepass';
+                $stringkey = $completionpassisset ? 'gradetopassnotset' : 'gradetopassmustbeset';
+                $errors[$key] = get_string($stringkey, 'mumie');
             }
         }
+        return $errors;
+    }
 
-        $workingperiod = $data['duration_selector'];
-        if ($workingperiod != 'duedate') {
-            $data['duedate'] = 0;
-        }
-        if ($workingperiod != 'timelimit') {
-            $data['timelimit'] = 0;
-        }
-
-        if ($workingperiod === 'duedate' && self::has_duedate($data) && time() - $data['duedate'] > 0) {
-            $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
-        }
-
-        if (array_key_exists('instance', $data) && $data['instance']) {
+    /**
+     * Validates that the grading status of an existing MUMIE task has not been changed.
+     *
+     * If the activity already exists and the 'isgraded' value has been modified,
+     * an error is returned, as changing the grading mode is not allowed.
+     *
+     * @param array $data Form data including the instance ID and the new 'isgraded' value.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_isgraded(array $data): array {
+        $errors = [];
+        if (!empty($data['instance'])) {
             $mumie = locallib::get_mumie_task($data['instance']);
             if ($mumie && $mumie->isgraded !== $data['isgraded']) {
                 $errors['prb_selector_btn'] = get_string('mumie_form_cant_change_isgraded', 'mod_mumie');
             }
         }
+        return $errors;
+    }
 
-        if (self::is_worksheet($data)
-            && self::is_correction_trigger_after_deadline($data['worksheet'])
-            && !(self::has_duedate($data) || self::has_timelimit($data))) {
+    /**
+     * Validates the selected duration settings for the MUMIE activity.
+     *
+     * Ensures that if a due date is selected, it must be in the future.
+     * Also resets 'duedate' and 'timelimit' fields if they are not applicable
+     * based on the selected duration option.
+     *
+     * @param array $data Form data containing duration-related fields.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_duration(array $data): array {
+        $errors = [];
+        $workingperiod = $data['duration_selector'];
+        if ($workingperiod !== 'duedate') {
+            $data['duedate'] = 0;
+        }
+        if ($workingperiod !== 'timelimit') {
+            $data['timelimit'] = 0;
+        }
+        if ($workingperiod === 'duedate' && self::has_duedate($data) && time() > $data['duedate']) {
+            $errors['duedate'] = get_string('mumie_form_due_date_must_be_future', 'mod_mumie');
+        }
+        return $errors;
+    }
+
+    /**
+     * Validates worksheet-specific configuration rules.
+     *
+     * Ensures that if the worksheet uses a correction trigger after the deadline,
+     * a due date or time limit must be set. Conversely, if no such trigger is used,
+     * no deadline should be defined.
+     *
+     * @param array $data Form data including worksheet settings.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_worksheet(array $data): array {
+
+        $isworksheet = self::is_worksheet($data);
+        if (!$isworksheet) {
+            return [];
+        }
+
+        $errors = [];
+        $triggerafterdeadline = self::is_correction_trigger_after_deadline($data['worksheet']);
+        $hasdeadline = self::has_duedate($data) || self::has_timelimit($data);
+
+        if ($triggerafterdeadline && !$hasdeadline) {
             $errors['duration_selector'] = get_string('mumie_form_deadline_required_for_trigger_after_deadline', 'mod_mumie');
+        } else if (!$triggerafterdeadline && $hasdeadline) {
+            $errors['duration_selector'] =
+                get_string('mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline', 'mod_mumie');
         }
-
-        if (self::is_worksheet($data)
-            && !self::is_correction_trigger_after_deadline($data['worksheet'])
-            && (self::has_duedate($data) || self::has_timelimit($data))) {
-            $errors['duration_selector'] = get_string('mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline', 'mod_mumie');
-        }
-
         return $errors;
     }
 
@@ -111,8 +186,8 @@ class mumie_task_validator {
      * @param array $data POST data
      * @return bool
      */
-    private static function has_duedate(array $data) : bool {
-        return $data['duedate'] > 0;
+    private static function has_duedate(array $data): bool {
+        return $data['duedate'] > 0 && $data['duration_selector'] === 'duedate';
     }
 
     /**
@@ -120,8 +195,8 @@ class mumie_task_validator {
      * @param array $data POST data
      * @return bool
      */
-    private static function has_timelimit(array $data) : bool {
-        return $data['timelimit'] > 0;
+    private static function has_timelimit(array $data): bool {
+        return $data['timelimit'] > 0 && $data['duration_selector'] === 'timelimit';
     }
 
     /**
@@ -130,7 +205,7 @@ class mumie_task_validator {
      * @param array $data POST data
      * @return bool
      */
-    private static function is_worksheet(array $data) : bool {
+    private static function is_worksheet(array $data): bool {
         return array_key_exists('worksheet', $data) && !empty($data['worksheet']);
     }
 
@@ -140,7 +215,7 @@ class mumie_task_validator {
      * @param string $worksheet The json string representing the worksheet configuration
      * @return bool
      */
-    private static function is_correction_trigger_after_deadline(string $worksheet) : bool {
-        return json_decode($worksheet, true)['configuration']['correction']['correctorType'] == "AFTER_DEADLINE";
+    private static function is_correction_trigger_after_deadline(string $worksheet): bool {
+        return json_decode($worksheet, true)['configuration']['correction']['correctorType'] === "AFTER_DEADLINE";
     }
 }

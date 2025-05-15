@@ -5,6 +5,78 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         let lmsSelectorUrl;
         let systemLanguage;
         let contextId;
+
+
+        const durationController = (function() {
+
+            const durationSelector = document.getElementById('id_duration_selector');
+            const gradedElem = document.getElementById('id_mumie_isgraded');
+
+            /**
+             * Returns if task is ungraded like courses and articles.
+             */
+            function isUngraded() {
+                return gradedElem.value === '0';
+            }
+
+            /**
+             * Updates the visibility of elements around duration selector.
+             */
+            function updateDurationElements() {
+                const disabled = isUngraded();
+                if (disabled) {
+                    durationSelector.setAttribute('disabled', 'disabled');
+                    durationSelector.value = 'unlimited';
+                } else {
+                    durationSelector.removeAttribute('disabled');
+                }
+
+                const displayNone = 'none';
+
+                if (durationSelector.value === 'unlimited') {
+                    document.getElementById('fitem_id_unlimited_info').style.display = '';
+
+                    document.getElementById('fitem_id_timelimit').style.display = displayNone;
+                    document.getElementById('fitem_id_timelimit_info').style.display = displayNone;
+                    document.getElementById('fitem_id_duedate').style.display = displayNone;
+                    document.getElementById('fitem_id_duedate_info').style.display = displayNone;
+                } else if (durationSelector.value === 'duedate') {
+                    document.getElementById('fitem_id_duedate').style.display = '';
+                    document.getElementById('fitem_id_duedate_info').style.display = '';
+
+                    document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
+                    document.getElementById('fitem_id_timelimit').style.display = displayNone;
+                    document.getElementById('fitem_id_timelimit_info').style.display = displayNone;
+                } else if (durationSelector.value === 'timelimit') {
+                    document.getElementById('fitem_id_timelimit').style.display = '';
+                    document.getElementById('fitem_id_timelimit_info').style.display = '';
+
+                    document.getElementById('fitem_id_duedate').style.display = displayNone;
+                    document.getElementById('fitem_id_duedate_info').style.display = displayNone;
+                    document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
+                }
+            }
+
+            return {
+                init: function() {
+                    durationSelector.onchange = function() {
+                        updateDurationElements();
+                    };
+                    window.addEventListener("load", () => {
+                        updateDurationElements();
+                    });
+                },
+                setDurationElements: updateDurationElements,
+                isUngraded: isUngraded,
+                setGradedElemValue: function(isGraded) {
+                    gradedElem.value = isGraded ? '1' : '0';
+                },
+                getGradedElemValue: function() {
+                    return gradedElem.value;
+                }
+            };
+        });
+
         const serverController = (function() {
             let serverStructure;
             const serverDropDown = document.getElementById("id_server");
@@ -44,7 +116,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Send a success message to problem selector window
+             * Send a success message to a problem selector window
              * @param {string} message
              */
             function sendSuccess(message = '') {
@@ -55,7 +127,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Send a failure message to problem selector window
+             * Send a failure message to a problem selector window
              * @param {string} message
              */
             function sendFailure(message = '') {
@@ -88,7 +160,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     } catch (error) {
                         sendFailure(error.message);
                     }
-                  }, false);
+                }, false);
             }
 
             /**
@@ -118,32 +190,32 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const selectedServer = serverController.getSelectedServer().urlprefix;
                 const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
                 if (useSSO) {
-                    return '/auth/mumie/problem_selector.php?'
-                        + 'org='
-                        + mumieOrg
-                        + '&serverurl='
-                        + encodeURIComponent(selectedServer)
-                        + '&problemlang='
-                        + langController.getSelectedLanguage()
-                        + '&origin=' + encodeURIComponent(window.location.origin)
-                        + '&gradingtype=' + gradingType
-                        + '&contextid=' + contextId
-                        + (selection ? '&selection=' + selection : '');
+                    return '/auth/mumie/problem_selector.php?' +
+                        'org=' +
+                        mumieOrg +
+                        '&serverurl=' +
+                        encodeURIComponent(selectedServer) +
+                        '&problemlang=' +
+                        langController.getSelectedLanguage() +
+                        '&origin=' + encodeURIComponent(window.location.origin) +
+                        '&gradingtype=' + gradingType +
+                        '&contextid=' + contextId +
+                        (selection ? '&selection=' + selection : '');
                 }
-                return lmsSelectorUrl
-                    + '/lms-problem-selector?'
-                    + 'org='
-                    + mumieOrg
-                    + '&serverUrl='
-                    + encodeURIComponent(selectedServer)
-                    + '&problemLang='
-                    + langController.getSelectedLanguage()
-                    + '&origin=' + encodeURIComponent(window.location.origin)
-                    + '&uiLang=' + systemLanguage
-                    + '&gradingType=' + gradingType
-                    + '&multiCourse=true'
-                    + '&worksheet=true'
-                    + (selection ? '&selection=' + selection : '');
+                return lmsSelectorUrl +
+                    '/lms-problem-selector?' +
+                    'org=' +
+                    mumieOrg +
+                    '&serverUrl=' +
+                    encodeURIComponent(selectedServer) +
+                    '&problemLang=' +
+                    langController.getSelectedLanguage() +
+                    '&origin=' + encodeURIComponent(window.location.origin) +
+                    '&uiLang=' + systemLanguage +
+                    '&gradingType=' + gradingType +
+                    '&multiCourse=true' +
+                    '&worksheet=true' +
+                    (selection ? '&selection=' + selection : '');
             }
 
             /**
@@ -171,20 +243,20 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     window.addEventListener("beforeunload", function() {
                         sendSuccess();
-                     }, false);
+                    }, false);
 
                     addMessageListener();
 
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
                         problemSelectorWindow = window.open(
-                          lmsSelectorUrl
-                          + '/lms-problem-selector?'
-                          + "serverUrl="
-                          + encodeURIComponent(serverController.getSelectedServer().urlprefix)
-                          + '&gradingType=all',
-                          "_blank",
-                          'toolbar=0,location=0,menubar=0'
+                            lmsSelectorUrl +
+                            '/lms-problem-selector?' +
+                            "serverUrl=" +
+                            encodeURIComponent(serverController.getSelectedServer().urlprefix) +
+                            '&gradingType=all',
+                            "_blank",
+                            'toolbar=0,location=0,menubar=0'
                         );
                     };
                 },
@@ -196,7 +268,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         const courseController = (function() {
             const courseNameElem = document.getElementById("id_mumie_course");
-            const coursefileElem = document.getElementsByName("mumie_coursefile")[0];
+            const courseFileElem = document.getElementsByName("mumie_coursefile")[0];
 
 
             /**
@@ -204,8 +276,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              *
              * @param {string} coursefile
              */
-            function updateCoursefilePath(coursefile) {
-                coursefileElem.value = coursefile;
+            function updateCourseFilePath(coursefile) {
+                courseFileElem.value = coursefile;
                 updateCourseName();
             }
 
@@ -228,10 +300,10 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 getSelectedCourse: function() {
                     const courses = serverController.getSelectedServer().courses;
-                    return courses.find(course => course.coursefile === coursefileElem.value);
+                    return courses.find(course => course.coursefile === courseFileElem.value);
                 },
                 setCourse: function(courseFile) {
-                    updateCoursefilePath(courseFile);
+                    updateCourseFilePath(courseFile);
                 }
             };
         })();
@@ -252,7 +324,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             const taskSelectionInput = document.getElementsByName("taskurl")[0];
             const nameElem = document.getElementById("id_name");
             const taskDisplayElement = document.getElementById("id_task_display_element");
-            const isGradedElem = document.getElementById('id_mumie_isgraded');
             const LANG_REQUEST_PARAM_PREFIX = "?lang=";
 
             /**
@@ -266,7 +337,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             /**
              * @param {string} localizedLink
              */
-            function updateTaskDisplayElemement(localizedLink) {
+            function updateTaskDisplayElement(localizedLink) {
                 taskDisplayElement.value = localizedLink;
             }
 
@@ -278,7 +349,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function updateTaskUri(link, language) {
                 const localizedLink = localizeLink(link, language);
                 taskSelectionInput.value = localizedLink;
-                updateTaskDisplayElemement(localizedLink);
+                updateTaskDisplayElement(localizedLink);
             }
 
             /**
@@ -304,55 +375,30 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Form inputs related to grades should be disabled, if the MUMIE Task is not graded.
+             * Form inputs related to grades should be disabled if the MUMIE Task is not graded.
              */
             function updateGradeEditability() {
-                const disabled = isGradedElem.value === '0';
+                const disabled = durationController().isUngraded();
                 document.getElementById('id_points').disabled = disabled;
                 document.getElementById('id_gradepass').disabled = disabled;
-
-                const durationSelector = document.getElementById('id_duration_selector');
-                durationSelector.disabled = disabled;
-                if (disabled) {
-                    const displayStyle = 'none';
-                    durationSelector.value = 'unlimited';
-                    document.getElementById('fitem_id_unlimited_info').hidden = !disabled;
-                    document.getElementById('fitem_id_unlimited_info').style.display = '';
-
-                    document.getElementById('fitem_id_duedate_info').hidden = disabled;
-                    document.getElementById('fitem_id_duedate_info').style.display = displayStyle;
-
-                    document.getElementById('fitem_id_duedate').hidden = disabled;
-                    document.getElementById('fitem_id_duedate').style.display = displayStyle;
-                    document.getElementById('fitem_id_duedate').disabled = disabled;
-
-                    document.getElementById('fitem_id_timelimit_info').hidden = disabled;
-                    document.getElementById('fitem_id_timelimit_info').style.display = displayStyle;
-
-                    document.getElementById('fitem_id_timelimit').hidden = disabled;
-                    document.getElementById('fitem_id_timelimit').style.display = displayStyle;
-                    document.getElementById('fitem_id_timelimit').disabled = disabled;
-                }
                 document.getElementById('id_gradecat').disabled = disabled;
+                durationController().setDurationElements();
             }
 
             return {
                 init: function() {
-                    updateTaskDisplayElemement(taskSelectionInput.value);
+                    updateTaskDisplayElement(taskSelectionInput.value);
                 },
                 setSelection: function(link, language, name) {
                     updateTaskUri(link, language);
                     updateName(name);
                 },
                 setIsGraded: function(isGraded) {
-                    if (isGraded === null) {
-                        isGradedElem.value = null;
-                    }
-                    isGradedElem.value = isGraded ? '1' : '0';
+                    durationController().setGradedElemValue(isGraded);
                     updateGradeEditability();
                 },
                 getGradingType: function() {
-                    const isGraded = isGradedElem.value;
+                    const isGraded = durationController().getGradedElemValue();
                     if (isGraded === '1') {
                         return 'graded';
                     } else if (isGraded === '0') {
@@ -475,7 +521,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         function disableDropDownMenus(errorKey) {
             require(['core/str', "core/notification"], function(str, notification) {
                 str.get_strings([{
-                    'key':  errorKey,
+                    'key': errorKey,
                     component: 'mod_mumie'
                 }]).done(function(s) {
                     notification.addNotification({
@@ -505,6 +551,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     taskController.init();
                     multiTaskEditController.init();
                     problemSelectorController.init();
+                    durationController().init();
                 }
                 multiTaskEditController.init();
                 if (addServerButton) {

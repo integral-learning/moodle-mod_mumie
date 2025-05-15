@@ -53,7 +53,7 @@ class locallib {
      */
     public static function get_mumie_task($id) {
         global $DB;
-        return $DB->get_record(MUMIE_TASK_TABLE, array('id' => $id));
+        return $DB->get_record(MUMIE_TASK_TABLE, ['id' => $id]);
     }
 
     /**
@@ -74,7 +74,7 @@ class locallib {
      */
     public static function get_mumie_tasks_by_course($courseid) {
         global $DB;
-        return $DB->get_records(MUMIE_TASK_TABLE, array("course" => $courseid));
+        return $DB->get_records(MUMIE_TASK_TABLE, ["course" => $courseid]);
     }
 
     /**
@@ -85,17 +85,16 @@ class locallib {
     public static function update_pending_gradepool($mumietask) {
         global $DB;
         $update = false;
-        if (!isset($mumie->id)) {
+        if (!isset($mumietask->id)) {
             $update = true;
         } else {
-            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietask->id));
+            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietask->id]);
             if ($oldrecord->privategradepool != $mumietask->privategradepool) {
                 $update = true;
             }
         }
-
         if ($update) {
-            $tasks = $DB->get_records(MUMIE_TASK_TABLE, array("course" => $mumietask->course));
+            $tasks = $DB->get_records(MUMIE_TASK_TABLE, ["course" => $mumietask->course]);
             foreach ($tasks as $task) {
                 if (!isset($task->privategradepool)) {
                     $task->privategradepool = $mumietask->privategradepool;
@@ -179,31 +178,36 @@ class locallib {
      */
     private static function get_browser_name() {
         $useragent = $_SERVER['HTTP_USER_AGENT'];
+        $googlechrome = 'Google Chrome';
+        $applesafari = 'Apple Safari';
+        $internetexplorer = 'Internet Explorer';
+        $edgereg = '/Edge/i';
 
-        if (preg_match('/MSIE/i', $useragent) && !preg_match('/Opera/i', $useragent)) {
-            return 'Internet Explorer';
+        $browsers = [
+            $googlechrome => '/Chrome/i',
+            $applesafari => '/Safari/i',
+            $internetexplorer => '/MSIE|Trident/i',
+            'Edge' => $edgereg,
+            'Opera' => '/OPR/i',
+            'Mozilla Firefox' => '/Firefox/i',
+            'Netscape' => '/Netscape/i',
+        ];
+
+        foreach ($browsers as $name => $pattern) {
+            if (preg_match($pattern, $useragent)) {
+                if ($name === $googlechrome && preg_match($edgereg, $useragent)) {
+                    continue;
+                }
+                if ($name === $applesafari && preg_match($edgereg, $useragent)) {
+                    continue;
+                }
+                if ($name === $internetexplorer && preg_match('/Opera/i', $useragent)) {
+                    continue;
+                }
+                return $name;
+            }
         }
-        if (preg_match('/Firefox/i', $useragent)) {
-            return 'Mozilla Firefox';
-        }
-        if (preg_match('/OPR/i', $useragent)) {
-            return 'Opera';
-        }
-        if (preg_match('/Chrome/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
-            return 'Google Chrome';
-        }
-        if (preg_match('/Safari/i', $useragent) && !preg_match('/Edge/i', $useragent)) {
-            return 'Apple Safari';
-        }
-        if (preg_match('/Netscape/i', $useragent)) {
-            return 'Netscape';
-        }
-        if (preg_match('/Edge/i', $useragent)) {
-            return 'Edge';
-        }
-        if (preg_match('/Trident/i', $useragent)) {
-            return 'Internet Explorer';
-        }
+
         return '';
     }
 
@@ -215,7 +219,7 @@ class locallib {
      */
     public static function has_problem_changed($mumietaskupdate) {
         global $DB;
-        $oldtask = $DB->get_record(MUMIE_TASK_TABLE, array('id' => $mumietaskupdate->id));
+        $oldtask = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietaskupdate->id]);
         $oldurl = self::remove_params_from_url($oldtask->taskurl);
         $newurl = self::remove_params_from_url($mumietaskupdate->taskurl);
         return $oldurl != $newurl;

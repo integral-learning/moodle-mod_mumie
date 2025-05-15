@@ -18,7 +18,7 @@
  * External library for mod_mumie.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ require_once($CFG->libdir . "/externallib.php");
  * External library for mod_mumie.
  *
  * @package mod_mumie
- * @copyright  2017-2021 integral-learning GmbH (https://www.integral-learning.de/)
+ * @copyright  2017-2025 integral-learning GmbH (https://www.integral-learning.de/)
  * @author Tobias Goltz (tobias.goltz@integral-learning.de)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -42,10 +42,10 @@ class mod_mumie_external extends external_api {
      */
     public static function submit_mumieduedate_form_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'contextid' => new external_value(PARAM_INT, 'The context id for action'),
                 'jsonformdata' => new external_value(PARAM_RAW, 'The data from the mumie duedate form, encoded as a json array'),
-            )
+            ]
         );
     }
 
@@ -78,7 +78,7 @@ class mod_mumie_external extends external_api {
 
         $serialiseddata = json_decode($params['jsonformdata']);
 
-        $data = array();
+        $data = [];
         parse_str($serialiseddata, $data);
 
         $editoroptions = [
@@ -100,7 +100,7 @@ class mod_mumie_external extends external_api {
         );
 
         // The last param is the ajax submitted data.
-        $mform = new duedate_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $data);
+        $mform = new duedate_form(null, ['editoroptions' => $editoroptions], 'post', '', null, true, $data);
 
         $validateddata = $mform->get_data();
         if ($validateddata) {

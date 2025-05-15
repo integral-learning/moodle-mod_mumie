@@ -11,7 +11,7 @@ define(['jquery', 'core/str', 'core/modal_factory', 'core/modal_events', 'core/f
         MumieDueDate.prototype.contextid = -1;
 
         MumieDueDate.prototype.init = function(selector, formdata) {
-            var triggers = $(selector);
+            const triggers = $(selector);
             return Str.get_string('mumie_duedate_form', 'mod_mumie').then(function(title) {
                 // Create the modal.
                 return ModalFactory.create({

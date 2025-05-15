@@ -29,12 +29,12 @@ require_once("../../config.php");
 
 $id = required_param('id', PARAM_INT); // Course id.
 
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
 require_login($course);
 $PAGE->set_pagelayout('incourse');
 
-$PAGE->set_url('/mod/mumie/index.php', array('id' => $course->id));
+$PAGE->set_url('/mod/mumie/index.php', ['id' => $course->id]);
 $pagetitle = strip_tags($course->shortname . ': ' . get_string("modulenameplural", "mumie"));
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($course->fullname);
@@ -59,10 +59,10 @@ $table->attributes['class'] = 'generaltable mod_index';
 
 if ($usesections) {
     $strsectionname = get_string('sectionname', 'format_' . $course->format);
-    $table->head = array($strsectionname, $strname, get_string("mumie_due_date", "mod_mumie"));
-    $table->align = array("center", "left");
+    $table->head = [$strsectionname, $strname, get_string("mumie_due_date", "mod_mumie")];
+    $table->align = ["center", "left"];
 } else {
-    $table->head = array($strname, get_string("mumie_due_date", "mod_mumie"));
+    $table->head = [$strname, get_string("mumie_due_date", "mod_mumie")];
 }
 
 foreach ($mumies as $mumie) {
@@ -81,9 +81,9 @@ foreach ($mumies as $mumie) {
     }
 
     if ($usesections) {
-        $table->data[] = array(get_section_name($course, $mumie->section), $link, $duedate);
+        $table->data[] = [get_section_name($course, $mumie->section), $link, $duedate];
     } else {
-        $table->data[] = array($link, $duedate);
+        $table->data[] = [$link, $duedate];
     }
 }
 
