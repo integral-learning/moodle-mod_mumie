@@ -208,12 +208,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement('date_time_selector', 'duedate', '');
         $mform->addElement('duration', 'timelimit', '');
 
-        $mform->hideIf('unlimited_info', 'duration_selector', 'neq', 'unlimited');
-        $mform->hideIf('duedate_info', 'duration_selector', 'neq', 'duedate');
-        $mform->hideIf('duedate', 'duration_selector', 'neq', 'duedate');
-        $mform->hideIf('timelimit_info', 'duration_selector', 'neq', 'timelimit');
-        $mform->hideIf('timelimit', 'duration_selector', 'neq', 'timelimit');
-
         $radioarray = [];
         $disablegradepool = $this->disable_gradepool_selection($COURSE->id);
         $gradepoolmsg = '';

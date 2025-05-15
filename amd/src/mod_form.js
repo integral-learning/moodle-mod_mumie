@@ -5,6 +5,78 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         let lmsSelectorUrl;
         let systemLanguage;
         let contextId;
+
+
+        const durationController = (function() {
+
+            const durationSelector = document.getElementById('id_duration_selector');
+            const gradedElem = document.getElementById('id_mumie_isgraded');
+
+            /**
+             * Returns if task is ungraded like courses and articles.
+             */
+            function isUngraded() {
+                return gradedElem.value === '0';
+            }
+
+            /**
+             * Updates the visibility of elements around duration selector.
+             */
+            function updateDurationElements() {
+                const disabled = isUngraded();
+                if (disabled) {
+                    durationSelector.setAttribute('disabled', 'disabled');
+                    durationSelector.value = 'unlimited';
+                } else {
+                    durationSelector.removeAttribute('disabled');
+                }
+
+                const displayNone = 'none';
+
+                if (durationSelector.value === 'unlimited') {
+                    document.getElementById('fitem_id_unlimited_info').style.display = '';
+
+                    document.getElementById('fitem_id_timelimit').style.display = displayNone;
+                    document.getElementById('fitem_id_timelimit_info').style.display = displayNone;
+                    document.getElementById('fitem_id_duedate').style.display = displayNone;
+                    document.getElementById('fitem_id_duedate_info').style.display = displayNone;
+                } else if (durationSelector.value === 'duedate') {
+                    document.getElementById('fitem_id_duedate').style.display = '';
+                    document.getElementById('fitem_id_duedate_info').style.display = '';
+
+                    document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
+                    document.getElementById('fitem_id_timelimit').style.display = displayNone;
+                    document.getElementById('fitem_id_timelimit_info').style.display = displayNone;
+                } else if (durationSelector.value === 'timelimit') {
+                    document.getElementById('fitem_id_timelimit').style.display = '';
+                    document.getElementById('fitem_id_timelimit_info').style.display = '';
+
+                    document.getElementById('fitem_id_duedate').style.display = displayNone;
+                    document.getElementById('fitem_id_duedate_info').style.display = displayNone;
+                    document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
+                }
+            }
+
+            return {
+                init: function() {
+                    durationSelector.onchange = function() {
+                        updateDurationElements();
+                    };
+                    window.addEventListener("load", () => {
+                        updateDurationElements();
+                    });
+                },
+                setDurationElements: updateDurationElements,
+                isUngraded: isUngraded,
+                setGradedElemValue: function(isGraded) {
+                    gradedElem.value = isGraded ? '1' : '0';
+                },
+                getGradedElemValue: function() {
+                    return gradedElem.value;
+                }
+            };
+        });
+
         const serverController = (function() {
             let serverStructure;
             const serverDropDown = document.getElementById("id_server");
@@ -252,7 +324,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             const taskSelectionInput = document.getElementsByName("taskurl")[0];
             const nameElem = document.getElementById("id_name");
             const taskDisplayElement = document.getElementById("id_task_display_element");
-            const isGradedElem = document.getElementById('id_mumie_isgraded');
             const LANG_REQUEST_PARAM_PREFIX = "?lang=";
 
             /**
@@ -266,7 +337,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             /**
              * @param {string} localizedLink
              */
-            function updateTaskDisplayElemement(localizedLink) {
+            function updateTaskDisplayElement(localizedLink) {
                 taskDisplayElement.value = localizedLink;
             }
 
@@ -278,7 +349,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function updateTaskUri(link, language) {
                 const localizedLink = localizeLink(link, language);
                 taskSelectionInput.value = localizedLink;
-                updateTaskDisplayElemement(localizedLink);
+                updateTaskDisplayElement(localizedLink);
             }
 
             /**
@@ -304,55 +375,30 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Form inputs related to grades should be disabled, if the MUMIE Task is not graded.
+             * Form inputs related to grades should be disabled if the MUMIE Task is not graded.
              */
             function updateGradeEditability() {
-                const disabled = isGradedElem.value === '0';
+                const disabled = durationController().isUngraded();
                 document.getElementById('id_points').disabled = disabled;
                 document.getElementById('id_gradepass').disabled = disabled;
-
-                const durationSelector = document.getElementById('id_duration_selector');
-                durationSelector.disabled = disabled;
-                if (disabled) {
-                    const displayStyle = 'none';
-                    durationSelector.value = 'unlimited';
-                    document.getElementById('fitem_id_unlimited_info').hidden = !disabled;
-                    document.getElementById('fitem_id_unlimited_info').style.display = '';
-
-                    document.getElementById('fitem_id_duedate_info').hidden = disabled;
-                    document.getElementById('fitem_id_duedate_info').style.display = displayStyle;
-
-                    document.getElementById('fitem_id_duedate').hidden = disabled;
-                    document.getElementById('fitem_id_duedate').style.display = displayStyle;
-                    document.getElementById('fitem_id_duedate').disabled = disabled;
-
-                    document.getElementById('fitem_id_timelimit_info').hidden = disabled;
-                    document.getElementById('fitem_id_timelimit_info').style.display = displayStyle;
-
-                    document.getElementById('fitem_id_timelimit').hidden = disabled;
-                    document.getElementById('fitem_id_timelimit').style.display = displayStyle;
-                    document.getElementById('fitem_id_timelimit').disabled = disabled;
-                }
                 document.getElementById('id_gradecat').disabled = disabled;
+                durationController().setDurationElements();
             }
 
             return {
                 init: function() {
-                    updateTaskDisplayElemement(taskSelectionInput.value);
+                    updateTaskDisplayElement(taskSelectionInput.value);
                 },
                 setSelection: function(link, language, name) {
                     updateTaskUri(link, language);
                     updateName(name);
                 },
                 setIsGraded: function(isGraded) {
-                    if (isGraded === null) {
-                        isGradedElem.value = null;
-                    }
-                    isGradedElem.value = isGraded ? '1' : '0';
+                    durationController().setGradedElemValue(isGraded);
                     updateGradeEditability();
                 },
                 getGradingType: function() {
-                    const isGraded = isGradedElem.value;
+                    const isGraded = durationController().getGradedElemValue();
                     if (isGraded === '1') {
                         return 'graded';
                     } else if (isGraded === '0') {
@@ -505,6 +551,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     taskController.init();
                     multiTaskEditController.init();
                     problemSelectorController.init();
+                    durationController().init();
                 }
                 multiTaskEditController.init();
                 if (addServerButton) {
