@@ -48,6 +48,10 @@ jobs:
             moodle-branch: 'MOODLE_500_STABLE'
             database: 'mysqli'
             db-version: '8.4'
+          - php: '8.4'
+            moodle-branch: 'v5.0.1'
+            database: 'pgsql'
+            db-version: '15'
 
     services:
       postgres:
