@@ -290,7 +290,7 @@ class mumie_participants extends \table_sql {
      */
     public function get_sql_sort() {
         $rawsort = parent::get_sql_sort();
-        $sortarray = str_getcsv($rawsort, ', ');
+        $sortarray = str_getcsv($rawsort, ',', '"', '\\');
         return implode(
             ', ',
             array_filter(
