@@ -2,6 +2,10 @@
 
 All important changes to this plugin will be documented in this file.
 
+## [v1.9.1] - 2025-07-03
+### Changed
+- Refactored code to comply with PHP 8.4
+ 
 ## [v1.9.0] - 2025-05-15
 ### Changed
 - **Code style revised:** Refactored code to comply with moodle-plugin-ci ^4 formatting standards
