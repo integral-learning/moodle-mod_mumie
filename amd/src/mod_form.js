@@ -23,7 +23,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * Updates the visibility of elements around duration selector.
              */
             function updateDurationElements() {
-                console.log('gradedElem.value', gradedElem?.value, 'disabled?', isUngraded());
                 const disabled = isUngraded();
                 if (disabled) {
                     durationSelector.setAttribute('disabled', 'disabled');
