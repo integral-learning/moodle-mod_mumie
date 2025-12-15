@@ -66,6 +66,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     window.addEventListener("load", () => {
                         updateDurationElements();
                     });
+                    updateDurationElements();
                 },
                 setDurationElements: updateDurationElements,
                 isUngraded: isUngraded,
