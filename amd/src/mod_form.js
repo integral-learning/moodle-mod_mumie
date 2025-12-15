@@ -75,7 +75,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     return gradedElem.value;
                 }
             };
-        });
+        })();
 
         const serverController = (function() {
             let serverStructure;
@@ -378,11 +378,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * Form inputs related to grades should be disabled if the MUMIE Task is not graded.
              */
             function updateGradeEditability() {
-                const disabled = durationController().isUngraded();
+                const disabled = durationController.isUngraded();
                 document.getElementById('id_points').disabled = disabled;
                 document.getElementById('id_gradepass').disabled = disabled;
                 document.getElementById('id_gradecat').disabled = disabled;
-                durationController().setDurationElements();
+                durationController.setDurationElements();
             }
 
             return {
@@ -394,11 +394,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     updateName(name);
                 },
                 setIsGraded: function(isGraded) {
-                    durationController().setGradedElemValue(isGraded);
+                    durationController.setGradedElemValue(isGraded);
                     updateGradeEditability();
                 },
                 getGradingType: function() {
-                    const isGraded = durationController().getGradedElemValue();
+                    const isGraded = durationController.getGradedElemValue();
                     if (isGraded === '1') {
                         return 'graded';
                     } else if (isGraded === '0') {
@@ -551,7 +551,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     taskController.init();
                     multiTaskEditController.init();
                     problemSelectorController.init();
-                    durationController().init();
+                    durationController.init();
                 }
                 multiTaskEditController.init();
                 if (addServerButton) {
