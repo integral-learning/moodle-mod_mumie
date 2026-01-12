@@ -41,7 +41,6 @@ require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mumie_mod_form extends moodleform_mod {
-
     /** All valid MUMIE servers (including course structure) available.
      * @var array
      */
@@ -146,7 +145,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             get_string(
                 "mumie_multi_problem_selector",
                 "mod_mumie",
-                $wiki));
+                $wiki
+            )
+        );
         $mform->addElement('button', 'multi_problem_selector_btn', get_string('mumie_form_multi_prb_selector_btn', 'mod_mumie'));
 
         $launchoptions = [];
@@ -360,11 +361,11 @@ class mod_mumie_mod_form extends moodleform_mod {
             'html',
             '<div>'
             . get_string('mumie_form_task_properties_selection_info', 'mod_mumie')
-            .'</div>'
-            .'<div class="mumie_table_wrapper">'
+            . '</div>'
+            . '<div class="mumie_table_wrapper">'
             . $htmltable
-            . '</div>' );
-
+            . '</div>'
+        );
     }
 
     /**
@@ -380,7 +381,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $modules = get_all_instances_in_course("mumie", $COURSE);
 
         if (!is_null($cm)) {
-            $modules = array_filter($modules, function($elem) use($cm){
+            $modules = array_filter($modules, function ($elem) use ($cm) {
                 return !($elem->id === $cm->instance);
             });
         }
@@ -388,7 +389,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         if (count($modules) < 1) {
             $notfound = html_writer::tag(
                 'i',
-                "- " . get_string("mumie_no_other_task_found", "mod_mumie") ." -",
+                "- " . get_string("mumie_no_other_task_found", "mod_mumie") . " -",
                 ["style" => "margin-left: 10px;"]
             );
             $mform->addElement(
@@ -396,7 +397,8 @@ class mod_mumie_mod_form extends moodleform_mod {
                 get_string('mumie_form_tasks_selection_info', 'mod_mumie')
                 . '<div class="mumie_table_wrapper">'
                 . $notfound
-                . '</div>' );
+                . '</div>'
+            );
             return;
         }
 
@@ -404,7 +406,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         foreach ($modules as $module) {
             $section = $module->section;
             if (!array_key_exists($section, $tables)) {
-                $table = new \html_table;
+                $table = new \html_table();
                 $table->attributes['class'] = 'generaltable mumie_table';
                 $table->head = [
                     get_string(
@@ -429,7 +431,8 @@ class mod_mumie_mod_form extends moodleform_mod {
                 '',
                 [
                     "section" => $section,
-                ]);
+                ]
+            );
             $table->data[] = [$module->name, $checkboxhtml];
         }
 
@@ -441,9 +444,10 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             'html',
             get_string('mumie_form_tasks_selection_info', 'mod_mumie')
-            .'<div class="mumie_table_wrapper">'
+            . '<div class="mumie_table_wrapper">'
             . $htmltables
-            . '</div>' );
+            . '</div>'
+        );
     }
 
     /**
@@ -641,8 +645,8 @@ class mod_mumie_mod_form extends moodleform_mod {
                 \core\notification::warning(get_string(
                     'mumie_form_no_course_on_server',
                     'mod_mumie',
-                    $server->get_name())
-                );
+                    $server->get_name()
+                ));
             } else {
                 array_push($validservers, $server);
             }

@@ -40,8 +40,7 @@ require_once($CFG->dirroot . '/mod/mumie/locallib.php');
  * @author    Yannic Lapawczyk (yannic.lapawczyk@integral-learning.de)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class before_standard_top_of_body_html_generation implements described_hook, deprecated_callback_replacement {
-
+final class before_standard_top_of_body_html_generation implements deprecated_callback_replacement, described_hook {
     /**
      * Hook description.
      */

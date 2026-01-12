@@ -50,7 +50,7 @@ class object_context implements \JsonSerializable {
      * @param user_context $usercontext
      * @return void
      */
-    public function add_user_context(string $userid,  user_context $usercontext): void {
+    public function add_user_context(string $userid, user_context $usercontext): void {
         $this->usercontexts[$userid] = $usercontext;
     }
 

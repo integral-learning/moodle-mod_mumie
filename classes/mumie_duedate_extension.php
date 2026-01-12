@@ -175,7 +175,7 @@ class mumie_duedate_extension {
      */
     public static function from_objects($objects) {
         return array_map(
-            function($object) {
+            function ($object) {
                 return self::from_object($object);
             },
             $objects

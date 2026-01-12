@@ -93,7 +93,6 @@ if ($action == "grading") {
 
     echo $OUTPUT->footer();
 } else if ($action == "open") {
-
     if (!isset($mumietask->privategradepool)) {
         throw new moodle_exception(
             'gradepool_decision_pending',
@@ -147,8 +146,10 @@ if ($action == "grading") {
     ));
     $PAGE->navbar->add(
         get_string("mumie_grading_settings", "mod_mumie"),
-        new moodle_url("/mod/mumie/view.php",
-        ["action" => "grading", "id" => $id])
+        new moodle_url(
+            "/mod/mumie/view.php",
+            ["action" => "grading", "id" => $id]
+        )
     );
     $PAGE->navbar->add(get_string("mumie_submissions", "mod_mumie"));
 
