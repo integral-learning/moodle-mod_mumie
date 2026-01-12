@@ -35,8 +35,6 @@ namespace mod_mumie;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mumie_calendar_service {
-
-
     /**
      * The MUMIE Task we want to manage calendar entries for.
      *
@@ -73,7 +71,7 @@ class mumie_calendar_service {
      */
     public function __construct($mumie) {
         global $CFG;
-        require_once($CFG->dirroot.'/mod/mumie/locallib.php');
+        require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 
         if (!is_object($mumie)) {
             $mumie = locallib::get_mumie_task($mumie);
@@ -117,7 +115,7 @@ class mumie_calendar_service {
      */
     protected function create_calendar_event($eventtype, $timestart, $userid = null) {
         global $CFG;
-        require_once($CFG->dirroot.'/calendar/lib.php');
+        require_once($CFG->dirroot . '/calendar/lib.php');
         $event = new \stdClass();
         $event->type = CALENDAR_EVENT_TYPE_ACTION;
         $event->eventtype = $eventtype;
@@ -146,7 +144,7 @@ class mumie_calendar_service {
      */
     protected function get_calendar_event($type, $userid = null) {
         global $CFG, $DB;
-        require_once($CFG->dirroot.'/calendar/lib.php');
+        require_once($CFG->dirroot . '/calendar/lib.php');
 
         $params = [
             "modulename" => "mumie",
@@ -177,7 +175,7 @@ class mumie_calendar_service {
      */
     public static function delete_all_calendar_events($mumie) {
         global $CFG, $DB;
-        require_once($CFG->dirroot.'/calendar/lib.php');
+        require_once($CFG->dirroot . '/calendar/lib.php');
         $records = $DB->get_records(
             "event",
             [

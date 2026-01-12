@@ -240,9 +240,11 @@ class mumie_dndupload_processor {
      * @param \stdClass $uploadinstance a problem instance that's being imported
      */
     private function validate_upload_params($uploadinstance) {
-        if (empty($uploadinstance->link) || empty($uploadinstance->path_to_coursefile)
+        if (
+            empty($uploadinstance->link) || empty($uploadinstance->path_to_coursefile)
             || empty($uploadinstance->language) || empty($uploadinstance->name)
-            || empty($uploadinstance->server) || empty($uploadinstance->course)) {
+            || empty($uploadinstance->server) || empty($uploadinstance->course)
+        ) {
             throw new \moodle_exception('parameter_missing', 'mod_mumie');
         }
     }
@@ -284,8 +286,8 @@ class mumie_dndupload_processor {
      */
     private function create_course_module() {
         global $CFG;
-        require_once($CFG->dirroot.'/course/modlib.php');
-        list($module, $context, $cw, $cm, $data) = prepare_new_moduleinfo_data($this->course, 'mumie', $this->section);
+        require_once($CFG->dirroot . '/course/modlib.php');
+        [$module, $context, $cw, $cm, $data] = prepare_new_moduleinfo_data($this->course, 'mumie', $this->section);
         $data->coursemodule = $data->id = add_course_module($data);
         return $data;
     }

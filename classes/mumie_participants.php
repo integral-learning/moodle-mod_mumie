@@ -205,7 +205,7 @@ class mumie_participants extends \table_sql {
      * @param bool $useinitialsbar do you want to use the initials bar.
      */
     public function query_db($pagesize, $useinitialsbar = true) {
-        list($twhere, $tparams) = $this->get_sql_where();
+        [$twhere, $tparams] = $this->get_sql_where();
         $psearch = new participants_search($this->course, $this->context, $this->filterset);
 
         $sort = $this->get_sql_sort();
@@ -226,8 +226,12 @@ class mumie_participants extends \table_sql {
         $rawdata->close();
 
         if ($this->rawdata) {
-            $this->allroleassignments = get_users_roles($this->context, array_keys($this->rawdata),
-                    true, 'c.contextlevel DESC, r.sortorder ASC');
+            $this->allroleassignments = get_users_roles(
+                $this->context,
+                array_keys($this->rawdata),
+                true,
+                'c.contextlevel DESC, r.sortorder ASC'
+            );
         } else {
             $this->allroleassignments = [];
         }

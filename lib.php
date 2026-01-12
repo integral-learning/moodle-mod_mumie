@@ -167,7 +167,8 @@ function mumie_cm_info_view(cm_info $cm) {
         [
             'courseid' => $mumie->course,
             'iteminstance' => $mumie->id, 'itemmodule' => 'mumie',
-        ]);
+        ]
+    );
     $info = '';
 
     $duedate = locallib::get_effective_duedate($USER->id, $mumie);
@@ -178,16 +179,16 @@ function mumie_cm_info_view(cm_info $cm) {
 
         $info .= html_writer::tag('p', $content, ['class' => 'tag-info tag mumie_tag badge badge-info ']);
     }
-    if ($gradeitem&&$gradeitem->gradepass > 0) {
+    if ($gradeitem && $gradeitem->gradepass > 0) {
         $content = get_string("gradepass", "grades") . ': ' . round($gradeitem->gradepass, 1);
         $info .= html_writer::tag('p', $content, ['class' => 'tag-info tag mumie_tag badge badge-info ']);
     }
     if (!isset($mumie->privategradepool)) {
         $info .= html_writer::tag(
-                'p',
-                get_string('mumie_tag_disabled', 'mod_mumie'),
-                ['class' => 'tag-warning tag mumie_tag badge badge-warning']
-            )
+            'p',
+            get_string('mumie_tag_disabled', 'mod_mumie'),
+            ['class' => 'tag-warning tag mumie_tag badge badge-warning']
+        )
             . html_writer::tag(
                 'span',
                 get_string('mumie_tag_disabled_help', 'mod_mumie')
@@ -470,12 +471,13 @@ function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
 function mumie_update_multiple_tasks($mumie) {
     global $DB;
 
-    if (property_exists($mumie, 'mumie_selected_task_properties')
-    &&property_exists($mumie, 'mumie_selected_tasks')) {
-
+    if (
+        property_exists($mumie, 'mumie_selected_task_properties')
+        && property_exists($mumie, 'mumie_selected_tasks')
+    ) {
         $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
         $selectedtasks = json_decode($mumie->mumie_selected_tasks);
-        if (!empty($selectedproperties)&&!empty($selectedtasks)) {
+        if (!empty($selectedproperties) && !empty($selectedtasks)) {
             foreach ($selectedtasks as $taskid) {
                 $record = $DB->get_record("mumie", ["id" => $taskid]);
                 foreach ($selectedproperties as $property) {

@@ -28,8 +28,8 @@ namespace mod_mumie;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/mod/mumie/classes/mumie_duedate_extension.php');
-require_once($CFG->dirroot.'/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
+require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
 
 /**
  * Class manages individual calendar entries for MUMIE Tasks.
@@ -97,8 +97,8 @@ class mumie_individual_calendar_service extends mumie_calendar_service {
      */
     public function update() {
         global $CFG;
-        require_once($CFG->dirroot.'/mod/mumie/locallib.php');
-        require_once($CFG->dirroot.'/mod/mumie/classes/mumie_duedate_extension.php');
+        require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+        require_once($CFG->dirroot . '/mod/mumie/classes/mumie_duedate_extension.php');
 
         if (!$this->extension->get_duedate() && $this->event) {
             $this->event->delete();

@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/lib/formslib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
 
 /**
  * This file describes a class used to display a form to create and edit due date extensions.

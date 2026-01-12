@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/mumie/backup/moodle2/backup_mumie_stepslib.ph
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_mumie_activity_task extends backup_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */

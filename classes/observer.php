@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_in
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class observer {
-
     /**
      * Handle course_module_viewed event.
      *

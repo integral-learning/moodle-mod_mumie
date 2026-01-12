@@ -44,7 +44,7 @@ function xmldb_mumie_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2019110100, 'mod', 'mumie');
     }
     if ($oldversion < 2020011702) {
-        addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null,  null, '0', null);
+        addfieldifmissing('mumie', 'duedate', XMLDB_TYPE_INTEGER, '10', null, null, null, '0', null);
         addfieldifmissing('mumie', 'privategradepool', XMLDB_TYPE_INTEGER, '1', null, null, null, null, null);
         mumie_set_privategradepool_default();
         upgrade_plugin_savepoint(true, 2020011702, 'mod', 'mumie');
@@ -56,10 +56,28 @@ function xmldb_mumie_upgrade($oldversion) {
 
     if ($oldversion < 2021011303) {
         addtableifmissing('mumie_duedate', 'id');
-        addfieldifmissing('mumie_duedate', 'id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
-        XMLDB_SEQUENCE, null, null);
-        addfieldifmissing('mumie_duedate', 'mumie', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL,
-        null, null, null);
+        addfieldifmissing(
+            'mumie_duedate',
+            'id',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            XMLDB_NOTNULL,
+            XMLDB_SEQUENCE,
+            null,
+            null
+        );
+        addfieldifmissing(
+            'mumie_duedate',
+            'mumie',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            null,
+            null
+        );
         addfieldifmissing('mumie_duedate', 'userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
         addfieldifmissing('mumie_duedate', 'duedate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
         upgrade_plugin_savepoint(true, 2021011303, 'mod', 'mumie');
@@ -87,7 +105,7 @@ function addtableifmissing(string $tablename, string $primaryname): void {
     global $DB;
     $dbman = $DB->get_manager();
     if (!$dbman->table_exists($tablename)) {
-        $table = new xmldb_table ($tablename);
+        $table = new xmldb_table($tablename);
         $table->add_key('primary', XMLDB_KEY_PRIMARY, [$primaryname]);
         $dbman->create_table($table);
     }
@@ -106,8 +124,17 @@ function addtableifmissing(string $tablename, string $primaryname): void {
  * @param null|string $previous
  * @return void
  */
-function addfieldifmissing(string $tablename, string $fieldname, ?int $type, ?string $precision,
-    ?bool $unsigned, ?bool $notnull, ?bool $sequence, mixed $default, ?string $previous): void {
+function addfieldifmissing(
+    string $tablename,
+    string $fieldname,
+    ?int $type,
+    ?string $precision,
+    ?bool $unsigned,
+    ?bool $notnull,
+    ?bool $sequence,
+    mixed $default,
+    ?string $previous
+): void {
     global $DB;
     $dbman = $DB->get_manager();
     $table = new xmldb_table($tablename);
