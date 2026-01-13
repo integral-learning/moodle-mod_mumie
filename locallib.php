@@ -45,7 +45,6 @@ define("MUMIE_LAUNCH_CONTAINER_EMBEDDED", 1);
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class locallib {
-
     /**
      * Get instance of mumie task with its id
      * @param int $id id of the mumie task

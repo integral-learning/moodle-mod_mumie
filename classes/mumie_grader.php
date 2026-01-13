@@ -153,7 +153,8 @@ class mumie_grader {
 
         if ($grades) {
             usort(
-                $grades, function ($a, $b) {
+                $grades,
+                function ($a, $b) {
                     return $b->timecreated <=> $a->timecreated;
                 }
             );

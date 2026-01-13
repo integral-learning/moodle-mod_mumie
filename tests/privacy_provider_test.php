@@ -192,7 +192,6 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
 
         // The data for m2 should still exist.
         $this->assertCount(1, $DB->get_records('mumie_duedate', ['mumie' => $m2->id]));
-
     }
 
     /**
@@ -236,7 +235,6 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $this->assertEmpty(
             $DB->get_fieldset_select('mumie_duedate', 'userid', 'mumie = ?', [$m2->id])
         );
-
     }
 
     /**
@@ -318,5 +316,4 @@ final class privacy_provider_test extends \core_privacy\tests\provider_testcase 
         $duedate->set_duedate(1000);
         $duedate->upsert();
     }
-
 }

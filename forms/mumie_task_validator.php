@@ -73,7 +73,7 @@ class mumie_task_validator {
         }
 
         $taskurlvalid = isset($data["taskurl"]) && $data["taskurl"] !== "";
-        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) ||$data["mumie_missing_config"] === "" )) {
+        if (!$taskurlvalid && (!isset($data["mumie_missing_config"]) || $data["mumie_missing_config"] === "" )) {
             $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
