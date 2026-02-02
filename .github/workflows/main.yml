@@ -49,9 +49,13 @@ jobs:
             database: 'mysqli'
             db-version: '8.4'
           - php: '8.4'
-            moodle-branch: 'v5.0.1'
+            moodle-branch: 'MOODLE_501_STABLE'
             database: 'pgsql'
             db-version: '15'
+          - php: '8.4'
+            moodle-branch: 'MOODLE_501_STABLE'
+            database: 'mysqli'
+            db-version: '8.4'
 
     services:
       postgres:
