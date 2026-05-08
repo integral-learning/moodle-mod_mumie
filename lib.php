@@ -78,6 +78,7 @@ function mumie_update_instance($mumie, $mform) {
     $grades = locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
+    locallib::delete_extensions_on_mode_change($mumie);
     $mumie = locallib::clean_up_duration_values($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
     $calendarservice->update();
@@ -478,6 +479,9 @@ function mumie_update_multiple_tasks($mumie) {
         $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
         $selectedtasks = json_decode($mumie->mumie_selected_tasks);
         if (!empty($selectedproperties) && !empty($selectedtasks)) {
+            if (in_array('duration_selector', $selectedproperties)) {
+                array_push($selectedproperties, 'duedate', 'timelimit');
+            }
             foreach ($selectedtasks as $taskid) {
                 $record = $DB->get_record("mumie", ["id" => $taskid]);
                 foreach ($selectedproperties as $property) {

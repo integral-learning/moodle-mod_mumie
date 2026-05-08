@@ -104,6 +104,30 @@ class locallib {
     }
 
     /**
+     * Deletes all per-student due date extensions for a MUMIE task if the working period mode has changed.
+     * Must be called before clean_up_duration_values() so the old mode can still be read from the DB.
+     * @param stdClass $mumietask the submitted MUMIE task that is supposed to be updated
+     * @return void
+     */
+    public static function delete_extensions_on_mode_change(stdClass $mumietask): void {
+        global $DB, $CFG;
+        if (!property_exists($mumietask, 'duration_selector') || !isset($mumietask->id)) {
+            return;
+        }
+        $oldrecord = $DB->get_record("mumie", ["id" => $mumietask->id]);
+        if (!$oldrecord) {
+            return;
+        }
+        $oldmode = $oldrecord->duedate > 0 ? 'duedate'
+                 : ($oldrecord->timelimit > 0 ? 'timelimit'
+                 : 'unlimited');
+        if ($oldmode !== $mumietask->duration_selector) {
+            require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
+            mumie_duedate_extension::delete_all_for_mumie($mumietask->id);
+        }
+    }
+
+    /**
      * The function is called whenever a MUMIE task is created or updated.
      * Cleans up the submitted duedate and timelimit if not selected in the duration selector.
      * @param stdClass $mumietask the submitted MUMIE task that is supposed to be created or updated
