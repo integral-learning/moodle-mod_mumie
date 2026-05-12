@@ -505,7 +505,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         } else {
             $mform->setDefault('duration_selector', 'unlimited');
         }
-        $mform->disabledIf('duration_selector', null);
     }
 
     /**
