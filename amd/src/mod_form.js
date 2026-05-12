@@ -55,6 +55,16 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     document.getElementById('fitem_id_duedate_info').style.display = displayNone;
                     document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
                 }
+
+                const durationPropCheckbox = document.getElementById('mumie_duration_property_checkbox');
+                if (durationPropCheckbox) {
+                    const show = durationSelector.value === 'duedate';
+                    durationPropCheckbox.closest('tr').style.display = show ? '' : displayNone;
+                    if (!show && durationPropCheckbox.checked) {
+                        durationPropCheckbox.checked = false;
+                        durationPropCheckbox.dispatchEvent(new Event('change'));
+                    }
+                }
             }
 
             return {

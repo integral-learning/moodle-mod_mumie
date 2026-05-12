@@ -352,7 +352,8 @@ class mod_mumie_mod_form extends moodleform_mod {
         foreach ($taskproperties as $taskproperty) {
             $label = $taskproperty[0];
             $value = $taskproperty[1];
-            $checkboxhtml = html_writer::checkbox("mumie_multi_edit_property", $value, false);
+            $extraattrs = $value === 'duration_selector' ? ['id' => 'mumie_duration_property_checkbox'] : [];
+            $checkboxhtml = html_writer::checkbox("mumie_multi_edit_property", $value, false, '', $extraattrs);
             $table->data[] = [$label, $checkboxhtml];
         }
 
