@@ -72,6 +72,7 @@ $string['mumie_due_date_help'] = 'Noten, die nach der ausgewählten Frist erziel
 $string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
+$string['mumie_duration_property'] = 'Deadline';
 $string['mumie_duration_selector'] = 'Bearbeitungszeitraum';
 $string['mumie_duration_selector_help'] = 'Bei einem begrenzten Bearbeitungszeitraum werden nur die in diesem Zeitraum erzielten Noten mit Moodle synchronisiert.';
 $string['mumie_form_activity_container'] = 'Startcontainer';

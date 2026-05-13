@@ -343,7 +343,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $taskproperties = [
             [get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"],
             [get_string('mumie_form_points', 'mod_mumie'), "points"],
-            [get_string('mumie_duration_selector', 'mod_mumie'), "duration_selector"],
+            [get_string('mumie_duration_property', 'mod_mumie'), "duration_selector"],
         ];
         $table = new \html_table();
         $table->attributes['class'] = 'generaltable mumie_table';
