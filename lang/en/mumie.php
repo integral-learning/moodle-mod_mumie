@@ -60,6 +60,7 @@ $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_form'] = 'Grant a due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
 $string['mumie_duration_property'] = 'Deadline';
+$string['mumie_duration_property_hint'] = 'Deadline can only be applied to tasks that were previously created with the Working Period type \'Deadline\'.';
 $string['mumie_duration_selector'] = 'Working period';
 $string['mumie_duration_selector_help'] = 'If the working period is limited, only grades achieved within that period are synchronized with Moodle.';
 $string['mumie_form_activity_container'] = 'Launch container';
