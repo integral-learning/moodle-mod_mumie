@@ -94,6 +94,7 @@ $string['mumie_form_cant_change_isgraded'] = 'Sie können bei einer bestehenden 
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 $string['mumie_form_coursefile'] = 'Path to MUMIE course meta file';
+$string['mumie_form_deadline_transfer_invalid'] = 'Deadline kann nur für Tasks übernommen werden, die bereits den Working Period Typ \'Deadline\' haben.';
 $string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet darf keinen begrenzten Bearbeitungszeitraum haben.<br><br>Wählen Sie ein Worksheet mit entsprechender Konfiguration aus, wenn Sie eine Frist setzen möchten.";
 $string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt einen festgelegten Bearbeitungszeitraum voraus";
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';

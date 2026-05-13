@@ -83,6 +83,7 @@ $string['mumie_form_cant_change_isgraded'] = 'You cannot switch from graded to u
 $string['mumie_form_complete_course'] = 'Link the entire course';
 $string['mumie_form_complete_course_help'] = 'The user will only be logged in and redirected to the course overview page. Grades will <b>not</b> be synchronized for this MUMIE Task.';
 $string['mumie_form_coursefile'] = 'Path to MUMIE course meta file';
+$string['mumie_form_deadline_transfer_invalid'] = 'Deadline can only be applied to tasks that already have the Working Period type \'Deadline\' set.';
 $string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "The selected worksheet cannot have a limited working period.<br><br>If you want to limit the working period, please select a worksheet with an appropriate configuration.";
 $string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a limited working period.";
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';

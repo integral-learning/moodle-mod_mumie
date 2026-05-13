@@ -50,7 +50,30 @@ class mumie_task_validator {
         $errors = array_merge($errors, self::check_isgraded($data));
         $errors = array_merge($errors, self::check_duration($data));
         $errors = array_merge($errors, self::check_worksheet($data));
+        $errors = array_merge($errors, self::check_multi_edit_deadline($data));
         return $errors;
+    }
+
+    /**
+     * Validates that the Deadline property is only applied to tasks that already have a deadline set.
+     *
+     * @param array $data Form data.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_multi_edit_deadline(array $data): array {
+        $props = json_decode($data['mumie_selected_task_properties'] ?? '[]', true);
+        if (!in_array('duration_selector', $props)) {
+            return [];
+        }
+        $taskids = json_decode($data['mumie_selected_tasks'] ?? '[]', true);
+        foreach ($taskids as $taskid) {
+            $task = locallib::get_mumie_task((int)$taskid);
+            if ($task && !($task->duedate > 0)) {
+                return ['mumie_multi_edit_deadline_error' =>
+                    get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie')];
+            }
+        }
+        return [];
     }
 
     /**

@@ -338,6 +338,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     private function add_property_selection(): void {
         $mform = $this->_form;
+        $mform->addElement('static', 'mumie_multi_edit_deadline_error', '');
         $mform->addElement("hidden", "mumie_selected_task_properties", "[]");
         $mform->setType("mumie_selected_task_properties", PARAM_RAW);
         $taskproperties = [
