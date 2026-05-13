@@ -469,6 +469,14 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             /**
              * Set selection listeners for properties to apply to MUMIE Tasks in the course.
              */
+            function updateNoDeadlineWarnings() {
+                const deadlineSelected = Array.from(propertySelectionInputs)
+                    .some(cb => cb.value === 'duration_selector' && cb.checked);
+                document.querySelectorAll('.mumie-no-deadline-warning').forEach(function(elem) {
+                    elem.style.display = deadlineSelected ? '' : 'none';
+                });
+            }
+
             function setPropertySelectionListeners() {
                 propertySelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
@@ -478,6 +486,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             selectedTaskProp.push(checkbox.value);
                         }
                         selectedTaskProperties.value = JSON.stringify(selectedTaskProp);
+                        updateNoDeadlineWarnings();
                     };
                 });
             }

@@ -443,7 +443,7 @@ class mod_mumie_mod_form extends moodleform_mod {
                 $label .= html_writer::tag(
                     'small',
                     ' — ' . get_string('mumie_form_task_no_deadline_warning', 'mod_mumie'),
-                    ['class' => 'text-warning']
+                    ['class' => 'text-warning mumie-no-deadline-warning', 'style' => 'display:none']
                 );
             }
             $table->data[] = [$label, $checkboxhtml];
