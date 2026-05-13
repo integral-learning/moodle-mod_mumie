@@ -391,10 +391,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             });
         }
 
-        $modules = array_filter($modules, function ($elem) {
-            return $elem->duedate > 0;
-        });
-
         if (count($modules) < 1) {
             $notfound = html_writer::tag(
                 'i',
@@ -442,7 +438,15 @@ class mod_mumie_mod_form extends moodleform_mod {
                     "section" => $section,
                 ]
             );
-            $table->data[] = [$module->name, $checkboxhtml];
+            $label = $module->name;
+            if (!($module->duedate > 0)) {
+                $label .= html_writer::tag(
+                    'small',
+                    ' — ' . get_string('mumie_form_task_no_deadline_warning', 'mod_mumie'),
+                    ['class' => 'text-warning']
+                );
+            }
+            $table->data[] = [$label, $checkboxhtml];
         }
 
         $htmltables = "";
@@ -453,9 +457,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         $mform->addElement(
             'html',
             get_string('mumie_form_tasks_selection_info', 'mod_mumie')
-            . '<div class="form-text text-muted">'
-            . get_string('mumie_form_tasks_deadline_only', 'mod_mumie')
-            . '</div>'
             . '<div class="mumie_table_wrapper">'
             . $htmltables
             . '</div>'
