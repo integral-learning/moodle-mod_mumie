@@ -78,7 +78,6 @@ function mumie_update_instance($mumie, $mform) {
     $grades = locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
-    locallib::delete_extensions_on_mode_change($mumie);
     $mumie = locallib::clean_up_duration_values($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
     $calendarservice->update();
