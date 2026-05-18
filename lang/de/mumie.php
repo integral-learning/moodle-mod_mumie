@@ -118,7 +118,6 @@ $string['mumie_form_properties'] = 'Eigenschaften';
 $string['mumie_form_server_added'] = 'MUMIE-Server wurde hinzugefügt';
 $string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigenschaften dieser MUMIE-Task aus, die in anderen MUMIE-Tasks übernommen werden sollen.';
 $string['mumie_form_task_no_deadline_warning'] = 'Bearbeitungszeitraum: keine Deadline';
-$string['mumie_form_tasks_deadline_only'] = 'Es werden nur Tasks mit dem Working Period Typ \'Deadline\' angezeigt.';
 $string['mumie_form_tasks_edit'] = 'In anderen MUMIE-Tasks übernehmen';
 $string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
 $string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
