@@ -461,7 +461,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             . $htmltables
             . '</div>'
         );
-        $mform->addElement('static', 'mumie_multi_edit_deadline_error', '&nbsp;');
+        $mform->addElement('html', '
+            <style>
+                #fitem_id_mumie_multi_edit_deadline_error > div:first-child { display: none; }
+                #fitem_id_mumie_multi_edit_deadline_error > div:last-child { flex: 0 0 100%; max-width: 100%; }
+            </style>
+        ');
+        $mform->addElement('static', 'mumie_multi_edit_deadline_error', '');
     }
 
     /**
