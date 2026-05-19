@@ -466,6 +466,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 });
             }
 
+            /**
+             * Show or hide per-task "Working period: not Deadline" warnings based on whether the deadline property is selected.
+             */
             function updateNoDeadlineWarnings() {
                 const deadlineSelected = Array.from(propertySelectionInputs)
                     .some(cb => cb.value === 'duration_selector' && cb.checked);
