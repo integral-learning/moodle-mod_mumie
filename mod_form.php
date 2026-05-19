@@ -345,7 +345,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             [get_string('mumie_form_points', 'mod_mumie'), "points"],
             [
                 get_string('mumie_duration_property', 'mod_mumie')
-                . html_writer::tag('div', get_string('mumie_duration_property_hint', 'mod_mumie'), ['class' => 'form-text text-muted small']),
+                . html_writer::tag('div',
+                    get_string('mumie_duration_property_hint', 'mod_mumie'),
+                    ['class' => 'form-text text-muted small']),
                 "duration_selector",
             ],
         ];
