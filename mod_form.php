@@ -506,7 +506,6 @@ class mod_mumie_mod_form extends moodleform_mod {
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
         $this->set_grade_data($data, $mform);
-        $mform->disabledIf('duration_selector', null);
         parent::set_data($data);
     }
 
@@ -527,6 +526,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         } else {
             $mform->setDefault('duration_selector', 'unlimited');
         }
+        $mform->disabledIf('duration_selector', null);
     }
 
     /**
