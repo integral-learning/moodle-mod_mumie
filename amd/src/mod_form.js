@@ -466,9 +466,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 });
             }
 
-            /**
-             * Set selection listeners for properties to apply to MUMIE Tasks in the course.
-             */
             function updateNoDeadlineWarnings() {
                 const deadlineSelected = Array.from(propertySelectionInputs)
                     .some(cb => cb.value === 'duration_selector' && cb.checked);
@@ -477,6 +474,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 });
             }
 
+            /**
+             * Set selection listeners for properties to apply to MUMIE Tasks in the course.
+             */
             function setPropertySelectionListeners() {
                 propertySelectionInputs.forEach(function(checkbox) {
                     checkbox.onchange = function() {
