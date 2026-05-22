@@ -119,7 +119,7 @@ $string['mumie_form_tasks_edit'] = 'In anderen MUMIE-Tasks übernehmen';
 $string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
 $string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
 $string['mumie_form_due_date_multi_edit_hint'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, welche vorher bereits mit dem Bearbeitungszeitraum Typ \'Abgabefrist\' erstellt wurden.';
-$string['mumie_form_task_no_deadline_warning'] = 'Bearbeitungszeitraum: keine Abgabefrist';
+$string['mumie_form_working_period_not_duedate_warning'] = 'Bearbeitungszeitraum: keine Abgabefrist';
 $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';

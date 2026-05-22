@@ -475,8 +475,8 @@ class mod_mumie_mod_form extends moodleform_mod {
             if (!($module->duedate > 0)) {
                 $label .= html_writer::tag(
                     'small',
-                    ' — ' . get_string('mumie_form_task_no_deadline_warning', 'mod_mumie'),
-                    ['class' => 'text-warning mumie-no-deadline-warning', 'style' => 'display:none']
+                    ' — ' . get_string('mumie_form_working_period_not_duedate_warning', 'mod_mumie'),
+                    ['class' => 'text-warning mumie-form-working-period-not-duedate-warning', 'style' => 'display:none']
                 );
             }
             $table->data[] = [$label, $checkboxhtml];

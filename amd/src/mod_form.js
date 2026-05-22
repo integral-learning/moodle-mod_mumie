@@ -56,17 +56,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
                 }
 
-                const durationPropRow = document
+                const duedatePropRow = document
                     .querySelector('[name="mumie_multi_edit_property"][value="duedate"]')
                     ?.closest('tr');
-                if (durationPropRow) {
+                if (duedatePropRow) {
                     const show = durationSelector.value === 'duedate';
-                    durationPropRow.style.display = show ? '' : displayNone;
+                    duedatePropRow.style.display = show ? '' : displayNone;
                     if (!show) {
-                        const cb = durationPropRow.querySelector('[name="mumie_multi_edit_property"]');
-                        if (cb && cb.checked) {
-                            cb.checked = false;
-                            cb.dispatchEvent(new Event('change'));
+                        const duedatePropertyCheckbox = duedatePropRow.querySelector('[name="mumie_multi_edit_property"]');
+                        if (duedatePropertyCheckbox && duedatePropertyCheckbox.checked) {
+                            duedatePropertyCheckbox.checked = false;
+                            duedatePropertyCheckbox.dispatchEvent(new Event('change'));
                         }
                     }
                 }
@@ -467,13 +467,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Show or hide per-task "Working period: not Deadline" warnings based on whether the deadline property is selected.
+             * Show or hide per-task "Working period: not Deadline" warnings based on whether the duedate property is selected.
              */
-            function updateNoDeadlineWarnings() {
-                const deadlineSelected = Array.from(propertySelectionInputs)
-                    .some(cb => cb.value === 'duedate' && cb.checked);
-                document.querySelectorAll('.mumie-no-deadline-warning').forEach(function(elem) {
-                    elem.style.display = deadlineSelected ? '' : 'none';
+            function updateNoDuedateWarnings() {
+                const duedateSelected = Array.from(propertySelectionInputs)
+                    .some(checkbox => checkbox.value === 'duedate' && checkbox.checked);
+                document.querySelectorAll('.mumie-form-working-period-not-duedate-warning').forEach(function(elem) {
+                    elem.style.display = duedateSelected ? '' : 'none';
                 });
             }
 
@@ -489,7 +489,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             selectedTaskProp.push(checkbox.value);
                         }
                         selectedTaskProperties.value = JSON.stringify(selectedTaskProp);
-                        updateNoDeadlineWarnings();
+                        updateNoDuedateWarnings();
                     };
                 });
             }
