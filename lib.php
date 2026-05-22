@@ -48,7 +48,6 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
     locallib::update_pending_gradepool($mumie);
-    $mumie = locallib::clean_up_duration_values($mumie);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
@@ -78,7 +77,6 @@ function mumie_update_instance($mumie, $mform) {
     $grades = locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
-    $mumie = locallib::clean_up_duration_values($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
     $calendarservice->update();
 

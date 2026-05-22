@@ -261,6 +261,35 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
+     * Post-process submitted form data before it is handed to mumie_(add|update)_instance.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    public function data_postprocessing($data): void
+    {
+        parent::data_postprocessing($data);
+        self::clean_up_duration_values($data);
+    }
+
+    /**
+     * Zero the duration column that does not match duration_selector.
+     *
+     * The form exposes duedate and timelimit side by side with duration_selector choosing
+     * which one is active. This enforces the invariant "only the active column is non-zero"
+     * before the data is handed to the persistence layer.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    private static function clean_up_duration_values(stdClass $data): void {
+        if ($data->duration_selector !== 'duedate') {
+            $data->duedate = 0;
+        }
+        if ($data->duration_selector !== 'timelimit') {
+            $data->timelimit = 0;
+        }
+    }
+
+    /**
      * Get all options for server drop-down menu
      *
      * @return array
