@@ -344,10 +344,10 @@ class mod_mumie_mod_form extends moodleform_mod {
             [get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"],
             [get_string('mumie_form_points', 'mod_mumie'), "points"],
             [
-                get_string('mumie_duration_property', 'mod_mumie')
+                get_string('mumie_due_date', 'mod_mumie')
                 . html_writer::tag(
                     'div',
-                    get_string('mumie_duration_property_hint', 'mod_mumie'),
+                    get_string('mumie_form_due_date_multi_edit_hint', 'mod_mumie'),
                     ['class' => 'form-text text-muted small']
                 ),
                 "duration_selector",

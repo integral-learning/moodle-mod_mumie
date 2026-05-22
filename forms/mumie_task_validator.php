@@ -198,7 +198,7 @@ class mumie_task_validator {
             $task = locallib::get_mumie_task((int)$taskid);
             if ($task && ($task->duedate <= 0)) {
                 $errors['mumie_multi_edit_deadline_error'] =
-                    get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie');
+                    get_string('mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline', 'mod_mumie');
                 break;
             }
         }
