@@ -163,7 +163,6 @@ class mumie_task_validator {
      * @return array Associative array of validation errors.
      */
     private static function check_worksheet(array $data): array {
-
         $isworksheet = self::is_worksheet($data);
         if (!$isworksheet) {
             return [];
@@ -198,11 +197,9 @@ class mumie_task_validator {
         foreach ($taskids as $taskid) {
             $task = locallib::get_mumie_task((int)$taskid);
             if ($task && !($task->duedate > 0)) {
-                $icon = \html_writer::tag('span', '', ['class' => 'icon fa fa-circle-exclamation text-danger fa-fw']);
-                $errors['mumie_multi_edit_deadline_error'] = get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie');
+                $errors['mumie_multi_edit_deadline_error'] =
+                    get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie');
                 break;
-                #return ['mumie_multi_edit_deadline_error' =>
-                #    $icon . get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie')];
             }
         }
         return $errors;
