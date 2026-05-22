@@ -55,29 +55,6 @@ class mumie_task_validator {
     }
 
     /**
-     * Validates that the Deadline property is only applied to tasks that already have a deadline set.
-     *
-     * @param array $data Form data.
-     * @return array Associative array of validation errors.
-     */
-    private static function check_multi_edit_deadline(array $data): array {
-        $props = json_decode($data['mumie_selected_task_properties'] ?? '[]', true);
-        if (!in_array('duration_selector', $props)) {
-            return [];
-        }
-        $taskids = json_decode($data['mumie_selected_tasks'] ?? '[]', true);
-        foreach ($taskids as $taskid) {
-            $task = locallib::get_mumie_task((int)$taskid);
-            if ($task && !($task->duedate > 0)) {
-                $icon = \html_writer::tag('span', '', ['class' => 'icon fa fa-circle-exclamation text-danger fa-fw']);
-                return ['mumie_multi_edit_deadline_error' =>
-                    $icon . get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie')];
-            }
-        }
-        return [];
-    }
-
-    /**
      * Checks whether all required fields are present in the given data array.
      *
      * Returns an array of error messages for any missing required fields.
@@ -206,6 +183,32 @@ class mumie_task_validator {
     }
 
     /**
+     * Validates that the Deadline property is only applied to tasks that already have a deadline set.
+     *
+     * @param array $data Form data.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_multi_edit_deadline(array $data): array {
+        if (!self::is_deadline_property_selected($data)) {
+            return [];
+        }
+
+        $errors = [];
+        $taskids = json_decode($data['mumie_selected_tasks'] ?? '[]', true);
+        foreach ($taskids as $taskid) {
+            $task = locallib::get_mumie_task((int)$taskid);
+            if ($task && !($task->duedate > 0)) {
+                $icon = \html_writer::tag('span', '', ['class' => 'icon fa fa-circle-exclamation text-danger fa-fw']);
+                $errors['mumie_selected_tasks'] = get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie');
+                break;
+                #return ['mumie_multi_edit_deadline_error' =>
+                #    $icon . get_string('mumie_form_deadline_transfer_invalid', 'mod_mumie')];
+            }
+        }
+        return $errors;
+    }
+
+    /**
      * Check whether a duedate was set
      * @param array $data POST data
      * @return bool
@@ -241,5 +244,15 @@ class mumie_task_validator {
      */
     private static function is_correction_trigger_after_deadline(string $worksheet): bool {
         return json_decode($worksheet, true)['configuration']['correction']['correctorType'] === "AFTER_DEADLINE";
+    }
+
+    /**
+     * Check whether the deadline property is selected for multi-edit transfer.
+     * @param array $data POST data
+     * @return bool
+     */
+    private static function is_deadline_property_selected(array $data): bool {
+        $props = json_decode($data['mumie_selected_task_properties'] ?? '[]', true);
+        return in_array('duration_selector', $props);
     }
 }
