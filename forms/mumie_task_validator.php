@@ -187,7 +187,7 @@ class mumie_task_validator {
      * @param array $data Form data.
      * @return array Associative array of validation errors.
      */
-        private static function check_multi_edit_duedate(array $data): array {
+    private static function check_multi_edit_duedate(array $data): array {
         if (!self::is_duedate_property_selected($data)) {
             return [];
         }

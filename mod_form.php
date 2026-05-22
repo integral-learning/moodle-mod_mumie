@@ -265,8 +265,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param stdClass $data Submitted form data (mutated in place).
      */
-    public function data_postprocessing($data): void
-    {
+    public function data_postprocessing($data): void {
         parent::data_postprocessing($data);
         self::clean_up_duration_values($data);
     }
