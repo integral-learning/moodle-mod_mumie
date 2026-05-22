@@ -57,7 +57,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 }
 
                 const durationPropRow = document
-                    .querySelector('[name="mumie_multi_edit_property"][value="duration_selector"]')
+                    .querySelector('[name="mumie_multi_edit_property"][value="duedate"]')
                     ?.closest('tr');
                 if (durationPropRow) {
                     const show = durationSelector.value === 'duedate';
@@ -471,7 +471,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              */
             function updateNoDeadlineWarnings() {
                 const deadlineSelected = Array.from(propertySelectionInputs)
-                    .some(cb => cb.value === 'duration_selector' && cb.checked);
+                    .some(cb => cb.value === 'duedate' && cb.checked);
                 document.querySelectorAll('.mumie-no-deadline-warning').forEach(function(elem) {
                     elem.style.display = deadlineSelected ? '' : 'none';
                 });

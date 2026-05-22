@@ -50,7 +50,7 @@ class mumie_task_validator {
         $errors = array_merge($errors, self::check_isgraded($data));
         $errors = array_merge($errors, self::check_duration($data));
         $errors = array_merge($errors, self::check_worksheet($data));
-        $errors = array_merge($errors, self::check_multi_edit_deadline($data));
+        $errors = array_merge($errors, self::check_multi_edit_duedate($data));
         return $errors;
     }
 
@@ -182,13 +182,13 @@ class mumie_task_validator {
     }
 
     /**
-     * Validates that the Deadline property is only applied to tasks that already have a deadline set.
+     * Validates that the duedate property is only applied to tasks that already have a duedate set.
      *
      * @param array $data Form data.
      * @return array Associative array of validation errors.
      */
-    private static function check_multi_edit_deadline(array $data): array {
-        if (!self::is_deadline_property_selected($data)) {
+        private static function check_multi_edit_duedate(array $data): array {
+        if (!self::is_duedate_property_selected($data)) {
             return [];
         }
 
@@ -244,12 +244,12 @@ class mumie_task_validator {
     }
 
     /**
-     * Check whether the deadline property is selected for multi-edit transfer.
+     * Check whether the duedate property is selected for multi-edit transfer.
      * @param array $data POST data
      * @return bool
      */
-    private static function is_deadline_property_selected(array $data): bool {
+    private static function is_duedate_property_selected(array $data): bool {
         $props = json_decode($data['mumie_selected_task_properties'] ?? '[]', true);
-        return in_array('duration_selector', $props);
+        return in_array('duedate', $props);
     }
 }

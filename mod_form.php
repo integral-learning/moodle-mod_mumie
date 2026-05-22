@@ -350,7 +350,7 @@ class mod_mumie_mod_form extends moodleform_mod {
                     get_string('mumie_form_due_date_multi_edit_hint', 'mod_mumie'),
                     ['class' => 'form-text text-muted small']
                 ),
-                "duration_selector",
+                "duedate",
             ],
         ];
         $table = new \html_table();

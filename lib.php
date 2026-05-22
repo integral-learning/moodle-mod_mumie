@@ -478,9 +478,6 @@ function mumie_update_multiple_tasks($mumie) {
         $selectedproperties = json_decode($mumie->mumie_selected_task_properties);
         $selectedtasks = json_decode($mumie->mumie_selected_tasks);
         if (!empty($selectedproperties) && !empty($selectedtasks)) {
-            if (in_array('duration_selector', $selectedproperties)) {
-                array_push($selectedproperties, 'duedate', 'timelimit');
-            }
             foreach ($selectedtasks as $taskid) {
                 $record = $DB->get_record("mumie", ["id" => $taskid]);
                 foreach ($selectedproperties as $property) {
