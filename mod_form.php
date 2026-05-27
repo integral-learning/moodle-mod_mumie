@@ -261,6 +261,34 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
+     * Post-process submitted form data before it is handed to mumie_(add|update)_instance.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    public function data_postprocessing($data): void {
+        parent::data_postprocessing($data);
+        self::clean_up_duration_values($data);
+    }
+
+    /**
+     * Zero the duration column that does not match duration_selector.
+     *
+     * The form exposes duedate and timelimit side by side with duration_selector choosing
+     * which one is active. This enforces the invariant "only the active column is non-zero"
+     * before the data is handed to the persistence layer.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    private static function clean_up_duration_values(stdClass $data): void {
+        if ($data->duration_selector !== 'duedate') {
+            $data->duedate = 0;
+        }
+        if ($data->duration_selector !== 'timelimit') {
+            $data->timelimit = 0;
+        }
+    }
+
+    /**
      * Get all options for server drop-down menu
      *
      * @return array
@@ -343,6 +371,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         $taskproperties = [
             [get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"],
             [get_string('mumie_form_points', 'mod_mumie'), "points"],
+            [
+                get_string('mumie_due_date', 'mod_mumie')
+                . html_writer::tag(
+                    'div',
+                    get_string('mumie_form_due_date_multi_edit_hint', 'mod_mumie'),
+                    ['class' => 'form-text text-muted small']
+                ),
+                "duedate",
+            ],
         ];
         $table = new \html_table();
         $table->attributes['class'] = 'generaltable mumie_table';
@@ -433,7 +470,15 @@ class mod_mumie_mod_form extends moodleform_mod {
                     "section" => $section,
                 ]
             );
-            $table->data[] = [$module->name, $checkboxhtml];
+            $label = $module->name;
+            if (!($module->duedate > 0)) {
+                $label .= html_writer::tag(
+                    'small',
+                    ' — ' . get_string('mumie_form_working_period_not_duedate_warning', 'mod_mumie'),
+                    ['class' => 'text-warning mumie-form-working-period-not-duedate-warning', 'style' => 'display:none']
+                );
+            }
+            $table->data[] = [$label, $checkboxhtml];
         }
 
         $htmltables = "";
@@ -448,6 +493,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             . $htmltables
             . '</div>'
         );
+        $mform->addElement('html', '
+            <style>
+                #fitem_id_mumie_multi_edit_deadline_error > div:first-child { display: none; }
+                #fitem_id_mumie_multi_edit_deadline_error > div:last-child { flex: 0 0 100%; max-width: 100%; }
+            </style>
+        ');
+        $mform->addElement('static', 'mumie_multi_edit_deadline_error', '');
     }
 
     /**

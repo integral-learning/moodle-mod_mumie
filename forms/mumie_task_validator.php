@@ -50,6 +50,7 @@ class mumie_task_validator {
         $errors = array_merge($errors, self::check_isgraded($data));
         $errors = array_merge($errors, self::check_duration($data));
         $errors = array_merge($errors, self::check_worksheet($data));
+        $errors = array_merge($errors, self::check_multi_edit_duedate($data));
         return $errors;
     }
 
@@ -162,7 +163,6 @@ class mumie_task_validator {
      * @return array Associative array of validation errors.
      */
     private static function check_worksheet(array $data): array {
-
         $isworksheet = self::is_worksheet($data);
         if (!$isworksheet) {
             return [];
@@ -177,6 +177,30 @@ class mumie_task_validator {
         } else if (!$triggerafterdeadline && $hasdeadline) {
             $errors['duration_selector'] =
                 get_string('mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline', 'mod_mumie');
+        }
+        return $errors;
+    }
+
+    /**
+     * Validates that the duedate property is only applied to tasks that already have a duedate set.
+     *
+     * @param array $data Form data.
+     * @return array Associative array of validation errors.
+     */
+    private static function check_multi_edit_duedate(array $data): array {
+        if (!self::is_duedate_property_selected($data)) {
+            return [];
+        }
+
+        $errors = [];
+        $taskids = json_decode($data['mumie_selected_tasks'] ?? '[]', true);
+        foreach ($taskids as $taskid) {
+            $task = locallib::get_mumie_task((int)$taskid);
+            if ($task && ($task->duedate <= 0)) {
+                $errors['mumie_multi_edit_deadline_error'] =
+                    get_string('mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline', 'mod_mumie');
+                break;
+            }
         }
         return $errors;
     }
@@ -217,5 +241,15 @@ class mumie_task_validator {
      */
     private static function is_correction_trigger_after_deadline(string $worksheet): bool {
         return json_decode($worksheet, true)['configuration']['correction']['correctorType'] === "AFTER_DEADLINE";
+    }
+
+    /**
+     * Check whether the duedate property is selected for multi-edit transfer.
+     * @param array $data POST data
+     * @return bool
+     */
+    private static function is_duedate_property_selected(array $data): bool {
+        $props = json_decode($data['mumie_selected_task_properties'] ?? '[]', true);
+        return in_array('duedate', $props);
     }
 }
