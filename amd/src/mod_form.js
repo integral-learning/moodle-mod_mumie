@@ -139,6 +139,67 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
+             * Collect current form settings for multi-task creation.
+             * @returns {Object} form settings
+             */
+            function collectFormSettings() {
+                const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
+                const submitBtn = document.getElementById('id_submitbutton');
+                const form = submitBtn && submitBtn.closest('form');
+                const sensitiveFields = ['sesskey', '_qf__mod_mumie_mod_form'];
+                const formdata = form
+                    ? Array.from(new FormData(form))
+                        .filter(([key]) => !sensitiveFields.includes(key))
+                        .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+                        .join('&')
+                    : '';
+                return {
+                    contextid: parseInt(contextId),
+                    section: section,
+                    formdata: formdata,
+                };
+            }
+
+            /**
+             * Handle multi-select postMessage: store tasks and show summary so teacher can adjust settings.
+             * @param {Array} tasks array of task objects from the selector
+             */
+            function handleMultiSelect(tasks) {
+                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                const summary = document.getElementById('mumie_multi_tasks_summary');
+                if (tasksField) {
+                    tasksField.value = JSON.stringify(tasks);
+                }
+                if (summary) {
+                    const names = tasks.map(t => t.name).join(', ');
+                    summary.textContent = tasks.length + ' tasks selected: ' + names;
+                    summary.style.display = 'block';
+                }
+                document.getElementById('id_name').disabled = true;
+                sendSuccess();
+                window.focus();
+            }
+
+            /**
+             * Submit multi-tasks via AJAX using current form settings, then redirect to course.
+             */
+            function submitMultiTasks() {
+                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                const courseId = document.getElementsByName('course')[0]?.value;
+                const settings = collectFormSettings();
+                settings.tasks = tasksField.value;
+
+                require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
+                    Ajax.call([{
+                        methodname: 'mod_mumie_create_multiple_tasks',
+                        args: settings,
+                    }])[0].done(function() {
+                        window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
+                    }).fail(Notification.exception);
+                });
+            }
+
+            /**
              * Add an event listener that accepts messages from LMS-Browser and updates the selected problem.
              */
             function addMessageListener() {
@@ -147,6 +208,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         return;
                     }
                     const importObj = JSON.parse(event.data);
+
+                    if (Array.isArray(importObj)) {
+                        handleMultiSelect(importObj);
+                        return;
+                    }
+
                     const isGraded = importObj.isGraded !== false;
                     const worksheet = importObj.worksheet ?? null;
                     try {
@@ -250,12 +317,15 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
+                        document.getElementById('id_name').disabled = true;
                         problemSelectorWindow = window.open(
                             lmsSelectorUrl +
                             '/lms-problem-selector?' +
                             "serverUrl=" +
                             encodeURIComponent(serverController.getSelectedServer().urlprefix) +
-                            '&gradingType=all',
+                            '&gradingType=all' +
+                            '&origin=' + encodeURIComponent(window.location.origin) +
+                            '&multiSelect=true',
                             "_blank",
                             'toolbar=0,location=0,menubar=0'
                         );
@@ -263,7 +333,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 disable: function() {
                     problemSelectorButton.disabled = true;
-                }
+                },
+                submitMultiTasks: submitMultiTasks,
             };
         })();
 
@@ -558,6 +629,18 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 if (addServerButton) {
                     require(['auth_mumie/mumie_server_config'], function(MumieServer) {
                         MumieServer.init(addServerButton, contextId);
+                    });
+                }
+
+                const submitBtn = document.getElementById('id_submitbutton');
+                const form = submitBtn && submitBtn.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                        if (tasksField && tasksField.value) {
+                            e.preventDefault();
+                            problemSelectorController.submitMultiTasks();
+                        }
                     });
                 }
             }
