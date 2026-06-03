@@ -404,17 +404,28 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
                         document.getElementById('id_name').disabled = true;
-                        problemSelectorWindow = window.open(
-                            lmsSelectorUrl +
-                            '/lms-problem-selector?' +
-                            "serverUrl=" +
-                            encodeURIComponent(serverController.getSelectedServer().urlprefix) +
-                            '&gradingType=all' +
-                            '&origin=' + encodeURIComponent(window.location.origin) +
-                            '&multiSelect=true',
-                            "_blank",
-                            'toolbar=0,location=0,menubar=0'
-                        );
+                        const selectedServer = serverController.getSelectedServer().urlprefix;
+                        const multiUrl = shouldUseSSO(lmsSelectorUrl, selectedServer)
+                            ? '/auth/mumie/problem_selector.php?' +
+                                'org=' + mumieOrg +
+                                '&serverurl=' + encodeURIComponent(selectedServer) +
+                                '&problemlang=' + langController.getSelectedLanguage() +
+                                '&origin=' + encodeURIComponent(window.location.origin) +
+                                '&gradingtype=all' +
+                                '&contextid=' + contextId +
+                                '&multiselect=true'
+                            : lmsSelectorUrl +
+                                '/lms-problem-selector?' +
+                                'org=' + mumieOrg +
+                                '&serverUrl=' + encodeURIComponent(selectedServer) +
+                                '&problemLang=' + langController.getSelectedLanguage() +
+                                '&origin=' + encodeURIComponent(window.location.origin) +
+                                '&uiLang=' + systemLanguage +
+                                '&gradingType=all' +
+                                '&multiCourse=true' +
+                                '&worksheet=true' +
+                                '&multiSelect=true';
+                        problemSelectorWindow = window.open(multiUrl, "_blank", 'toolbar=0,location=0,menubar=0');
                     };
                 },
                 disable: function() {
