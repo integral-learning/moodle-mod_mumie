@@ -139,153 +139,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Collect current form settings for multi-task creation.
-             * @returns {Object} form settings
-             */
-            function collectFormSettings() {
-                const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
-                const submitBtn = document.getElementById('id_submitbutton');
-                const form = submitBtn && submitBtn.closest('form');
-                const sensitiveFields = ['sesskey', '_qf__mod_mumie_mod_form'];
-                const formdata = form
-                    ? Array.from(new FormData(form))
-                        .filter(([key]) => !sensitiveFields.includes(key))
-                        .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
-                        .join('&')
-                    : '';
-                return {
-                    contextid: parseInt(contextId),
-                    section: section,
-                    formdata: formdata,
-                };
-            }
-
-            /**
-             * Handle multi-select postMessage: store tasks and show summary so teacher can adjust settings.
-             * @param {Array} tasks array of task objects from the selector
-             */
-            function handleMultiSelect(tasks) {
-                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
-                const summary = document.getElementById('mumie_multi_tasks_summary');
-                if (tasksField) {
-                    tasksField.value = JSON.stringify(tasks);
-                }
-                if (summary) {
-                    const items = tasks.map(t => {
-                        const li = document.createElement('li');
-                        li.textContent = t.name;
-                        return li;
-                    });
-                    summary.innerHTML = '';
-                    const label = document.createElement('div');
-                    label.textContent = tasks.length + ' tasks selected:';
-                    const list = document.createElement('ul');
-                    list.style.margin = '0.3em 0 0 1.2em';
-                    items.forEach(li => list.appendChild(li));
-                    summary.appendChild(label);
-                    summary.appendChild(list);
-                    summary.style.display = 'block';
-                }
-                const nameField = document.getElementById('id_name');
-                nameField.disabled = true;
-                nameField.removeAttribute('required');
-                const nameItem = document.getElementById('fitem_id_name');
-                if (nameItem) {
-                    nameItem.querySelectorAll('.req, .text-danger, [title="Required field"]')
-                        .forEach(el => { el.style.display = 'none'; });
-                }
-                const requiredLegend = document.querySelector('.fdescription.required');
-                if (requiredLegend) {
-                    requiredLegend.style.display = 'none';
-                }
-                sendSuccess();
-                window.focus();
-            }
-
-            /**
-             * Validate worksheet deadline requirements against current duration_selector.
-             * Returns a lang string key if invalid, null if valid.
-             * @param {Array} tasks
-             * @returns {string|null}
-             */
-            function validateWorksheetDeadlines(tasks) {
-                const durationSelector = document.getElementById('id_duration_selector')?.value || 'unlimited';
-                const hasDeadline = durationSelector === 'duedate' || durationSelector === 'timelimit';
-                for (const task of tasks) {
-                    if (!task.worksheet) {
-                        continue;
-                    }
-                    const config = typeof task.worksheet === 'string' ? JSON.parse(task.worksheet) : task.worksheet;
-                    const triggerAfterDeadline = config?.configuration?.correction?.correctorType === 'AFTER_DEADLINE';
-                    if (triggerAfterDeadline && !hasDeadline) {
-                        return 'mumie_form_deadline_required_for_trigger_after_deadline';
-                    }
-                    if (!triggerAfterDeadline && hasDeadline) {
-                        return 'mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline';
-                    }
-                }
-                return null;
-            }
-
-            /**
-             * Submit multi-tasks via AJAX using current form settings, then redirect to course.
-             */
-            function submitMultiTasks() {
-                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
-                const courseId = document.getElementsByName('course')[0]?.value;
-                const tasks = JSON.parse(tasksField.value);
-                const errorKey = validateWorksheetDeadlines(tasks);
-                if (errorKey) {
-                    require(['core/str'], function(Str) {
-                        Str.get_string(errorKey, 'mod_mumie').then(function(msg) {
-                            const field = document.getElementById('id_duration_selector');
-                            const fitem = field && field.closest('.fitem');
-                            if (fitem) {
-                                fitem.classList.add('has-danger');
-                                const feedback = fitem.querySelector('.form-control-feedback');
-                                if (feedback) {
-                                    feedback.innerHTML = msg;
-                                    feedback.style.display = 'block';
-                                }
-                                const section = fitem.closest('.collapse:not(.show)');
-                                if (section) {
-                                    section.classList.add('show');
-                                    const btn = document.querySelector('[aria-controls="' + section.id + '"]');
-                                    if (btn) {
-                                        btn.setAttribute('aria-expanded', 'true');
-                                    }
-                                }
-                            }
-                            if (field) {
-                                field.scrollIntoView({behavior: 'smooth', block: 'center'});
-                                field.focus();
-                            }
-                        });
-                    });
-                    return;
-                }
-                const fitemClear = document.getElementById('id_duration_selector')?.closest('.fitem');
-                if (fitemClear) {
-                    fitemClear.classList.remove('has-danger');
-                    const fb = fitemClear.querySelector('.form-control-feedback');
-                    if (fb) {
-                        fb.style.display = 'none';
-                    }
-                }
-                const settings = collectFormSettings();
-                settings.tasks = tasksField.value;
-
-                require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
-                    Ajax.call([{
-                        methodname: 'mod_mumie_create_multiple_tasks',
-                        args: settings,
-                    }])[0].done(function() {
-                        window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
-                    }).fail(Notification.exception);
-                });
-            }
-
-            /**
              * Add an event listener that accepts messages from LMS-Browser and updates the selected problem.
              */
             function addMessageListener() {
@@ -296,7 +149,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     const importObj = JSON.parse(event.data);
 
                     if (Array.isArray(importObj)) {
-                        handleMultiSelect(importObj);
+                        taskController.setMultiSelection(importObj);
+                        sendSuccess();
+                        window.focus();
                         return;
                     }
 
@@ -431,7 +286,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 disable: function() {
                     problemSelectorButton.disabled = true;
                 },
-                submitMultiTasks: submitMultiTasks,
             };
         })();
 
@@ -554,6 +408,151 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 durationController.setDurationElements();
             }
 
+            /**
+             * Store selected tasks and update UI for multi-task creation.
+             * @param {Array} tasks array of task objects from the selector
+             */
+            function setMultiSelection(tasks) {
+                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                const summary = document.getElementById('mumie_multi_tasks_summary');
+                if (tasksField) {
+                    tasksField.value = JSON.stringify(tasks);
+                }
+                if (summary) {
+                    const items = tasks.map(t => {
+                        const li = document.createElement('li');
+                        li.textContent = t.name;
+                        return li;
+                    });
+                    summary.innerHTML = '';
+                    const label = document.createElement('div');
+                    label.textContent = tasks.length + ' tasks selected:';
+                    const list = document.createElement('ul');
+                    list.style.margin = '0.3em 0 0 1.2em';
+                    items.forEach(li => list.appendChild(li));
+                    summary.appendChild(label);
+                    summary.appendChild(list);
+                    summary.style.display = 'block';
+                }
+                const nameField = document.getElementById('id_name');
+                nameField.disabled = true;
+                nameField.removeAttribute('required');
+                const nameItem = document.getElementById('fitem_id_name');
+                if (nameItem) {
+                    nameItem.querySelectorAll('.req, .text-danger, [title="Required field"]')
+                        .forEach(el => { el.style.display = 'none'; });
+                }
+                const requiredLegend = document.querySelector('.fdescription.required');
+                if (requiredLegend) {
+                    requiredLegend.style.display = 'none';
+                }
+            }
+
+            /**
+             * Collect current form settings for multi-task creation.
+             * @returns {Object} form settings
+             */
+            function collectFormSettings() {
+                const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
+                const submitBtn = document.getElementById('id_submitbutton');
+                const form = submitBtn && submitBtn.closest('form');
+                const sensitiveFields = ['sesskey', '_qf__mod_mumie_mod_form'];
+                const formdata = form
+                    ? Array.from(new FormData(form))
+                        .filter(([key]) => !sensitiveFields.includes(key))
+                        .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+                        .join('&')
+                    : '';
+                return {
+                    contextid: parseInt(contextId),
+                    section: section,
+                    formdata: formdata,
+                };
+            }
+
+            /**
+             * Validate worksheet deadline requirements against current duration_selector.
+             * Returns a lang string key if invalid, null if valid.
+             * @param {Array} tasks
+             * @returns {string|null}
+             */
+            function validateWorksheetDeadlines(tasks) {
+                const durationSelector = document.getElementById('id_duration_selector')?.value || 'unlimited';
+                const hasDeadline = durationSelector === 'duedate' || durationSelector === 'timelimit';
+                for (const task of tasks) {
+                    if (!task.worksheet) {
+                        continue;
+                    }
+                    const config = typeof task.worksheet === 'string' ? JSON.parse(task.worksheet) : task.worksheet;
+                    const triggerAfterDeadline = config?.configuration?.correction?.correctorType === 'AFTER_DEADLINE';
+                    if (triggerAfterDeadline && !hasDeadline) {
+                        return 'mumie_form_deadline_required_for_trigger_after_deadline';
+                    }
+                    if (!triggerAfterDeadline && hasDeadline) {
+                        return 'mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline';
+                    }
+                }
+                return null;
+            }
+
+            /**
+             * Submit multi-tasks via AJAX using current form settings, then redirect to course.
+             */
+            function submitMultiTasks() {
+                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                const courseId = document.getElementsByName('course')[0]?.value;
+                const tasks = JSON.parse(tasksField.value);
+                const errorKey = validateWorksheetDeadlines(tasks);
+                if (errorKey) {
+                    require(['core/str'], function(Str) {
+                        Str.get_string(errorKey, 'mod_mumie').then(function(msg) {
+                            const field = document.getElementById('id_duration_selector');
+                            const fitem = field && field.closest('.fitem');
+                            if (fitem) {
+                                fitem.classList.add('has-danger');
+                                const feedback = fitem.querySelector('.form-control-feedback');
+                                if (feedback) {
+                                    feedback.innerHTML = msg;
+                                    feedback.style.display = 'block';
+                                }
+                                const section = fitem.closest('.collapse:not(.show)');
+                                if (section) {
+                                    section.classList.add('show');
+                                    const btn = document.querySelector('[aria-controls="' + section.id + '"]');
+                                    if (btn) {
+                                        btn.setAttribute('aria-expanded', 'true');
+                                    }
+                                }
+                            }
+                            if (field) {
+                                field.scrollIntoView({behavior: 'smooth', block: 'center'});
+                                field.focus();
+                            }
+                        });
+                    });
+                    return;
+                }
+                const fitemClear = document.getElementById('id_duration_selector')?.closest('.fitem');
+                if (fitemClear) {
+                    fitemClear.classList.remove('has-danger');
+                    const fb = fitemClear.querySelector('.form-control-feedback');
+                    if (fb) {
+                        fb.style.display = 'none';
+                    }
+                }
+                const settings = collectFormSettings();
+                settings.tasks = tasksField.value;
+
+                require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
+                    Ajax.call([{
+                        methodname: 'mod_mumie_create_multiple_tasks',
+                        args: settings,
+                    }])[0].done(function() {
+                        window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
+                    }).fail(Notification.exception);
+                });
+            }
+
             return {
                 init: function() {
                     updateTaskDisplayElement(taskSelectionInput.value);
@@ -577,7 +576,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 getDelocalizedTaskLink: function() {
                     return delocalizeLink(taskSelectionInput.value);
-                }
+                },
+                setMultiSelection: setMultiSelection,
+                hasMultiTasks: function() {
+                    const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                    return tasksField && !!tasksField.value;
+                },
+                submitMultiTasks: submitMultiTasks,
             };
         })();
 
@@ -747,7 +752,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
                         if (tasksField && tasksField.value) {
                             e.preventDefault();
-                            problemSelectorController.submitMultiTasks();
+                            taskController.submitMultiTasks();
                         }
                     });
                 }
