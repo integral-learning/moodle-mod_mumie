@@ -419,28 +419,28 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     tasksField.value = JSON.stringify(tasks);
                 }
                 if (summary) {
-                    const items = tasks.map(t => {
-                        const li = document.createElement('li');
-                        li.textContent = t.name;
-                        return li;
+                    const taskListItems = tasks.map(task => {
+                        const taskListItem = document.createElement('li');
+                        taskListItem.textContent = task.name;
+                        return taskListItem;
                     });
                     summary.innerHTML = '';
-                    const label = document.createElement('div');
-                    label.textContent = tasks.length + ' tasks selected:';
-                    const list = document.createElement('ul');
-                    list.style.margin = '0.3em 0 0 1.2em';
-                    items.forEach(li => list.appendChild(li));
-                    summary.appendChild(label);
-                    summary.appendChild(list);
+                    const taskCountLabel = document.createElement('div');
+                    taskCountLabel.textContent = tasks.length + ' tasks selected:';
+                    const taskList = document.createElement('ul');
+                    taskList.style.margin = '0.3em 0 0 1.2em';
+                    taskListItems.forEach(taskListItem => taskList.appendChild(taskListItem));
+                    summary.appendChild(taskCountLabel);
+                    summary.appendChild(taskList);
                     summary.style.display = 'block';
                 }
                 const nameField = document.getElementById('id_name');
                 nameField.disabled = true;
                 nameField.removeAttribute('required');
-                const nameItem = document.getElementById('fitem_id_name');
-                if (nameItem) {
-                    nameItem.querySelectorAll('.req, .text-danger, [title="Required field"]')
-                        .forEach(el => { el.style.display = 'none'; });
+                const nameFieldContainer = document.getElementById('fitem_id_name');
+                if (nameFieldContainer) {
+                    nameFieldContainer.querySelectorAll('.req, .text-danger, [title="Required field"]')
+                        .forEach(requiredIndicator => { requiredIndicator.style.display = 'none'; });
                 }
                 const requiredLegend = document.querySelector('.fdescription.required');
                 if (requiredLegend) {
@@ -454,19 +454,19 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              */
             function collectFormSettings() {
                 const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
-                const submitBtn = document.getElementById('id_submitbutton');
-                const form = submitBtn && submitBtn.closest('form');
+                const submitButton = document.getElementById('id_submitbutton');
+                const form = submitButton && submitButton.closest('form');
                 const sensitiveFields = ['sesskey', '_qf__mod_mumie_mod_form'];
-                const formdata = form
+                const formData = form
                     ? Array.from(new FormData(form))
                         .filter(([key]) => !sensitiveFields.includes(key))
-                        .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+                        .map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
                         .join('&')
                     : '';
                 return {
                     contextid: parseInt(contextId),
                     section: section,
-                    formdata: formdata,
+                    formdata: formData,
                 };
             }
 
@@ -483,8 +483,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     if (!task.worksheet) {
                         continue;
                     }
-                    const config = typeof task.worksheet === 'string' ? JSON.parse(task.worksheet) : task.worksheet;
-                    const triggerAfterDeadline = config?.configuration?.correction?.correctorType === 'AFTER_DEADLINE';
+                    const worksheetConfig = task.worksheet;
+                    const triggerAfterDeadline = worksheetConfig?.configuration?.correction?.correctorType === 'AFTER_DEADLINE';
                     if (triggerAfterDeadline && !hasDeadline) {
                         return 'mumie_form_deadline_required_for_trigger_after_deadline';
                     }
@@ -502,42 +502,44 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
                 const courseId = document.getElementsByName('course')[0]?.value;
                 const tasks = JSON.parse(tasksField.value);
-                const errorKey = validateWorksheetDeadlines(tasks);
-                if (errorKey) {
+                const deadlineValidationError = validateWorksheetDeadlines(tasks);
+                if (deadlineValidationError) {
                     require(['core/str'], function(Str) {
-                        Str.get_string(errorKey, 'mod_mumie').then(function(msg) {
-                            const field = document.getElementById('id_duration_selector');
-                            const fitem = field && field.closest('.fitem');
-                            if (fitem) {
-                                fitem.classList.add('has-danger');
-                                const feedback = fitem.querySelector('.form-control-feedback');
+                        Str.get_string(deadlineValidationError, 'mod_mumie').then(function(errorMessage) {
+                            const durationSelectorField = document.getElementById('id_duration_selector');
+                            const workingPeriodContainer = durationSelectorField && durationSelectorField.closest('.fitem');
+                            if (workingPeriodContainer) {
+                                workingPeriodContainer.classList.add('has-danger');
+                                const feedback = workingPeriodContainer.querySelector('.form-control-feedback');
                                 if (feedback) {
-                                    feedback.innerHTML = msg;
+                                    feedback.innerHTML = errorMessage;
                                     feedback.style.display = 'block';
                                 }
-                                const section = fitem.closest('.collapse:not(.show)');
-                                if (section) {
-                                    section.classList.add('show');
-                                    const btn = document.querySelector('[aria-controls="' + section.id + '"]');
-                                    if (btn) {
-                                        btn.setAttribute('aria-expanded', 'true');
+                                const collapsibleSection = workingPeriodContainer.closest('.collapse:not(.show)');
+                                if (collapsibleSection) {
+                                    collapsibleSection.classList.add('show');
+                                    const sectionToggleButton = document.querySelector(
+                                        '[aria-controls="' + collapsibleSection.id + '"]'
+                                    );
+                                    if (sectionToggleButton) {
+                                        sectionToggleButton.setAttribute('aria-expanded', 'true');
                                     }
                                 }
                             }
-                            if (field) {
-                                field.scrollIntoView({behavior: 'smooth', block: 'center'});
-                                field.focus();
+                            if (durationSelectorField) {
+                                durationSelectorField.scrollIntoView({behavior: 'smooth', block: 'center'});
+                                durationSelectorField.focus();
                             }
                         });
                     });
                     return;
                 }
-                const fitemClear = document.getElementById('id_duration_selector')?.closest('.fitem');
-                if (fitemClear) {
-                    fitemClear.classList.remove('has-danger');
-                    const fb = fitemClear.querySelector('.form-control-feedback');
-                    if (fb) {
-                        fb.style.display = 'none';
+                const workingPeriodContainer = document.getElementById('id_duration_selector')?.closest('.fitem');
+                if (workingPeriodContainer) {
+                    workingPeriodContainer.classList.remove('has-danger');
+                    const feedback = workingPeriodContainer.querySelector('.form-control-feedback');
+                    if (feedback) {
+                        feedback.style.display = 'none';
                     }
                 }
                 const settings = collectFormSettings();
@@ -690,12 +692,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         /**
          *  Disable all dropdown menus and show notification
-         * @param {string} errorKey
+         * @param {string} deadlineValidationError
          */
-        function disableDropDownMenus(errorKey) {
+        function disableDropDownMenus(deadlineValidationError) {
             require(['core/str', "core/notification"], function(str, notification) {
                 str.get_strings([{
-                    'key': errorKey,
+                    'key': deadlineValidationError,
                     component: 'mod_mumie'
                 }]).done(function(s) {
                     notification.addNotification({
@@ -749,8 +751,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             cancelClicked = false;
                             return;
                         }
-                        const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
-                        if (tasksField && tasksField.value) {
+                        if (taskController.hasMultiTasks()) {
                             e.preventDefault();
                             taskController.submitMultiTasks();
                         }
