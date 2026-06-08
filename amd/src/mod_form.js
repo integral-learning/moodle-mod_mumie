@@ -692,12 +692,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
         /**
          *  Disable all dropdown menus and show notification
-         * @param {string} deadlineValidationError
+         * @param {string} errorKey
          */
-        function disableDropDownMenus(deadlineValidationError) {
+        function disableDropDownMenus(errorKey) {
             require(['core/str', "core/notification"], function(str, notification) {
                 str.get_strings([{
-                    'key': deadlineValidationError,
+                    'key': errorKey,
                     component: 'mod_mumie'
                 }]).done(function(s) {
                     notification.addNotification({
@@ -736,8 +736,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     });
                 }
 
-                const submitBtn = document.getElementById('id_submitbutton');
-                const form = submitBtn && submitBtn.closest('form');
+                const submitButton = document.getElementById('id_submitbutton');
+                const form = submitButton && submitButton.closest('form');
                 if (form) {
                     let cancelClicked = false;
                     const cancelBtn = document.getElementById('id_cancel');
