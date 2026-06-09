@@ -425,8 +425,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     });
                     summary.innerHTML = '';
                     const taskCountLabel = document.createElement('div');
-                    taskCountLabel.textContent = tasks.length + ' tasks selected:';
                     const taskList = document.createElement('ul');
+                    require(['core/str'], function(Str) {
+                        Str.get_string('mumie_multi_tasks_selected', 'mod_mumie', tasks.length)
+                            .then(function(label) {
+                                taskCountLabel.textContent = label;
+                            });
+                    });
                     taskList.style.margin = '0.3em 0 0 1.2em';
                     taskListItems.forEach(taskListItem => taskList.appendChild(taskListItem));
                     summary.appendChild(taskCountLabel);
