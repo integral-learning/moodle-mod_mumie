@@ -55,6 +55,21 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     document.getElementById('fitem_id_duedate_info').style.display = displayNone;
                     document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
                 }
+
+                const duedatePropRow = document
+                    .querySelector('[name="mumie_multi_edit_property"][value="duedate"]')
+                    ?.closest('tr');
+                if (duedatePropRow) {
+                    const show = durationSelector.value === 'duedate';
+                    duedatePropRow.style.display = show ? '' : displayNone;
+                    if (!show) {
+                        const duedatePropertyCheckbox = duedatePropRow.querySelector('[name="mumie_multi_edit_property"]');
+                        if (duedatePropertyCheckbox && duedatePropertyCheckbox.checked) {
+                            duedatePropertyCheckbox.checked = false;
+                            duedatePropertyCheckbox.dispatchEvent(new Event('change'));
+                        }
+                    }
+                }
             }
 
             return {
@@ -654,6 +669,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
+             * Show or hide per-task "Working period: not Deadline" warnings based on whether the duedate property is selected.
+             */
+            function updateNoDuedateWarnings() {
+                const duedateSelected = Array.from(propertySelectionInputs)
+                    .some(checkbox => checkbox.value === 'duedate' && checkbox.checked);
+                document.querySelectorAll('.mumie-form-working-period-not-duedate-warning').forEach(function(elem) {
+                    elem.style.display = duedateSelected ? '' : 'none';
+                });
+            }
+
+            /**
              * Set selection listeners for properties to apply to MUMIE Tasks in the course.
              */
             function setPropertySelectionListeners() {
@@ -665,6 +691,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             selectedTaskProp.push(checkbox.value);
                         }
                         selectedTaskProperties.value = JSON.stringify(selectedTaskProp);
+                        updateNoDuedateWarnings();
                     };
                 });
             }
