@@ -189,7 +189,6 @@ class mod_mumie_external extends external_api {
         $privategradepool = (int)(isset($formfields['privategradepool']) ? $formfields['privategradepool'] : 0);
         $completionpass = (int)(isset($formfields['completionpass']) ? $formfields['completionpass'] : 0);
         $completionview = (int)($formfields['completionview'] ?? 0);
-        $isgraded = (int)($formfields['isgraded'] ?? 1);
         $durationselector = $formfields['duration_selector'] ?? 'unlimited';
 
         $duedate = 0;
@@ -239,7 +238,7 @@ class mod_mumie_external extends external_api {
             $moduleinfo->duration_selector = $durationselector;
             $moduleinfo->duedate          = $duedate;
             $moduleinfo->timelimit        = $timelimit;
-            $moduleinfo->isgraded         = $isgraded;
+            $moduleinfo->isgraded         = (int)($taskdata['isGraded'] ?? 1);
 
             $moduleinfo->grade            = $points;
             $moduleinfo->gradepass        = $gradepass;
