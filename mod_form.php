@@ -149,7 +149,7 @@ class mod_mumie_mod_form extends moodleform_mod {
             )
         );
         $mform->addElement('button', 'multi_problem_selector_btn', get_string('mumie_form_multi_prb_selector_btn', 'mod_mumie'));
-        $mform->addElement('html', '<div id="mumie_multi_tasks_summary" style="display:none; margin: 0.5em 0; padding: 0.5em; background: #f0f0f0; border-radius: 4px;"></div>');
+        $mform->addElement('html', '<div id="mumie_multi_tasks_summary" style="display:none;"></div>');
         $mform->addElement('hidden', 'mumie_multi_tasks', '');
         $mform->setType('mumie_multi_tasks', PARAM_RAW);
 
