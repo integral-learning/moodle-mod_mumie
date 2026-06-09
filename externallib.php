@@ -189,7 +189,7 @@ class mod_mumie_external extends external_api {
         $privategradepool = (int)(isset($formfields['privategradepool']) ? $formfields['privategradepool'] : 0);
         $completionpass = (int)(isset($formfields['completionpass']) ? $formfields['completionpass'] : 0);
         $completionview = (int)($formfields['completionview'] ?? 0);
-        $isgraded = (int)($formfields['mumie_isgraded'] ?? 1);
+        $isgraded = (int)($formfields['isgraded'] ?? 1);
         $durationselector = $formfields['duration_selector'] ?? 'unlimited';
 
         $duedate = 0;
@@ -226,8 +226,8 @@ class mod_mumie_external extends external_api {
             }
 
             $moduleinfo->name             = clean_param($taskdata['name'] ?? '', PARAM_TEXT);
-            $moduleinfo->taskurl          = $tasklink;
             $moduleinfo->language         = clean_param($taskdata['language'] ?? '', PARAM_TEXT);
+            $moduleinfo->taskurl          = $tasklink . '?lang=' . $moduleinfo->language;
             $moduleinfo->mumie_coursefile = clean_param($taskdata['path_to_coursefile'] ?? '', PARAM_TEXT);
             $moduleinfo->mumie_course     = clean_param($taskdata['course'] ?? '', PARAM_TEXT);
             $moduleinfo->server           = $taskserver;

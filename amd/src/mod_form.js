@@ -258,9 +258,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
-                        document.getElementById('id_name').disabled = true;
                         const selectedServer = serverController.getSelectedServer().urlprefix;
-                        const multiUrl = shouldUseSSO(lmsSelectorUrl, selectedServer)
+                        const multiSelectorUrl = shouldUseSSO(lmsSelectorUrl, selectedServer)
                             ? '/auth/mumie/problem_selector.php?' +
                                 'org=' + mumieOrg +
                                 '&serverurl=' + encodeURIComponent(selectedServer) +
@@ -280,7 +279,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 '&multiCourse=true' +
                                 '&worksheet=true' +
                                 '&multiSelect=true';
-                        problemSelectorWindow = window.open(multiUrl, "_blank", 'toolbar=0,location=0,menubar=0');
+                        problemSelectorWindow = window.open(multiSelectorUrl, "_blank", 'toolbar=0,location=0,menubar=0');
                     };
                 },
                 disable: function() {
@@ -560,6 +559,29 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     updateTaskDisplayElement(taskSelectionInput.value);
                 },
                 setSelection: function(link, language, name) {
+                    const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                    if (tasksField) {
+                        tasksField.value = '';
+                    }
+                    const summary = document.getElementById('mumie_multi_tasks_summary');
+                    if (summary) {
+                        summary.style.display = 'none';
+                        summary.innerHTML = '';
+                    }
+                    const nameField = document.getElementById('id_name');
+                    if (nameField) {
+                        nameField.disabled = false;
+                        nameField.setAttribute('required', 'required');
+                    }
+                    const nameFieldContainer = document.getElementById('fitem_id_name');
+                    if (nameFieldContainer) {
+                        nameFieldContainer.querySelectorAll('.req, .text-danger, [title="Required field"]')
+                            .forEach(requiredIndicator => { requiredIndicator.style.display = ''; });
+                    }
+                    const requiredLegend = document.querySelector('.fdescription.required');
+                    if (requiredLegend) {
+                        requiredLegend.style.display = '';
+                    }
                     updateTaskUri(link, language);
                     updateName(name);
                 },
@@ -740,9 +762,9 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 const form = submitButton && submitButton.closest('form');
                 if (form) {
                     let cancelClicked = false;
-                    const cancelBtn = document.getElementById('id_cancel');
-                    if (cancelBtn) {
-                        cancelBtn.addEventListener('click', function() {
+                    const cancelButton = document.getElementById('id_cancel');
+                    if (cancelButton) {
+                        cancelButton.addEventListener('click', function() {
                             cancelClicked = true;
                         });
                     }
