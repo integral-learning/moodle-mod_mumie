@@ -154,6 +154,7 @@ class mod_mumie_external extends external_api {
         require_once($CFG->dirroot . '/course/modlib.php');
         require_once($CFG->dirroot . '/mod/mumie/lib.php');
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+        require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
 
         $params = self::validate_parameters(
             self::create_multiple_tasks_parameters(),
@@ -224,12 +225,15 @@ class mod_mumie_external extends external_api {
                 throw new invalid_parameter_exception('Each task must have a valid link and server');
             }
 
+            $serverobj = new \auth_mumie\mumie_server();
+            $serverobj->set_urlprefix($taskserver);
+
             $moduleinfo->name             = clean_param($taskdata['name'] ?? '', PARAM_TEXT);
             $moduleinfo->language         = clean_param($taskdata['language'] ?? '', PARAM_TEXT);
             $moduleinfo->taskurl          = $tasklink . '?lang=' . $moduleinfo->language;
             $moduleinfo->mumie_coursefile = clean_param($taskdata['path_to_coursefile'] ?? '', PARAM_TEXT);
             $moduleinfo->mumie_course     = clean_param($taskdata['course'] ?? '', PARAM_TEXT);
-            $moduleinfo->server           = $taskserver;
+            $moduleinfo->server           = $serverobj->get_urlprefix();
 
             $moduleinfo->points           = $points;
             $moduleinfo->launchcontainer  = $launchcontainer;
