@@ -1,4 +1,4 @@
-define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_server_config', 'core/ajax'],
+define(['jquery', 'core/templates', 'auth_mumie/mumie_server_config', 'core/ajax'],
     function() {
         const addServerButton = document.getElementById("id_add_server_button");
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
