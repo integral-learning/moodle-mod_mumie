@@ -1,5 +1,12 @@
-define(['jquery', 'core/str', 'core/modal_save_cancel', 'core/modal_events', 'core/fragment', 'core/ajax', 'core/yui'],
-    function($, Str, ModalSaveCancel, ModalEvents, Fragment, Ajax, Y) {
+define([
+    'jquery',
+    'core/str',
+    'core/modal_save_cancel',
+    'core/modal_events',
+    'core/fragment',
+    'core/ajax',
+    'core_form/changechecker',
+], function($, Str, ModalSaveCancel, ModalEvents, Fragment, Ajax, FormChangeChecker) {
 
         var MumieDueDate = function(selector, contextid, formdata) {
             this.contextid = contextid;
@@ -58,12 +65,7 @@ define(['jquery', 'core/str', 'core/modal_save_cancel', 'core/modal_events', 'co
          */
         MumieDueDate.prototype.handleFormSubmissionResponse = function() {
             this.modal.hide();
-            // We could trigger an event instead.
-            // Yuk.
-            Y.use('moodle-core-formchangechecker', function() {
-                M.core_formchangechecker.reset_form_dirty_state();
-            });
-
+            FormChangeChecker.resetAllFormDirtyStates();
             document.location.reload();
         };
 
