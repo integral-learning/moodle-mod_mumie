@@ -8,9 +8,14 @@ All important changes to this plugin will be documented in this file.
 - Tasks without a 'Deadline' working period show a warning when deadline transfer is selected
 - Validation prevents transferring a deadline to tasks that were not created with working period type 'Deadline'
 
+### Changed
+- Plugin now requires Moodle 4.3
+- Support Moodle 5.2
+
 ### Fixed
 - MUMIE Task no longer shows working period descriptions for all options simultaneously
 - Inconsistent working period description texts corrected
+- Deleting a due date extension no longer fails with a server error
 
 ## [v1.9.1] - 2025-07-03
 ### Changed
