@@ -170,14 +170,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         return;
                     }
 
-                    const isGraded = importObj.isGraded !== false;
-                    const worksheet = importObj.worksheet ?? null;
                     try {
-                        courseController.setCourse(importObj.path_to_coursefile);
-                        langController.setLanguage(importObj.language);
-                        taskController.setSelection(importObj.link, importObj.language, importObj.name);
-                        taskController.setIsGraded(isGraded);
-                        worksheetController.setWorksheet(worksheet);
+                        applyPickerPayloadToForm(importObj);
                         sendSuccess();
                         window.focus();
                         displayProblemSelectedMessage();
@@ -302,6 +296,25 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
             };
         })();
+
+        /**
+         * Apply a picker payload to the form's per-task fields.
+         *
+         * Single source of truth for picker-payload → form-field mapping.
+         * Used by both the single-task postMessage handler and the multi-task
+         * submit loop, so new picker fields only need to be wired here.
+         *
+         * @param {Object} payload picker payload for one task
+         */
+        function applyPickerPayloadToForm(payload) {
+            const isGraded = payload.isGraded !== false;
+            const worksheet = payload.worksheet ?? null;
+            courseController.setCourse(payload.path_to_coursefile);
+            langController.setLanguage(payload.language);
+            taskController.setSelection(payload.link, payload.language, payload.name);
+            taskController.setIsGraded(isGraded);
+            worksheetController.setWorksheet(worksheet);
+        }
 
         const courseController = (function() {
             const courseNameElem = document.getElementById("id_mumie_course");
@@ -468,106 +481,65 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
-             * Collect current form settings for multi-task creation.
-             * @returns {Object} form settings
+             * Serialize a form into a URL-encoded POST string, omitting form mechanics
+             * the webservice does not need (sesskey, qf form marker).
+             *
+             * Disabled form controls are temporarily enabled so FormData includes them:
+             * the picker writes values to display-only inputs (e.g. mumie_course) that
+             * the server-side validator still expects to receive.
+             *
+             * @param {HTMLFormElement} form
+             * @returns {string}
              */
-            function collectFormSettings() {
-                const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
-                const submitButton = document.getElementById('id_submitbutton');
-                const form = submitButton && submitButton.closest('form');
-                const sensitiveFields = ['sesskey', '_qf__mod_mumie_mod_form'];
-                const formData = form
-                    ? Array.from(new FormData(form))
-                        .filter(([key]) => !sensitiveFields.includes(key))
+            function serializeFormFields(form) {
+                const disabledFields = Array.from(form.querySelectorAll(':disabled'));
+                disabledFields.forEach(field => { field.disabled = false; });
+                try {
+                    const omit = ['sesskey', '_qf__mod_mumie_mod_form'];
+                    return Array.from(new FormData(form))
+                        .filter(([key]) => !omit.includes(key))
                         .map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
-                        .join('&')
-                    : '';
-                return {
-                    contextid: parseInt(contextId),
-                    section: section,
-                    formdata: formData,
-                };
-            }
-
-            /**
-             * Validate worksheet deadline requirements against current duration_selector.
-             * Returns a lang string key if invalid, null if valid.
-             * @param {Array} tasks
-             * @returns {string|null}
-             */
-            function validateWorksheetDeadlines(tasks) {
-                const durationSelector = document.getElementById('id_duration_selector')?.value || 'unlimited';
-                const hasDeadline = durationSelector === 'duedate' || durationSelector === 'timelimit';
-                for (const task of tasks) {
-                    if (!task.worksheet) {
-                        continue;
-                    }
-                    const worksheetConfig = task.worksheet;
-                    const triggerAfterDeadline = worksheetConfig?.configuration?.correction?.correctorType === 'AFTER_DEADLINE';
-                    if (triggerAfterDeadline && !hasDeadline) {
-                        return 'mumie_form_deadline_required_for_trigger_after_deadline';
-                    }
-                    if (!triggerAfterDeadline && hasDeadline) {
-                        return 'mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline';
-                    }
+                        .join('&');
+                } finally {
+                    disabledFields.forEach(field => { field.disabled = true; });
                 }
-                return null;
             }
 
             /**
-             * Submit multi-tasks via AJAX using current form settings, then redirect to course.
+             * Submit multi-tasks via AJAX, then redirect to course.
+             *
+             * Builds one full form payload per task by applying each picker payload
+             * to the live form and serializing it. The server treats each entry as
+             * an independent single-task submission, so picker-payload → form-field
+             * mapping lives in applyPickerPayloadToForm and is shared with the
+             * single-task path. Validation runs server-side via the shared form
+             * pipeline; errors surface via Notification.exception.
              */
             function submitMultiTasks() {
                 const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
                 const courseId = document.getElementsByName('course')[0]?.value;
+                const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
+                const submitButton = document.getElementById('id_submitbutton');
+                const form = submitButton && submitButton.closest('form');
                 const tasks = JSON.parse(tasksField.value);
-                const deadlineValidationError = validateWorksheetDeadlines(tasks);
-                if (deadlineValidationError) {
-                    require(['core/str'], function(Str) {
-                        Str.get_string(deadlineValidationError, 'mod_mumie').then(function(errorMessage) {
-                            const durationSelectorField = document.getElementById('id_duration_selector');
-                            const workingPeriodContainer = durationSelectorField && durationSelectorField.closest('.fitem');
-                            if (workingPeriodContainer) {
-                                workingPeriodContainer.classList.add('has-danger');
-                                const feedback = workingPeriodContainer.querySelector('.form-control-feedback');
-                                if (feedback) {
-                                    feedback.innerHTML = errorMessage;
-                                    feedback.style.display = 'block';
-                                }
-                                const collapsibleSection = workingPeriodContainer.closest('.collapse:not(.show)');
-                                if (collapsibleSection) {
-                                    collapsibleSection.classList.add('show');
-                                    const sectionToggleButton = document.querySelector(
-                                        '[aria-controls="' + collapsibleSection.id + '"]'
-                                    );
-                                    if (sectionToggleButton) {
-                                        sectionToggleButton.setAttribute('aria-expanded', 'true');
-                                    }
-                                }
-                            }
-                            if (durationSelectorField) {
-                                durationSelectorField.scrollIntoView({behavior: 'smooth', block: 'center'});
-                                durationSelectorField.focus();
-                            }
-                        });
-                    });
-                    return;
-                }
-                const workingPeriodContainer = document.getElementById('id_duration_selector')?.closest('.fitem');
-                if (workingPeriodContainer) {
-                    workingPeriodContainer.classList.remove('has-danger');
-                    const feedback = workingPeriodContainer.querySelector('.form-control-feedback');
-                    if (feedback) {
-                        feedback.style.display = 'none';
-                    }
-                }
-                const settings = collectFormSettings();
-                settings.tasks = tasksField.value;
+
+                const tasksFormData = tasks.map(task => {
+                    applyPickerPayloadToForm(task);
+                    return serializeFormFields(form);
+                });
+
+                // applyPickerPayloadToForm leaves the form in single-task mode of the last task;
+                // restore the multi-task UI so the form is coherent if the AJAX call fails.
+                setMultiSelection(tasks);
 
                 require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                     Ajax.call([{
                         methodname: 'mod_mumie_create_multiple_tasks',
-                        args: settings,
+                        args: {
+                            contextid: parseInt(contextId),
+                            section: section,
+                            tasksformdata: tasksFormData,
+                        },
                     }])[0].done(function() {
                         window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
                     }).fail(Notification.exception);

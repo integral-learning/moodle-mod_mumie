@@ -132,37 +132,44 @@ class mod_mumie_external extends external_api {
      */
     public static function create_multiple_tasks_parameters() {
         return new external_function_parameters([
-            'contextid' => new external_value(PARAM_INT, 'Context id of the course'),
-            'section'   => new external_value(PARAM_INT, 'Section number to add tasks to'),
-            'tasks'     => new external_value(PARAM_RAW, 'JSON array of task objects'),
-            'formdata'  => new external_value(PARAM_RAW, 'URL-encoded form data for settings'),
+            'contextid'     => new external_value(PARAM_INT, 'Context id of the course'),
+            'section'       => new external_value(PARAM_INT, 'Section number to add tasks to'),
+            'tasksformdata' => new external_multiple_structure(
+                new external_value(PARAM_RAW, 'URL-encoded form POST for one task'),
+                'One serialized form POST per task to create'
+            ),
         ]);
     }
 
     /**
-     * Create multiple MUMIE tasks at once with shared settings.
+     * Create multiple MUMIE tasks at once.
+     *
+     * Each entry of tasksformdata is the same payload the form would submit
+     * for a single task. The picker-payload → form-field mapping lives in JS
+     * (applyPickerPayloadToForm) and is shared with the single-task path, so
+     * adding a new picker field doesn't require parallel PHP changes.
      *
      * @param int $contextid Course context id
      * @param int $section Section number
-     * @param string $tasks JSON array of task objects
-     * @param string $formdata URL-encoded serialized form data
+     * @param string[] $tasksformdata One URL-encoded form POST per task
      * @return array Array of created course module ids
      */
-    public static function create_multiple_tasks($contextid, $section, $tasks, $formdata) {
+    public static function create_multiple_tasks($contextid, $section, $tasksformdata) {
         global $CFG, $DB;
 
         require_once($CFG->dirroot . '/course/modlib.php');
         require_once($CFG->dirroot . '/mod/mumie/lib.php');
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
-        require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
+        require_once($CFG->dirroot . '/mod/mumie/mod_form.php');
+        require_once($CFG->dirroot . '/mod/mumie/forms/form_field_decoder.php');
+        require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
 
         $params = self::validate_parameters(
             self::create_multiple_tasks_parameters(),
             [
-                'contextid' => $contextid,
-                'section'   => $section,
-                'tasks'     => $tasks,
-                'formdata'  => $formdata,
+                'contextid'     => $contextid,
+                'section'       => $section,
+                'tasksformdata' => $tasksformdata,
             ]
         );
 
@@ -170,87 +177,42 @@ class mod_mumie_external extends external_api {
         self::validate_context($context);
         require_capability('mod/mumie:addinstance', $context);
 
-        $course = $DB->get_record('course', ['id' => $context->instanceid], '*', MUST_EXIST);
-        $mumiemodule = $DB->get_record('modules', ['name' => 'mumie'], '*', MUST_EXIST);
-        $taskarray = json_decode($params['tasks'], true);
-        if (!is_array($taskarray) || empty($taskarray)) {
-            throw new invalid_parameter_exception('tasks must be a non-empty JSON array');
+        if (empty($params['tasksformdata'])) {
+            throw new invalid_parameter_exception('tasksformdata must be a non-empty array');
         }
-        if (count($taskarray) > 50) {
+        if (count($params['tasksformdata']) > 50) {
             throw new invalid_parameter_exception('Cannot create more than 50 tasks at once');
         }
 
-        $formfields = [];
-        parse_str($params['formdata'], $formfields);
-
-        $points = (int)($formfields['points'] ?? 100);
-        $gradepass = (float)($formfields['gradepass'] ?? 0);
-        $gradecat = (int)($formfields['gradecat'] ?? 0);
-        $launchcontainer = (int)($formfields['launchcontainer'] ?? 0);
-        $privategradepool = (int)(isset($formfields['privategradepool']) ? $formfields['privategradepool'] : 0);
-        $completionpass = (int)(isset($formfields['completionpass']) ? $formfields['completionpass'] : 0);
-        $completionview = (int)($formfields['completionview'] ?? 0);
-        $durationselector = $formfields['duration_selector'] ?? 'unlimited';
-
-        $duedate = 0;
-        if ($durationselector === 'duedate' && !empty($formfields['duedate']['year'])) {
-            $duedate = make_timestamp(
-                $formfields['duedate']['year'],
-                $formfields['duedate']['month'],
-                $formfields['duedate']['day'],
-                $formfields['duedate']['hour'] ?? 0,
-                $formfields['duedate']['minute'] ?? 0
-            );
-        }
-
-        $timelimit = 0;
-        if ($durationselector === 'timelimit' && !empty($formfields['timelimit']['timeunit'])) {
-            $timelimit = (int)$formfields['timelimit']['number'] * (int)$formfields['timelimit']['timeunit'];
-        }
+        $course = $DB->get_record('course', ['id' => $context->instanceid], '*', MUST_EXIST);
+        $mumiemodule = $DB->get_record('modules', ['name' => 'mumie'], '*', MUST_EXIST);
 
         $createdids = [];
-        foreach ($taskarray as $taskdata) {
-            $moduleinfo = new stdClass();
-            $moduleinfo->modulename    = 'mumie';
-            $moduleinfo->module        = $mumiemodule->id;
-            $moduleinfo->course        = $course->id;
-            $moduleinfo->section       = $params['section'];
-            $moduleinfo->visible       = 1;
-            $moduleinfo->intro         = '';
-            $moduleinfo->introformat   = FORMAT_HTML;
+        foreach ($params['tasksformdata'] as $taskpost) {
+            $formfields = [];
+            parse_str($taskpost, $formfields);
 
-            $tasklink = clean_param($taskdata['link'] ?? '', PARAM_TEXT);
-            $taskserver = clean_param($taskdata['server'] ?? '', PARAM_URL);
-            if (empty($tasklink) || empty($taskserver)) {
-                throw new invalid_parameter_exception('Each task must have a valid link and server');
+            $instancedata = \mod_mumie\form_field_decoder::from_form_fields($formfields);
+            \mod_mumie_mod_form::clean_up_duration_values($instancedata);
+
+            $instancedata->modulename  = 'mumie';
+            $instancedata->module      = $mumiemodule->id;
+            $instancedata->course      = $course->id;
+            $instancedata->section     = $params['section'];
+            $instancedata->visible     = 1;
+            $instancedata->intro       = '';
+            $instancedata->introformat = FORMAT_HTML;
+            if (isset($instancedata->points)) {
+                $instancedata->grade = (int)$instancedata->points;
             }
 
-            $serverobj = new \auth_mumie\mumie_server();
-            $serverobj->set_urlprefix($taskserver);
+            $errors = \mod_mumie\mumie_task_validator::get_errors((array)$instancedata, new stdClass());
+            if (!empty($errors)) {
+                throw new moodle_exception('mumie_multi_task_validation_error', 'mod_mumie', '', reset($errors));
+            }
 
-            $moduleinfo->name             = clean_param($taskdata['name'] ?? '', PARAM_TEXT);
-            $moduleinfo->language         = clean_param($taskdata['language'] ?? '', PARAM_TEXT);
-            $moduleinfo->taskurl          = $tasklink . '?lang=' . $moduleinfo->language;
-            $moduleinfo->mumie_coursefile = clean_param($taskdata['path_to_coursefile'] ?? '', PARAM_TEXT);
-            $moduleinfo->mumie_course     = clean_param($taskdata['course'] ?? '', PARAM_TEXT);
-            $moduleinfo->server           = $serverobj->get_urlprefix();
-
-            $moduleinfo->points           = $points;
-            $moduleinfo->launchcontainer  = $launchcontainer;
-            $moduleinfo->privategradepool = $privategradepool;
-            $moduleinfo->completionpass   = $completionpass;
-            $moduleinfo->duration_selector = $durationselector;
-            $moduleinfo->duedate          = $duedate;
-            $moduleinfo->timelimit        = $timelimit;
-            $moduleinfo->isgraded         = (int)($taskdata['isGraded'] ?? 1);
-
-            $moduleinfo->grade            = $points;
-            $moduleinfo->gradepass        = $gradepass;
-            $moduleinfo->gradecat         = $gradecat;
-            $moduleinfo->completionview   = $completionview;
-
-            $moduleinfo = add_moduleinfo($moduleinfo, $course);
-            $createdids[] = $moduleinfo->coursemodule;
+            $created = add_moduleinfo($instancedata, $course);
+            $createdids[] = $created->coursemodule;
         }
 
         return $createdids;

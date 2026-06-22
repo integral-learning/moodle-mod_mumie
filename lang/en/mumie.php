@@ -125,6 +125,7 @@ $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_percentage'] = 'Grade in %';
 $string['mumie_grading_settings'] = "Individual grading settings";
 $string['mumie_multi_problem_selector'] = 'Alternatively, you can also create multiple MUMIE Tasks at once using the Multi Problem Selector. All tasks will be created with the settings configured (points, deadline, container type, etc.). Each task keeps its own name — unlike single task creation, no custom name can be assigned. <br><br>For more information, have a look at our <a target="_blank" href="{$a}">wiki</a>';
+$string['mumie_multi_task_validation_error'] = 'Validation error: {$a}';
 $string['mumie_multi_tasks_selected'] = 'You have selected the following {$a} problems:';
 $string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
 $string['mumie_no_submissions'] = 'No answers submitted';

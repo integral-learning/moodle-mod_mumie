@@ -282,7 +282,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      *
      * @param stdClass $data Submitted form data (mutated in place).
      */
-    private static function clean_up_duration_values(stdClass $data): void {
+    public static function clean_up_duration_values(stdClass $data): void {
         if ($data->duration_selector !== 'duedate') {
             $data->duedate = 0;
         }
