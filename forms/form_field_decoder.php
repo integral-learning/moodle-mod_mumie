@@ -45,6 +45,10 @@ class form_field_decoder {
         'cancel',
         'mumie_multi_tasks',
         'mumie_server_structure',
+        'mumie_selected_tasks',
+        'mumie_selected_task_properties',
+        'task_display_element',
+        'mumie_org',
     ];
 
     /**
