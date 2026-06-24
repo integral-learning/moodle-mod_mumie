@@ -525,7 +525,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     }])[0].done(function() {
                         window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
                     }).fail(function(error) {
-                        Notification.exception({message: error.message});
+                        Notification.alert('', error.message);
                     });
                 });
             }
