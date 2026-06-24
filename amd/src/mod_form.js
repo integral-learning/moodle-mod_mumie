@@ -514,7 +514,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 // restore the multi-task UI so the form is coherent if the AJAX call fails.
                 setMultiSelection(tasks);
 
-                require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
+                require(['core/ajax', 'core/notification'], function(Ajax, notification) {
                     Ajax.call([{
                         methodname: 'mod_mumie_create_multiple_mumie_tasks',
                         args: {
@@ -525,7 +525,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     }])[0].done(function() {
                         window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
                     }).fail(function(error) {
-                        Notification.alert('', error.message);
+                        notification.alert('', error.message);
                     });
                 });
             }
