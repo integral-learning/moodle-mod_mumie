@@ -200,6 +200,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Builds the URL to the Problem Selector
+             * @param {boolean} multiSelect Whether to build a multi-select URL
              * @returns {string} URL to the Problem Selector
              */
             function buildURL(multiSelect = false) {
@@ -443,7 +444,12 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 }
                 const nameField = document.getElementById('id_name');
                 nameField.disabled = true;
+                nameField.value = '';
                 nameField.removeAttribute('required');
+                const taskDisplayElem = document.getElementById('id_task_display_element');
+                if (taskDisplayElem) { taskDisplayElem.value = ''; }
+                const courseNameElem = document.getElementById('id_mumie_course');
+                if (courseNameElem) { courseNameElem.value = ''; }
                 const nameFieldContainer = document.getElementById('fitem_id_name');
                 if (nameFieldContainer) {
                     nameFieldContainer.querySelectorAll('.req, .text-danger, [title="Required field"]')
