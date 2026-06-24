@@ -538,6 +538,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->set_general_server_data($data, $mform);
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
+        $mform->updateElementAttr("multi_problem_selector_btn", ["disabled" => "disabled"]);
         $this->set_grade_data($data, $mform);
         parent::set_data($data);
     }
