@@ -127,7 +127,7 @@ $string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
 $string['mumie_grade_percentage'] = 'Bewerung in %';
 $string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
 $string['mumie_multi_problem_selector'] = 'Alternativ können Sie mit der Mehrfach-Aufgabenauswahl auch mehrere MUMIE-Aufgaben auf einmal auswählen. Alle Aufgaben werden mit den eingestellten Einstellungen angelegt (Punkte, Frist, Startcontainer etc.). Jede Aufgabe behält ihren eigenen Namen — anders als bei der Einzelauswahl kann kein eigener Name vergeben werden. <br><br>Weitere Informationen finden Sie in unserem <a target="_blank" href="{$a}">Wiki</a>';
-$string['mumie_multi_task_validation_error'] = 'Validierungsfehler: {$a}';
+$string['mumie_multi_task_validation_error'] = '{$a}';
 $string['mumie_multi_tasks_selected'] = 'Sie haben folgende {$a} Aufgaben ausgewählt:';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
 $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
