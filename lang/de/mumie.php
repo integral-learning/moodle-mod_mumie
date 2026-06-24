@@ -30,9 +30,6 @@ wenn dafür eine Bewertungsgrenze festgelegt wurde.
 <br><br><b>Bitte beachten Sie:</b><br>
 Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierenden sehen möchten,
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
-$string['dnd_addmessage'] = 'MUMIE-Task hinzufügen';
-$string['dnd_addmessage_multiple'] = 'MUMIE-Tasks hinzufügen';
-$string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['modulename'] = 'MUMIE Task';
