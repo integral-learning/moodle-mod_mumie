@@ -82,12 +82,13 @@ class form_field_decoder {
             if (in_array($key, $excluded, true)) {
                 continue;
             }
-            if ($key === 'duedate' || $key === 'timelimit') {
+            if ($key === 'duedate' || $key === 'timelimit' || $key === 'completionexpected') {
                 continue;
             }
             $data->$key = self::normalize_multiselect_sentinel($value);
         }
-        $data->duedate = self::decode_duedate($formfields);
+        $data->duedate = self::decode_date($formfields, 'duedate');
+        $data->completionexpected = self::decode_date($formfields, 'completionexpected');
         $data->timelimit = self::decode_timelimit($formfields);
         return $data;
     }
@@ -115,22 +116,23 @@ class form_field_decoder {
     }
 
     /**
-     * Convert a date_selector group `duedate[year|month|day|hour|minute]` to a unix timestamp.
+     * Convert a date_selector group `$field[year|month|day|hour|minute]` to a unix timestamp.
      *
      * @param array $formfields
+     * @param string $field
      * @return int
      */
-    private static function decode_duedate(array $formfields): int {
-        $duedate = $formfields['duedate'] ?? null;
-        if (!is_array($duedate) || empty($duedate['year'])) {
+    private static function decode_date(array $formfields, string $field): int {
+        $dategroup = $formfields[$field] ?? null;
+        if (!is_array($dategroup) || empty($dategroup['year'])) {
             return 0;
         }
         return make_timestamp(
-            $duedate['year'],
-            $duedate['month'],
-            $duedate['day'],
-            $duedate['hour'] ?? 0,
-            $duedate['minute'] ?? 0
+            $dategroup['year'],
+            $dategroup['month'],
+            $dategroup['day'],
+            $dategroup['hour'] ?? 0,
+            $dategroup['minute'] ?? 0
         );
     }
 
