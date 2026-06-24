@@ -34,9 +34,9 @@ $functions = [
         'ajax' => true,
         'type' => 'write',
     ],
-    'mod_mumie_create_multiple_tasks' => [
+    'mod_mumie_create_multiple_mumie_tasks' => [
         'classname' => 'mod_mumie_external',
-        'methodname' => 'create_multiple_tasks',
+        'methodname' => 'create_multiple_mumie_tasks',
         'classpath' => 'mod/mumie/externallib.php',
         'description' => 'Creates multiple MUMIE Tasks at once with shared settings',
         'ajax' => true,

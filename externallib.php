@@ -127,10 +127,10 @@ class mod_mumie_external extends external_api {
     }
 
     /**
-     * Describes the parameters for create_multiple_tasks webservice.
+     * Describes the parameters for create_multiple_mumie_tasks webservice.
      * @return external_function_parameters
      */
-    public static function create_multiple_tasks_parameters() {
+    public static function create_multiple_mumie_tasks_parameters() {
         return new external_function_parameters([
             'contextid'     => new external_value(PARAM_INT, 'Context id of the course'),
             'section'       => new external_value(PARAM_INT, 'Section number to add tasks to'),
@@ -154,7 +154,7 @@ class mod_mumie_external extends external_api {
      * @param string[] $tasksformdata One URL-encoded form POST per task
      * @return array Array of created course module ids
      */
-    public static function create_multiple_tasks($contextid, $section, $tasksformdata) {
+    public static function create_multiple_mumie_tasks($contextid, $section, $tasksformdata) {
         global $CFG, $DB;
 
         require_once($CFG->dirroot . '/course/modlib.php');
@@ -165,7 +165,7 @@ class mod_mumie_external extends external_api {
         require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
 
         $params = self::validate_parameters(
-            self::create_multiple_tasks_parameters(),
+            self::create_multiple_mumie_tasks_parameters(),
             [
                 'contextid'     => $contextid,
                 'section'       => $section,
@@ -219,10 +219,10 @@ class mod_mumie_external extends external_api {
     }
 
     /**
-     * Describes the return value for create_multiple_tasks webservice.
+     * Describes the return value for create_multiple_mumie_tasks webservice.
      * @return external_multiple_structure
      */
-    public static function create_multiple_tasks_returns() {
+    public static function create_multiple_mumie_tasks_returns() {
         return new external_multiple_structure(
             new external_value(PARAM_INT, 'course module id')
         );

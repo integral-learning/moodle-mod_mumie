@@ -534,7 +534,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                 require(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                     Ajax.call([{
-                        methodname: 'mod_mumie_create_multiple_tasks',
+                        methodname: 'mod_mumie_create_multiple_mumie_tasks',
                         args: {
                             contextid: parseInt(contextId),
                             section: section,
