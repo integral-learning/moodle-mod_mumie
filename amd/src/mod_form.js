@@ -494,8 +494,8 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * an independent single-task submission, so picker-payload → form-field
              * mapping lives in applyPickerPayloadToForm and is shared with the
              * single-task path. Validation runs server-side via the shared form
-             * pipeline; errors surface as a top-of-page notification with the
-             * validator's localized message.
+             * pipeline; errors surface as a modal alert with the validator's
+             * localized message.
              */
             function submitMultiTasks() {
                 const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
@@ -525,10 +525,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     }])[0].done(function() {
                         window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
                     }).fail(function(error) {
-                        Notification.addNotification({
-                            message: error.message,
-                            type: 'error',
-                        });
+                        Notification.alert(error.message);
                     });
                 });
             }
