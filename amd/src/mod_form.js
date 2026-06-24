@@ -202,38 +202,34 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * Builds the URL to the Problem Selector
              * @returns {string} URL to the Problem Selector
              */
-            function buildURL() {
-                const gradingType = taskController.getGradingType();
-                const selection = taskController.getDelocalizedTaskLink();
+            function buildURL(multiSelect = false) {
+                const gradingType = multiSelect ? 'all' : taskController.getGradingType();
                 const selectedServer = serverController.getSelectedServer().urlprefix;
                 const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
-                if (useSSO) {
-                    return '/auth/mumie/problem_selector.php?' +
-                        'org=' +
-                        mumieOrg +
-                        '&serverurl=' +
-                        encodeURIComponent(selectedServer) +
-                        '&problemlang=' +
-                        langController.getSelectedLanguage() +
-                        '&origin=' + encodeURIComponent(window.location.origin) +
-                        '&gradingtype=' + gradingType +
-                        '&contextid=' + contextId +
-                        (selection ? '&selection=' + selection : '');
-                }
-                return lmsSelectorUrl +
-                    '/lms-problem-selector?' +
-                    'org=' +
-                    mumieOrg +
-                    '&serverUrl=' +
-                    encodeURIComponent(selectedServer) +
-                    '&problemLang=' +
-                    langController.getSelectedLanguage() +
+
+                const base = useSSO
+                    ? '/auth/mumie/problem_selector.php?' +
+                    'org=' + mumieOrg +
+                    '&serverurl=' + encodeURIComponent(selectedServer) +
+                    '&problemlang=' + langController.getSelectedLanguage() +
+                    '&origin=' + encodeURIComponent(window.location.origin) +
+                    '&gradingtype=' + gradingType +
+                    '&contextid=' + contextId
+                    : lmsSelectorUrl + '/lms-problem-selector?' +
+                    'org=' + mumieOrg +
+                    '&serverUrl=' + encodeURIComponent(selectedServer) +
+                    '&problemLang=' + langController.getSelectedLanguage() +
                     '&origin=' + encodeURIComponent(window.location.origin) +
                     '&uiLang=' + systemLanguage +
                     '&gradingType=' + gradingType +
                     '&multiCourse=true' +
-                    '&worksheet=true' +
-                    (selection ? '&selection=' + selection : '');
+                    '&worksheet=true';
+
+                if (multiSelect) {
+                    return base + (useSSO ? '&multiselect=true' : '&multiSelect=true');
+                }
+                const selection = taskController.getDelocalizedTaskLink();
+                return selection ? base + '&selection=' + selection : base;
             }
 
             /**
@@ -267,28 +263,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
-                        const selectedServer = serverController.getSelectedServer().urlprefix;
-                        const multiSelectorUrl = shouldUseSSO(lmsSelectorUrl, selectedServer)
-                            ? '/auth/mumie/problem_selector.php?' +
-                                'org=' + mumieOrg +
-                                '&serverurl=' + encodeURIComponent(selectedServer) +
-                                '&problemlang=' + langController.getSelectedLanguage() +
-                                '&origin=' + encodeURIComponent(window.location.origin) +
-                                '&gradingtype=all' +
-                                '&contextid=' + contextId +
-                                '&multiselect=true'
-                            : lmsSelectorUrl +
-                                '/lms-problem-selector?' +
-                                'org=' + mumieOrg +
-                                '&serverUrl=' + encodeURIComponent(selectedServer) +
-                                '&problemLang=' + langController.getSelectedLanguage() +
-                                '&origin=' + encodeURIComponent(window.location.origin) +
-                                '&uiLang=' + systemLanguage +
-                                '&gradingType=all' +
-                                '&multiCourse=true' +
-                                '&worksheet=true' +
-                                '&multiSelect=true';
-                        problemSelectorWindow = window.open(multiSelectorUrl, "_blank", 'toolbar=0,location=0,menubar=0');
+                        problemSelectorWindow = window.open(buildURL(true), '_blank', 'toolbar=0,location=0,menubar=0');
                     };
                 },
                 disable: function() {
