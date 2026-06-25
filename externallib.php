@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use mod_mumie\locallib;
+
 require_once($CFG->libdir . "/externallib.php");
 
 /**
@@ -160,7 +162,6 @@ class mod_mumie_external extends external_api {
         require_once($CFG->dirroot . '/course/modlib.php');
         require_once($CFG->dirroot . '/mod/mumie/lib.php');
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
-        require_once($CFG->dirroot . '/mod/mumie/mod_form.php');
         require_once($CFG->dirroot . '/mod/mumie/forms/form_field_decoder.php');
         require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
 
@@ -193,7 +194,7 @@ class mod_mumie_external extends external_api {
             parse_str($taskpost, $formfields);
 
             $instancedata = \mod_mumie\form_field_decoder::from_form_fields($formfields);
-            \mod_mumie_mod_form::clean_up_duration_values($instancedata);
+            locallib::clean_up_duration_values($instancedata);
 
             $instancedata->modulename  = 'mumie';
             $instancedata->module      = $mumiemodule->id;

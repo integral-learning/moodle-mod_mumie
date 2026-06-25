@@ -256,4 +256,22 @@ class locallib {
 
         return "";
     }
+
+    /**
+     * Zero the duration column that does not match duration_selector.
+     *
+     * The form exposes duedate and timelimit side by side with duration_selector choosing
+     * which one is active. This enforces the invariant "only the active column is non-zero"
+     * before the data is handed to the persistence layer.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    public static function clean_up_duration_values(\stdClass $data): void {
+        if ($data->duration_selector !== 'duedate') {
+            $data->duedate = 0;
+        }
+        if ($data->duration_selector !== 'timelimit') {
+            $data->timelimit = 0;
+        }
+    }
 }
