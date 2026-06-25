@@ -162,7 +162,6 @@ class mod_mumie_external extends external_api {
         global $CFG, $DB;
 
         require_once($CFG->dirroot . '/course/modlib.php');
-        require_once($CFG->dirroot . '/mod/mumie/lib.php');
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
         require_once($CFG->dirroot . '/mod/mumie/forms/form_field_decoder.php');
         require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
