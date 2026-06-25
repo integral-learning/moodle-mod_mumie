@@ -7,10 +7,16 @@ All important changes to this plugin will be documented in this file.
 - Teachers can now apply the deadline setting to multiple MUMIE Tasks at once using the multi-edit feature
 - Tasks without a 'Deadline' working period show a warning when deadline transfer is selected
 - Validation prevents transferring a deadline to tasks that were not created with working period type 'Deadline'
+- Teachers can now create multiple MUMIE Tasks at once using the Multi Problem Selector
 
 ### Fixed
 - MUMIE Task no longer shows working period descriptions for all options simultaneously
 - Inconsistent working period description texts corrected
+- Switching to multi-select mode now correctly clears the name, course, and problem fields
+- The multi-select button is now disabled when editing an existing MUMIE Task
+
+### Changed
+- Error messages when adding a MUMIE server are now displayed in a modal dialog
 
 ## [v1.9.1] - 2025-07-03
 ### Changed
