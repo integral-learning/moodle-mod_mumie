@@ -424,17 +424,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                         return taskListItem;
                     });
                     summary.innerHTML = '';
-                    const taskCountLabel = document.createElement('div');
+                    const summaryHeading = document.createElement('div');
                     const taskList = document.createElement('ul');
                     require(['core/str'], function(Str) {
                         Str.get_string('mumie_multi_tasks_selected', 'mod_mumie', tasks.length)
-                            .then(function(label) {
-                                taskCountLabel.textContent = label;
+                            .then(function(headingText) {
+                                summaryHeading.textContent = headingText;
                             });
                     });
                     taskList.classList.add('mumie_multi_tasks_list');
                     taskListItems.forEach(taskListItem => taskList.appendChild(taskListItem));
-                    summary.appendChild(taskCountLabel);
+                    summary.appendChild(summaryHeading);
                     summary.appendChild(taskList);
                     summary.style.display = 'block';
                 }
