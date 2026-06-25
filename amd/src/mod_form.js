@@ -161,20 +161,16 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     if (event.origin !== lmsSelectorUrl) {
                         return;
                     }
-                    const importObj = JSON.parse(event.data);
-
-                    if (Array.isArray(importObj)) {
-                        taskController.setMultiSelection(importObj);
-                        sendSuccess();
-                        window.focus();
-                        return;
-                    }
-
                     try {
-                        applyPickerPayloadToForm(importObj);
+                        const importObj = JSON.parse(event.data);
+                        if (Array.isArray(importObj)) {
+                            taskController.setMultiSelection(importObj);
+                        } else {
+                            applyPickerPayloadToForm(importObj);
+                            displayProblemSelectedMessage();
+                        }
                         sendSuccess();
                         window.focus();
-                        displayProblemSelectedMessage();
                     } catch (error) {
                         sendFailure(error.message);
                     }
