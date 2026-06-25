@@ -25,6 +25,10 @@
     border-bottom: 1px solid black;
 }
 
+.mumie_multi_tasks_list {
+    margin: 0.3em 0 0 1.2em;
+}
+
 #mumie_multi_tasks_summary {
     margin: 0.5em 0;
     padding: 0.5em;

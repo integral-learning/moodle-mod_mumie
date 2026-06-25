@@ -432,7 +432,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                                 taskCountLabel.textContent = label;
                             });
                     });
-                    taskList.style.margin = '0.3em 0 0 1.2em';
+                    taskList.classList.add('mumie_multi_tasks_list');
                     taskListItems.forEach(taskListItem => taskList.appendChild(taskListItem));
                     summary.appendChild(taskCountLabel);
                     summary.appendChild(taskList);
