@@ -26,6 +26,8 @@
 defined('MOODLE_INTERNAL') || die;
 
 use mod_mumie\locallib;
+use mod_mumie\form_field_decoder;
+use mod_mumie\mumie_task_validator;
 
 require_once($CFG->libdir . "/externallib.php");
 
@@ -193,7 +195,7 @@ class mod_mumie_external extends external_api {
             $formfields = [];
             parse_str($taskpost, $formfields);
 
-            $instancedata = \mod_mumie\form_field_decoder::from_form_fields($formfields);
+            $instancedata = form_field_decoder::from_form_fields($formfields);
             locallib::clean_up_duration_values($instancedata);
 
             $instancedata->modulename  = 'mumie';
@@ -207,7 +209,7 @@ class mod_mumie_external extends external_api {
                 $instancedata->grade = (int)$instancedata->points;
             }
 
-            $errors = \mod_mumie\mumie_task_validator::get_errors((array)$instancedata, new stdClass());
+            $errors = mumie_task_validator::get_errors((array)$instancedata, new stdClass());
             if (!empty($errors)) {
                 throw new moodle_exception('mumie_multi_task_validation_error', 'mod_mumie', '', reset($errors));
             }
