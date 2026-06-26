@@ -14,7 +14,6 @@ All important changes to this plugin will be documented in this file.
 - Inconsistent working period description texts corrected
 
 ### Changed
-- Error messages when adding a MUMIE server are now displayed in a modal dialog
 - Multi Problem Selector now creates MUMIE Tasks via form submission instead of drag-and-drop
 - Drag-and-drop creation of MUMIE Tasks is no longer supported
 - Settings configured on the form (points, deadline, container, etc.) are now applied to all tasks created via the Multi Problem Selector
