@@ -7,7 +7,7 @@ All important changes to this plugin will be documented in this file.
 - Teachers can now apply the deadline setting to multiple MUMIE Tasks at once using the multi-edit feature
 - Tasks without a 'Deadline' working period show a warning when deadline transfer is selected
 - Validation prevents transferring a deadline to tasks that were not created with working period type 'Deadline'
-- SSO when opening the Multi Problem Selector
+- SSO when opening the Multi Problem Selector for the Problem Pool
 
 ### Fixed
 - MUMIE Task no longer shows working period descriptions for all options simultaneously
