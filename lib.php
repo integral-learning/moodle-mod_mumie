@@ -25,7 +25,6 @@
 
 use mod_mumie\locallib;
 use mod_mumie\mumie_calendar_service;
-use mod_mumie\mumie_dndupload_processor;
 use mod_mumie\mumie_duedate_extension;
 
 defined('MOODLE_INTERNAL') || die;
@@ -314,56 +313,6 @@ function mumie_get_completion_state($course, $cm, $userid, $type) {
     return false;
 }
 
-/**
- * Register the ability to handle drag and drop of datatransfertype mumie/json
- * @return array containing details of the files / types the mod can handle
- */
-function mumie_dndupload_register() {
-    return [
-        'addtypes' => [
-            [
-                'identifier' => 'mumie/json', 'datatransfertypes' => ['mumie/json', 'mumie/json'],
-                'addmessage' => get_string('dnd_addmessage', 'mod_mumie'),
-                'namemessage' => '',
-                'priority' => 1],
-            [
-                'identifier' => 'mumie/jsonArray', 'datatransfertypes' => ['mumie/jsonArray', 'mumie/jsonArray'],
-                'addmessage' => get_string('dnd_addmessage_multiple', 'mod_mumie'),
-                'namemessage' => '',
-                'priority' => 1],
-            ],
-        'types' => [
-            [
-                'identifier' => 'mumie/json',
-                'message' => get_string('dndupload_message', 'mod_mumie'),
-                'noname' => true],
-            [
-                'identifier' => 'mumie/jsonArray',
-                'message' => get_string('dndupload_message', 'mod_mumie'),
-                'noname' => true],
-            ],
-    ];
-}
-
-/**
- * Handle content that has been uploaded
- * @param object $uploadinfo details of the content that has been uploaded
- * @return int instance id of the newly created mod
- */
-function mumie_dndupload_handle($uploadinfo) {
-    global $CFG, $COURSE, $USER;
-
-    $courseid = required_param('course', PARAM_INT);
-    $section = required_param('section', PARAM_INT);
-    $type = required_param('type', PARAM_TEXT);
-
-    $context = context_module::instance($uploadinfo->coursemodule);
-    $upload = json_decode(clean_param($uploadinfo->content, PARAM_RAW));
-    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_dndupload_processor.php');
-    $processor = new mumie_dndupload_processor($courseid, $section, $type, $upload);
-    $result = $processor->process();
-    return $result;
-}
 
 /**
  * Get mumieserver_form as a fragment
