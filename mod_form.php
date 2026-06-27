@@ -72,10 +72,22 @@ class mod_mumie_mod_form extends moodleform_mod {
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
 
+        // Resolve the target section number the same way modedit.php does.
+        // The multi-problem button is only enabled when adding (not editing),
+        // so URL params are populated; on Moodle 5.1+ the URL prefers sectionid,
+        // on older versions it uses section.
+        $sectionid = optional_param('sectionid', null, PARAM_INT);
+        $sectionnum = optional_param('section', 0, PARAM_INT);
+        if (empty($sectionnum) && !empty($sectionid)) {
+            $sectionnum = (int) get_fast_modinfo($COURSE)
+                ->get_section_info_by_id($sectionid, MUST_EXIST)->sectionnum;
+        }
+
         $jsparams = [
             json_encode($context->id),
             get_config('auth_mumie', 'mumie_problem_selector_url'),
             $USER->lang,
+            $sectionnum,
         ];
         $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
