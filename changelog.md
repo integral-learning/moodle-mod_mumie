@@ -7,6 +7,7 @@ All important changes to this plugin will be documented in this file.
 - Teachers can now apply the deadline setting to multiple MUMIE Tasks at once using the multi-edit feature
 - Tasks without a 'Deadline' working period show a warning when deadline transfer is selected
 - Validation prevents transferring a deadline to tasks that were not created with working period type 'Deadline'
+- SSO when opening the Multi Problem Selector for the Problem Pool
 
 ### Changed
 - Plugin now requires Moodle 4.3
@@ -16,6 +17,12 @@ All important changes to this plugin will be documented in this file.
 - MUMIE Task no longer shows working period descriptions for all options simultaneously
 - Inconsistent working period description texts corrected
 - Deleting a due date extension no longer fails with a server error
+
+### Changed
+- Multi Problem Selector now creates MUMIE Tasks via form submission instead of drag-and-drop
+- Drag-and-drop creation of MUMIE Tasks is no longer supported
+- Settings configured on the form (points, deadline, container, etc.) are now applied to all tasks created via the Multi Problem Selector
+- Multi Problem Selector button is unavailable when editing an existing MUMIE Task
 
 ## [v1.9.1] - 2025-07-03
 ### Changed

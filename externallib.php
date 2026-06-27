@@ -25,6 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use mod_mumie\locallib;
+use mod_mumie\form_field_decoder;
+use mod_mumie\mumie_task_validator;
+
 require_once($CFG->libdir . "/externallib.php");
 
 /**
@@ -124,5 +128,105 @@ class mod_mumie_external extends external_api {
      */
     public static function submit_mumieduedate_form_returns() {
         return new external_value(PARAM_INT, 'duedate id');
+    }
+
+    /**
+     * Describes the parameters for create_multiple_mumie_tasks webservice.
+     * @return external_function_parameters
+     */
+    public static function create_multiple_mumie_tasks_parameters() {
+        return new external_function_parameters([
+            'contextid'     => new external_value(PARAM_INT, 'Context id of the course'),
+            'section'       => new external_value(PARAM_INT, 'Section number to add tasks to'),
+            'tasksformdata' => new external_multiple_structure(
+                new external_value(PARAM_RAW, 'URL-encoded form POST for one task'),
+                'One serialized form POST per task to create'
+            ),
+        ]);
+    }
+
+    /**
+     * Create multiple MUMIE tasks at once.
+     *
+     * Each entry of tasksformdata is the same payload the form would submit
+     * for a single task. The picker-payload → form-field mapping lives in JS
+     * (applyPickerPayloadToForm) and is shared with the single-task path, so
+     * adding a new picker field doesn't require parallel PHP changes.
+     *
+     * @param int $contextid Course context id
+     * @param int $section Section number
+     * @param string[] $tasksformdata One URL-encoded form POST per task
+     * @return array Array of created course module ids
+     */
+    public static function create_multiple_mumie_tasks($contextid, $section, $tasksformdata) {
+        global $CFG, $DB;
+
+        require_once($CFG->dirroot . '/course/modlib.php');
+        require_once($CFG->dirroot . '/mod/mumie/locallib.php');
+        require_once($CFG->dirroot . '/mod/mumie/forms/form_field_decoder.php');
+        require_once($CFG->dirroot . '/mod/mumie/forms/mumie_task_validator.php');
+
+        $params = self::validate_parameters(
+            self::create_multiple_mumie_tasks_parameters(),
+            [
+                'contextid'     => $contextid,
+                'section'       => $section,
+                'tasksformdata' => $tasksformdata,
+            ]
+        );
+
+        $context = context::instance_by_id($params['contextid'], MUST_EXIST);
+        self::validate_context($context);
+        require_capability('mod/mumie:addinstance', $context);
+
+        if (empty($params['tasksformdata'])) {
+            throw new invalid_parameter_exception('tasksformdata must be a non-empty array');
+        }
+        if (count($params['tasksformdata']) > 50) {
+            throw new invalid_parameter_exception('Cannot create more than 50 tasks at once');
+        }
+
+        $course = $DB->get_record('course', ['id' => $context->instanceid], '*', MUST_EXIST);
+        $mumiemodule = $DB->get_record('modules', ['name' => 'mumie'], '*', MUST_EXIST);
+
+        $createdids = [];
+        foreach ($params['tasksformdata'] as $taskpost) {
+            $formfields = [];
+            parse_str($taskpost, $formfields);
+
+            $instancedata = form_field_decoder::from_form_fields($formfields);
+            locallib::clean_up_duration_values($instancedata);
+
+            $instancedata->modulename  = 'mumie';
+            $instancedata->module      = $mumiemodule->id;
+            $instancedata->course      = $course->id;
+            $instancedata->section     = $params['section'];
+            $instancedata->visible     = 1;
+            $instancedata->intro       = '';
+            $instancedata->introformat = FORMAT_HTML;
+            if (isset($instancedata->points)) {
+                $instancedata->grade = (int)$instancedata->points;
+            }
+
+            $errors = mumie_task_validator::get_errors((array)$instancedata, new stdClass());
+            if (!empty($errors)) {
+                throw new moodle_exception('mumie_multi_task_validation_error', 'mod_mumie', '', reset($errors));
+            }
+
+            $created = add_moduleinfo($instancedata, $course);
+            $createdids[] = $created->coursemodule;
+        }
+
+        return $createdids;
+    }
+
+    /**
+     * Describes the return value for create_multiple_mumie_tasks webservice.
+     * @return external_multiple_structure
+     */
+    public static function create_multiple_mumie_tasks_returns() {
+        return new external_multiple_structure(
+            new external_value(PARAM_INT, 'course module id')
+        );
     }
 }

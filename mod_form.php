@@ -149,6 +149,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             )
         );
         $mform->addElement('button', 'multi_problem_selector_btn', get_string('mumie_form_multi_prb_selector_btn', 'mod_mumie'));
+        $mform->addElement('html', '<div id="mumie_multi_tasks_summary" style="display:none;"></div>');
+        $mform->addElement('hidden', 'mumie_multi_tasks', '');
+        $mform->setType('mumie_multi_tasks', PARAM_RAW);
 
         $launchoptions = [];
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
@@ -267,25 +270,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function data_postprocessing($data): void {
         parent::data_postprocessing($data);
-        self::clean_up_duration_values($data);
-    }
-
-    /**
-     * Zero the duration column that does not match duration_selector.
-     *
-     * The form exposes duedate and timelimit side by side with duration_selector choosing
-     * which one is active. This enforces the invariant "only the active column is non-zero"
-     * before the data is handed to the persistence layer.
-     *
-     * @param stdClass $data Submitted form data (mutated in place).
-     */
-    private static function clean_up_duration_values(stdClass $data): void {
-        if ($data->duration_selector !== 'duedate') {
-            $data->duedate = 0;
-        }
-        if ($data->duration_selector !== 'timelimit') {
-            $data->timelimit = 0;
-        }
+        locallib::clean_up_duration_values($data);
     }
 
     /**
@@ -535,6 +520,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->set_general_server_data($data, $mform);
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
+        $mform->updateElementAttr("multi_problem_selector_btn", ["disabled" => "disabled"]);
         $this->set_grade_data($data, $mform);
         parent::set_data($data);
     }

@@ -30,9 +30,6 @@ wenn dafür eine Bewertungsgrenze festgelegt wurde.
 <br><br><b>Bitte beachten Sie:</b><br>
 Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierenden sehen möchten,
 sollten zu daher zuvor die Bewerterübersicht öffnen.';
-$string['dnd_addmessage'] = 'MUMIE-Task hinzufügen';
-$string['dnd_addmessage_multiple'] = 'MUMIE-Tasks hinzufügen';
-$string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';
 $string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
 $string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['modulename'] = 'MUMIE Task';
@@ -92,9 +89,10 @@ $string['mumie_form_cant_change_isgraded'] = 'Sie können bei einer bestehenden 
 $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 $string['mumie_form_coursefile'] = 'Path to MUMIE course meta file';
-$string['mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, die bereits den Bearbeitungszeitraum Typ \'Abgabefrist\' haben.';
 $string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet darf keinen begrenzten Bearbeitungszeitraum haben.<br><br>Wählen Sie ein Worksheet mit entsprechender Konfiguration aus, wenn Sie eine Frist setzen möchten.";
+$string['mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, die bereits den Bearbeitungszeitraum Typ \'Abgabefrist\' haben.';
 $string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt einen festgelegten Bearbeitungszeitraum voraus";
+$string['mumie_form_due_date_multi_edit_hint'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, welche vorher bereits mit dem Bearbeitungszeitraum Typ \'Abgabefrist\' erstellt wurden.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
 $string['mumie_form_filter'] = 'MUMIE-Tasks filtern';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
@@ -118,18 +116,19 @@ $string['mumie_form_task_properties_selection_info'] = 'Wählen Sie die Eigensch
 $string['mumie_form_tasks_edit'] = 'In anderen MUMIE-Tasks übernehmen';
 $string['mumie_form_tasks_edit_info'] = 'Sie können einige der oben gewählten Einstellungen auch automatisch in anderen MUMIE-Tasks dieses Kurses übernehmen';
 $string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, für die die ausgewählten Eigenschaften ebenfalls übernommen werden sollen.';
-$string['mumie_form_due_date_multi_edit_hint'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, welche vorher bereits mit dem Bearbeitungszeitraum Typ \'Abgabefrist\' erstellt wurden.';
-$string['mumie_form_working_period_not_duedate_warning'] = 'Bearbeitungszeitraum: keine Abgabefrist';
 $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
+$string['mumie_form_working_period_not_duedate_warning'] = 'Bearbeitungszeitraum: keine Abgabefrist';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist:';
 $string['mumie_general_timelimit'] = 'Zeitlimit: ';
 $string['mumie_grade_invalid'] = 'Bewertung ungültig!';
 $string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
 $string['mumie_grade_percentage'] = 'Bewerung in %';
 $string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
-$string['mumie_multi_problem_selector'] = 'Alternativ können Sie auch mehrere MUMIE Tasks gleichzeitig mit der Mehrfach-Aufgabenauswahl erstellen. Ziehen Sie dazu einfach die gewünschten Aufgaben in ihren Kurs.<br><br>Für eine Kurzanleitung und weitere Informationen besuchen Sie unser <a target="_blank" href="{$a}">Wiki</a>';
+$string['mumie_multi_problem_selector'] = 'Alternativ können Sie mit der Mehrfach-Aufgabenauswahl auch mehrere MUMIE-Aufgaben auf einmal auswählen. Alle Aufgaben werden mit den eingestellten Einstellungen angelegt (Punkte, Frist, Startcontainer etc.). Jede Aufgabe behält ihren eigenen Namen — anders als bei der Einzelauswahl kann kein eigener Name vergeben werden. <br><br>Weitere Informationen finden Sie in unserem <a target="_blank" href="{$a}">Wiki</a>';
+$string['mumie_multi_task_validation_error'] = '{$a}';
+$string['mumie_multi_tasks_selected'] = 'Sie haben folgende {$a} Aufgaben ausgewählt:';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
 $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 $string['mumie_open_task'] = 'MUMIE-Task öffnen';
