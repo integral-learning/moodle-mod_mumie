@@ -46,7 +46,6 @@ class mumie_task_validator {
     public static function get_errors(array $data, \stdClass $current): array {
         $errors = [];
         $errors = array_merge($errors, self::check_required($data));
-        $errors = array_merge($errors, self::check_completion($data, $current));
         $errors = array_merge($errors, self::check_isgraded($data));
         $errors = array_merge($errors, self::check_duration($data));
         $errors = array_merge($errors, self::check_worksheet($data));
@@ -78,32 +77,6 @@ class mumie_task_validator {
             $errors["prb_selector_btn"] = get_string('mumie_form_required', 'mod_mumie');
         }
 
-        return $errors;
-    }
-
-    /**
-     * Validates the completion settings of a MUMIE activity.
-     *
-     * Ensures that if automatic completion tracking is enabled and completion requires passing,
-     * then a valid passing grade must be set. Adds appropriate errors if this condition is not met.
-     *
-     * @param array $data Form data submitted by the user.
-     * @param \stdClass $current The current MUMIE activity instance for fallback values.
-     * @return array Associative array of validation errors.
-     */
-    private static function check_completion(array $data, \stdClass $current): array {
-        $errors = [];
-        if (($data['completion'] ?? null) == COMPLETION_TRACKING_AUTOMATIC) {
-            $completionpass = $data['completionpass'] ?? $current->completionpass;
-            $gradepass = grade_floatval($data['gradepass'] ?? 0);
-
-            if ($completionpass && $gradepass == 0) {
-                $completionpassisset = isset($data['completionpass']);
-                $key = $completionpassisset ? 'completionpassgroup' : 'gradepass';
-                $stringkey = $completionpassisset ? 'gradetopassnotset' : 'gradetopassmustbeset';
-                $errors[$key] = get_string($stringkey, 'mumie');
-            }
-        }
         return $errors;
     }
 

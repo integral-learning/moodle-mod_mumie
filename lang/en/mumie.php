@@ -24,12 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['completionpass'] = 'Require passing grade';
-$string['completionpass_help'] = 'If enabled, this activity is considered completed when the student receives a passing grade, with the pass grade set in the gradebook.
-<br><br><b>Please Note:</b><br>
-Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
-$string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
-$string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>This activity module enables the usage of content from the MUMIE e-learning platform and automatic grade synchronization. A MUMIE tasks represents an individual graded problem from a MUMIE course.</p>
 <p><strong>What is MUMIE?</strong></p>
