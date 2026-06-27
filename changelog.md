@@ -12,17 +12,15 @@ All important changes to this plugin will be documented in this file.
 ### Changed
 - Plugin now requires Moodle 4.3
 - Support Moodle 5.2
+- Multi Problem Selector now creates MUMIE Tasks via form submission instead of drag-and-drop
+- Drag-and-drop creation of MUMIE Tasks is no longer supported
+- Settings configured on the form (points, deadline, container, etc.) are now applied to all tasks created via the Multi Problem Selector
+- Multi Problem Selector button is unavailable when editing an existing MUMIE Task
 
 ### Fixed
 - MUMIE Task no longer shows working period descriptions for all options simultaneously
 - Inconsistent working period description texts corrected
 - Deleting a due date extension no longer fails with a server error
-
-### Changed
-- Multi Problem Selector now creates MUMIE Tasks via form submission instead of drag-and-drop
-- Drag-and-drop creation of MUMIE Tasks is no longer supported
-- Settings configured on the form (points, deadline, container, etc.) are now applied to all tasks created via the Multi Problem Selector
-- Multi Problem Selector button is unavailable when editing an existing MUMIE Task
 
 ## [v1.9.1] - 2025-07-03
 ### Changed
