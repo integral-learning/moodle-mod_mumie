@@ -24,15 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['completionpass'] = 'Require passing grade';
-$string['completionpass_help'] = 'If enabled, this activity is considered completed when the student receives a passing grade, with the pass grade set in the gradebook.
-<br><br><b>Please Note:</b><br>
-Grades for MUMIE Tasks are only updated, when the gradebook is opened. If you want the current completion status of all students, remember to open the gradebook overview page first';
-$string['dnd_addmessage'] = 'Add MUMIE Task here';
-$string['dnd_addmessage_multiple'] = 'Add MUMIE Tasks here';
-$string['dndupload_message'] = 'Add as a new MUMIE Task';
-$string['gradetopassmustbeset'] = '<i>Grade to pass</i> cannot be zero as this activity has its completion method set to require passing grade. Please set a non-zero value.';
-$string['gradetopassnotset'] = 'This MUMIE task does not have a <i>grade to pass</i> set so you cannot use this option. Please use the require grade setting instead.';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>This activity module enables the usage of content from the MUMIE e-learning platform and automatic grade synchronization. A MUMIE tasks represents an individual graded problem from a MUMIE course.</p>
 <p><strong>What is MUMIE?</strong></p>
@@ -60,7 +51,7 @@ $string['mumie_duedate_extension'] = 'Due date extension';
 $string['mumie_duedate_form'] = 'Grant a due date extension';
 $string['mumie_duedate_not_set'] = 'No general due date set for this MUMIE Task!';
 $string['mumie_duration_selector'] = 'Working period';
-$string['mumie_duration_selector_help'] = 'If the working period is limited, grades are only synchronized with Moodle after the period ends.';
+$string['mumie_duration_selector_help'] = 'If the working period is limited, only grades achieved within that period are synchronized with Moodle.';
 $string['mumie_form_activity_container'] = 'Launch container';
 $string['mumie_form_activity_container_embedded'] = 'embedded';
 $string['mumie_form_activity_container_help'] = 'Please select whether the activity should be opened in a new browser tab or embedded into moodle.<br><br>Please note that embedded MUMIE Tasks cannot be opened with Safari due to technical limitations. This MUMIE Task will be opened in a tab instead for Safari users';
@@ -82,7 +73,9 @@ $string['mumie_form_complete_course'] = 'Link the entire course';
 $string['mumie_form_complete_course_help'] = 'The user will only be logged in and redirected to the course overview page. Grades will <b>not</b> be synchronized for this MUMIE Task.';
 $string['mumie_form_coursefile'] = 'Path to MUMIE course meta file';
 $string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "The selected worksheet cannot have a limited working period.<br><br>If you want to limit the working period, please select a worksheet with an appropriate configuration.";
+$string['mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline'] = 'Deadline can only be applied to tasks that already have the working period type \'Deadline\' set.';
 $string['mumie_form_deadline_required_for_trigger_after_deadline'] = "The selected worksheet requires a limited working period.";
+$string['mumie_form_due_date_multi_edit_hint'] = 'Deadline can only be applied to tasks that were previously created with the working period type \'Deadline\'.';
 $string['mumie_form_due_date_must_be_future'] = 'You must select a date in the future!';
 $string['mumie_form_filter'] = 'Filter MUMIE problems';
 $string['mumie_form_grade_pool'] = 'Share grades with other courses';
@@ -115,13 +108,16 @@ $string['mumie_form_title'] = 'Configure MUMIE Server';
 $string['mumie_form_topic'] = 'Topic: {$a}';
 $string['mumie_form_updated_selection'] = 'Successfully selected problem';
 $string['mumie_form_wiki_link'] = 'For help and advanced features, please visit our <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a>!';
+$string['mumie_form_working_period_not_duedate_warning'] = 'Working period: not Deadline';
 $string['mumie_general_duedate'] = 'General due date:';
 $string['mumie_general_timelimit'] = 'Timelimit: ';
 $string['mumie_grade_invalid'] = 'Grade is invalid!';
 $string['mumie_grade_overridden'] = 'Updated grade successfully!';
 $string['mumie_grade_percentage'] = 'Grade in %';
 $string['mumie_grading_settings'] = "Individual grading settings";
-$string['mumie_multi_problem_selector'] = 'Alternatively, you can also create multiple MUMIE Tasks at once simply via Multi Problem Selector by dragging them into your course. <br><br>For information on how to use this, have a look at our <a target="_blank" href="{$a}">wiki</a>';
+$string['mumie_multi_problem_selector'] = 'Alternatively, you can also create multiple MUMIE Tasks at once using the Multi Problem Selector. All tasks will be created with the settings configured (points, deadline, container type, etc.). Each task keeps its own name — unlike single task creation, no custom name can be assigned. <br><br>For more information, have a look at our <a target="_blank" href="{$a}">wiki</a>';
+$string['mumie_multi_task_validation_error'] = '{$a}';
+$string['mumie_multi_tasks_selected'] = 'You have selected the following {$a} problems:';
 $string['mumie_no_other_task_found'] = 'No other MUMIE Tasks found in course';
 $string['mumie_no_submissions'] = 'No answers submitted';
 $string['mumie_open_task'] = 'Open MUMIE Task';
@@ -139,9 +135,9 @@ $string['mumie_tag_disabled_help'] = 'This activity is disabled because the conf
 $string['mumie_task_updated'] = 'One additional MUMIE Task has been updated';
 $string['mumie_tasks_updated'] = '{$a} additional MUMIE Tasks have been updated';
 $string['mumie_timelimit'] = 'Timelimit';
-$string['mumie_timelimit_help'] = 'Each student\'s grade is only synchronized with Moodle after their individual deadline has passed. The timelimit will start the moment a student first opens a MUMIE task.';
+$string['mumie_timelimit_help'] = 'Grades that were earned after the time limit will not be synchronized with Moodle. The time limit will start the moment a student first opens a MUMIE task.';
 $string['mumie_unlimited'] = 'Unlimited';
-$string['mumie_unlimited_help'] = 'Grades can be synchronized with Moodle at any time.';
+$string['mumie_unlimited_help'] = 'There is no time-based restriction. All achieved grades will be synchronized with Moodle.';
 $string['mumie_url_prefix'] = 'MUMIE URL Prefix';
 $string['mumie_url_prefix_help'] = 'Specify the MUMIE URL prefix  <br><br> e.g. <b>https://www.ombplus.de/ombplus</b> <br><br> There can only be a single configuration for any URL prefix.';
 $string['mumieintro'] = 'Activity description';

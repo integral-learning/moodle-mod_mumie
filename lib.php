@@ -25,7 +25,6 @@
 
 use mod_mumie\locallib;
 use mod_mumie\mumie_calendar_service;
-use mod_mumie\mumie_dndupload_processor;
 use mod_mumie\mumie_duedate_extension;
 
 defined('MOODLE_INTERNAL') || die;
@@ -48,7 +47,6 @@ function mumie_add_instance($mumie, $mform) {
     $mumie->timemodified = $mumie->timecreated;
     $mumie->use_hashed_id = 1;
     locallib::update_pending_gradepool($mumie);
-    $mumie = locallib::clean_up_duration_values($mumie);
     $mumie->id = $DB->insert_record("mumie", $mumie);
     mumie_grade_item_update($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
@@ -78,7 +76,6 @@ function mumie_update_instance($mumie, $mform) {
     $grades = locallib::has_problem_changed($mumie) ? "reset" : null;
     mumie_grade_item_update($mumie, $grades);
 
-    $mumie = locallib::clean_up_duration_values($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
     $calendarservice->update();
 
@@ -205,8 +202,6 @@ function mumie_supports($feature) {
     switch ($feature) {
         case FEATURE_GRADE_HAS_GRADE:
             return true;
-        case FEATURE_COMPLETION_HAS_RULES:
-            return true;
         case FEATURE_BACKUP_MOODLE2:
             return true;
         case FEATURE_SHOW_DESCRIPTION:
@@ -284,87 +279,6 @@ function mumie_update_grades_all_user($mumie) {
  */
 function mumie_before_standard_top_of_body_html() {
     return locallib::callbackimpl_before_standard_top_of_body_html();
-}
-
-/**
- * Obtains the automatic completion state for this MUMIE task
- *
- * This is a code fragment copied from mod_quiz version 2018051400
- * @param object $course Course
- * @param object $cm Course-module
- * @param int $userid User ID
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
- * @return bool True if completed, false if not. (If no conditions, then return
- *   value depends on comparison type)
- */
-function mumie_get_completion_state($course, $cm, $userid, $type) {
-    global $DB, $CFG;
-    $mumie = $DB->get_record('mumie', ['id' => $cm->instance], '*', MUST_EXIST);
-
-    if ($mumie->completionpass) {
-        require_once($CFG->libdir . '/gradelib.php');
-        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'mumie', 'iteminstance' => $cm->instance, 'outcomeid' => null]);
-
-        if ($item) {
-            $grades = grade_grade::fetch_users_grades($item, [$userid], false);
-            if (!empty($grades[$userid])) {
-                return $grades[$userid]->is_passed($item);
-            }
-        }
-    }
-    return false;
-}
-
-/**
- * Register the ability to handle drag and drop of datatransfertype mumie/json
- * @return array containing details of the files / types the mod can handle
- */
-function mumie_dndupload_register() {
-    return [
-        'addtypes' => [
-            [
-                'identifier' => 'mumie/json', 'datatransfertypes' => ['mumie/json', 'mumie/json'],
-                'addmessage' => get_string('dnd_addmessage', 'mod_mumie'),
-                'namemessage' => '',
-                'priority' => 1],
-            [
-                'identifier' => 'mumie/jsonArray', 'datatransfertypes' => ['mumie/jsonArray', 'mumie/jsonArray'],
-                'addmessage' => get_string('dnd_addmessage_multiple', 'mod_mumie'),
-                'namemessage' => '',
-                'priority' => 1],
-            ],
-        'types' => [
-            [
-                'identifier' => 'mumie/json',
-                'message' => get_string('dndupload_message', 'mod_mumie'),
-                'noname' => true],
-            [
-                'identifier' => 'mumie/jsonArray',
-                'message' => get_string('dndupload_message', 'mod_mumie'),
-                'noname' => true],
-            ],
-    ];
-}
-
-/**
- * Handle content that has been uploaded
- * @param object $uploadinfo details of the content that has been uploaded
- * @return int instance id of the newly created mod
- */
-function mumie_dndupload_handle($uploadinfo) {
-    global $CFG, $COURSE, $USER;
-
-    $courseid = required_param('course', PARAM_INT);
-    $section = required_param('section', PARAM_INT);
-    $type = required_param('type', PARAM_TEXT);
-
-    $context = context_module::instance($uploadinfo->coursemodule);
-    $upload = json_decode(clean_param($uploadinfo->content, PARAM_RAW));
-    require_once($CFG->dirroot . '/mod/mumie/classes/mumie_dndupload_processor.php');
-    $processor = new mumie_dndupload_processor($courseid, $section, $type, $upload);
-    $result = $processor->process();
-    return $result;
 }
 
 /**

@@ -72,10 +72,22 @@ class mod_mumie_mod_form extends moodleform_mod {
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
 
+        // Resolve the target section number the same way modedit.php does.
+        // The multi-problem button is only enabled when adding (not editing),
+        // so URL params are populated; on Moodle 5.1+ the URL prefers sectionid,
+        // on older versions it uses section.
+        $sectionid = optional_param('sectionid', null, PARAM_INT);
+        $sectionnum = optional_param('section', 0, PARAM_INT);
+        if (empty($sectionnum) && !empty($sectionid)) {
+            $sectionnum = (int) get_fast_modinfo($COURSE)
+                ->get_section_info_by_id($sectionid, MUST_EXIST)->sectionnum;
+        }
+
         $jsparams = [
             json_encode($context->id),
             get_config('auth_mumie', 'mumie_problem_selector_url'),
             $USER->lang,
+            $sectionnum,
         ];
         $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
@@ -149,6 +161,9 @@ class mod_mumie_mod_form extends moodleform_mod {
             )
         );
         $mform->addElement('button', 'multi_problem_selector_btn', get_string('mumie_form_multi_prb_selector_btn', 'mod_mumie'));
+        $mform->addElement('html', '<div id="mumie_multi_tasks_summary" style="display:none;"></div>');
+        $mform->addElement('hidden', 'mumie_multi_tasks', '');
+        $mform->setType('mumie_multi_tasks', PARAM_RAW);
 
         $launchoptions = [];
         $launchoptions[MUMIE_LAUNCH_CONTAINER_EMBEDDED] = get_string("mumie_form_activity_container_embedded", "mod_mumie");
@@ -261,6 +276,16 @@ class mod_mumie_mod_form extends moodleform_mod {
     }
 
     /**
+     * Post-process submitted form data before it is handed to mumie_(add|update)_instance.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    public function data_postprocessing($data): void {
+        parent::data_postprocessing($data);
+        locallib::clean_up_duration_values($data);
+    }
+
+    /**
      * Get all options for server drop-down menu
      *
      * @return array
@@ -271,52 +296,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             $serveroptions[$server->get_urlprefix()] = $server->get_name();
         }
         return $serveroptions;
-    }
-
-    /**
-     * Provide option to mark an activity automatically as completed once a passing grade was archived
-     *
-     * This function is copied from mod_quiz version 2018051400
-     * @return array containing the name of the mform group that has been added to the form
-     */
-    public function add_completion_rules(): array {
-        $mform = $this->_form;
-        $items = [];
-
-        $group = [];
-        $completionpasselement = $this->get_completion_rule_element_name('completionpass');
-        $group[] = $mform->createElement(
-            'advcheckbox',
-            $completionpasselement,
-            null,
-            get_string('completionpass', 'mumie'),
-            ['group' => 'cpass']
-        );
-        $completionusegradeelement = $this->get_completion_rule_element_name('completionusegrade');
-        $mform->disabledIf($completionpasselement, $completionusegradeelement, 'notchecked');
-        $completionpassgroupelement = $this->get_completion_rule_element_name('completionpassgroup');
-        $mform->addGroup($group, $completionpassgroupelement, get_string('completionpass', 'mumie'), ' &nbsp; ', false);
-        $mform->addHelpButton($completionpassgroupelement, 'completionpass', 'mumie');
-        $items[] = $completionpassgroupelement;
-        return $items;
-    }
-
-    /**
-     * Get the completion rule's element name.
-     *
-     * Conditionally add suffix for Moodle >= 4.3.
-     *
-     * @param string $rawname The raw name of the completion rule.
-     * @return string The properly suffixed element name.
-     */
-    private function get_completion_rule_element_name($rawname): string {
-        global $CFG;
-        if ($CFG->branch < 403) {
-            $suffix = '';
-        } else {
-            $suffix = $this->get_suffix();
-        }
-        return $rawname . $suffix;
     }
 
     /**
@@ -343,6 +322,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         $taskproperties = [
             [get_string('mumie_form_activity_container', 'mod_mumie'), "launchcontainer"],
             [get_string('mumie_form_points', 'mod_mumie'), "points"],
+            [
+                get_string('mumie_due_date', 'mod_mumie')
+                . html_writer::tag(
+                    'div',
+                    get_string('mumie_form_due_date_multi_edit_hint', 'mod_mumie'),
+                    ['class' => 'form-text text-muted small']
+                ),
+                "duedate",
+            ],
         ];
         $table = new \html_table();
         $table->attributes['class'] = 'generaltable mumie_table';
@@ -433,7 +421,15 @@ class mod_mumie_mod_form extends moodleform_mod {
                     "section" => $section,
                 ]
             );
-            $table->data[] = [$module->name, $checkboxhtml];
+            $label = $module->name;
+            if (!($module->duedate > 0)) {
+                $label .= html_writer::tag(
+                    'small',
+                    ' — ' . get_string('mumie_form_working_period_not_duedate_warning', 'mod_mumie'),
+                    ['class' => 'text-warning mumie-form-working-period-not-duedate-warning', 'style' => 'display:none']
+                );
+            }
+            $table->data[] = [$label, $checkboxhtml];
         }
 
         $htmltables = "";
@@ -448,6 +444,13 @@ class mod_mumie_mod_form extends moodleform_mod {
             . $htmltables
             . '</div>'
         );
+        $mform->addElement('html', '
+            <style>
+                #fitem_id_mumie_multi_edit_deadline_error > div:first-child { display: none; }
+                #fitem_id_mumie_multi_edit_deadline_error > div:last-child { flex: 0 0 100%; max-width: 100%; }
+            </style>
+        ');
+        $mform->addElement('static', 'mumie_multi_edit_deadline_error', '');
     }
 
     /**
@@ -483,6 +486,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         $this->set_general_server_data($data, $mform);
         // This option must not be changed to avoid messing with grades in the database.
         $mform->updateElementAttr("mumie_complete_course", ["disabled" => "disabled"]);
+        $mform->updateElementAttr("multi_problem_selector_btn", ["disabled" => "disabled"]);
         $this->set_grade_data($data, $mform);
         parent::set_data($data);
     }
@@ -579,18 +583,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
     }
-
-    /**
-     * Called during validation. Indicates whether a module-specific completion rule is selected.
-     *
-     * @param array $data Input data (not yet validated)
-     * @return bool True if one or more rules is enabled, false if none are.
-     */
-    public function completion_rule_enabled($data): bool {
-        $completionpasselement = $this->get_completion_rule_element_name('completionpass');
-        return !empty($data[$completionpasselement]);
-    }
-
 
     /**
      * The decision regarding gradepools is final. We need to know whether we should disable the selection boxes.

@@ -104,25 +104,6 @@ class locallib {
     }
 
     /**
-     * The function is called whenever a MUMIE task is created or updated.
-     * Cleans up the submitted duedate and timelimit if not selected in the duration selector.
-     * @param stdClass $mumietask the submitted MUMIE task that is supposed to be created or updated
-     * @return stdClass the MUMIE task with cleaned duration values
-     */
-    public static function clean_up_duration_values(stdClass $mumietask): stdClass {
-        $workingperiod = $mumietask->duration_selector;
-        if (isset($workingperiod)) {
-            if ($workingperiod != 'duedate') {
-                $mumietask->duedate = 0;
-            }
-            if ($workingperiod != 'timelimit') {
-                $mumietask->timelimit = 0;
-            }
-        }
-        return $mumietask;
-    }
-
-    /**
      * Get a default name for the uploaded MumieTask, if available.
      *
      * The dropped MUMIE Task's name is automatically generated and does not look pretty.
@@ -274,5 +255,23 @@ class locallib {
         gradesync::update();
 
         return "";
+    }
+
+    /**
+     * Zero the duration column that does not match duration_selector.
+     *
+     * The form exposes duedate and timelimit side by side with duration_selector choosing
+     * which one is active. This enforces the invariant "only the active column is non-zero"
+     * before the data is handed to the persistence layer.
+     *
+     * @param stdClass $data Submitted form data (mutated in place).
+     */
+    public static function clean_up_duration_values(\stdClass $data): void {
+        if ($data->duration_selector !== 'duedate') {
+            $data->duedate = 0;
+        }
+        if ($data->duration_selector !== 'timelimit') {
+            $data->timelimit = 0;
+        }
     }
 }

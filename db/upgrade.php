@@ -91,6 +91,10 @@ function xmldb_mumie_upgrade($oldversion) {
         addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null, null);
         upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     }
+    if ($oldversion < 2026062900) {
+        dropfieldifexists('mumie', 'completionpass');
+        upgrade_plugin_savepoint(true, 2026062900, 'mod', 'mumie');
+    }
 
     return true;
 }
@@ -141,5 +145,22 @@ function addfieldifmissing(
     $field = new xmldb_field($fieldname, $type, $precision, $unsigned, $notnull, $sequence, $default, $previous);
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
+    }
+}
+
+/**
+ * Drops a field from a table if it exists.
+ *
+ * @param string $tablename
+ * @param string $fieldname
+ * @return void
+ */
+function dropfieldifexists(string $tablename, string $fieldname): void {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table($tablename);
+    $field = new xmldb_field($fieldname);
+    if ($dbman->field_exists($table, $field)) {
+        $dbman->drop_field($table, $field);
     }
 }

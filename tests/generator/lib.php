@@ -43,7 +43,6 @@ class mod_mumie_generator extends testing_module_generator {
             'mumie_course' => '',
             'lastsync' => 0,
             'points' => 100,
-            'completionpass' => 0,
             'use_hashed_id' => 1,
             'duedate' => 0,
             'privategradepool' => 1,

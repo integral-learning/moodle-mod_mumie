@@ -1,10 +1,11 @@
-define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_server_config', 'core/ajax'],
+define(['jquery', 'core/templates', 'auth_mumie/mumie_server_config', 'core/ajax'],
     function() {
         const addServerButton = document.getElementById("id_add_server_button");
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
         let lmsSelectorUrl;
         let systemLanguage;
         let contextId;
+        let section;
 
 
         const durationController = (function() {
@@ -55,6 +56,21 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     document.getElementById('fitem_id_duedate_info').style.display = displayNone;
                     document.getElementById('fitem_id_unlimited_info').style.display = displayNone;
                 }
+
+                const duedatePropRow = document
+                    .querySelector('[name="mumie_multi_edit_property"][value="duedate"]')
+                    ?.closest('tr');
+                if (duedatePropRow) {
+                    const show = durationSelector.value === 'duedate';
+                    duedatePropRow.style.display = show ? '' : displayNone;
+                    if (!show) {
+                        const duedatePropertyCheckbox = duedatePropRow.querySelector('[name="mumie_multi_edit_property"]');
+                        if (duedatePropertyCheckbox && duedatePropertyCheckbox.checked) {
+                            duedatePropertyCheckbox.checked = false;
+                            duedatePropertyCheckbox.dispatchEvent(new Event('change'));
+                        }
+                    }
+                }
             }
 
             return {
@@ -65,6 +81,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     window.addEventListener("load", () => {
                         updateDurationElements();
                     });
+                    updateDurationElements();
                 },
                 setDurationElements: updateDurationElements,
                 isUngraded: isUngraded,
@@ -75,7 +92,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     return gradedElem.value;
                 }
             };
-        });
+        })();
 
         const serverController = (function() {
             let serverStructure;
@@ -145,18 +162,16 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     if (event.origin !== lmsSelectorUrl) {
                         return;
                     }
-                    const importObj = JSON.parse(event.data);
-                    const isGraded = importObj.isGraded !== false;
-                    const worksheet = importObj.worksheet ?? null;
                     try {
-                        courseController.setCourse(importObj.path_to_coursefile);
-                        langController.setLanguage(importObj.language);
-                        taskController.setSelection(importObj.link, importObj.language, importObj.name);
-                        taskController.setIsGraded(isGraded);
-                        worksheetController.setWorksheet(worksheet);
+                        const importObj = JSON.parse(event.data);
+                        if (Array.isArray(importObj)) {
+                            taskController.setMultiSelection(importObj);
+                        } else {
+                            applyPickerPayloadToForm(importObj);
+                            displayProblemSelectedMessage();
+                        }
                         sendSuccess();
                         window.focus();
-                        displayProblemSelectedMessage();
                     } catch (error) {
                         sendFailure(error.message);
                     }
@@ -182,40 +197,37 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
             /**
              * Builds the URL to the Problem Selector
+             * @param {boolean} multiSelect Whether to build a multi-select URL
              * @returns {string} URL to the Problem Selector
              */
-            function buildURL() {
-                const gradingType = taskController.getGradingType();
-                const selection = taskController.getDelocalizedTaskLink();
+            function buildURL(multiSelect = false) {
+                const gradingType = multiSelect ? 'all' : taskController.getGradingType();
                 const selectedServer = serverController.getSelectedServer().urlprefix;
                 const useSSO = shouldUseSSO(lmsSelectorUrl, selectedServer);
-                if (useSSO) {
-                    return '/auth/mumie/problem_selector.php?' +
-                        'org=' +
-                        mumieOrg +
-                        '&serverurl=' +
-                        encodeURIComponent(selectedServer) +
-                        '&problemlang=' +
-                        langController.getSelectedLanguage() +
-                        '&origin=' + encodeURIComponent(window.location.origin) +
-                        '&gradingtype=' + gradingType +
-                        '&contextid=' + contextId +
-                        (selection ? '&selection=' + selection : '');
-                }
-                return lmsSelectorUrl +
-                    '/lms-problem-selector?' +
-                    'org=' +
-                    mumieOrg +
-                    '&serverUrl=' +
-                    encodeURIComponent(selectedServer) +
-                    '&problemLang=' +
-                    langController.getSelectedLanguage() +
+
+                const base = useSSO
+                    ? '/auth/mumie/problem_selector.php?' +
+                    'org=' + mumieOrg +
+                    '&serverurl=' + encodeURIComponent(selectedServer) +
+                    '&problemlang=' + langController.getSelectedLanguage() +
+                    '&origin=' + encodeURIComponent(window.location.origin) +
+                    '&gradingtype=' + gradingType +
+                    '&contextid=' + contextId
+                    : lmsSelectorUrl + '/lms-problem-selector?' +
+                    'org=' + mumieOrg +
+                    '&serverUrl=' + encodeURIComponent(selectedServer) +
+                    '&problemLang=' + langController.getSelectedLanguage() +
                     '&origin=' + encodeURIComponent(window.location.origin) +
                     '&uiLang=' + systemLanguage +
                     '&gradingType=' + gradingType +
                     '&multiCourse=true' +
-                    '&worksheet=true' +
-                    (selection ? '&selection=' + selection : '');
+                    '&worksheet=true';
+
+                if (multiSelect) {
+                    return base + (useSSO ? '&multiselect=true' : '&multiSelect=true');
+                }
+                const selection = taskController.getDelocalizedTaskLink();
+                return selection ? base + '&selection=' + selection : base;
             }
 
             /**
@@ -249,22 +261,33 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
 
                     multiProblemSelectorButton.onclick = function(e) {
                         e.preventDefault();
-                        problemSelectorWindow = window.open(
-                            lmsSelectorUrl +
-                            '/lms-problem-selector?' +
-                            "serverUrl=" +
-                            encodeURIComponent(serverController.getSelectedServer().urlprefix) +
-                            '&gradingType=all',
-                            "_blank",
-                            'toolbar=0,location=0,menubar=0'
-                        );
+                        problemSelectorWindow = window.open(buildURL(true), '_blank', 'toolbar=0,location=0,menubar=0');
                     };
                 },
                 disable: function() {
                     problemSelectorButton.disabled = true;
-                }
+                },
             };
         })();
+
+        /**
+         * Apply a picker payload to the form's per-task fields.
+         *
+         * Single source of truth for picker-payload → form-field mapping.
+         * Used by both the single-task postMessage handler and the multi-task
+         * submit loop, so new picker fields only need to be wired here.
+         *
+         * @param {Object} payload picker payload for one task
+         */
+        function applyPickerPayloadToForm(payload) {
+            const isGraded = payload.isGraded !== false;
+            const worksheet = payload.worksheet ?? null;
+            courseController.setCourse(payload.path_to_coursefile);
+            langController.setLanguage(payload.language);
+            taskController.setSelection(payload.link, payload.language, payload.name);
+            taskController.setIsGraded(isGraded);
+            worksheetController.setWorksheet(worksheet);
+        }
 
         const courseController = (function() {
             const courseNameElem = document.getElementById("id_mumie_course");
@@ -378,11 +401,129 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
              * Form inputs related to grades should be disabled if the MUMIE Task is not graded.
              */
             function updateGradeEditability() {
-                const disabled = durationController().isUngraded();
+                const disabled = durationController.isUngraded();
                 document.getElementById('id_points').disabled = disabled;
                 document.getElementById('id_gradepass').disabled = disabled;
                 document.getElementById('id_gradecat').disabled = disabled;
-                durationController().setDurationElements();
+                durationController.setDurationElements();
+            }
+
+            /**
+             * Store selected tasks and update UI for multi-task creation.
+             * @param {Array} tasks array of task objects from the selector
+             */
+            function setMultiSelection(tasks) {
+                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                const summary = document.getElementById('mumie_multi_tasks_summary');
+                if (tasksField) {
+                    tasksField.value = JSON.stringify(tasks);
+                }
+                if (summary) {
+                    const taskListItems = tasks.map(task => {
+                        const taskListItem = document.createElement('li');
+                        taskListItem.textContent = task.name;
+                        return taskListItem;
+                    });
+                    summary.innerHTML = '';
+                    const summaryHeading = document.createElement('div');
+                    const taskList = document.createElement('ul');
+                    require(['core/str'], function(Str) {
+                        Str.get_string('mumie_multi_tasks_selected', 'mod_mumie', tasks.length)
+                            .then(function(headingText) {
+                                summaryHeading.textContent = headingText;
+                            });
+                    });
+                    taskList.classList.add('mumie_multi_tasks_list');
+                    taskListItems.forEach(taskListItem => taskList.appendChild(taskListItem));
+                    summary.appendChild(summaryHeading);
+                    summary.appendChild(taskList);
+                    summary.style.display = 'block';
+                }
+                const nameField = document.getElementById('id_name');
+                nameField.disabled = true;
+                nameField.value = '';
+                nameField.removeAttribute('required');
+                const taskDisplayElem = document.getElementById('id_task_display_element');
+                if (taskDisplayElem) { taskDisplayElem.value = ''; }
+                const courseNameElem = document.getElementById('id_mumie_course');
+                if (courseNameElem) { courseNameElem.value = ''; }
+                const nameFieldContainer = document.getElementById('fitem_id_name');
+                if (nameFieldContainer) {
+                    nameFieldContainer.querySelectorAll('.req, .text-danger, [title="Required field"]')
+                        .forEach(requiredIndicator => { requiredIndicator.style.display = 'none'; });
+                }
+                const requiredLegend = document.querySelector('.fdescription.required');
+                if (requiredLegend) {
+                    requiredLegend.style.display = 'none';
+                }
+            }
+
+            /**
+             * Serialize a form into a URL-encoded POST string, omitting form mechanics
+             * the webservice does not need (sesskey, qf form marker).
+             *
+             * Disabled form controls are temporarily enabled so FormData includes them:
+             * the picker writes values to display-only inputs (e.g. mumie_course) that
+             * the server-side validator still expects to receive.
+             *
+             * @param {HTMLFormElement} form
+             * @returns {string}
+             */
+            function serializeFormFields(form) {
+                const disabledFields = Array.from(form.querySelectorAll(':disabled'));
+                disabledFields.forEach(field => { field.disabled = false; });
+                try {
+                    const omit = ['sesskey', '_qf__mod_mumie_mod_form'];
+                    return Array.from(new FormData(form))
+                        .filter(([key]) => !omit.includes(key))
+                        .map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
+                        .join('&');
+                } finally {
+                    disabledFields.forEach(field => { field.disabled = true; });
+                }
+            }
+
+            /**
+             * Submit multi-tasks via AJAX, then redirect to course.
+             *
+             * Builds one full form payload per task by applying each picker payload
+             * to the live form and serializing it. The server treats each entry as
+             * an independent single-task submission, so picker-payload → form-field
+             * mapping lives in applyPickerPayloadToForm and is shared with the
+             * single-task path. Validation runs server-side via the shared form
+             * pipeline; errors surface as a modal alert with the validator's
+             * localized message.
+             */
+            function submitMultiTasks() {
+                const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                const courseId = document.getElementsByName('course')[0]?.value;
+                const submitButton = document.getElementById('id_submitbutton');
+                const form = submitButton && submitButton.closest('form');
+                const tasks = JSON.parse(tasksField.value);
+
+                const tasksFormData = tasks.map(task => {
+                    applyPickerPayloadToForm(task);
+                    return serializeFormFields(form);
+                });
+
+                // applyPickerPayloadToForm leaves the form in single-task mode of the last task;
+                // restore the multi-task UI so the form is coherent if the AJAX call fails.
+                setMultiSelection(tasks);
+
+                require(['core/ajax', 'core/notification'], function(Ajax, notification) {
+                    Ajax.call([{
+                        methodname: 'mod_mumie_create_multiple_mumie_tasks',
+                        args: {
+                            contextid: parseInt(contextId),
+                            section: section,
+                            tasksformdata: tasksFormData,
+                        },
+                    }])[0].done(function() {
+                        window.location.href = M.cfg.wwwroot + '/course/view.php?id=' + courseId;
+                    }).fail(function(error) {
+                        notification.alert('', error.message);
+                    });
+                });
             }
 
             return {
@@ -390,15 +531,38 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     updateTaskDisplayElement(taskSelectionInput.value);
                 },
                 setSelection: function(link, language, name) {
+                    const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                    if (tasksField) {
+                        tasksField.value = '';
+                    }
+                    const summary = document.getElementById('mumie_multi_tasks_summary');
+                    if (summary) {
+                        summary.style.display = 'none';
+                        summary.innerHTML = '';
+                    }
+                    const nameField = document.getElementById('id_name');
+                    if (nameField) {
+                        nameField.disabled = false;
+                        nameField.setAttribute('required', 'required');
+                    }
+                    const nameFieldContainer = document.getElementById('fitem_id_name');
+                    if (nameFieldContainer) {
+                        nameFieldContainer.querySelectorAll('.req, .text-danger, [title="Required field"]')
+                            .forEach(requiredIndicator => { requiredIndicator.style.display = ''; });
+                    }
+                    const requiredLegend = document.querySelector('.fdescription.required');
+                    if (requiredLegend) {
+                        requiredLegend.style.display = '';
+                    }
                     updateTaskUri(link, language);
                     updateName(name);
                 },
                 setIsGraded: function(isGraded) {
-                    durationController().setGradedElemValue(isGraded);
+                    durationController.setGradedElemValue(isGraded);
                     updateGradeEditability();
                 },
                 getGradingType: function() {
-                    const isGraded = durationController().getGradedElemValue();
+                    const isGraded = durationController.getGradedElemValue();
                     if (isGraded === '1') {
                         return 'graded';
                     } else if (isGraded === '0') {
@@ -408,7 +572,13 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                 },
                 getDelocalizedTaskLink: function() {
                     return delocalizeLink(taskSelectionInput.value);
-                }
+                },
+                setMultiSelection: setMultiSelection,
+                hasMultiTasks: function() {
+                    const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
+                    return tasksField && !!tasksField.value;
+                },
+                submitMultiTasks: submitMultiTasks,
             };
         })();
 
@@ -451,6 +621,17 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             }
 
             /**
+             * Show or hide per-task "Working period: not Deadline" warnings based on whether the duedate property is selected.
+             */
+            function updateNoDuedateWarnings() {
+                const duedateSelected = Array.from(propertySelectionInputs)
+                    .some(checkbox => checkbox.value === 'duedate' && checkbox.checked);
+                document.querySelectorAll('.mumie-form-working-period-not-duedate-warning').forEach(function(elem) {
+                    elem.style.display = duedateSelected ? '' : 'none';
+                });
+            }
+
+            /**
              * Set selection listeners for properties to apply to MUMIE Tasks in the course.
              */
             function setPropertySelectionListeners() {
@@ -462,6 +643,7 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                             selectedTaskProp.push(checkbox.value);
                         }
                         selectedTaskProperties.value = JSON.stringify(selectedTaskProp);
+                        updateNoDuedateWarnings();
                     };
                 });
             }
@@ -535,10 +717,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextIdParam, prbSelectorUrl, lang) {
+            init: function(contextIdParam, prbSelectorUrl, lang, sectionParam) {
                 lmsSelectorUrl = prbSelectorUrl;
                 systemLanguage = lang;
                 contextId = contextIdParam;
+                section = sectionParam;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {
@@ -551,12 +734,33 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
                     taskController.init();
                     multiTaskEditController.init();
                     problemSelectorController.init();
-                    durationController().init();
+                    durationController.init();
                 }
-                multiTaskEditController.init();
                 if (addServerButton) {
                     require(['auth_mumie/mumie_server_config'], function(MumieServer) {
                         MumieServer.init(addServerButton, contextId);
+                    });
+                }
+
+                const submitButton = document.getElementById('id_submitbutton');
+                const form = submitButton && submitButton.closest('form');
+                if (form) {
+                    let cancelClicked = false;
+                    const cancelButton = document.getElementById('id_cancel');
+                    if (cancelButton) {
+                        cancelButton.addEventListener('click', function() {
+                            cancelClicked = true;
+                        });
+                    }
+                    form.addEventListener('submit', function(e) {
+                        if (cancelClicked) {
+                            cancelClicked = false;
+                            return;
+                        }
+                        if (taskController.hasMultiTasks()) {
+                            e.preventDefault();
+                            taskController.submitMultiTasks();
+                        }
                     });
                 }
             }

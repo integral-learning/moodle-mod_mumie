@@ -24,20 +24,9 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['completionpass'] = ' Bewertung für Bestehen notwendig';
-$string['completionpass_help'] = 'Wenn diese Option aktiviert ist, wird die Aktivität als abgeschlossen betrachtet, sobald eine Bewertung vorliegt. Icons für die erfolgreiche oder erfolglose Bearbeitung können angezeigt werden,
-wenn dafür eine Bewertungsgrenze festgelegt wurde.
-<br><br><b>Bitte beachten Sie:</b><br>
-Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierenden sehen möchten,
-sollten zu daher zuvor die Bewerterübersicht öffnen.';
-$string['dnd_addmessage'] = 'MUMIE-Task hinzufügen';
-$string['dnd_addmessage_multiple'] = 'MUMIE-Tasks hinzufügen';
-$string['dndupload_message'] = 'Als neue MUMIE Task hinzufügen';
-$string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
-$string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>Dieses Aktivität-Modul ermöglicht die Nutzung von Inhalten der MUMIE-Plattform auf Moodle und eine automatische Synchronisierung der dort erzielten Noten.
-Ein MUMIE Task steht hierbei für eine einzelne benote Aufgabe eines MUMIE-Kurses.</p>
+Ein MUMIE Task steht hierbei für eine einzelne benotete Aufgabe eines MUMIE-Kurses.</p>
 <p><strong>Was ist MUMIE?</strong></p>
 <p>
 
@@ -66,14 +55,14 @@ $string['mumie:revokeduedateextension'] = 'Die Verlängerung der Abgabefrist ein
 $string['mumie:viewgrades'] = 'Alle Noten einer MUMIE Task in einem Kurs sehen';
 $string['mumie_calendar_duedate_desc'] = 'Später Abgaben werden nicht in die Moodle-Bewertungen übernommen';
 $string['mumie_calendar_duedate_extension'] = 'Verlängerte Abgabefrist: {$a}';
-$string['mumie_calendar_duedate_name'] = 'Abgabefirst: {$a}';
+$string['mumie_calendar_duedate_name'] = 'Abgabefrist: {$a}';
 $string['mumie_due_date'] = 'Abgabefrist';
-$string['mumie_due_date_help'] = 'Die Noten werden erst nach Ablauf der Frist mit Moodle synchronisiert.';
+$string['mumie_due_date_help'] = 'Noten, die nach der ausgewählten Frist erzielt wurden, werden nicht mit Moodle synchronisiert.';
 $string['mumie_duedate_extension'] = 'Abfabefristverlängerung';
 $string['mumie_duedate_form'] = 'Abgabefrist verlängern';
 $string['mumie_duedate_not_set'] = 'Keine allgemeine Abgabefrist für diese MUMIE-Task festgelegt!';
 $string['mumie_duration_selector'] = 'Bearbeitungszeitraum';
-$string['mumie_duration_selector_help'] = 'Bei einem begrenzten Bearbeitungszeitraum werden die Noten erst nach Ablauf der Fristen mit Moodle synchronisiert.';
+$string['mumie_duration_selector_help'] = 'Bei einem begrenzten Bearbeitungszeitraum werden nur die in diesem Zeitraum erzielten Noten mit Moodle synchronisiert.';
 $string['mumie_form_activity_container'] = 'Startcontainer';
 $string['mumie_form_activity_container_embedded'] = 'Eingebunden';
 $string['mumie_form_activity_container_help'] = 'Bitte wählen Sie, ob diese Aktivität in die Moodle-Umgebung eingebunden oder in einem neuen Browser-Tab geöffnet werden soll.<br><br>Bitte beachten Sie, dass eingebettete MUMIE Tasks aus technischen Gründen nicht mit Safari bearbeitet werden können. Für diese User wird diese MUMIE Task daher im gesamten Tab dargestellt.';
@@ -93,7 +82,9 @@ $string['mumie_form_complete_course'] = 'Ganzen Kurs verlinken';
 $string['mumie_form_complete_course_help'] = 'Nutzer werden nur eingeloggt und dann zur Kursübersicht weitergeleitet. Leistungsdaten werden für diese MUMIE-Task <b>nicht</b> synchronisiert.';
 $string['mumie_form_coursefile'] = 'Path to MUMIE course meta file';
 $string['mumie_form_deadline_prohibited_for_worksheet_without_trigger_after_deadline'] = "Das ausgewählte Worksheet darf keinen begrenzten Bearbeitungszeitraum haben.<br><br>Wählen Sie ein Worksheet mit entsprechender Konfiguration aus, wenn Sie eine Frist setzen möchten.";
+$string['mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, die bereits den Bearbeitungszeitraum Typ \'Abgabefrist\' haben.';
 $string['mumie_form_deadline_required_for_trigger_after_deadline'] = "Das ausgewählte Worksheet setzt einen festgelegten Bearbeitungszeitraum voraus";
+$string['mumie_form_due_date_multi_edit_hint'] = 'Abgabefrist kann nur für MUMIE-Tasks übernommen werden, welche vorher bereits mit dem Bearbeitungszeitraum Typ \'Abgabefrist\' erstellt wurden.';
 $string['mumie_form_due_date_must_be_future'] = 'Das Datum der Abgabefrist kann nicht in der Vergangenheit liegen!';
 $string['mumie_form_filter'] = 'MUMIE-Tasks filtern';
 $string['mumie_form_grade_pool'] = 'Punkte mit anderen Kursen teilen';
@@ -120,13 +111,16 @@ $string['mumie_form_tasks_selection_info'] = 'Bestimmen Sie die MUMIE-Tasks, fü
 $string['mumie_form_topic'] = 'Thema: {$a}';
 $string['mumie_form_updated_selection'] = 'Aufgabe erfolgreich ausgewählt';
 $string['mumie_form_wiki_link'] = 'Bitte besuchen Sie unser <a target="_blank" href="https://wiki.mumie.net/wiki/MUMIE-Moodle-integration-for-teachers">Wiki</a> für weiterführende Informationen!';
+$string['mumie_form_working_period_not_duedate_warning'] = 'Bearbeitungszeitraum: keine Abgabefrist';
 $string['mumie_general_duedate'] = 'Allgemeine Abgabefrist:';
 $string['mumie_general_timelimit'] = 'Zeitlimit: ';
 $string['mumie_grade_invalid'] = 'Bewertung ungültig!';
 $string['mumie_grade_overridden'] = 'Bewertung erfolgreich gespeichert!';
 $string['mumie_grade_percentage'] = 'Bewerung in %';
 $string['mumie_grading_settings'] = "Individuelle Bewertungseinstellungen";
-$string['mumie_multi_problem_selector'] = 'Alternativ können Sie auch mehrere MUMIE Tasks gleichzeitig mit der Mehrfach-Aufgabenauswahl erstellen. Ziehen Sie dazu einfach die gewünschten Aufgaben in ihren Kurs.<br><br>Für eine Kurzanleitung und weitere Informationen besuchen Sie unser <a target="_blank" href="{$a}">Wiki</a>';
+$string['mumie_multi_problem_selector'] = 'Alternativ können Sie mit der Mehrfach-Aufgabenauswahl auch mehrere MUMIE-Aufgaben auf einmal auswählen. Alle Aufgaben werden mit den eingestellten Einstellungen angelegt (Punkte, Frist, Startcontainer etc.). Jede Aufgabe behält ihren eigenen Namen — anders als bei der Einzelauswahl kann kein eigener Name vergeben werden. <br><br>Weitere Informationen finden Sie in unserem <a target="_blank" href="{$a}">Wiki</a>';
+$string['mumie_multi_task_validation_error'] = '{$a}';
+$string['mumie_multi_tasks_selected'] = 'Sie haben folgende {$a} Aufgaben ausgewählt:';
 $string['mumie_no_other_task_found'] = 'Keine andere MUMIE Tasks in Kurs gefunden';
 $string['mumie_no_submissions'] = 'Keine Antworten abgegeben';
 $string['mumie_open_task'] = 'MUMIE-Task öffnen';
@@ -142,9 +136,9 @@ $string['mumie_tag_disabled_help'] = 'Diese Aktivität ist gerade deaktiviert, d
 $string['mumie_task_updated'] = 'Es wurde eine weitere MUMIE-Task aktualisiert';
 $string['mumie_tasks_updated'] = 'Es wurden {$a} weitere MUMIE-Tasks aktualisiert';
 $string['mumie_timelimit'] = 'Zeitlimit';
-$string['mumie_timelimit_help'] = 'Die Note eines Studierenden wird erst mit Moodle synchronisiert, nachdem seine individuelle Frist abgelaufen ist. Das Zeitlimit beginnt in dem Moment, in dem ein Studierender eine MUMIE-Aufgabe zum ersten Mal öffnet.';
+$string['mumie_timelimit_help'] = 'Noten, die nach Ablauf des Zeitlimits erzielt wurden, werden nicht mit Moodle synchronisiert. Das Zeitlimit beginnt in dem Moment, in dem ein Studierender eine MUMIE-Aufgabe zum ersten Mal öffnet.';
 $string['mumie_unlimited'] = 'Uneingeschränkt';
-$string['mumie_unlimited_help'] = 'Die Noten können zu jeder Zeit mit Moodle synchronisiert werden.';
+$string['mumie_unlimited_help'] = 'Es gibt keine zeitliche Beschränkung. Alle erzielten Noten werden mit Moodle synchronisiert.';
 $string['mumieintro'] = 'Aktivitätsbeschreibung';
 $string['name'] = 'Name';
 $string['nomumieinstance'] = 'In diesem Kurs gibt es keine MUMIE-Instanzen';
