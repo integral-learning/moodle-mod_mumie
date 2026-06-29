@@ -91,9 +91,9 @@ function xmldb_mumie_upgrade($oldversion) {
         addfieldifmissing('mumie', 'timelimit', XMLDB_TYPE_INTEGER, '10', null, false, null, null, null);
         upgrade_plugin_savepoint(true, 2025031200, 'mod', 'mumie');
     }
-    if ($oldversion < 2026062300) {
+    if ($oldversion < 2026062900) {
         dropfieldifexists('mumie', 'completionpass');
-        upgrade_plugin_savepoint(true, 2026062300, 'mod', 'mumie');
+        upgrade_plugin_savepoint(true, 2026062900, 'mod', 'mumie');
     }
 
     return true;

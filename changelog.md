@@ -2,7 +2,7 @@
 
 All important changes to this plugin will be documented in this file.
 
-## TODO
+## [1.10.0] - 2026-06-29
 ### Added
 - Teachers can now apply the deadline setting to multiple MUMIE Tasks at once using the multi-edit feature
 - Tasks without a 'Deadline' working period show a warning when deadline transfer is selected
