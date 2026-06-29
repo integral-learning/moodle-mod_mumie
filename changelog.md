@@ -9,15 +9,21 @@ All important changes to this plugin will be documented in this file.
 - Validation prevents transferring a deadline to tasks that were not created with working period type 'Deadline'
 - SSO when opening the Multi Problem Selector for the Problem Pool
 
+### Changed
+- Plugin now requires Moodle 4.3 or higher
+- Support Moodle 5.2
+- Multi Problem Selector now creates MUMIE Tasks via form submission instead of drag-and-drop
+- Settings configured on the form (points, deadline, container, etc.) are now applied to all tasks created via the Multi Problem Selector
+- Multi Problem Selector button is unavailable when editing an existing MUMIE Task
+
+### Removed
+- Drag-and-drop creation of MUMIE Tasks is no longer supported
+- The "Require passing grade" completion option in activity settings; use Moodle's built-in "Receive a grade" → "Passing grade" option instead.
+
 ### Fixed
 - MUMIE Task no longer shows working period descriptions for all options simultaneously
 - Inconsistent working period description texts corrected
-
-### Changed
-- Multi Problem Selector now creates MUMIE Tasks via form submission instead of drag-and-drop
-- Drag-and-drop creation of MUMIE Tasks is no longer supported
-- Settings configured on the form (points, deadline, container, etc.) are now applied to all tasks created via the Multi Problem Selector
-- Multi Problem Selector button is unavailable when editing an existing MUMIE Task
+- Deleting a due date extension no longer fails with a server error
 
 ## [v1.9.1] - 2025-07-03
 ### Changed

@@ -1,10 +1,11 @@
-define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_server_config', 'core/ajax'],
+define(['jquery', 'core/templates', 'auth_mumie/mumie_server_config', 'core/ajax'],
     function() {
         const addServerButton = document.getElementById("id_add_server_button");
         const missingConfig = document.getElementsByName("mumie_missing_config")[0];
         let lmsSelectorUrl;
         let systemLanguage;
         let contextId;
+        let section;
 
 
         const durationController = (function() {
@@ -496,7 +497,6 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
             function submitMultiTasks() {
                 const tasksField = document.getElementsByName('mumie_multi_tasks')[0];
                 const courseId = document.getElementsByName('course')[0]?.value;
-                const section = parseInt(new URLSearchParams(window.location.search).get('section') || 0);
                 const submitButton = document.getElementById('id_submitbutton');
                 const form = submitButton && submitButton.closest('form');
                 const tasks = JSON.parse(tasksField.value);
@@ -717,10 +717,11 @@ define(['jquery', 'core/templates', 'core/modal_factory', 'auth_mumie/mumie_serv
         }
 
         return {
-            init: function(contextIdParam, prbSelectorUrl, lang) {
+            init: function(contextIdParam, prbSelectorUrl, lang, sectionParam) {
                 lmsSelectorUrl = prbSelectorUrl;
                 systemLanguage = lang;
                 contextId = contextIdParam;
+                section = sectionParam;
                 const isEdit = document.getElementById("id_name").getAttribute('value');
                 const serverStructure = JSON.parse(document.getElementsByName('mumie_server_structure')[0].value);
                 if (isEdit && !serverConfigExists()) {

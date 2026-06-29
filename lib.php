@@ -202,8 +202,6 @@ function mumie_supports($feature) {
     switch ($feature) {
         case FEATURE_GRADE_HAS_GRADE:
             return true;
-        case FEATURE_COMPLETION_HAS_RULES:
-            return true;
         case FEATURE_BACKUP_MOODLE2:
             return true;
         case FEATURE_SHOW_DESCRIPTION:
@@ -282,37 +280,6 @@ function mumie_update_grades_all_user($mumie) {
 function mumie_before_standard_top_of_body_html() {
     return locallib::callbackimpl_before_standard_top_of_body_html();
 }
-
-/**
- * Obtains the automatic completion state for this MUMIE task
- *
- * This is a code fragment copied from mod_quiz version 2018051400
- * @param object $course Course
- * @param object $cm Course-module
- * @param int $userid User ID
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
- * @return bool True if completed, false if not. (If no conditions, then return
- *   value depends on comparison type)
- */
-function mumie_get_completion_state($course, $cm, $userid, $type) {
-    global $DB, $CFG;
-    $mumie = $DB->get_record('mumie', ['id' => $cm->instance], '*', MUST_EXIST);
-
-    if ($mumie->completionpass) {
-        require_once($CFG->libdir . '/gradelib.php');
-        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod',
-            'itemmodule' => 'mumie', 'iteminstance' => $cm->instance, 'outcomeid' => null]);
-
-        if ($item) {
-            $grades = grade_grade::fetch_users_grades($item, [$userid], false);
-            if (!empty($grades[$userid])) {
-                return $grades[$userid]->is_passed($item);
-            }
-        }
-    }
-    return false;
-}
-
 
 /**
  * Get mumieserver_form as a fragment

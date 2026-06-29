@@ -24,14 +24,6 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$string['completionpass'] = 'Bewertung für Bestehen notwendig';
-$string['completionpass_help'] = 'Wenn diese Option aktiviert ist, wird die Aktivität als abgeschlossen betrachtet, sobald eine Bewertung vorliegt. Icons für die erfolgreiche oder erfolglose Bearbeitung können angezeigt werden,
-wenn dafür eine Bewertungsgrenze festgelegt wurde.
-<br><br><b>Bitte beachten Sie:</b><br>
-Noten für MUMIE Tasks werden nur aktualisiert, wenn sie im Moodle-Gradebook angezeigt werden. Wenn Sie aktuelle Informationen über den Aktivitätsabschluss aller Studierenden sehen möchten,
-sollten zu daher zuvor die Bewerterübersicht öffnen.';
-$string['gradetopassmustbeset'] = 'Die Bestehensgrenze kann nicht 0 sein, da der Aktivitätsabschluss vom Erreichen dieser Grenze abhängig ist. Bitte geben Sie daher einen Wert über 0 ein.';
-$string['gradetopassnotset'] = 'Dieser Test hat keine Bestehensgrenze.';
 $string['modulename'] = 'MUMIE Task';
 $string['modulename_help'] = '<p>Dieses Aktivität-Modul ermöglicht die Nutzung von Inhalten der MUMIE-Plattform auf Moodle und eine automatische Synchronisierung der dort erzielten Noten.
 Ein MUMIE Task steht hierbei für eine einzelne benotete Aufgabe eines MUMIE-Kurses.</p>

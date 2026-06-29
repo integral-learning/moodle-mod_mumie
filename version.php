@@ -25,9 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2025070300; // The current module version (Date: YYYYMMDDXX).
+// todo: before release, the version in /db/upgrade.php should match the updated plugin version
+$plugin->version = 2026062300; // The current module version (Date: YYYYMMDDXX).
 $plugin->component = 'mod_mumie'; // Full name of the plugin (used for diagnostics).
-$plugin->requires = 2022112800; // 4.1 LTS
+$plugin->requires = 2023100900; // 4.3
 $plugin->release = "v1.9.1";
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [

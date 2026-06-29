@@ -72,10 +72,22 @@ class mod_mumie_mod_form extends moodleform_mod {
         $context = context_course::instance($COURSE->id);
         $this->disable_grade_rules();
 
+        // Resolve the target section number the same way modedit.php does.
+        // The multi-problem button is only enabled when adding (not editing),
+        // so URL params are populated; on Moodle 5.1+ the URL prefers sectionid,
+        // on older versions it uses section.
+        $sectionid = optional_param('sectionid', null, PARAM_INT);
+        $sectionnum = optional_param('section', 0, PARAM_INT);
+        if (empty($sectionnum) && !empty($sectionid)) {
+            $sectionnum = (int) get_fast_modinfo($COURSE)
+                ->get_section_info_by_id($sectionid, MUST_EXIST)->sectionnum;
+        }
+
         $jsparams = [
             json_encode($context->id),
             get_config('auth_mumie', 'mumie_problem_selector_url'),
             $USER->lang,
+            $sectionnum,
         ];
         $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
     }
@@ -284,52 +296,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             $serveroptions[$server->get_urlprefix()] = $server->get_name();
         }
         return $serveroptions;
-    }
-
-    /**
-     * Provide option to mark an activity automatically as completed once a passing grade was archived
-     *
-     * This function is copied from mod_quiz version 2018051400
-     * @return array containing the name of the mform group that has been added to the form
-     */
-    public function add_completion_rules(): array {
-        $mform = $this->_form;
-        $items = [];
-
-        $group = [];
-        $completionpasselement = $this->get_completion_rule_element_name('completionpass');
-        $group[] = $mform->createElement(
-            'advcheckbox',
-            $completionpasselement,
-            null,
-            get_string('completionpass', 'mumie'),
-            ['group' => 'cpass']
-        );
-        $completionusegradeelement = $this->get_completion_rule_element_name('completionusegrade');
-        $mform->disabledIf($completionpasselement, $completionusegradeelement, 'notchecked');
-        $completionpassgroupelement = $this->get_completion_rule_element_name('completionpassgroup');
-        $mform->addGroup($group, $completionpassgroupelement, get_string('completionpass', 'mumie'), ' &nbsp; ', false);
-        $mform->addHelpButton($completionpassgroupelement, 'completionpass', 'mumie');
-        $items[] = $completionpassgroupelement;
-        return $items;
-    }
-
-    /**
-     * Get the completion rule's element name.
-     *
-     * Conditionally add suffix for Moodle >= 4.3.
-     *
-     * @param string $rawname The raw name of the completion rule.
-     * @return string The properly suffixed element name.
-     */
-    private function get_completion_rule_element_name($rawname): string {
-        global $CFG;
-        if ($CFG->branch < 403) {
-            $suffix = '';
-        } else {
-            $suffix = $this->get_suffix();
-        }
-        return $rawname . $suffix;
     }
 
     /**
@@ -617,18 +583,6 @@ class mod_mumie_mod_form extends moodleform_mod {
             }
         }
     }
-
-    /**
-     * Called during validation. Indicates whether a module-specific completion rule is selected.
-     *
-     * @param array $data Input data (not yet validated)
-     * @return bool True if one or more rules is enabled, false if none are.
-     */
-    public function completion_rule_enabled($data): bool {
-        $completionpasselement = $this->get_completion_rule_element_name('completionpass');
-        return !empty($data[$completionpasselement]);
-    }
-
 
     /**
      * The decision regarding gradepools is final. We need to know whether we should disable the selection boxes.
