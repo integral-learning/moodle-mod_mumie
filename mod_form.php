@@ -47,6 +47,22 @@ class mod_mumie_mod_form extends moodleform_mod {
     private $servers;
 
     /**
+     * Resolve the activity subtype for the current form invocation.
+     *
+     * On edit, the type comes from the loaded DB record. On add, it comes from the
+     * &type= URL/POST parameter set by the activity chooser card. Defaults to 'task'
+     * so any pre-existing add link keeps producing MUMIE Task rows.
+     *
+     * @return string
+     */
+    private function resolve_activity_type(): string {
+        if (!empty($this->current->type)) {
+            return $this->current->type;
+        }
+        return optional_param('type', 'task', PARAM_ALPHA);
+    }
+
+    /**
      * Define fields and default values for the mumie server form
      * @return void
      */
@@ -54,6 +70,15 @@ class mod_mumie_mod_form extends moodleform_mod {
         global $PAGE, $COURSE, $USER;
 
         $mform = &$this->_form;
+
+        $type = $this->resolve_activity_type();
+        $mform->addElement('hidden', 'type', $type);
+        $mform->setType('type', PARAM_ALPHA);
+
+        if ($type === 'tutor') {
+            $this->definition_tutor($mform); // todo: proper differentiation between tutor and task (put the rest into "definition_task)
+            return;
+        }
 
         $this->servers = $this->get_valid_servers_with_structure();
         $serveroptions = $this->get_server_options();
@@ -90,6 +115,32 @@ class mod_mumie_mod_form extends moodleform_mod {
             $sectionnum,
         ];
         $PAGE->requires->js_call_amd('mod_mumie/mod_form', 'init', $jsparams);
+    }
+
+    /**
+     * Define fields for the MUMIE Tutor subtype: name + intro only.
+     *
+     * @param MoodleQuickForm $mform
+     * @return void
+     */
+    private function definition_tutor(MoodleQuickForm $mform): void {
+        $mform->addElement('header', 'mumie_tutor_general', get_string('mumie_form_activity_header', 'mod_mumie'));
+
+        $mform->addElement(
+            'text',
+            'name',
+            get_string('mumie_form_activity_name', 'mod_mumie'),
+            ['class' => 'mumie_text_input']
+        );
+        $mform->setType('name', PARAM_TEXT);
+        $mform->addRule('name', get_string('required'), 'required', null);
+
+        $this->standard_intro_elements(get_string('mumieintro', 'mumie'));
+
+        $this->standard_coursemodule_elements();
+        $mform->setAdvanced('cmidnumber');
+
+        $this->add_action_buttons();
     }
 
     /**
@@ -272,6 +323,9 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return array associative array of errors
      */
     public function validation($data, $files): array {
+        if ($data['type'] === 'tutor') {
+            return [];
+        }
         return \mod_mumie\mumie_task_validator::get_errors($data, $this->current);
     }
 
@@ -282,6 +336,9 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function data_postprocessing($data): void {
         parent::data_postprocessing($data);
+        if ($data->type === 'tutor') {
+            return;
+        }
         locallib::clean_up_duration_values($data);
     }
 
@@ -474,6 +531,15 @@ class mod_mumie_mod_form extends moodleform_mod {
      */
     public function set_data($data): void {
         global $CFG;
+
+        // Tutor subtype has none of the MUMIE task fields (server, gradepool, duedate, ...),
+        // so skip all task-specific preloading. On a fresh add, $data does not yet carry the
+        // hidden type field, so consult resolve_activity_type() which also checks the URL.
+        if ($this->resolve_activity_type() === 'tutor') {
+            parent::set_data($data);
+            return;
+        }
+
         $this->set_general_data($data);
 
         // The following changes only apply to edits, so skip them if not necessary.

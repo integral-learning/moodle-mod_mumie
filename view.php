@@ -45,6 +45,23 @@ $PAGE->set_cm($cm, $course);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('incourse');
 
+if ($mumietask->type === 'tutor') {
+    $PAGE->set_title($course->shortname . ': ' . $mumietask->name);
+    $PAGE->set_heading($mumietask->name);
+    $PAGE->set_url(new moodle_url('/mod/mumie/view.php', ['id' => $id]));
+
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(format_string($mumietask->name));
+    echo format_module_intro('mumie', $mumietask, $cm->id);
+    echo html_writer::tag(
+        'p',
+        get_string('tutor_placeholder', 'mod_mumie'),
+        ['class' => 'alert alert-info']
+    );
+    echo $OUTPUT->footer();
+    return;
+}
+
 if ($action == "grading") {
     require_capability("mod/mumie:grantduedateextension", $context);
     require_once($CFG->dirroot . '/mod/mumie/classes/mumie_grader.php');

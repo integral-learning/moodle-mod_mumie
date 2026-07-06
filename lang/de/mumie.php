@@ -47,6 +47,8 @@ Leistungsstarke Autorenwerkzeuge ermöglichen die Erstellung von neuen Inhalten.
 <li><strong>Single-Sign-On und automatisches Sign-Out</strong><br /> Studierende müssen keinen neuen Account für die MUMIE-Plattform erstellen oder sich einloggen. Dies geschieht automatisch, sobald sie eine MUMIE Task starten.
 Aus Sicherheitsgründen werden sie zudem auch auf MUMIE-Servern ausgeloggt, wenn sie sich in Moodle ausloggen.</li>
 </ul>';
+$string['modulename_tutor'] = 'MUMIE Tutor';
+$string['modulename_tutor_help'] = 'Ein KI-gestützter Tutor, den Studierende während der Kursbearbeitung zurate ziehen können. Diese Aktivität wird nicht benotet und öffnet keine externen Inhalte.';
 $string['modulenameplural'] = 'MUMIE Tasks';
 $string['mumie:addinstance'] = 'Neue MUMIE Task hinzufügen';
 $string['mumie:grantduedateextension'] = 'Die Abgabefrist einer MUMIE-Task für individuelle Studierende verlängern';
@@ -150,3 +152,4 @@ $string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID der MUMIE-T
 $string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Abgabefristverlängerungen';
 $string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID des Nutzers, für den die Fristverlängerung gilt';
 $string['server_config_missing'] = '<br><br>Es konnte keine Kofiguration für die MUMIE-Server-URL gefunden werden, die zum Erstellen dieser MUMIE Task benutzt wird. Bitten Sie Ihren Administrator eine MUMIE-Server-Konfiguration für die folgende URL zu erstellen:<br><br><b>{$a}</b>';
+$string['tutor_placeholder'] = 'MUMIE Tutor — folgt in Kürze.';

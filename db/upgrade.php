@@ -95,6 +95,10 @@ function xmldb_mumie_upgrade($oldversion) {
         dropfieldifexists('mumie', 'completionpass');
         upgrade_plugin_savepoint(true, 2026062900, 'mod', 'mumie');
     }
+    if ($oldversion < 2026070400) { //todo update version before release
+        addfieldifmissing('mumie', 'type', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'task', null);
+        upgrade_plugin_savepoint(true, 2026070400, 'mod', 'mumie');
+    }
 
     return true;
 }

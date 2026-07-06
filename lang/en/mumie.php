@@ -36,6 +36,8 @@ $string['modulename_help'] = '<p>This activity module enables the usage of conte
 <li><strong>Automatic grade synchronization</strong><br /> All MUMIE tasks are graded and their results are automatically added to the moodle gradebook.</li>
 <li><strong>Single sign on and automatic sign out</strong><br /> Students don\'t need to create a new account or login to MUMIE servers. It\'s done for them automatically as soon as they start a MUMIE task. To secure their data, they are also automatically logged out of all MUMIE servers, when they log out of moodle.</li>
 </ul>';
+$string['modulename_tutor'] = 'MUMIE Tutor';
+$string['modulename_tutor_help'] = 'An AI-powered tutor students can consult while working through a course. This activity has no grade and does not launch external content.'; // todo: launches external webapp...
 $string['modulenameplural'] = 'MUMIE tasks';
 $string['mumie:addinstance'] = 'Add a new MUMIE Task';
 $string['mumie:grantduedateextension'] = 'Grant a due date extension to individual students';
@@ -151,3 +153,4 @@ $string['privacy:metadata:mod_mumie_duedate_extensions:mumie'] = 'ID of MUMIE Ta
 $string['privacy:metadata:mod_mumie_duedate_extensions:tableexplanation'] = 'Due data extensions';
 $string['privacy:metadata:mod_mumie_duedate_extensions:userid'] = 'User ID to whom the extension is granted';
 $string['server_config_missing'] = '<br><br>We could not find a configuration for the MUMIE server that is being used in this MUMIE Task. Please ask your administrator to add a MUMIE server configuration for the following URL prefix:<br><br><b>{$a}</b>';
+$string['tutor_placeholder'] = 'MUMIE Tutor — coming soon.';

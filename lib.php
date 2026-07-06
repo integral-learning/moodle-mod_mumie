@@ -45,6 +45,15 @@ function mumie_add_instance($mumie, $mform) {
     global $DB;
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
+
+    if ($mumie->type === 'tutor') {
+        // taskurl is NOTNULL without a DB default; fill it so the tutor row can be inserted.
+        // No tutor code path reads it.
+        $mumie->taskurl = ''; //todo separate tables for task and tutor?
+        $mumie->id = $DB->insert_record("mumie", $mumie);
+        return $mumie->id;
+    }
+
     $mumie->use_hashed_id = 1;
     locallib::update_pending_gradepool($mumie);
     $mumie->id = $DB->insert_record("mumie", $mumie);
@@ -71,6 +80,11 @@ function mumie_update_instance($mumie, $mform) {
         $completionexpected = !empty($mumie->completionexpected) ? $mumie->completionexpected : null;
         \core_completion\api::update_completion_date_event($mumie->coursemodule, 'mumie', $mumie->id, $completionexpected);
     };
+
+    if ($mumie->type === 'tutor') {
+        return $DB->update_record("mumie", $mumie);
+    }
+
     locallib::update_pending_gradepool($mumie);
 
     $grades = locallib::has_problem_changed($mumie) ? "reset" : null;
@@ -221,6 +235,9 @@ function mumie_supports($feature) {
  */
 function mumie_grade_item_update($mumie, $grades = null) {
     global $CFG;
+    if ($mumie->type === 'tutor') {
+        return 0;
+    }
     if (!$mumie->isgraded) {
         return false;
     }
@@ -429,4 +446,39 @@ function mumie_get_effective_duedate(int $userid, stdClass $mumie): int {
  */
 function mumie_get_deadline_in_ms($deadline) {
     return $deadline * 1000;
+}
+
+/**
+ * Return the activity-chooser cards for mod_mumie: the default "MUMIE Task" and a "MUMIE Tutor" subtype card.
+ *
+ * When a plugin defines this hook, core stops auto-adding the default card; the plugin must
+ * include it explicitly. The tutor card's add-URL carries type=tutor so mod_form.php and the
+ * save path can distinguish the subtype.
+ *
+ * @param \core_course\local\entity\content_item $defaultmodulecontentitem
+ * @param \stdClass $user
+ * @param \stdClass $course
+ * @return array
+ */
+function mod_mumie_get_course_content_items(
+    \core_course\local\entity\content_item $defaultmodulecontentitem,
+    \stdClass $user,
+    \stdClass $course
+): array {
+    $tutorlink = new moodle_url($defaultmodulecontentitem->get_link());
+    $tutorlink->param('type', 'tutor');
+
+    $tutoritem = new \core_course\local\entity\content_item(
+        $defaultmodulecontentitem->get_id() + 1,
+        'mumie_tutor',
+        new \core_course\local\entity\string_title(get_string('modulename_tutor', 'mod_mumie')),
+        $tutorlink,
+        $defaultmodulecontentitem->get_icon(),
+        get_string('modulename_tutor_help', 'mod_mumie'),
+        $defaultmodulecontentitem->get_archetype(),
+        $defaultmodulecontentitem->get_component_name(),
+        $defaultmodulecontentitem->get_purpose()
+    );
+
+    return [$defaultmodulecontentitem, $tutoritem];
 }
