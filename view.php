@@ -40,7 +40,7 @@ $action = optional_param(
 
 $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
-$mumietask = $DB->get_record('mumie', ['id' => $cm->instance]);
+$mumietask = \mod_mumie\repository::get($cm->instance);
 $PAGE->set_cm($cm, $course);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('incourse');

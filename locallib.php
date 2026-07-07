@@ -46,34 +46,13 @@ define("MUMIE_LAUNCH_CONTAINER_EMBEDDED", 1);
  */
 class locallib {
     /**
-     * Get instance of mumie task with its id
-     * @param int $id id of the mumie task
-     * @return stdClass instance of mumie task
-     */
-    public static function get_mumie_task($id) {
-        global $DB;
-        return $DB->get_record(MUMIE_TASK_TABLE, ['id' => $id]);
-    }
-
-    /**
      * Check if there are any MUMIE Tasks in the given course.
      *
      * @param int $courseid The course to check
      * @return bool True, if there are MUMIE Tasks in the course
      */
     public static function course_contains_mumie_tasks($courseid) {
-        return count(self::get_mumie_tasks_by_course($courseid)) > 0;
-    }
-
-    /**
-     * Get all MUMIE Tasks for a course
-     *
-     * @param int $courseid The course to check
-     * @return array array of MUMIE Tasks
-     */
-    public static function get_mumie_tasks_by_course($courseid) {
-        global $DB;
-        return $DB->get_records(MUMIE_TASK_TABLE, ["course" => $courseid]);
+        return count(repository::get_tasks_in_course($courseid)) > 0;
     }
 
     /**
@@ -82,22 +61,20 @@ class locallib {
      * @param stdClass $mumietask The update we are processing
      */
     public static function update_pending_gradepool($mumietask) {
-        global $DB;
         $update = false;
         if (!isset($mumietask->id)) {
             $update = true;
         } else {
-            $oldrecord = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietask->id]);
+            $oldrecord = repository::get_task($mumietask->id);
             if ($oldrecord->privategradepool != $mumietask->privategradepool) {
                 $update = true;
             }
         }
         if ($update) {
-            $tasks = $DB->get_records(MUMIE_TASK_TABLE, ["course" => $mumietask->course]);
-            foreach ($tasks as $task) {
+            foreach (repository::get_tasks_in_course($mumietask->course) as $task) {
                 if (!isset($task->privategradepool)) {
                     $task->privategradepool = $mumietask->privategradepool;
-                    $DB->update_record(MUMIE_TASK_TABLE, $task);
+                    repository::save_update($task);
                 }
             }
         }
@@ -198,8 +175,7 @@ class locallib {
      * @return boolean has a new problem been selected?
      */
     public static function has_problem_changed($mumietaskupdate) {
-        global $DB;
-        $oldtask = $DB->get_record(MUMIE_TASK_TABLE, ['id' => $mumietaskupdate->id]);
+        $oldtask = repository::get_task($mumietaskupdate->id);
         $oldurl = self::remove_params_from_url($oldtask->taskurl);
         $newurl = self::remove_params_from_url($mumietaskupdate->taskurl);
         return $oldurl != $newurl;

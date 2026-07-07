@@ -59,7 +59,7 @@ class observer {
         }
 
         $mumietaskid = $module->instance;
-        $mumietask = $DB->get_record('mumie', ['id' => $mumietaskid]);
+        $mumietask = repository::get_task($mumietaskid);
         if (!$mumietask) {
             return;
         }

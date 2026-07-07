@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="mumie" COMMENT="This table contains mumie instances">
+    <TABLE NAME="mumie" COMMENT="Shared parent table for all mumie activity subtypes.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course mumie activity belongs to"/>
@@ -13,6 +13,18 @@
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Activity subtype: 'task' or 'tutor'."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="mumie_task" COMMENT="Task-specific fields, keyed by mumie.id.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Matches mumie.id"/>
         <FIELD NAME="taskurl" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="link to mumie task"/>
         <FIELD NAME="launchcontainer" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Launch mumie task in a new window"/>
         <FIELD NAME="mumie_course" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Deprecated"/>
@@ -24,17 +36,21 @@
         <FIELD NAME="use_hashed_id" TYPE="int" LENGTH="1" DEFAULT="0"/>
         <FIELD NAME="duedate" TYPE="int" LENGTH="10" SEQUENCE="false" DEFAULT="0"/>
         <FIELD NAME="timelimit" TYPE="int" LENGTH="10" SEQUENCE="false" NOTNULL="false"/>
-        <FIELD NAME ="privategradepool" TYPE="int" LENGTH="1"/>
-        <FIELD NAME ="isgraded" TYPE="int" LENGTH="1" DEFAULT="1"/>
-        <FILED NAME ="worksheet" TYPE="text" NOTNULL="false" COMMENT="Serialized worksheet configuration"/>
-        <FIELD NAME="type" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="task" SEQUENCE="false" COMMENT="Activity subtype: 'task' (MUMIE Task) or 'tutor' (MUMIE Tutor)"/>
+        <FIELD NAME="privategradepool" TYPE="int" LENGTH="1"/>
+        <FIELD NAME="isgraded" TYPE="int" LENGTH="1" DEFAULT="1"/>
+        <FIELD NAME="worksheet" TYPE="text" NOTNULL="false" COMMENT="Serialized worksheet configuration"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
-      <INDEXES>
-        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-      </INDEXES>
+    </TABLE>
+    <TABLE NAME="mumie_tutor" COMMENT="Tutor-specific fields, keyed by mumie.id.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Matches mumie.id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
     </TABLE>
     <TABLE NAME="mumie_duedate" COMMENT="This table contains duedate extensions for individual students">
       <FIELDS>

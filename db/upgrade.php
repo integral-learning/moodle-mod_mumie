@@ -95,12 +95,49 @@ function xmldb_mumie_upgrade($oldversion) {
         dropfieldifexists('mumie', 'completionpass');
         upgrade_plugin_savepoint(true, 2026062900, 'mod', 'mumie');
     }
-    if ($oldversion < 2026070400) { //todo update version before release
+    if ($oldversion < 2026070700) { // TODO update version before release
+        // Reconcile a schema drift: the old install.xml had a typo (<FILED> instead of <FIELD>)
+        // on the worksheet column, so fresh installs from 2023050900 onwards never got it while
+        // upgraders did. Add it here so both paths converge before the split migration runs.
+        addfieldifmissing('mumie', 'worksheet', XMLDB_TYPE_TEXT, null, null, false, null, null, null);
+
         addfieldifmissing('mumie', 'type', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'task', null);
-        upgrade_plugin_savepoint(true, 2026070400, 'mod', 'mumie');
+        changefielddefault('mumie', 'type', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null);
+
+        installtablefromxmlifmissing('mumie_task');
+        installtablefromxmlifmissing('mumie_tutor');
+
+        mumie_migrate_task_fields_to_task_table();
+
+        foreach ([
+            'taskurl', 'launchcontainer', 'mumie_course', 'language', 'server', 'mumie_coursefile',
+            'lastsync', 'points', 'use_hashed_id', 'duedate', 'timelimit', 'privategradepool',
+            'isgraded', 'worksheet',
+        ] as $fieldname) {
+            dropfieldifexists('mumie', $fieldname);
+        }
+
+        upgrade_plugin_savepoint(true, 2026070700, 'mod', 'mumie');
     }
 
     return true;
+}
+
+/**
+ * Creates a table from db/install.xml if it doesn't yet exist.
+ *
+ * @param string $tablename Name of the table (must be declared in db/install.xml).
+ * @return void
+ */
+function installtablefromxmlifmissing(string $tablename): void {
+    global $CFG, $DB;
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists($tablename)) {
+        $dbman->install_one_table_from_xmldb_file(
+            $CFG->dirroot . '/mod/mumie/db/install.xml',
+            $tablename
+        );
+    }
 }
 
 /**
@@ -150,6 +187,43 @@ function addfieldifmissing(
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
+}
+
+/**
+ * Change the DB DEFAULT on an existing column.
+ *
+ * Sequence and previous are omitted from the parameter list because change_field_default does not act on them.
+ *
+ * @param string      $tablename
+ * @param string      $fieldname
+ * @param null|int    $type      XMLDB_TYPE_INTEGER, XMLDB_TYPE_CHAR, ...
+ * @param null|string $precision length for integers and chars
+ * @param null|bool   $unsigned
+ * @param null|bool   $notnull
+ * @param mixed       $default
+ * @return void
+ */
+function changefielddefault(
+    string $tablename,
+    string $fieldname,
+    ?int $type,
+    ?string $precision,
+    ?bool $unsigned,
+    ?bool $notnull,
+    mixed $default
+): void {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table($tablename);
+    $field = new xmldb_field(
+        name: $fieldname,
+        type: $type,
+        precision: $precision,
+        unsigned: $unsigned,
+        notnull: $notnull,
+        default: $default,
+    );
+    $dbman->change_field_default($table, $field);
 }
 
 /**

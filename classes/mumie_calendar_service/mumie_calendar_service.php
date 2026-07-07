@@ -74,7 +74,7 @@ class mumie_calendar_service {
         require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 
         if (!is_object($mumie)) {
-            $mumie = locallib::get_mumie_task($mumie);
+            $mumie = repository::get_task($mumie);
         }
         $this->mumie = $mumie;
         $this->event = $this->get_calendar_event(self::EVENT_TYPE);
@@ -206,7 +206,7 @@ class mumie_calendar_service {
         if ($event->eventtype == self::EVENT_TYPE) {
             $effectiveduedate = mumie_get_effective_duedate(
                 $userid,
-                locallib::get_mumie_task($event->instance)
+                repository::get_task($event->instance)
             );
             return $effectiveduedate == $event->timestart;
         } else {

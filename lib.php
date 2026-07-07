@@ -26,6 +26,7 @@
 use mod_mumie\locallib;
 use mod_mumie\mumie_calendar_service;
 use mod_mumie\mumie_duedate_extension;
+use mod_mumie\repository;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -33,7 +34,6 @@ require_once($CFG->dirroot . '/mod/mumie/locallib.php');
 require_once($CFG->dirroot . '/mod/mumie/classes/mumie_calendar_service/mumie_calendar_service.php');
 
 define("SSO_TOKEN_TABLE", "auth_mumie_sso_tokens");
-define("MUMIE_TASK_TABLE", "mumie");
 
 /**
  * Add a new MUMIE task to the database
@@ -42,21 +42,17 @@ define("MUMIE_TASK_TABLE", "mumie");
  * @return int $id id of newly added grade item
  */
 function mumie_add_instance($mumie, $mform) {
-    global $DB;
     $mumie->timecreated = time();
     $mumie->timemodified = $mumie->timecreated;
 
     if ($mumie->type === 'tutor') {
-        // taskurl is NOTNULL without a DB default; fill it so the tutor row can be inserted.
-        // No tutor code path reads it.
-        $mumie->taskurl = ''; //todo separate tables for task and tutor?
-        $mumie->id = $DB->insert_record("mumie", $mumie);
+        $mumie->id = repository::save_new($mumie);
         return $mumie->id;
     }
 
     $mumie->use_hashed_id = 1;
     locallib::update_pending_gradepool($mumie);
-    $mumie->id = $DB->insert_record("mumie", $mumie);
+    $mumie->id = repository::save_new($mumie);
     mumie_grade_item_update($mumie);
     $calendarservice = new mumie_calendar_service($mumie);
     $calendarservice->update();
@@ -71,7 +67,6 @@ function mumie_add_instance($mumie, $mform) {
  * @return int $id id of updated grade item
  */
 function mumie_update_instance($mumie, $mform) {
-    global $DB;
     $mumie->timemodified = time();
     if (property_exists($mumie, 'instance')) {
         $mumie->id = $mumie->instance;
@@ -82,7 +77,7 @@ function mumie_update_instance($mumie, $mform) {
     };
 
     if ($mumie->type === 'tutor') {
-        return $DB->update_record("mumie", $mumie);
+        return repository::save_update($mumie);
     }
 
     locallib::update_pending_gradepool($mumie);
@@ -94,7 +89,7 @@ function mumie_update_instance($mumie, $mform) {
     $calendarservice->update();
 
     mumie_update_multiple_tasks($mumie);
-    return $DB->update_record("mumie", $mumie);
+    return repository::save_update($mumie);
 }
 
 /**
@@ -103,10 +98,11 @@ function mumie_update_instance($mumie, $mform) {
  * @return boolean Success/Failure
  */
 function mumie_delete_instance($id) {
-    global $DB, $CFG;
+    global $CFG;
 
     require_once($CFG->dirroot . "/mod/mumie/classes/mumie_duedate_extension.php");
-    if (!$mumie = $DB->get_record("mumie", ["id" => $id])) {
+    $mumie = repository::get($id);
+    if (!$mumie) {
         return false;
     }
 
@@ -114,7 +110,7 @@ function mumie_delete_instance($id) {
     \core_completion\api::update_completion_date_event($cm->id, 'mumie', $id, null);
     mumie_calendar_service::delete_all_calendar_events($mumie);
     mumie_duedate_extension::delete_all_for_mumie($id);
-    return $DB->delete_records("mumie", ["id" => $mumie->id]);
+    return repository::delete($id);
 }
 
 /**
@@ -124,9 +120,8 @@ function mumie_delete_instance($id) {
  * @param stdClass $coursemodule
  */
 function mumie_get_coursemodule_info($coursemodule) {
-    global $DB;
-
-    if (!$mumie = $DB->get_record("mumie", ["id" => $coursemodule->instance])) {
+    $mumie = repository::get($coursemodule->instance);
+    if (!$mumie) {
         return null;
     }
 
@@ -149,8 +144,9 @@ function mumie_get_coursemodule_info($coursemodule) {
  * @throws dml_exception
  */
 function mumie_cm_info_dynamic(cm_info $cm) {
-    global $DB, $USER, $CFG;
-    if (!$mumie = $DB->get_record("mumie", ["id" => $cm->instance])) {
+    global $USER, $CFG;
+    $mumie = repository::get_task($cm->instance);
+    if (!$mumie) {
         return null;
     }
     $context = context_module::instance($cm->id);
@@ -172,7 +168,10 @@ function mumie_cm_info_view(cm_info $cm) {
     global $CFG, $DB, $USER;
     require_once($CFG->dirroot . "/mod/mumie/locallib.php");
 
-    $mumie = $DB->get_record('mumie', ['id' => $cm->instance]);
+    $mumie = repository::get_task($cm->instance);
+    if (!$mumie) {
+        return;
+    }
     $gradeitem = $DB->get_record(
         'grade_items',
         [
@@ -400,8 +399,6 @@ function mod_mumie_core_calendar_is_event_visible(calendar_event $event) {
  * @param stdClass $mumie instance of MUMIE task to add
  */
 function mumie_update_multiple_tasks($mumie) {
-    global $DB;
-
     if (
         property_exists($mumie, 'mumie_selected_task_properties')
         && property_exists($mumie, 'mumie_selected_tasks')
@@ -410,7 +407,7 @@ function mumie_update_multiple_tasks($mumie) {
         $selectedtasks = json_decode($mumie->mumie_selected_tasks);
         if (!empty($selectedproperties) && !empty($selectedtasks)) {
             foreach ($selectedtasks as $taskid) {
-                $record = $DB->get_record("mumie", ["id" => $taskid]);
+                $record = repository::get_task($taskid);
                 foreach ($selectedproperties as $property) {
                     $record->$property = $mumie->$property;
                 }

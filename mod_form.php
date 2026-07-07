@@ -26,6 +26,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 use mod_mumie\locallib;
+use mod_mumie\repository;
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/auth/mumie/classes/mumie_server.php');
@@ -532,9 +533,8 @@ class mod_mumie_mod_form extends moodleform_mod {
     public function set_data($data): void {
         global $CFG;
 
-        // Tutor subtype has none of the MUMIE task fields (server, gradepool, duedate, ...),
-        // so skip all task-specific preloading. On a fresh add, $data does not yet carry the
-        // hidden type field, so consult resolve_activity_type() which also checks the URL.
+        // On a fresh add, $data does not yet carry the hidden type field, so consult
+        // resolve_activity_type() which also checks the URL.
         if ($this->resolve_activity_type() === 'tutor') {
             parent::set_data($data);
             return;
@@ -636,7 +636,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return void
      */
     private function set_general_data($data): void {
-        global $COURSE, $DB;
+        global $COURSE;
         // Decisions about gradepools are final. Don't preselect an option if the decision is
         // still pending!
         if (!locallib::course_contains_mumie_tasks($COURSE->id)) {
@@ -644,7 +644,7 @@ class mod_mumie_mod_form extends moodleform_mod {
         } else {
             if (!isset($data->privategradepool)) {
                 $data->privategradepool = array_values(
-                    $DB->get_records(MUMIE_TASK_TABLE, ["course" => $COURSE->id])
+                    repository::get_tasks_in_course($COURSE->id)
                 )[0]->privategradepool ?? -1;
             }
         }
@@ -657,8 +657,7 @@ class mod_mumie_mod_form extends moodleform_mod {
      * @return bool whether to disable gradepool selection
      */
     private function disable_gradepool_selection($courseid): bool {
-        global $DB;
-        $records = $DB->get_records(MUMIE_TASK_TABLE, ["course" => $courseid]);
+        $records = repository::get_tasks_in_course($courseid);
         if (get_config('auth_mumie', 'defaultgradepool') != -1) {
             return true;
         }

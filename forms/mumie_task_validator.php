@@ -92,7 +92,7 @@ class mumie_task_validator {
     private static function check_isgraded(array $data): array {
         $errors = [];
         if (!empty($data['instance'])) {
-            $mumie = locallib::get_mumie_task($data['instance']);
+            $mumie = repository::get_task($data['instance']);
             if ($mumie && $mumie->isgraded !== $data['isgraded']) {
                 $errors['prb_selector_btn'] = get_string('mumie_form_cant_change_isgraded', 'mod_mumie');
             }
@@ -168,7 +168,7 @@ class mumie_task_validator {
         $errors = [];
         $taskids = json_decode($data['mumie_selected_tasks'] ?? '[]', true);
         foreach ($taskids as $taskid) {
-            $task = locallib::get_mumie_task((int)$taskid);
+            $task = repository::get_task((int)$taskid);
             if ($task && ($task->duedate <= 0)) {
                 $errors['mumie_multi_edit_deadline_error'] =
                     get_string('mumie_form_deadline_transfer_prohibited_for_tasks_without_deadline', 'mod_mumie');
